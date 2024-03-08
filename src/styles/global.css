@@ -1,0 +1,27 @@
+html,
+body {
+  font-family: 'SUIT Variable';
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+* {
+  box-sizing: border-box;
+  &::after,
+  &::before {
+    box-sizing: border-box;
+  }
+}
+
+input:disabled,
+button:disabled {
+  cursor: not-allowed;
+}
+
+button,
+input,
+textarea {
+  font-family: 'SUIT Variable';
+}
