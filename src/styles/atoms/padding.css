@@ -1,38 +1,5 @@
 :root {
-  --padding-base-vertical: 11px;
-  --padding-base-horizontal: 16px;
-
-  --padding-t-vertical: 4px;
-  --padding-t-horizontal: 8px;
-
-  --padding-s-vertical: 7px;
-  --padding-s-horizontal: 12px;
-
-  --padding-l-vertical: 11px;
-  --padding-l-horizontal: 22px;
-
-  --padding-xl-vertical: 18px;
-  --padding-xl-horizontal: 24px;
-
-  --padding-container-base: 48px;
-}
-
-.padding--base {
-  padding: var(--padding-base-vertical) var(--padding-base-horizontal);
-}
-
-.padding--t {
-  padding: var(--padding-t-vertical) var(--padding-t-horizontal);
-}
-
-.padding--s {
-  padding: var(--padding-s-vertical) var(--padding-s-horizontal);
-}
-
-.padding--l {
-  padding: var(--padding-l-vertical) var(--padding-l-horizontal);
-}
-
-.padding--xl {
-  padding: var(--padding-xl-vertical) var(--padding-xl-horizontal);
+  --padding-horizontal-base: 16px;
+  --padding-horizontal-s: 12px;
+  --padding-horizontal-xs: 8px;
 }

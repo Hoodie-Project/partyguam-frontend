@@ -1,0 +1,9 @@
+:root {
+  --button-height-base: 56px;
+  --button-height-s: 48px;
+  --button-height-xs: 36px;
+  --button-height-xxs: 24px;
+
+  --square-button-width-base: 300px;
+  --square-button-width-s: 144px;
+}
