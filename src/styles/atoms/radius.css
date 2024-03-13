@@ -1,12 +1,4 @@
 :root {
   --radius-s: 12px;
-  --radius-m: 16px;
-}
-
-.radius--s {
-  border-radius: var(--radius-s);
-}
-
-.radius--m {
-  border-radius: var(--radius-m);
+  --radius-base: 16px;
 }
