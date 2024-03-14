@@ -1,6 +1,7 @@
 'use client';
 
-import React, { ButtonHTMLAttributes, forwardRef } from 'react';
+import type { ButtonHTMLAttributes } from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 type OwnProps = {

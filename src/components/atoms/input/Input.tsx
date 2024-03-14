@@ -1,8 +1,10 @@
 'use client';
 
-import { InputHTMLAttributes, forwardRef } from 'react';
-import XCircle from '@/assets/icon/x-circle.svg';
+import type { InputHTMLAttributes } from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
+
+import XCircle from '@/assets/icon/x-circle.svg';
 import { svgSizeMap } from '@/utils/svg';
 
 type OwnProps = {
@@ -36,18 +38,8 @@ const Input = forwardRef<HTMLInputElement, Props>(
   ) => {
     return (
       <>
-        <InputContainer>
-          <TextInput
-            ref={ref}
-            value={value}
-            placeholder={placeholder}
-            disabled={disabled}
-            inputState={inputState}
-            height={height}
-            padding={padding}
-            radius={radius}
-            {...inputAttributes}
-          />
+        <InputContainer height={height} padding={padding} radius={radius} inputState={inputState} disabled={disabled}>
+          <TextInput ref={ref} value={value} placeholder={placeholder} disabled={disabled} {...inputAttributes} />
           {value && (
             <XCircle
               onClick={onClear}
@@ -96,6 +88,7 @@ const InputContainer = styled.div<Props>`
   padding: ${props => padding[props.padding || 'base']};
   border-radius: ${props => radius[props.radius || 'base']};
   border-color: ${props => inputState[props.inputState || 'default']};
+  background-color: ${props => props.disabled && 'var(--grey100)'};
   border-width: 1px;
   border-style: solid;
   box-shadow: var(--shadow-1);
@@ -105,6 +98,7 @@ const TextInput = styled.input<Props>`
   width: 100%;
   font-size: 16px;
   font-weight: bold;
+  background-color: ${props => props.disabled && 'var(--grey100)'};
 `;
 
 const Message = styled.div<Props>`
