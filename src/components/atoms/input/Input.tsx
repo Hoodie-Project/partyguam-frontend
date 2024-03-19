@@ -1,8 +1,10 @@
 'use client';
 
-import { InputHTMLAttributes, forwardRef } from 'react';
-import XCircle from '@/assets/icon/x-circle.svg';
+import type { InputHTMLAttributes } from 'react';
+import { forwardRef } from 'react';
 import styled from '@emotion/styled';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+
 import { svgSizeMap } from '@/utils/svg';
 
 type OwnProps = {
@@ -10,10 +12,10 @@ type OwnProps = {
   radius: 'base' | 's';
   padding: 'base' | 's' | 'xs';
   inputState: 'warn' | 'success' | 'default';
-
+  placeholder: string;
   value: string;
   bottomMessage: string;
-  onClear: () => void;
+  onClear: (value: any) => void;
 };
 
 export type Props = Partial<OwnProps> & Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'>;
@@ -36,24 +38,16 @@ const Input = forwardRef<HTMLInputElement, Props>(
   ) => {
     return (
       <>
-        <InputContainer>
-          <TextInput
-            ref={ref}
-            value={value}
-            placeholder={placeholder}
-            disabled={disabled}
-            inputState={inputState}
-            height={height}
-            padding={padding}
-            radius={radius}
-            {...inputAttributes}
-          />
+        <InputContainer height={height} padding={padding} radius={radius} inputState={inputState} disabled={disabled}>
+          <TextInput ref={ref} value={value} placeholder={placeholder} disabled={disabled} {...inputAttributes} />
           {value && (
-            <XCircle
+            <CancelOutlinedIcon
               onClick={onClear}
-              width={svgSizeMap['s'].size}
-              height={svgSizeMap['s'].size}
-              stroke-width={svgSizeMap['s'].strokeWidth}
+              sx={{
+                width: `${svgSizeMap['s'].size}`,
+                strokeWidth: `${svgSizeMap['s'].strokeWidth}`,
+                cursor: 'pointer',
+              }}
             />
           )}
         </InputContainer>
@@ -96,6 +90,7 @@ const InputContainer = styled.div<Props>`
   padding: ${props => padding[props.padding || 'base']};
   border-radius: ${props => radius[props.radius || 'base']};
   border-color: ${props => inputState[props.inputState || 'default']};
+  background-color: ${props => props.disabled && 'var(--grey100)'};
   border-width: 1px;
   border-style: solid;
   box-shadow: var(--shadow-1);
@@ -105,11 +100,12 @@ const TextInput = styled.input<Props>`
   width: 100%;
   font-size: 16px;
   font-weight: bold;
+  background-color: ${props => props.disabled && 'var(--grey100)'};
 `;
 
 const Message = styled.div<Props>`
   color: ${props => inputState[props.inputState || 'success']};
-  margin: 8px 0 0 20px;
+  margin: ${props => (props.inputState ? '8px 0 0 20px' : '0 0 0 20px')};
   font-size: 14px;
 `;
 
