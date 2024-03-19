@@ -22,7 +22,7 @@ export default function CustomHeader({
   prevMonthButtonDisabled,
   nextMonthButtonDisabled,
 }: CustomHeaderProps) {
-  const YEARS = Array.from({ length: getYear(new Date()) + 1 - 2000 }, (_, i) => getYear(new Date()) - i);
+  const YEARS = Array.from({ length: getYear(new Date()) + 1 - 1990 }, (_, i) => getYear(new Date()) - i);
   const MONTHS = [
     'January',
     'February',
@@ -101,8 +101,7 @@ const MonthButton = styled.button`
   }
 
   &:disabled {
-    cursor: default;
-    background-color: colors.$BG_COLOR;
+    cursor: not-allowed;
 
     svg {
       fill: #575757;

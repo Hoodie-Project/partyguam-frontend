@@ -50,6 +50,10 @@ body {
     background-color: var(--white);
   }
 
+  .react-datepicker__day--disabled {
+    cursor: not-allowed;
+  }
+
   .selectedDay,
   .unselectedDay {
     padding: 3px 1px 0 0;

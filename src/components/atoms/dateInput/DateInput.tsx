@@ -4,7 +4,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { format, isValid, parse } from 'date-fns';
+import { format, parse, startOfDay } from 'date-fns';
 
 import type { Props } from '../input';
 import Input from '../input';
@@ -13,13 +13,17 @@ import CustomHeader from './CustomHeader';
 
 export default function DateInput(props: Props) {
   const [selectDate, setSelectDate] = useState<Date | null>(null);
-  const regex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+  const REGEX = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
+
+  const minDate = new Date('1900-01-01');
+  const maxDate = startOfDay(new Date());
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    if (regex.test(value)) {
-      const parsedDate = parse(value, 'yyyy-MM-dd', new Date());
-      if (isValid(parsedDate)) {
+    const parsedDate = parse(value, 'yyyy-MM-dd', new Date());
+
+    if (REGEX.test(value) && parsedDate >= minDate && parsedDate <= maxDate) {
+      if (format(parsedDate, 'yyyy-MM-dd') === value) {
         setSelectDate(parsedDate);
         return;
       }
@@ -32,15 +36,18 @@ export default function DateInput(props: Props) {
     if (!selectDate) {
       return 'default';
     }
+
     const formattedDate = format(selectDate, 'yyyy-MM-dd');
-    return regex.test(formattedDate) ? 'success' : 'warn';
+    const isValid = REGEX.test(formattedDate) && selectDate && selectDate >= minDate && selectDate <= maxDate;
+
+    return isValid ? 'success' : 'warn';
   }, [selectDate]);
 
   return (
     <DatePicker
       selected={selectDate}
+      maxDate={startOfDay(new Date())} /** 오늘 이후 날짜 선택 불가 */
       dateFormat="yyyy-MM-dd"
-      shouldCloseOnSelect
       placeholderText="ex. 2000-01-01"
       onChange={date => setSelectDate(date)}
       dayClassName={date => (date.getDate() === selectDate?.getDate() ? 'selectedDay' : 'unselectedDay')}
@@ -54,6 +61,8 @@ export default function DateInput(props: Props) {
         />
       }
       renderCustomHeader={props => <CustomHeader {...props} />}
+      showDisabledMonthNavigation
+      shouldCloseOnSelect
     />
   );
 }
