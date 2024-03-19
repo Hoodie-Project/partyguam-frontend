@@ -23,6 +23,7 @@ a {
   text-decoration: none;
 }
 
+select,
 input,
 button {
   border: none;
@@ -39,6 +40,8 @@ button:disabled {
   cursor: not-allowed;
 }
 
+select:focus,
+select:active,
 input:focus,
 input:active,
 button:focus,

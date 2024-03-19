@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button, Input, Txt } from '@/components/atoms';
+import { Button, DateInput, Input, Txt } from '@/components/atoms';
 
 export default function Home() {
   return (
@@ -13,6 +13,9 @@ export default function Home() {
       <Button disabled label="disabled 버튼" />
       <div style={{ margin: '10px' }} />
       <Input placeholder="일반 input" />
+      <div style={{ margin: '10px' }} />
+      <DateInput placeholder="ex. 2000-01-01" />
+
       <div style={{ margin: '10px' }} />
       <Input placeholder="disabled input" disabled />
       <div style={{ margin: '10px' }} />
