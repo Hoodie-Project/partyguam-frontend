@@ -73,7 +73,7 @@ export default function Join() {
 }
 
 const JoinContainer = styled.section`
-  padding-top: 84px;
+  padding: 5.25rem 21.25rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -81,10 +81,10 @@ const JoinContainer = styled.section`
 `;
 
 const JoinHeader = styled.section`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 77.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  place-items: center;
+  width: 100%;
   height: 3.75rem;
 `;
 
@@ -96,7 +96,6 @@ const GoBackBtn = styled.button`
   font-weight: bold;
   font-size: 18px;
   color: var(--grey500);
-  margin-right: 30.375rem;
 `;
 
 const JoinForm = styled.section`
