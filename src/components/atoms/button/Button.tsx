@@ -8,7 +8,7 @@ import Txt from '../txt';
 
 type OwnProps = {
   height: 'base' | 's' | 'm' | 'xs' | 'xxs';
-  width: 'base' | 's';
+  width: 'base' | 's' | 'm';
   color: 'white' | 'primary';
   radius: 's' | 'base';
   label?: string;
@@ -42,7 +42,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         <Txt
           fontSize={18}
           fontWeight={color === 'primary' ? 'bold' : 'normal'}
-          color={disabled ? 'var(--grey400)' : color === 'white' ? 'var(--grey500)' : 'var(--black)'}
+          color={disabled ? '--grey400' : color === 'white' ? '--grey500' : '--black'}
         >
           {label}
         </Txt>
@@ -80,7 +80,8 @@ const SquareButton = styled.button<Props>`
   border-width: 1px;
   border-style: solid;
 
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-2);
+  flex-shrink: 0;
 `;
 
 export default Button;

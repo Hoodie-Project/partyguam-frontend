@@ -1,4 +1,5 @@
 'use client';
+import type { ReactNode } from 'react';
 import React from 'react';
 import styled from '@emotion/styled';
 
@@ -16,6 +17,7 @@ type OwnProps = {
   onClick: () => void;
   onIconClick: () => void;
   icon: JSX.Element;
+  children: ReactNode;
 };
 
 export type Props = Partial<OwnProps> & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>;

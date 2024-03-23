@@ -37,7 +37,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     ref,
   ) => {
     return (
-      <>
+      <InputWrapper>
         <InputContainer height={height} padding={padding} radius={radius} inputState={inputState} disabled={disabled}>
           <TextInput ref={ref} value={value} placeholder={placeholder} disabled={disabled} {...inputAttributes} />
           {value && (
@@ -52,7 +52,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
           )}
         </InputContainer>
         {inputState && <Message inputState={inputState}>{bottomMessage}</Message>}
-      </>
+      </InputWrapper>
     );
   },
 );
@@ -81,6 +81,12 @@ const radius = {
   s: 'var(--radius-s)',
 };
 
+const InputWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
 const InputContainer = styled.div<Props>`
   display: flex;
   flex-direction: row;
@@ -93,7 +99,7 @@ const InputContainer = styled.div<Props>`
   background-color: ${props => props.disabled && 'var(--grey100)'};
   border-width: 1px;
   border-style: solid;
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-2);
 `;
 
 const TextInput = styled.input<Props>`
