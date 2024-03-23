@@ -88,8 +88,8 @@ const YearSelect = styled.select`
 `;
 
 const MonthButton = styled.button`
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   padding: 5px;
   border-radius: 50%;
   background-color: var(--white);

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Button, DateInput, Input, Txt } from '@/components/atoms';
+import { Button, Chip, DateInput, Input, Txt } from '@/components/atoms';
+
 
 export default function Home() {
   return (
@@ -32,6 +33,12 @@ export default function Home() {
       <Txt fontWeight="bold">bold</Txt>
       <div style={{ margin: '10px' }} />
       <Txt fontWeight="semibold">semibold</Txt>
+      <div style={{ margin: '10px' }} />
+      <Txt fontWeight="semibold" className="app-title">
+        GAUM.
+      </Txt>
+      <div style={{ margin: '10px' }} />
+      <Chip label="포트폴리오" />
     </main>
   );
 }

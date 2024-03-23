@@ -4,9 +4,11 @@ import type { ButtonHTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
+import Txt from '../txt';
+
 type OwnProps = {
   height: 'base' | 's' | 'm' | 'xs' | 'xxs';
-  width: 'base' | 's';
+  width: 'base' | 's' | 'm';
   color: 'white' | 'primary';
   radius: 's' | 'base';
   label?: string;
@@ -37,7 +39,13 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         ref={ref}
         {...buttonAttributes}
       >
-        {label}
+        <Txt
+          fontSize={18}
+          fontWeight={color === 'primary' ? 'bold' : 'normal'}
+          color={disabled ? '--grey400' : color === 'white' ? '--grey500' : '--black'}
+        >
+          {label}
+        </Txt>
       </SquareButton>
     );
   },
@@ -72,11 +80,8 @@ const SquareButton = styled.button<Props>`
   border-width: 1px;
   border-style: solid;
 
-  color: ${props => (props.disabled ? 'var(--grey400)' : props.color === 'white' ? 'var(--grey500)' : 'var(--black)')};
-  font-weight: ${props => props.color === 'primary' && 'bold'};
-
-  font-size: 18px;
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-2);
+  flex-shrink: 0;
 `;
 
 export default Button;

@@ -21,6 +21,14 @@
   --font-weight-regular: normal;
 }
 
+.app-title {
+  font-size: 48px;
+  font-weight: 900;
+  background: linear-gradient(45deg, var(--title-green), var(--secondary-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .typography {
   margin: 0;
   padding: 0;
