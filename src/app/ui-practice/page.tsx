@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Button, Chip, DateInput, Input, Txt } from '@/components/atoms';
 
+
 export default function Home() {
   return (
     <main>
