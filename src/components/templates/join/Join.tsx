@@ -75,7 +75,6 @@ export default function Join() {
 const JoinContainer = styled.section`
   padding: 5.25rem 21.25rem;
   width: 100%;
-
   display: flex;
   flex-direction: column;
   align-items: center;
