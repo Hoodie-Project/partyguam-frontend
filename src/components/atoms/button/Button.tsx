@@ -9,7 +9,7 @@ import Txt from '../txt';
 type OwnProps = {
   height: 'base' | 's' | 'm' | 'xs' | 'xxs';
   width: 'base' | 's' | 'm';
-  color: 'white' | 'primary';
+  color: 'white' | 'primary' | 'disabled';
   radius: 's' | 'base';
   label?: string;
 };
@@ -62,6 +62,7 @@ const sizes = {
 const colors = {
   primary: 'var(--primary-green)',
   white: 'var(--white)',
+  disabled: 'var(--green-light200)',
 };
 
 const radius = {
