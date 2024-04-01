@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Button, Chip, DateInput, Input, Txt } from '@/components/atoms';
-
+import { Button, Chip, Input, Txt } from '@/components/atoms';
 
 export default function Home() {
   return (
@@ -15,7 +14,7 @@ export default function Home() {
       <div style={{ margin: '10px' }} />
       <Input placeholder="일반 input" />
       <div style={{ margin: '10px' }} />
-      <DateInput placeholder="ex. 2000-01-01" />
+      {/* <DateInput placeholder="ex. 2000-01-01" /> */}
 
       <div style={{ margin: '10px' }} />
       <Input placeholder="disabled input" disabled />

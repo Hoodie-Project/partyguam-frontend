@@ -8,9 +8,11 @@ import Txt from '../txt';
 
 type OwnProps = {
   height: 'base' | 's' | 'm' | 'xs' | 'xxs';
-  width: 'base' | 's' | 'm';
-  color: 'white' | 'primary' | 'disabled';
+  width: 'base' | 's' | 'm' | 'l';
+  color: 'white' | 'primary' | 'disabled' | 'yellow';
   radius: 's' | 'base';
+  shadow?: 'none';
+  border?: 'none';
   label?: string;
 };
 
@@ -24,6 +26,8 @@ const Button = forwardRef<HTMLButtonElement, Props>(
       color = 'primary',
       radius = 'base',
       label = 'default label',
+      shadow,
+      border,
       disabled,
       ...buttonAttributes
     },
@@ -37,6 +41,8 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         radius={radius}
         disabled={disabled}
         ref={ref}
+        border={border}
+        shadow={shadow}
         {...buttonAttributes}
       >
         <Txt
@@ -53,6 +59,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
 
 const sizes = {
   base: { width: 'var(--square-button-width-base)', height: 'var(--button-height-base)' },
+  l: { width: 'var(--square-button-width-l)' },
   m: { width: 'var(--square-button-width-m)', height: 'var(--button-height-m)' },
   s: { width: 'var(--square-button-width-s)', height: 'var(--button-height-s)' },
   xs: { height: 'var(--button-height-xs)' },
@@ -62,6 +69,7 @@ const sizes = {
 const colors = {
   primary: 'var(--primary-green)',
   white: 'var(--white)',
+  yellow: 'var(--kakao-btn)',
   disabled: 'var(--green-light200)',
 };
 
@@ -77,11 +85,17 @@ const SquareButton = styled.button<Props>`
 
   border-radius: ${props => radius[props.radius || 'base']};
   border-color: ${props =>
-    props.disabled ? 'var(--green-light200)' : props.color === 'white' ? 'var(--grey200)' : 'var(--primary-green)'};
+    props.border === 'none'
+      ? 'transparent'
+      : props.disabled
+        ? 'var(--green-light200)'
+        : props.color === 'white'
+          ? 'var(--grey200)'
+          : 'var(--primary-green)'};
   border-width: 1px;
   border-style: solid;
 
-  box-shadow: var(--shadow-2);
+  box-shadow: ${props => (props.shadow === 'none' ? 'none' : 'var(--shadow-2)')};
   flex-shrink: 0;
 `;
 

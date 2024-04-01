@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import styled from '@emotion/styled';
 
 import { Txt } from '@/components/atoms';
@@ -13,9 +13,11 @@ export default function Header() {
   return (
     <HeaderContainer>
       <HeaderLeft>
-        <Txt fontWeight="semibold" className="app-title" onClick={() => {}}>
-          GAUM.
-        </Txt>
+        <Link href="/">
+          <Txt fontWeight="semibold" className="app-title" onClick={() => {}}>
+            GAUM.
+          </Txt>
+        </Link>
         <Menus />
       </HeaderLeft>
 
