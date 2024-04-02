@@ -1,11 +1,12 @@
 'use client';
 import React, { useMemo } from 'react';
 import styled from '@emotion/styled';
-import { ArrowBackIosNew } from '@mui/icons-material';
+import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import { startOfDay } from 'date-fns';
 
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
 import { usePersonalInfo } from '@/hooks';
+import { palette } from '@/styles';
 
 export default function Join() {
   const {
@@ -39,8 +40,10 @@ export default function Join() {
     <JoinContainer>
       <JoinHeader>
         <GoBackBtn>
-          <ArrowBackIosNew />
-          <Txt>뒤로 가기</Txt>
+          <ArrowBackIosNewRoundedIcon />
+          <Txt fontColor="grey500" fontWeight="bold" style={{ marginTop: '2px', marginLeft: '10px' }}>
+            뒤로 가기
+          </Txt>
         </GoBackBtn>
         <Txt fontSize={20} fontWeight="bold">
           가입하기
@@ -55,7 +58,7 @@ export default function Join() {
           <Txt fontSize={16} style={{ marginBottom: 20 }}>
             이메일은 변경할 수 없어요.
           </Txt>
-          <Input placeholder="disabled input" disabled />
+          <Input placeholder="disabled input" shadow="shadow2" disabled />
         </JoinField>
 
         <JoinField>
@@ -72,6 +75,7 @@ export default function Join() {
                 setIsNicknameConfirmed(true);
               }}
               name="nickname"
+              shadow="shadow1"
               placeholder="15자 이내로 입력해 주세요. (영문/한글/숫자)"
               onChange={e => {
                 const { value, name } = e.target;
@@ -83,14 +87,19 @@ export default function Join() {
               bottomMessage={nicknameValidate.bottomMessage}
             />
             <Button
-              color="white"
-              label="중복 확인"
+              backgroudColor="white"
               width="s"
+              height="base"
+              radius="base"
+              shadow="shadow1"
+              borderColor="grey200"
               onClick={e => {
                 e.preventDefault();
                 checkNickname();
               }}
-            />
+            >
+              <Txt fontColor="grey500">중복 확인</Txt>
+            </Button>
           </FlexRow>
         </JoinField>
 
@@ -103,6 +112,7 @@ export default function Join() {
           </Txt>
           <DateInput
             placeholder="ex. 2000-01-01"
+            shadow="shadow1"
             onClear={() => setJoinInput({ ...joinInput, birthday: null })}
             minDate={new Date('1900-01-01')}
             maxDate={startOfDay(new Date())}
@@ -125,27 +135,47 @@ export default function Join() {
           </Txt>
           <FlexRow>
             <Button
-              color={joinInput.gender === '남자' ? 'disabled' : 'white'}
-              label="남자"
               width="m"
               onClick={e => {
                 e.preventDefault();
                 setJoinInput({ ...joinInput, gender: '남자' });
               }}
-            />
+              height="base"
+              backgroudColor={joinInput.gender === '남자' ? 'greenLight200' : 'white'}
+              borderColor={joinInput.gender === '남자' ? 'transparent' : 'grey200'}
+              radius="base"
+              shadow="shadow1"
+            >
+              <Txt fontColor="grey500">남자</Txt>
+            </Button>
             <Button
-              color={joinInput.gender === '여자' ? 'disabled' : 'white'}
-              label="여자"
               width="m"
               onClick={e => {
                 e.preventDefault();
                 setJoinInput({ ...joinInput, gender: '여자' });
               }}
-            />
+              height="base"
+              backgroudColor={joinInput.gender === '여자' ? 'greenLight200' : 'white'}
+              borderColor={joinInput.gender === '여자' ? 'transparent' : 'grey200'}
+              radius="base"
+              shadow="shadow1"
+            >
+              <Txt fontColor="grey500">여자</Txt>
+            </Button>
           </FlexRow>
         </JoinField>
 
-        <Button label="가입 완료" style={{ marginBottom: 60 }} disabled={joinBtnDisabled} />
+        <Button
+          style={{ marginBottom: 60 }}
+          disabled={joinBtnDisabled}
+          height="base"
+          width="base"
+          backgroudColor="primaryGreen"
+          radius="base"
+          shadow="shadow2"
+        >
+          <Txt fontWeight="bold">가입 완료</Txt>
+        </Button>
       </JoinForm>
     </JoinContainer>
   );
@@ -169,12 +199,13 @@ const JoinHeader = styled.section`
 
 const GoBackBtn = styled.button`
   display: flex;
+  justify-items: center;
   align-items: center;
-  justify-self: flex-start;
+  gap: 10;
   background-color: transparent;
   font-weight: bold;
   font-size: 18px;
-  color: var(--grey500);
+  color: ${palette.grey500};
 `;
 
 const JoinForm = styled.form`

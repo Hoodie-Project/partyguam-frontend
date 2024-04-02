@@ -4,6 +4,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import Portal from '@/components/atoms/portal';
+import { zIndex } from '@/styles';
 
 type Props = {
   onClick?: () => void;
@@ -26,6 +27,6 @@ const DimmerContainer = styled.div<{ onClick?: () => void }>`
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: var(--dimmer-index);
+  z-index: ${zIndex.dimmerIndex};
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'default')};
 `;

@@ -5,6 +5,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Dimmer, Portal } from '@/components/atoms';
+import { zIndex } from '@/styles';
 
 type Position = {
   top: string;
@@ -45,5 +46,5 @@ const ModalContainer = styled.div<{ position?: Partial<Position> }>`
 
   width: auto;
   height: auto;
-  z-index: var(--drawer-index);
+  z-index: ${zIndex.drawerIndex};
 `;
