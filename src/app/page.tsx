@@ -1,5 +1,11 @@
 import React from 'react';
 
+import { Main } from '@/components/templates';
+
 export default function Home() {
-  return <main>home</main>;
+  return (
+    <>
+      <Main />
+    </>
+  );
 }

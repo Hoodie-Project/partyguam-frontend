@@ -5,14 +5,17 @@ import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
+import { button, padding, palette, radius, shadow } from '@/styles';
 import { svgSizeMap } from '@/utils/svg';
 
 type OwnProps = {
-  height: 'base' | 's' | 'xs' | 'xxs';
-  radius: 'base' | 's';
-  padding: 'base' | 's' | 'xs';
+  height: keyof typeof button.height;
+  radius: keyof typeof radius;
+  padding: keyof typeof padding;
   inputState: 'warn' | 'success' | 'default';
   placeholder: string;
+  shadow?: keyof typeof shadow;
+  borderColor?: keyof typeof palette;
   value: string;
   bottomMessage: string;
   onClear: (value: any) => void;
@@ -27,8 +30,10 @@ const Input = forwardRef<HTMLInputElement, Props>(
       onClear,
       height = 'base',
       radius = 'base',
-      padding = 'base',
+      padding = 'horizontalBase',
       inputState = 'default',
+      shadow,
+      borderColor,
       bottomMessage,
       placeholder,
       disabled,
@@ -38,7 +43,15 @@ const Input = forwardRef<HTMLInputElement, Props>(
   ) => {
     return (
       <InputWrapper>
-        <InputContainer height={height} padding={padding} radius={radius} inputState={inputState} disabled={disabled}>
+        <InputContainer
+          height={height}
+          padding={padding}
+          radius={radius}
+          shadow={shadow}
+          borderColor={borderColor}
+          inputState={inputState}
+          disabled={disabled}
+        >
           <TextInput ref={ref} value={value} placeholder={placeholder} disabled={disabled} {...inputAttributes} />
           {value && (
             <CancelOutlinedIcon
@@ -57,28 +70,10 @@ const Input = forwardRef<HTMLInputElement, Props>(
   },
 );
 
-const height = {
-  base: 'var(--button-height-m)',
-  s: 'var(--button-height-s)',
-  xs: 'var(--button-height-xs)',
-  xxs: 'var(--button-height-xxs)',
-};
-
-const padding = {
-  base: 'var(--padding-horizontal-base)',
-  s: 'var(--padding-horizontal-s)',
-  xs: 'var(--padding-horizontal-xs)',
-};
-
 const inputState = {
-  success: 'var(--green-dark100)',
-  warn: 'var(--fail-red)',
-  default: 'var(--grey200)',
-};
-
-const radius = {
-  base: 'var(--radius-base)',
-  s: 'var(--radius-s)',
+  success: palette.greenDark100,
+  warn: palette.failRed,
+  default: palette.grey200,
 };
 
 const InputWrapper = styled.div`
@@ -92,21 +87,22 @@ const InputContainer = styled.div<Props>`
   flex-direction: row;
   align-items: center;
   width: 100%;
-  height: ${props => height[props.height || 'base']};
-  padding: ${props => padding[props.padding || 'base']};
+  height: ${props => button.height[props.height || 'base']};
+  padding: ${props => padding[props.padding || 'horizontalBase']};
   border-radius: ${props => radius[props.radius || 'base']};
-  border-color: ${props => inputState[props.inputState || 'default']};
-  background-color: ${props => props.disabled && 'var(--grey100)'};
+  border-color: ${props =>
+    props.inputState ? inputState[props.inputState] : props.borderColor ? palette[props.borderColor] : 'transparent'};
+  background-color: ${props => props.disabled && palette.grey100};
   border-width: 1px;
   border-style: solid;
-  box-shadow: var(--shadow-2);
+  box-shadow: ${props => (props.shadow ? shadow[props.shadow] : 'none')};
 `;
 
 const TextInput = styled.input<Props>`
   width: 100%;
   font-size: 16px;
   font-weight: bold;
-  background-color: ${props => props.disabled && 'var(--grey100)'};
+  background-color: ${props => props.disabled && palette.grey100};
 `;
 
 const Message = styled.div<Props>`

@@ -1,3 +1,5 @@
+@import './components/datepicker.css';
+
 html,
 body {
   font-family: 'SUIT Variable';
@@ -31,7 +33,7 @@ button {
 
 ::placeholder {
   font-weight: normal;
-  font-color: var(--grey400);
+  font-color: #99999;
 }
 
 input:disabled,
@@ -52,4 +54,12 @@ button,
 input,
 textarea {
   font-family: 'SUIT Variable';
+}
+
+.app-title {
+  font-size: 40px;
+  font-weight: 900;
+  background: linear-gradient(45deg, #00ffc2, #00c2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

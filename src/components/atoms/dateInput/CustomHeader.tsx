@@ -5,6 +5,8 @@ import styled from '@emotion/styled';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import { getMonth, getYear } from 'date-fns';
 
+import { palette } from '@/styles';
+
 interface CustomHeaderProps {
   date: Date;
   changeYear: (year: number) => void;
@@ -78,8 +80,8 @@ const Month = styled.span`
 `;
 
 const YearSelect = styled.select`
-  background-color: var(--white);
-  color: var(--black);
+  background-color: ${palette.white};
+  color: ${palette.black};
   border: none;
   font-size: 16px;
   font-weight: bold;
@@ -92,12 +94,12 @@ const MonthButton = styled.button`
   height: 32px;
   padding: 5px;
   border-radius: 50%;
-  background-color: var(--white);
+  background-color: ${palette.white};
   :nth-of-type(1) {
     margin-right: 8px;
   }
   &:hover {
-    background-color: var(--green-light300);
+    background-color: ${palette.primaryGreen};
   }
 
   &:disabled {
