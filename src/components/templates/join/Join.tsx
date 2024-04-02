@@ -5,6 +5,9 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import { startOfDay } from 'date-fns';
 
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
+import { Modal } from '@/components/molecules';
+import { Header } from '@/components/organisms';
+import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
 import { usePersonalInfo } from '@/hooks';
 import { palette } from '@/styles';
 
@@ -37,147 +40,151 @@ export default function Join() {
   }, [isNicknameConfirmed, isNicknameDuplicated, joinInput.birthday, joinInput.gender, joinInput.nickname]);
 
   return (
-    <JoinContainer>
-      <JoinHeader>
-        <GoBackBtn>
-          <ArrowBackIosNewRoundedIcon />
-          <Txt fontColor="grey500" fontWeight="bold" style={{ marginTop: '2px', marginLeft: '10px' }}>
-            뒤로 가기
+    <ModalContextProvider>
+      <Header />
+      <Modal />
+      <JoinContainer>
+        <JoinHeader>
+          <GoBackBtn>
+            <ArrowBackIosNewRoundedIcon />
+            <Txt fontColor="grey500" fontWeight="bold" style={{ marginTop: '2px', marginLeft: '10px' }}>
+              뒤로 가기
+            </Txt>
+          </GoBackBtn>
+          <Txt fontSize={20} fontWeight="bold">
+            가입하기
           </Txt>
-        </GoBackBtn>
-        <Txt fontSize={20} fontWeight="bold">
-          가입하기
-        </Txt>
-      </JoinHeader>
-      <JoinForm>
-        {/* NOTE. email 불러온 뒤 placeholder로 넣어주기 */}
-        <JoinField>
-          <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
-            이메일을 확인해 주세요.
-          </Txt>
-          <Txt fontSize={16} style={{ marginBottom: 20 }}>
-            이메일은 변경할 수 없어요.
-          </Txt>
-          <Input placeholder="disabled input" shadow="shadow2" disabled />
-        </JoinField>
+        </JoinHeader>
+        <JoinForm>
+          {/* NOTE. email 불러온 뒤 placeholder로 넣어주기 */}
+          <JoinField>
+            <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
+              이메일을 확인해 주세요.
+            </Txt>
+            <Txt fontSize={16} style={{ marginBottom: 20 }}>
+              이메일은 변경할 수 없어요.
+            </Txt>
+            <Input placeholder="disabled input" shadow="shadow2" disabled />
+          </JoinField>
 
-        <JoinField>
-          <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
-            닉네임을 입력해 주세요.
-          </Txt>
-          <Txt fontSize={16} style={{ marginBottom: 20 }}>
-            닉네임은 변경할 수 없어요.
-          </Txt>
-          <FlexRow>
-            <Input
-              onBlur={handleBlur}
-              onFocus={() => {
-                setIsNicknameConfirmed(true);
-              }}
-              name="nickname"
+          <JoinField>
+            <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
+              닉네임을 입력해 주세요.
+            </Txt>
+            <Txt fontSize={16} style={{ marginBottom: 20 }}>
+              닉네임은 변경할 수 없어요.
+            </Txt>
+            <FlexRow>
+              <Input
+                onBlur={handleBlur}
+                onFocus={() => {
+                  setIsNicknameConfirmed(true);
+                }}
+                name="nickname"
+                shadow="shadow1"
+                placeholder="15자 이내로 입력해 주세요. (영문/한글/숫자)"
+                onChange={e => {
+                  const { value, name } = e.target;
+                  setJoinInput({ ...joinInput, [name]: value });
+                }}
+                value={joinInput.nickname}
+                onClear={() => setJoinInput({ ...joinInput, nickname: '' })}
+                inputState={nicknameValidate.inputState}
+                bottomMessage={nicknameValidate.bottomMessage}
+              />
+              <Button
+                backgroudColor="white"
+                width="s"
+                height="base"
+                radius="base"
+                shadow="shadow1"
+                borderColor="grey200"
+                onClick={e => {
+                  e.preventDefault();
+                  checkNickname();
+                }}
+              >
+                <Txt fontColor="grey500">중복 확인</Txt>
+              </Button>
+            </FlexRow>
+          </JoinField>
+
+          <JoinField>
+            <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
+              생년월일을 알려주세요.
+            </Txt>
+            <Txt fontSize={16} style={{ marginBottom: 20 }}>
+              프로필에서 노출 여부를 설정할 수 있어요.
+            </Txt>
+            <DateInput
+              placeholder="ex. 2000-01-01"
               shadow="shadow1"
-              placeholder="15자 이내로 입력해 주세요. (영문/한글/숫자)"
-              onChange={e => {
-                const { value, name } = e.target;
-                setJoinInput({ ...joinInput, [name]: value });
-              }}
-              value={joinInput.nickname}
-              onClear={() => setJoinInput({ ...joinInput, nickname: '' })}
-              inputState={nicknameValidate.inputState}
-              bottomMessage={nicknameValidate.bottomMessage}
+              onClear={() => setJoinInput({ ...joinInput, birthday: null })}
+              minDate={new Date('1900-01-01')}
+              maxDate={startOfDay(new Date())}
+              selectDate={joinInput.birthday}
+              setSelectDate={newDate =>
+                setJoinInput({
+                  ...joinInput,
+                  birthday: newDate,
+                })
+              }
             />
-            <Button
-              backgroudColor="white"
-              width="s"
-              height="base"
-              radius="base"
-              shadow="shadow1"
-              borderColor="grey200"
-              onClick={e => {
-                e.preventDefault();
-                checkNickname();
-              }}
-            >
-              <Txt fontColor="grey500">중복 확인</Txt>
-            </Button>
-          </FlexRow>
-        </JoinField>
+          </JoinField>
 
-        <JoinField>
-          <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
-            생년월일을 알려주세요.
-          </Txt>
-          <Txt fontSize={16} style={{ marginBottom: 20 }}>
-            프로필에서 노출 여부를 설정할 수 있어요.
-          </Txt>
-          <DateInput
-            placeholder="ex. 2000-01-01"
-            shadow="shadow1"
-            onClear={() => setJoinInput({ ...joinInput, birthday: null })}
-            minDate={new Date('1900-01-01')}
-            maxDate={startOfDay(new Date())}
-            selectDate={joinInput.birthday}
-            setSelectDate={newDate =>
-              setJoinInput({
-                ...joinInput,
-                birthday: newDate,
-              })
-            }
-          />
-        </JoinField>
+          <JoinField>
+            <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
+              성별은 어떻게 되시나요?
+            </Txt>
+            <Txt fontSize={16} style={{ marginBottom: 20 }}>
+              프로필에서 노출 여부를 설정할 수 있어요.
+            </Txt>
+            <FlexRow>
+              <Button
+                width="m"
+                onClick={e => {
+                  e.preventDefault();
+                  setJoinInput({ ...joinInput, gender: '남자' });
+                }}
+                height="base"
+                backgroudColor={joinInput.gender === '남자' ? 'greenLight200' : 'white'}
+                borderColor={joinInput.gender === '남자' ? 'transparent' : 'grey200'}
+                radius="base"
+                shadow="shadow1"
+              >
+                <Txt fontColor="grey500">남자</Txt>
+              </Button>
+              <Button
+                width="m"
+                onClick={e => {
+                  e.preventDefault();
+                  setJoinInput({ ...joinInput, gender: '여자' });
+                }}
+                height="base"
+                backgroudColor={joinInput.gender === '여자' ? 'greenLight200' : 'white'}
+                borderColor={joinInput.gender === '여자' ? 'transparent' : 'grey200'}
+                radius="base"
+                shadow="shadow1"
+              >
+                <Txt fontColor="grey500">여자</Txt>
+              </Button>
+            </FlexRow>
+          </JoinField>
 
-        <JoinField>
-          <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
-            성별은 어떻게 되시나요?
-          </Txt>
-          <Txt fontSize={16} style={{ marginBottom: 20 }}>
-            프로필에서 노출 여부를 설정할 수 있어요.
-          </Txt>
-          <FlexRow>
-            <Button
-              width="m"
-              onClick={e => {
-                e.preventDefault();
-                setJoinInput({ ...joinInput, gender: '남자' });
-              }}
-              height="base"
-              backgroudColor={joinInput.gender === '남자' ? 'greenLight200' : 'white'}
-              borderColor={joinInput.gender === '남자' ? 'transparent' : 'grey200'}
-              radius="base"
-              shadow="shadow1"
-            >
-              <Txt fontColor="grey500">남자</Txt>
-            </Button>
-            <Button
-              width="m"
-              onClick={e => {
-                e.preventDefault();
-                setJoinInput({ ...joinInput, gender: '여자' });
-              }}
-              height="base"
-              backgroudColor={joinInput.gender === '여자' ? 'greenLight200' : 'white'}
-              borderColor={joinInput.gender === '여자' ? 'transparent' : 'grey200'}
-              radius="base"
-              shadow="shadow1"
-            >
-              <Txt fontColor="grey500">여자</Txt>
-            </Button>
-          </FlexRow>
-        </JoinField>
-
-        <Button
-          style={{ marginBottom: 60 }}
-          disabled={joinBtnDisabled}
-          height="base"
-          width="base"
-          backgroudColor="primaryGreen"
-          radius="base"
-          shadow="shadow2"
-        >
-          <Txt fontWeight="bold">가입 완료</Txt>
-        </Button>
-      </JoinForm>
-    </JoinContainer>
+          <Button
+            style={{ marginBottom: 60 }}
+            disabled={joinBtnDisabled}
+            height="base"
+            width="base"
+            backgroudColor="primaryGreen"
+            radius="base"
+            shadow="shadow2"
+          >
+            <Txt fontWeight="bold">가입 완료</Txt>
+          </Button>
+        </JoinForm>
+      </JoinContainer>
+    </ModalContextProvider>
   );
 }
 

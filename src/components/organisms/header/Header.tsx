@@ -2,8 +2,9 @@
 import Link from 'next/link';
 import styled from '@emotion/styled';
 
-import { Txt } from '@/components/atoms';
 import { Dropdown, Menus } from '@/components/molecules';
+import { LoginModal } from '@/components/organisms';
+import { useModalContext } from '@/contexts/ModalContext';
 import { palette, zIndex } from '@/styles';
 
 /**
@@ -11,20 +12,20 @@ import { palette, zIndex } from '@/styles';
  * 전역 헤더임 -> 매번 page template에 넣을 건지 전역에 때려박을건지 결정
  */
 export default function Header() {
+  const { openModal } = useModalContext();
+
   return (
     <HeaderContainer>
       <HeaderLeft>
-        <Link href="/">
-          <Txt fontWeight="semibold" className="app-title" onClick={() => {}}>
-            GAUM.
-          </Txt>
+        <Link className="app-title" href="/">
+          GAUM.
         </Link>
         <Menus />
       </HeaderLeft>
 
       <HeaderRight>
         <Dropdown />
-        <LoginButton>로그인</LoginButton>
+        <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
       </HeaderRight>
     </HeaderContainer>
   );

@@ -57,7 +57,7 @@ textarea {
 }
 
 .app-title {
-  font-size: 48px;
+  font-size: 40px;
   font-weight: 900;
   background: linear-gradient(45deg, #00ffc2, #00c2ff);
   -webkit-background-clip: text;

@@ -1,49 +1,43 @@
 'use client';
 
-import type { ReactNode } from 'react';
 import React from 'react';
 import styled from '@emotion/styled';
 
 import { Dimmer, Portal } from '@/components/atoms';
+import { useModalContext } from '@/contexts/ModalContext';
 import { zIndex } from '@/styles';
 
-type Position = {
-  top: string;
-  left: string;
-  right: string;
-  bottom: string;
-};
+export type Props = React.DOMAttributes<HTMLDivElement>;
 
-type OwnProps = {
-  children: ReactNode;
-  isOpen: boolean;
-  position?: Partial<Position>;
-};
+export default function Modal({ ...divAttributes }: Props) {
+  const { isOpen, modalData, closeModal } = useModalContext();
+  const { children, onCancel } = modalData;
 
-export type Props = Partial<OwnProps> & React.DOMAttributes<HTMLDivElement>;
+  if (!isOpen) {
+    return <></>;
+  }
 
-export default function Modal({ children, isOpen, position }: Props) {
+  const onCancelInternal = () => {
+    onCancel?.();
+    closeModal();
+  };
+
   return (
     <>
-      {isOpen && (
-        <>
-          <Dimmer />
-          <Portal>
-            <ModalContainer position={position}>{children}</ModalContainer>
-          </Portal>
-        </>
-      )}
+      <Dimmer onClick={onCancelInternal} />
+      <Portal>
+        <ModalContainer {...divAttributes}>{children}</ModalContainer>
+      </Portal>
     </>
   );
 }
 
-const ModalContainer = styled.div<{ position?: Partial<Position> }>`
+const ModalContainer = styled.div`
   position: fixed;
-  top: ${({ position }) => position?.top};
-  left: ${({ position }) => position?.left};
-  right: ${({ position }) => position?.right};
-  bottom: ${({ position }) => position?.bottom};
+  top: 50%;
+  left: 50%;
 
+  transform: translate(-50%, -50%);
   width: auto;
   height: auto;
   z-index: ${zIndex.drawerIndex};

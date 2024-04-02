@@ -1,11 +1,14 @@
 'use client';
 
-import { LoginModal } from '@/components/organisms';
+import { Modal } from '@/components/molecules';
+import { Header } from '@/components/organisms';
+import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
 
 export default function Main() {
   return (
-    <>
-      <LoginModal />
-    </>
+    <ModalContextProvider>
+      <Header />
+      <Modal />
+    </ModalContextProvider>
   );
 }
