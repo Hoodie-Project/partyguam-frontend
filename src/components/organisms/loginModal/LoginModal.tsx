@@ -35,7 +35,7 @@ export default function LoginModal() {
       <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 90 }}>
         파티괌과 함께 <br /> 파티에 참여할 준비가 되었나요?
       </Txt>
-      <Txt fontWeight="normal" fontSize={16} style={{ marginTop: 8 }}>
+      <Txt fontWeight="normal" fontSize={16}>
         소셜 로그인으로 편하게 이용해 보세요.
       </Txt>
       <LoginButtonContainer>
@@ -68,17 +68,21 @@ export default function LoginModal() {
       </LoginButtonContainer>
       <BottomText>
         <Txt fontSize={12} style={{ whiteSpace: 'nowrap' }}>
-          소셜 로그인 가입 시&nbsp;
+          소셜 로그인 가입 시
         </Txt>
+        &nbsp;
         <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
-          이용약관&nbsp;
+          이용약관
         </Txt>
+        &nbsp;
         <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
-          개인정보처리방침&nbsp;
+          개인정보처리방침
         </Txt>
+        &nbsp;
         <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
-          전자금융거래약관&nbsp;
+          전자금융거래약관
         </Txt>
+        &nbsp;
         <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
           결제/환불약관
         </Txt>
