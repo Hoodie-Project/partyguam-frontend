@@ -2,6 +2,9 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 import '@/styles/global.css';
+import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
+
+import Header from './Header';
 
 export const metadata: Metadata = {
   title: 'PartyGuam',
@@ -15,7 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="kr">
-      <body>{children}</body>
+      <body>
+        <ModalContextProvider>
+          <Header />
+          {children}
+        </ModalContextProvider>
+      </body>
     </html>
   );
 }

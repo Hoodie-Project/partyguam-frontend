@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 
 import { JOIN_VALIDATION } from '@/constants';
 
-import { fetchNicknameDuplicated } from './remotes';
+import { fetchNicknameDuplicated } from '../apis';
 
 interface JoinInput {
   nickname: string;

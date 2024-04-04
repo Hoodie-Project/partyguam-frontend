@@ -1,3 +1,5 @@
+import { privateApi } from '.';
+
 /**
  *
  * @param nickname string
@@ -7,7 +9,10 @@
  */
 export const fetchNicknameDuplicated = async (nickname: string) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/user/check-nickname?nickname=${nickname}`);
+    const response = await privateApi.get(`${process.env.NEXT_PUBLIC_API_HOST}/user/check-nickname`, {
+      params: { nickname },
+    });
+
     if (response.status === 200) {
       return false;
     } else if (response.status === 409) {

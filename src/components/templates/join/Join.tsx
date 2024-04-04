@@ -6,8 +6,6 @@ import { startOfDay } from 'date-fns';
 
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
 import { Modal } from '@/components/molecules';
-import { Header } from '@/components/organisms';
-import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
 import { usePersonalInfo } from '@/hooks';
 import { palette } from '@/styles';
 
@@ -40,8 +38,7 @@ export default function Join() {
   }, [isNicknameConfirmed, isNicknameDuplicated, joinInput.birthday, joinInput.gender, joinInput.nickname]);
 
   return (
-    <ModalContextProvider>
-      <Header />
+    <>
       <Modal />
       <JoinContainer>
         <JoinHeader>
@@ -184,7 +181,7 @@ export default function Join() {
           </Button>
         </JoinForm>
       </JoinContainer>
-    </ModalContextProvider>
+    </>
   );
 }
 
