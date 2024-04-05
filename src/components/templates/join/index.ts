@@ -1,1 +1,2 @@
-export { default } from './Join';
+export { default as Join } from './Join';
+export { default as JoinSuccess } from './JoinSuccess';
