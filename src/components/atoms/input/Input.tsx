@@ -101,7 +101,7 @@ const InputContainer = styled.div<Props>`
 const TextInput = styled.input<Props>`
   width: 100%;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: normal;
   background-color: ${props => props.disabled && palette.grey100};
 `;
 

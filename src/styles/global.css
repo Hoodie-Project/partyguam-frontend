@@ -7,6 +7,7 @@ body {
   -webkit-font-smoothing: antialiased;
   word-break: keep-all;
   overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 * {
@@ -48,6 +49,10 @@ input:active,
 button:focus,
 button:active {
   outline: none;
+}
+
+input:-internal-autofill-selected {
+  background-color: white !important;
 }
 
 button,
