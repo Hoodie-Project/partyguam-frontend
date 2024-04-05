@@ -6,9 +6,9 @@ import axios, {
   type InternalAxiosRequestConfig,
   isAxiosError,
 } from 'axios';
-import { getCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 
-const getResult = (response: AxiosResponse) => response.data.body;
+const getResult = (response: AxiosResponse) => response;
 
 class HttpClient {
   private client: AxiosInstance;
@@ -45,7 +45,10 @@ class HttpClient {
   }
 
   private onRequestFulfilled(config: InternalAxiosRequestConfig) {
-    const token = getCookie('accessToken');
+    const signupData = getCookie('signupData') || '{}';
+    const signupDataJson: { email: string; signupAccessToken: string } = JSON.parse(signupData);
+
+    const token = getCookie('accessToken') || signupDataJson.signupAccessToken;
 
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
@@ -63,11 +66,25 @@ class HttpClient {
 
   private onResponseRejected(error: AxiosError) {
     if (!isAxiosError(error) || !error.response) return Promise.reject(error);
-
     const { status: errorStatus } = error.response;
-    if (errorStatus) {
-      console.log(errorStatus);
+
+    if (errorStatus === 401) {
+      const token = getCookie('accessToken');
+
+      if (!token) {
+        setCookie('signupData', error.response.data);
+        window.location.href = '/join';
+      } else if (token) {
+        deleteCookie('accessToken');
+        window.location.href = '/';
+      }
     }
+
+    if (errorStatus === 500) {
+      alert('error.response');
+      window.location.href = '/';
+    }
+
     return Promise.reject(error.response);
   }
 }
