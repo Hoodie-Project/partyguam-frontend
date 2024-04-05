@@ -3,6 +3,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const nextConfig = {
+  reactStrictMode: false,
   webpack: config => {
     config.optimization = {
       ...config.optimization,
