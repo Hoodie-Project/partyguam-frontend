@@ -12,6 +12,7 @@ export default function GoogleLogin() {
       shadow="none"
       borderColor="grey200"
       style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingLeft: '32px' }}
+      disabled
     >
       <GoogleIcon />
       <Txt fontSize={14} fontWeight="bold" style={{ marginLeft: '12px' }}>

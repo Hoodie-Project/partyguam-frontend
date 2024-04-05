@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 import '@/styles/global.css';
+import { Modal } from '@/components/molecules';
 import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
 
 import Header from './Header';
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body>
         <ModalContextProvider>
           <Header />
+          <Modal />
           {children}
         </ModalContextProvider>
       </body>

@@ -1,11 +1,19 @@
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 import KakaoIcon from '@/assets/icon/kakao-icon.svg';
 import { Button, Txt } from '@/components/atoms';
 
 export default function KaKaoLogin() {
+  const { push } = useRouter();
+  const handleKakaoLogin = () => {
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID}&redirect_uri=${process.env.NEXT_PUBLIC_KAKAO_LOCAL_REDIRECT_URL}&response_type=code&nonce=${process.env.NEXT_PUBLIC_KAKAO_NONCE}`;
+    push(kakaoAuthUrl);
+  };
+
   return (
     <Button
+      onClick={handleKakaoLogin}
       width="l"
       height="s"
       backgroudColor="kakaoBtn"
