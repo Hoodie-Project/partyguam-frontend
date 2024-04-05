@@ -1,62 +1,65 @@
 'use client';
 import React, { useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
-import { startOfDay } from 'date-fns';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { format, startOfDay } from 'date-fns';
 
+import { fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
-import { Modal } from '@/components/molecules';
-import { Header } from '@/components/organisms';
-import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
-import { usePersonalInfo } from '@/hooks';
-import { palette } from '@/styles';
+import { usePersonalInfo } from '@/hooks/join';
+import { useAuthStore } from '@/store/auth';
+import { SContainer } from '@/styles/components/join';
+
+import JoinHeader from './JoinHeader';
 
 export default function Join() {
+  const router = useRouter();
+  const setAuth = useAuthStore(state => state.setAuth);
+  const signupData = getCookie('signupData') || '';
+  const signupDataJson: { email: string; signupAccessToken: string } = JSON.parse(signupData);
+
   const {
     joinInput,
     setJoinInput,
     isNicknameConfirmed,
     setIsNicknameConfirmed,
     isNicknameDuplicated,
+    setIsNicknameDuplicated,
     checkNickname,
     nicknameValidate,
     handleBlur,
   } = usePersonalInfo({
     nickname: '',
-    birthday: null,
+    birth: null,
     gender: '',
   });
 
   const joinBtnDisabled = useMemo(() => {
     const fields = [
       joinInput.nickname,
-      joinInput.birthday,
+      joinInput.birth,
       joinInput.gender,
       isNicknameConfirmed,
       isNicknameDuplicated === false,
     ];
     const validFields = fields.filter(Boolean);
     return validFields.length !== fields.length;
-  }, [isNicknameConfirmed, isNicknameDuplicated, joinInput.birthday, joinInput.gender, joinInput.nickname]);
+  }, [isNicknameConfirmed, isNicknameDuplicated, joinInput.birth, joinInput.gender, joinInput.nickname]);
 
   return (
-    <ModalContextProvider>
-      <Header />
-      <Modal />
-      <JoinContainer>
-        <JoinHeader>
-          <GoBackBtn>
-            <ArrowBackIosNewRoundedIcon />
-            <Txt fontColor="grey500" fontWeight="bold" style={{ marginTop: '2px', marginLeft: '10px' }}>
-              뒤로 가기
-            </Txt>
-          </GoBackBtn>
-          <Txt fontSize={20} fontWeight="bold">
-            가입하기
-          </Txt>
-        </JoinHeader>
+    <>
+      <SContainer>
+        <JoinHeader
+          title="가입하기"
+          hrefLabel="뒤로 가기"
+          onClickHref={() => {
+            alert('뒤로 가시면 회원 가입이 취소됩니다. 뒤로가기 하실? ');
+            deleteCookie('signupData');
+            router.push('/');
+          }}
+        />
         <JoinForm>
-          {/* NOTE. email 불러온 뒤 placeholder로 넣어주기 */}
           <JoinField>
             <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
               이메일을 확인해 주세요.
@@ -64,7 +67,7 @@ export default function Join() {
             <Txt fontSize={16} style={{ marginBottom: 20 }}>
               이메일은 변경할 수 없어요.
             </Txt>
-            <Input placeholder="disabled input" shadow="shadow2" disabled />
+            <Input placeholder={signupDataJson.email} shadow="shadow2" disabled />
           </JoinField>
 
           <JoinField>
@@ -88,7 +91,11 @@ export default function Join() {
                   setJoinInput({ ...joinInput, [name]: value });
                 }}
                 value={joinInput.nickname}
-                onClear={() => setJoinInput({ ...joinInput, nickname: '' })}
+                onClear={() => {
+                  setJoinInput({ ...joinInput, nickname: '' });
+
+                  setIsNicknameDuplicated(undefined);
+                }}
                 inputState={nicknameValidate.inputState}
                 bottomMessage={nicknameValidate.bottomMessage}
               />
@@ -103,6 +110,7 @@ export default function Join() {
                   e.preventDefault();
                   checkNickname();
                 }}
+                disabled={isNicknameDuplicated === false}
               >
                 <Txt fontColor="grey500">중복 확인</Txt>
               </Button>
@@ -119,14 +127,14 @@ export default function Join() {
             <DateInput
               placeholder="ex. 2000-01-01"
               shadow="shadow1"
-              onClear={() => setJoinInput({ ...joinInput, birthday: null })}
+              onClear={() => setJoinInput({ ...joinInput, birth: null })}
               minDate={new Date('1900-01-01')}
               maxDate={startOfDay(new Date())}
-              selectDate={joinInput.birthday}
+              selectDate={joinInput.birth}
               setSelectDate={newDate =>
                 setJoinInput({
                   ...joinInput,
-                  birthday: newDate,
+                  birth: newDate,
                 })
               }
             />
@@ -144,11 +152,11 @@ export default function Join() {
                 width="m"
                 onClick={e => {
                   e.preventDefault();
-                  setJoinInput({ ...joinInput, gender: '남자' });
+                  setJoinInput({ ...joinInput, gender: 'M' });
                 }}
                 height="base"
-                backgroudColor={joinInput.gender === '남자' ? 'greenLight200' : 'white'}
-                borderColor={joinInput.gender === '남자' ? 'transparent' : 'grey200'}
+                backgroudColor={joinInput.gender === 'M' ? 'greenLight200' : 'white'}
+                borderColor={joinInput.gender === 'M' ? 'transparent' : 'grey200'}
                 radius="base"
                 shadow="shadow1"
               >
@@ -158,11 +166,11 @@ export default function Join() {
                 width="m"
                 onClick={e => {
                   e.preventDefault();
-                  setJoinInput({ ...joinInput, gender: '여자' });
+                  setJoinInput({ ...joinInput, gender: 'F' });
                 }}
                 height="base"
-                backgroudColor={joinInput.gender === '여자' ? 'greenLight200' : 'white'}
-                borderColor={joinInput.gender === '여자' ? 'transparent' : 'grey200'}
+                backgroudColor={joinInput.gender === 'F' ? 'greenLight200' : 'white'}
+                borderColor={joinInput.gender === 'F' ? 'transparent' : 'grey200'}
                 radius="base"
                 shadow="shadow1"
               >
@@ -179,41 +187,35 @@ export default function Join() {
             backgroudColor="primaryGreen"
             radius="base"
             shadow="shadow2"
+            onClick={async e => {
+              e.preventDefault();
+
+              const formattedBirth = (joinInput.birth && format(joinInput.birth, 'yyyy-MM-dd')) || '';
+              const data = {
+                nickname: joinInput.nickname,
+                email: signupDataJson.email,
+                birth: formattedBirth,
+                gender: joinInput.gender,
+              };
+
+              const response = await fetchJoinFormSubmit(data);
+              if (response.status === 201) {
+                setAuth(data);
+                setCookie('accessToken', response.data.accessToken);
+                deleteCookie('signupData');
+                router.push('/join/success');
+              }
+            }}
           >
-            <Txt fontWeight="bold">가입 완료</Txt>
+            <Txt fontWeight="bold" fontColor={joinBtnDisabled ? 'grey400' : 'black'}>
+              가입 완료
+            </Txt>
           </Button>
         </JoinForm>
-      </JoinContainer>
-    </ModalContextProvider>
+      </SContainer>
+    </>
   );
 }
-
-const JoinContainer = styled.section`
-  padding: 5.25rem 21.25rem 0rem 21.25rem;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const JoinHeader = styled.section`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  place-items: center;
-  width: 100%;
-  height: 3.75rem;
-`;
-
-const GoBackBtn = styled.button`
-  display: flex;
-  justify-items: center;
-  align-items: center;
-  gap: 10;
-  background-color: transparent;
-  font-weight: bold;
-  font-size: 18px;
-  color: ${palette.grey500};
-`;
 
 const JoinForm = styled.form`
   display: flex;

@@ -56,11 +56,21 @@ const SquareButton = styled.button<Props>`
   height: ${props => button.height[props.height || 'base']};
 
   background-color: ${props =>
-    props.disabled ? palette.greenLight400 : palette[props.backgroudColor || 'transparent']};
+    props.disabled && props.backgroudColor === 'primaryGreen'
+      ? palette.greenLight400
+      : props.disabled && props.backgroudColor === 'white'
+        ? palette.grey100
+        : palette[props.backgroudColor || 'transparent']};
 
   border-radius: ${props => radius[props.radius || 'base']};
   border-color: ${props =>
-    props.disabled ? palette.greenLight200 : props.borderColor ? palette[props.borderColor] : 'transparent'};
+    props.disabled && props.backgroudColor === 'primaryGreen'
+      ? palette.greenLight200
+      : props.disabled && props.backgroudColor === 'white'
+        ? palette.grey200
+        : props.borderColor
+          ? palette[props.borderColor]
+          : 'transparent'};
 
   border-width: 1px;
   border-style: solid;
