@@ -8,15 +8,18 @@ import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { button, padding, palette, radius, shadow } from '@/styles';
 import { svgSizeMap } from '@/utils/svg';
 
+import Txt from '../txt';
+
 type OwnProps = {
   height: keyof typeof button.height;
   radius: keyof typeof radius;
   padding: keyof typeof padding;
   inputState: 'warn' | 'success' | 'default';
   placeholder: string;
-  shadow?: keyof typeof shadow;
+  shadow: keyof typeof shadow;
   borderColor?: keyof typeof palette;
   value: string;
+  maxCount: number;
   bottomMessage: string;
   onClear: (value: any) => void;
 };
@@ -36,6 +39,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
       borderColor,
       bottomMessage,
       placeholder,
+      maxCount,
       disabled,
       ...inputAttributes
     },
@@ -53,6 +57,16 @@ const Input = forwardRef<HTMLInputElement, Props>(
           disabled={disabled}
         >
           <TextInput ref={ref} value={value} placeholder={placeholder} disabled={disabled} {...inputAttributes} />
+          {value && maxCount && (
+            <Txt
+              fontWeight="normal"
+              fontColor="grey400"
+              fontSize={14}
+              style={{ display: 'inline-block', width: '60px', marginLeft: '8px' }}
+            >
+              {value?.length} / {maxCount}
+            </Txt>
+          )}
           {value && (
             <CancelOutlinedIcon
               onClick={onClear}

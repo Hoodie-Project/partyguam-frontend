@@ -98,6 +98,7 @@ export default function Join() {
                 }}
                 inputState={nicknameValidate.inputState}
                 bottomMessage={nicknameValidate.bottomMessage}
+                maxCount={15}
               />
               <Button
                 backgroudColor="white"
