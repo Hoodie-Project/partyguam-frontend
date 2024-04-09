@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { publicApi } from '@/apis';
 
-export default function KakaoAuthPage() {
+function KakaoAuthCode() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const code = searchParams.get('code');
@@ -23,5 +23,14 @@ export default function KakaoAuthPage() {
 
     handleKakaoAuth();
   }, [code, router]);
+
   return <></>;
+}
+
+export default function KakaoAuthPage() {
+  return (
+    <Suspense>
+      <KakaoAuthCode />
+    </Suspense>
+  );
 }

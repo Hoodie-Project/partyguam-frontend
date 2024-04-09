@@ -1,6 +1,7 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 
-import { JoinSuccess } from '@/components/templates/join';
+const JoinSuccess = dynamic(() => import('@/components/templates/join/JoinSuccess'), { ssr: false });
 
 export default function JoinSuccessPage() {
   return (
