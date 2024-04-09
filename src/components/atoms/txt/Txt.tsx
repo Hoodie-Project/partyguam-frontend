@@ -16,7 +16,7 @@ type OwnProps = {
 export type Props = Partial<OwnProps> & Omit<HTMLAttributes<HTMLSpanElement>, 'as'>;
 
 const Txt = forwardRef<HTMLSpanElement, Props>(
-  ({ fontWeight = 'normal', fontColor = 'black', fontSize = 18, onClick, ...spanAttributes }, ref) => {
+  ({ fontWeight = 'normal', fontColor = 'black', fontSize = 18, onClick, ...spanAttributes }) => {
     return (
       <Span fontWeight={fontWeight} fontColor={fontColor} fontSize={fontSize} onClick={onClick} {...spanAttributes} />
     );

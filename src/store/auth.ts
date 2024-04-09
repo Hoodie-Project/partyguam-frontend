@@ -16,7 +16,7 @@ type AuthAction = {
 
 export const useAuthStore = create(
   persist<Auth & AuthAction>(
-    (set, get) => ({
+    set => ({
       nickname: '',
       email: '',
       gender: '',

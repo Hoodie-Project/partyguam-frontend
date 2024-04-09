@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 
 import { Button, Txt } from '@/components/atoms';
 import { SContainer } from '@/styles/components/join';
+
 import JoinHeader from './JoinHeader';
 
 export default function JoinSuccess() {

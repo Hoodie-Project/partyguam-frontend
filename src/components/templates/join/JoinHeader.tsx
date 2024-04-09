@@ -12,7 +12,7 @@ type Props = {
   onClickJump: () => void;
 };
 
-export default function JoinHeader({ onClickHref, hrefLabel, title, onClickJump }: Partial<Props>) {
+export default function JoinHeader({ onClickHref, hrefLabel, title }: Partial<Props>) {
   return (
     <JoinHeaderContainer>
       <GoBackBtn onClick={onClickHref}>
