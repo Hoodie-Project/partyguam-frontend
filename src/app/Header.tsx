@@ -18,7 +18,7 @@ export default function Header() {
     <HeaderContainer>
       <HeaderLeft>
         <Link className="app-title" href="/">
-          GAUM.
+          GUAM.
         </Link>
         <Menus />
       </HeaderLeft>
