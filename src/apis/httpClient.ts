@@ -67,7 +67,7 @@ class HttpClient {
 
     if (errorStatus === 500) {
       alert('로그인을 다시 해주세요');
-      deleteCookie('signupToken');
+      deleteCookie('accessToken');
       window.location.href = '/';
     }
 

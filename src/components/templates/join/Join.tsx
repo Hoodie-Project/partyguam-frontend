@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-import { deleteCookie, setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
@@ -14,6 +13,7 @@ import { SContainer } from '@/styles/components/join';
 import JoinHeader from './JoinHeader';
 
 export default function Join() {
+  const router = useRouter();
   const setAuth = useAuthStore(state => state.setAuth);
   const [signupData, setSignupData] = useState({ email: '', image: '' });
 
@@ -62,7 +62,6 @@ export default function Join() {
           hrefLabel="뒤로 가기"
           onClickHref={() => {
             alert('뒤로 가시면 회원 가입이 취소됩니다. 뒤로가기 하실? ');
-            deleteCookie('signupToken');
             router.push('/');
           }}
         />
@@ -209,8 +208,6 @@ export default function Join() {
               const response = await fetchJoinFormSubmit(data);
               if (response.status === 201) {
                 setAuth(data);
-                setCookie('accessToken', response.data.accessToken);
-                deleteCookie('signupToken');
                 router.push('/join/success');
               }
             }}
