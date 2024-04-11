@@ -1,6 +1,16 @@
 import { privateApi } from '.';
+
+const fetchGetOauthInfo = async () => {
+  try {
+    const response = await privateApi.get('/users/me/oauth');
+    return response.data;
+  } catch (error) {
+    throw new Error('Error fetching data');
+  }
+};
+
 /**
- *
+ * 회원가입 닉네임 중복 검사시
  * @param nickname string
  * @returns
  * 200: 중복 안됨, false 반환
@@ -8,7 +18,7 @@ import { privateApi } from '.';
  */
 const fetchNicknameDuplicated = async (nickname: string) => {
   try {
-    const response = await privateApi.get('/user/check-nickname', {
+    const response = await privateApi.get('/users/check-nickname', {
       params: { nickname },
     });
 
@@ -25,9 +35,14 @@ const fetchNicknameDuplicated = async (nickname: string) => {
   }
 };
 
+/**
+ * 회원가입 폼 제출시
+ * @param form data: { nickname: string; email: string; birth: string; gender: string }
+ * @returns refreshToken - cookie
+ */
 const fetchJoinFormSubmit = async (data: { nickname: string; email: string; birth: string; gender: string }) => {
   try {
-    const response = await privateApi.post('/user/signup', {
+    const response = await privateApi.post('/users', {
       nickname: data.nickname,
       email: data.email,
       birth: data.birth,
@@ -40,4 +55,4 @@ const fetchJoinFormSubmit = async (data: { nickname: string; email: string; birt
   }
 };
 
-export { fetchJoinFormSubmit, fetchNicknameDuplicated };
+export { fetchGetOauthInfo, fetchJoinFormSubmit, fetchNicknameDuplicated };

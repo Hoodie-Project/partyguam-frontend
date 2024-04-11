@@ -1,11 +1,11 @@
 'use client';
-import React, { useMemo } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-import { setCookie } from 'cookies-next';
+import { deleteCookie, setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
-import { fetchJoinFormSubmit } from '@/apis/join';
+import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
 import { usePersonalInfo } from '@/hooks/join';
 import { useAuthStore } from '@/store/auth';
@@ -15,9 +15,16 @@ import JoinHeader from './JoinHeader';
 
 export default function Join() {
   const setAuth = useAuthStore(state => state.setAuth);
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get('email') || '';
+  const [signupData, setSignupData] = useState({ email: '', image: '' });
+
+  useEffect(() => {
+    const fetchSignupData = async () => {
+      const response = await fetchGetOauthInfo();
+      setSignupData(response);
+    };
+
+    fetchSignupData();
+  }, []);
 
   const {
     joinInput,
@@ -55,6 +62,7 @@ export default function Join() {
           hrefLabel="뒤로 가기"
           onClickHref={() => {
             alert('뒤로 가시면 회원 가입이 취소됩니다. 뒤로가기 하실? ');
+            deleteCookie('signupToken');
             router.push('/');
           }}
         />
@@ -66,7 +74,7 @@ export default function Join() {
             <Txt fontSize={16} style={{ marginBottom: 20 }}>
               이메일은 변경할 수 없어요.
             </Txt>
-            <Input placeholder={email} shadow="shadow2" disabled />
+            <Input placeholder={signupData.email} shadow="shadow2" disabled />
           </JoinField>
 
           <JoinField>
@@ -193,7 +201,7 @@ export default function Join() {
               const formattedBirth = (joinInput.birth && format(joinInput.birth, 'yyyy-MM-dd')) || '';
               const data = {
                 nickname: joinInput.nickname,
-                email: email,
+                email: signupData.email,
                 birth: formattedBirth,
                 gender: joinInput.gender,
               };
@@ -202,6 +210,7 @@ export default function Join() {
               if (response.status === 201) {
                 setAuth(data);
                 setCookie('accessToken', response.data.accessToken);
+                deleteCookie('signupToken');
                 router.push('/join/success');
               }
             }}
