@@ -1,8 +1,8 @@
 'use client';
 import React, { useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
 import { fetchJoinFormSubmit } from '@/apis/join';
@@ -14,10 +14,10 @@ import { SContainer } from '@/styles/components/join';
 import JoinHeader from './JoinHeader';
 
 export default function Join() {
-  const router = useRouter();
   const setAuth = useAuthStore(state => state.setAuth);
-  const signupData = getCookie('signupData') || '';
-  const signupDataJson: { email: string; signupAccessToken: string } = JSON.parse(signupData);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email') || '';
 
   const {
     joinInput,
@@ -55,7 +55,6 @@ export default function Join() {
           hrefLabel="뒤로 가기"
           onClickHref={() => {
             alert('뒤로 가시면 회원 가입이 취소됩니다. 뒤로가기 하실? ');
-            deleteCookie('signupData');
             router.push('/');
           }}
         />
@@ -67,7 +66,7 @@ export default function Join() {
             <Txt fontSize={16} style={{ marginBottom: 20 }}>
               이메일은 변경할 수 없어요.
             </Txt>
-            <Input placeholder={signupDataJson.email} shadow="shadow2" disabled />
+            <Input placeholder={email} shadow="shadow2" disabled />
           </JoinField>
 
           <JoinField>
@@ -194,7 +193,7 @@ export default function Join() {
               const formattedBirth = (joinInput.birth && format(joinInput.birth, 'yyyy-MM-dd')) || '';
               const data = {
                 nickname: joinInput.nickname,
-                email: signupDataJson.email,
+                email: email,
                 birth: formattedBirth,
                 gender: joinInput.gender,
               };
@@ -203,7 +202,6 @@ export default function Join() {
               if (response.status === 201) {
                 setAuth(data);
                 setCookie('accessToken', response.data.accessToken);
-                deleteCookie('signupData');
                 router.push('/join/success');
               }
             }}

@@ -45,10 +45,7 @@ class HttpClient {
   }
 
   private onRequestFulfilled(config: InternalAxiosRequestConfig) {
-    const signupData = getCookie('signupData') || '{}';
-    const signupDataJson: { email: string; signupAccessToken: string } = JSON.parse(signupData);
-
-    const token = getCookie('accessToken') || signupDataJson.signupAccessToken;
+    const token = getCookie('accessToken');
 
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
