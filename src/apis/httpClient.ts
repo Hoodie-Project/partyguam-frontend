@@ -6,7 +6,7 @@ import axios, {
   type InternalAxiosRequestConfig,
   isAxiosError,
 } from 'axios';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 
 const getResult = (response: AxiosResponse) => response;
 
@@ -68,20 +68,9 @@ class HttpClient {
     if (!isAxiosError(error) || !error.response) return Promise.reject(error);
     const { status: errorStatus } = error.response;
 
-    if (errorStatus === 401) {
-      const token = getCookie('accessToken');
-
-      if (!token) {
-        setCookie('signupData', error.response.data);
-        window.location.href = '/join';
-      } else if (token) {
-        deleteCookie('accessToken');
-        window.location.href = '/';
-      }
-    }
-
     if (errorStatus === 500) {
-      alert('error.response');
+      alert('로그인을 다시 해주세요');
+      deleteCookie('signupToken');
       window.location.href = '/';
     }
 
