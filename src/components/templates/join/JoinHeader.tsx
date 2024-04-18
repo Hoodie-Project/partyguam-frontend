@@ -30,6 +30,8 @@ export default function JoinHeader({ onClickHref, hrefLabel, title }: Partial<Pr
 
 const JoinHeaderContainer = styled.section`
   display: grid;
+  position: fixed;
+  background-color: white;
   grid-template-columns: 1fr 1fr 1fr;
   place-items: center;
   width: 100%;

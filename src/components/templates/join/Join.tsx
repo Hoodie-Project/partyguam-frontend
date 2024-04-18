@@ -224,7 +224,7 @@ export default function Join() {
 
 const JoinForm = styled.form`
   display: flex;
-  padding-top: 40px;
+  padding-top: 5rem;
   flex-direction: column;
   justify-content: center;
   align-items: center;
