@@ -16,17 +16,19 @@ export default function Header() {
 
   return (
     <HeaderContainer>
-      <HeaderLeft>
-        <Link className="app-title" href="/">
-          GUAM.
-        </Link>
-        <Menus />
-      </HeaderLeft>
+      <HeaderWrapper>
+        <HeaderLeft>
+          <Link className="app-title" href="/">
+            GUAM.
+          </Link>
+          <Menus />
+        </HeaderLeft>
 
-      <HeaderRight>
-        <Dropdown />
-        <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
-      </HeaderRight>
+        <HeaderRight>
+          <Dropdown />
+          <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
+        </HeaderRight>
+      </HeaderWrapper>
     </HeaderContainer>
   );
 }
@@ -38,15 +40,22 @@ const HeaderContainer = styled.header`
   right: 0;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   height: 84px;
   width: 100%;
   border-bottom: 2px solid;
   border-color: ${palette.grey200};
-  padding: 0 21.25rem 0 21.25rem;
   z-index: ${zIndex.navIndex};
   background-color: ${palette.white};
+`;
+
+const HeaderWrapper = styled.div`
+  width: 77.75rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 /** NOTE

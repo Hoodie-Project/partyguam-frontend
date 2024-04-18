@@ -33,6 +33,7 @@ const JoinHeaderContainer = styled.section`
   grid-template-columns: 1fr 1fr 1fr;
   place-items: center;
   width: 100%;
+  max-width: 77.75rem;
   height: 3.5rem;
   padding: 0.875rem 0px;
   justify-items: stretch;
