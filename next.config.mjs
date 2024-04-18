@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 import TerserPlugin from 'terser-webpack-plugin';
 
-const isProduction = process.env.NODE_ENVNODE_ENV === 'production';
+const isProduction = process.env.NEXT_PUBLIC_ENV === 'production';
 const nextConfig = {
   output: 'export',
   distDir: 'build',
