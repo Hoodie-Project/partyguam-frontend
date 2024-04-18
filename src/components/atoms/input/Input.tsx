@@ -62,7 +62,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
               fontWeight="normal"
               fontColor="grey400"
               fontSize={14}
-              style={{ display: 'inline-block', width: '60px', marginLeft: '8px' }}
+              style={{ display: 'inline-block', width: '60px', marginLeft: '16px' }}
             >
               {value?.length} / {maxCount}
             </Txt>
