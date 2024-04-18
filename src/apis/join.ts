@@ -5,7 +5,7 @@ const fetchGetOauthInfo = async () => {
     const response = await privateApi.get('/users/me/oauth');
     return response.data;
   } catch (error) {
-    console.error('error : ', error)
+    console.error('error : ', error);
     throw new Error('Error fetching data');
   }
 };
