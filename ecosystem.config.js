@@ -1,22 +1,16 @@
 module.exports = {
   apps : [{
-    name: 'front',
-    cwd: '/Users/macmini/partyguam/partyguam-frontend',
-    args: 'start',
-    script: './node_modules/next/dist/bin/next',
-    watch: ['./node_modules/next/dist/bin/next']
-  }],
-
-  deploy : {
-    production : {
-      user : 'SSH_USERNAME',
-      host : 'SSH_HOSTMACHINE',
-      ref  : 'origin/master',
-      repo : 'GIT_REPOSITORY',
-      path : 'DESTINATION_PATH',
-      'pre-deploy-local': '',
-      'post-deploy' : 'pnpm install && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': ''
+    name: 'next',
+    script: 'server.js', 
+    watch: true, 
+    env: {
+      NEXT_PUBLIC_API_HOST:"https://partyguam.net:8000/api",
+      NEXT_PUBLIC_ENV:"production",
+      NEXT_PUBLIC_HTTPS:true,
+      
+      NEXT_PUBLIC_SSL_CA:"/etc/letsencrypt/live/partyguam.net/chain.pem",
+      NEXT_PUBLIC_SSL_KEY:"/etc/letsencrypt/live/partyguam.net/privkey.pem",
+      NEXT_PUBLIC_SSL_CERT:"/etc/letsencrypt/live/partyguam.net/cert.pem"
     }
-  }
+  }]
 };

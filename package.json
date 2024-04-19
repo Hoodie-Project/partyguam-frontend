@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build", 
+    "build": "next build",
     "prestart": "pnpm run build",
     "start": "node server.js",
     "lint": "next lint"
@@ -17,6 +17,7 @@
     "axios": "^1.6.8",
     "cookies-next": "^4.1.1",
     "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
     "emotion-reset": "^3.0.1",
     "next": "14.1.0",
     "react": "^18",
