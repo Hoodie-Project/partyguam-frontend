@@ -3,8 +3,6 @@ import TerserPlugin from 'terser-webpack-plugin';
 
 const isProduction = process.env.NEXT_PUBLIC_ENV === 'production';
 const nextConfig = {
-  output: 'export',
-  distDir: 'build',
   reactStrictMode: false,
   webpack: config => {
     config.optimization = {
@@ -34,14 +32,6 @@ const nextConfig = {
     });
 
     return config;
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: 'http://partyguam.net:8000/:path*',
-      },
-    ];
   },
 };
 
