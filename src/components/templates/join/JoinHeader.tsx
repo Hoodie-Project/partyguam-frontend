@@ -16,7 +16,7 @@ export default function JoinHeader({ onClickHref, hrefLabel, title }: Partial<Pr
   return (
     <JoinHeaderContainer>
       <GoBackBtn onClick={onClickHref}>
-        <ArrowBackIosNewRoundedIcon />
+        {hrefLabel && <ArrowBackIosNewRoundedIcon />}
         <Txt fontColor="grey500" fontWeight="bold" style={{ marginTop: '2px', marginLeft: '10px' }}>
           {hrefLabel}
         </Txt>
