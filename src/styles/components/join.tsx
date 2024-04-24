@@ -9,4 +9,13 @@ const SContainer = styled.section`
   align-items: center;
 `;
 
-export { SContainer };
+const SJoinForm = styled.form`
+  display: flex;
+  padding-top: 5rem;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 77.75rem;
+`;
+
+export { SContainer, SJoinForm };

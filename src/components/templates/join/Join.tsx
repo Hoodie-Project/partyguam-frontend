@@ -8,7 +8,7 @@ import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
 import { usePersonalInfo } from '@/hooks/join';
 import { useAuthStore } from '@/store/auth';
-import { SContainer } from '@/styles/components/join';
+import { SContainer, SJoinForm } from '@/styles/components/join';
 
 import JoinHeader from './JoinHeader';
 
@@ -65,7 +65,7 @@ export default function Join() {
             router.push('/');
           }}
         />
-        <JoinForm>
+        <SJoinForm>
           <JoinField>
             <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
               이메일을 확인해 주세요.
@@ -216,20 +216,11 @@ export default function Join() {
               가입 완료
             </Txt>
           </Button>
-        </JoinForm>
+        </SJoinForm>
       </SContainer>
     </>
   );
 }
-
-const JoinForm = styled.form`
-  display: flex;
-  padding-top: 5rem;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 77.75rem;
-`;
 
 const JoinField = styled.div`
   display: flex;
