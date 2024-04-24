@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "prestart": "pnpm run build",
-    "start": "node server.js",
+    "start": "next start -p 80",
     "lint": "next lint"
   },
   "dependencies": {
