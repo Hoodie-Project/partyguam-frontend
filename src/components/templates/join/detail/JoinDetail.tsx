@@ -8,6 +8,8 @@ import { SContainer, SJoinForm } from '@/styles/components/join';
 
 import JoinHeader from '../JoinHeader';
 
+import SelectLocation from './SelectLocation';
+
 export default function JoinDetail() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -65,6 +67,7 @@ export default function JoinDetail() {
               />
             ))}
           </ProgressBarContainer>
+          <SelectLocation />
         </JoinDetailWrapper>
       </SJoinForm>
     </SContainer>
