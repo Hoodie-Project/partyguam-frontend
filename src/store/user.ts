@@ -11,7 +11,7 @@ interface SelectLocationState {
   selectedCities: Location[];
   setSelectedProvince: (province: string) => void;
   setSelectedCities: (city: Location) => void;
-  removeSelectedCity: (city: string) => void;
+  removeSelectedCity: (cityId: number) => void;
 }
 
 export const useSelectLocationStore = create<SelectLocationState>(set => ({
@@ -24,8 +24,8 @@ export const useSelectLocationStore = create<SelectLocationState>(set => ({
       selectedCities: [...state.selectedCities, city],
     })),
 
-  removeSelectedCity: cityName =>
+  removeSelectedCity: cityId =>
     set(state => ({
-      selectedCities: state.selectedCities.filter(city => city.city !== cityName),
+      selectedCities: state.selectedCities.filter(item => item.id !== cityId),
     })),
 }));

@@ -21,7 +21,6 @@ interface Location {
 }
 
 export default function Location() {
-  // const [curProvince, setCurProvince] = useState('서울');
   const { selectedProvince, setSelectedProvince, selectedCities, setSelectedCities, removeSelectedCity } =
     useSelectLocationStore();
 
@@ -45,15 +44,15 @@ export default function Location() {
   }, [selectedProvince]);
 
   const handleCityClick = (item: { id: number; city: string }) => {
-    if (isSelectedCities(item.city)) {
-      removeSelectedCity(item.city);
+    if (isSelectedCities(item.id)) {
+      removeSelectedCity(item.id);
     } else if (selectedCities.length < 3) {
       setSelectedCities({ id: item.id, city: item.city, province: selectedProvince });
     }
   };
 
-  const isSelectedCities = (city: string) => {
-    return selectedCities.find(selected => city === selected.city);
+  const isSelectedCities = (cityId: number) => {
+    return selectedCities.find(selected => cityId === selected.id);
   };
 
   return (
@@ -96,14 +95,14 @@ export default function Location() {
               backgroundColor="white"
               style={{
                 cursor: `${selectedCities.length === 3 ? 'not-allowed' : 'pointer'}`,
-                border: `${isSelectedCities(item.city) ? `1px solid ${palette.primaryGreen}` : 'none'}`,
+                border: `${isSelectedCities(item.id) ? `1px solid ${palette.primaryGreen}` : 'none'}`,
               }}
               onClick={() => handleCityClick(item)}
             >
               <Txt
                 fontSize={16}
-                fontWeight={isSelectedCities(item.city) ? 'bold' : 'normal'}
-                fontColor={isSelectedCities(item.city) ? 'primaryGreen' : 'grey600'}
+                fontWeight={isSelectedCities(item.id) ? 'bold' : 'normal'}
+                fontColor={isSelectedCities(item.id) ? 'primaryGreen' : 'grey600'}
               >
                 {item.city}
               </Txt>
