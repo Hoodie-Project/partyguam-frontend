@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="kr">
-      <body>
+      <body suppressHydrationWarning={true}>
         <ModalContextProvider>
           <Header />
           <Modal />

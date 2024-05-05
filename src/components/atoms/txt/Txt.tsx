@@ -1,7 +1,6 @@
 'use client';
 
 import type { HTMLAttributes } from 'react';
-import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
 import { fontWeight, palette } from '@/styles';
@@ -15,15 +14,17 @@ type OwnProps = {
 
 export type Props = Partial<OwnProps> & Omit<HTMLAttributes<HTMLSpanElement>, 'as'>;
 
-const Txt = forwardRef<HTMLSpanElement, Props>(
-  ({ fontWeight = 'normal', fontColor = 'black', fontSize = 18, onClick, ...spanAttributes }) => {
-    return (
-      <Span fontWeight={fontWeight} fontColor={fontColor} fontSize={fontSize} onClick={onClick} {...spanAttributes} />
-    );
-  },
-);
-
-export default Txt;
+export default function Txt({
+  fontWeight = 'normal',
+  fontColor = 'black',
+  fontSize = 18,
+  onClick,
+  ...spanAttributes
+}: Props) {
+  return (
+    <Span fontWeight={fontWeight} fontColor={fontColor} fontSize={fontSize} onClick={onClick} {...spanAttributes} />
+  );
+}
 
 const Span = styled.span<Props>`
   font-weight: ${props => (props.fontWeight ? fontWeight[props.fontWeight] : fontWeight.normal)};
