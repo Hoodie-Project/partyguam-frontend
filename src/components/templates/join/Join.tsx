@@ -7,7 +7,7 @@ import { format, startOfDay } from 'date-fns';
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
 import { usePersonalInfo } from '@/hooks/join';
-import { useAuthStore } from '@/store/auth';
+import { useAuthStore } from '@/stores/auth';
 import { SContainer, SJoinForm } from '@/styles/components/join';
 
 import JoinHeader from './JoinHeader';

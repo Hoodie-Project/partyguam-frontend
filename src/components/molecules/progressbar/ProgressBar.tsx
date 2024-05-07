@@ -56,7 +56,7 @@ const ProgressEdge = styled.div<{ isValid: boolean }>`
 
 const ProgressLine = styled.div<{ isValid: boolean }>`
   background-color: ${props => (props.isValid ? `${palette.primaryGreen}` : `${palette.grey100}`)};
-  width: 124px;
+  width: 28px;
   height: 4px;
-  margin: 0 13px;
+  margin: 0 5px;
 `;

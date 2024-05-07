@@ -9,10 +9,11 @@ type Props = {
   title: string;
   hrefLabel: string;
   onClickHref: () => void;
-  onClickJump: () => void;
+  onClickIcon: () => void;
+  icon: JSX.Element;
 };
 
-export default function JoinHeader({ onClickHref, hrefLabel, title }: Partial<Props>) {
+export default function JoinHeader({ onClickHref, hrefLabel, title, icon, onClickIcon }: Partial<Props>) {
   return (
     <JoinHeaderContainer>
       <GoBackBtn onClick={onClickHref}>
@@ -24,6 +25,7 @@ export default function JoinHeader({ onClickHref, hrefLabel, title }: Partial<Pr
       <Txt fontSize={20} fontWeight="bold" style={{ textAlign: 'center' }}>
         {title}
       </Txt>
+      {icon && <IconContainer onClick={onClickIcon}>{icon}</IconContainer>}
     </JoinHeaderContainer>
   );
 }
@@ -49,5 +51,16 @@ const GoBackBtn = styled.button`
   background-color: transparent;
   font-weight: bold;
   font-size: 18px;
+  color: ${palette.grey500};
+`;
+
+const IconContainer = styled.button`
+  width: 26px;
+  height: 26px;
+  display: flex;
+  justify-self: flex-end;
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
   color: ${palette.grey500};
 `;

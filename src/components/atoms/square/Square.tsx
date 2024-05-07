@@ -6,7 +6,7 @@ import { palette, radius, shadow } from '@/styles/themes';
 type OwnProps = {
   width: string;
   height: string;
-  radiusKey: keyof typeof radius;
+  radiusKey?: keyof typeof radius;
   shadowKey: keyof typeof shadow;
   backgroundColor: keyof typeof palette;
   children?: React.ReactNode;
@@ -17,7 +17,7 @@ export type Props = OwnProps & React.HTMLAttributes<HTMLDivElement>;
 export default function Square({
   width,
   height,
-  radiusKey,
+  radiusKey = 'none',
   shadowKey,
   backgroundColor,
   children,

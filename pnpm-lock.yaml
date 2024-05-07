@@ -103,6 +103,9 @@ devDependencies:
   eslint-plugin-unused-imports:
     specifier: ^3.1.0
     version: 3.1.0(@typescript-eslint/eslint-plugin@7.2.0)(eslint@8.57.0)
+  husky:
+    specifier: ^9.0.11
+    version: 9.0.11
   terser-webpack-plugin:
     specifier: ^5.3.10
     version: 5.3.10(webpack@5.90.3)
@@ -4061,6 +4064,12 @@ packages:
     dependencies:
       react-is: 16.13.1
     dev: false
+
+  /husky@9.0.11:
+    resolution: {integrity: sha512-AB6lFlbwwyIqMdHYhwPe+kjOC3Oc5P3nThEoW/AaO2BX3vJDjWPFxYLxokUZOo6RNX20He3AaT8sESs9NJcmEw==}
+    engines: {node: '>=18'}
+    hasBin: true
+    dev: true
 
   /ignore@5.3.1:
     resolution: {integrity: sha512-5Fytz/IraMjqpwfd34ke28PTVMjZjJG2MPn5t7OE4eUCUNf8BAa7b5WUS9/Qvr6mwOQS7Mk6vdsMno5he+T8Xw==}

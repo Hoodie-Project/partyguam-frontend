@@ -1,0 +1,83 @@
+'use client';
+import React, { useEffect } from 'react';
+import { keyframes } from '@emotion/react';
+import styled from '@emotion/styled';
+
+import { Portal, Txt } from '@/components/atoms';
+import { palette } from '@/styles';
+
+type Props = {
+  visible: boolean;
+  onClose: () => void;
+  label: string;
+  icon: React.ReactNode;
+  position: number;
+};
+
+function Toast({ visible, onClose, label, icon, position }: Props) {
+  useEffect(() => {
+    if (visible) {
+      const timer = setTimeout(() => onClose(), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [visible, onClose]);
+
+  if (!visible) return null;
+
+  return (
+    <Portal>
+      <ToastContainer position={position}>
+        <IconContainer>{icon}</IconContainer>
+        <Txt fontWeight="bold" fontSize={14} fontColor="white">
+          {label}
+        </Txt>
+      </ToastContainer>
+    </Portal>
+  );
+}
+
+export default Toast;
+
+const slideUp = (position: number) => keyframes`
+  from {
+    bottom: 0px;
+    opacity: 0;
+  }
+  to {
+    bottom: ${position}px;
+    opacity: 1;
+  }
+`;
+
+const fadeOut = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
+const ToastContainer = styled.div<{ position: number }>`
+  position: relative;
+  left: 50%;
+  bottom: ${({ position }) => `${position}px`};
+  transform: translateX(-50%);
+  animation: ${({ position }) => `${slideUp(position)} 0.5s ease, ${fadeOut} 2s 3s ease`};
+  background-color: ${palette.grey600};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  width: 20.9375rem;
+  height: 2.125rem;
+  z-index: 1000;
+`;
+
+const IconContainer = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${palette.primaryGreen};
+  margin-right: 2px;
+`;

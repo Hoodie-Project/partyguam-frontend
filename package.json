@@ -7,7 +7,9 @@
     "build": "next build",
     "prestart": "pnpm run build",
     "start": "next build & next start -p 80",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "husky install",
+    "lint:fix": "eslint '*.{js,jsx,ts,tsx}' --fix"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -44,7 +46,14 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "eslint-plugin-unused-imports": "^3.1.0",
+    "husky": "^9.0.11",
     "terser-webpack-plugin": "^5.3.10",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --cache --fix"
+    ]
   }
 }

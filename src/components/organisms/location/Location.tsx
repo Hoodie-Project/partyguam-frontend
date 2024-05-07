@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import styled from '@emotion/styled';
 
 import { Square, Txt } from '@/components/atoms';
-import { useSelectLocationStore } from '@/store/user';
+import { useSelectLocationStore } from '@/stores/user';
 import { palette, radius } from '@/styles/themes';
 
 import locationData from './mock.json';
@@ -21,8 +21,14 @@ interface Location {
 }
 
 export default function Location() {
-  const { selectedProvince, setSelectedProvince, selectedCities, setSelectedCities, removeSelectedCity } =
-    useSelectLocationStore();
+  const {
+    selectedProvince,
+    setSelectedProvince,
+    selectedCities,
+    setSelectedCities,
+    removeSelectedCity,
+    removeSelectedCitiesByProvince,
+  } = useSelectLocationStore();
 
   const uniqueProvinces: { province: string }[] = locationData.reduce(
     (acc: { province: string }[], current: Location) => {
@@ -44,6 +50,9 @@ export default function Location() {
   }, [selectedProvince]);
 
   const handleCityClick = (item: { id: number; city: string }) => {
+    if (item.city === '전체') {
+      removeSelectedCitiesByProvince(selectedProvince);
+    }
     if (isSelectedCities(item.id)) {
       removeSelectedCity(item.id);
     } else if (selectedCities.length < 3) {
@@ -62,20 +71,21 @@ export default function Location() {
           {uniqueProvinces.map(item => (
             <Square
               key={item.province}
-              width="4.8125rem"
+              width="5.3125rem"
               height="3.25rem"
-              radiusKey="s"
-              shadowKey={selectedProvince === item.province ? 'shadow1' : 'none'}
+              shadowKey="none"
               backgroundColor={selectedProvince === item.province ? 'greenLight400' : 'transparent'}
-              style={{ cursor: 'pointer' }}
+              style={{
+                cursor: 'pointer',
+              }}
               onClick={() => {
                 setSelectedProvince(item.province);
               }}
             >
               <Txt
                 fontSize={16}
-                fontWeight={selectedProvince === item.province ? 'bold' : 'normal'}
-                fontColor="grey600"
+                fontWeight="bold"
+                fontColor={selectedProvince === item.province ? 'greenDark200' : 'grey400'}
               >
                 {item.province}
               </Txt>
@@ -88,22 +98,18 @@ export default function Location() {
           {cities.map(item => (
             <Square
               key={item.id}
-              width="4.8125rem"
+              width="4.6875rem"
               height="3.25rem"
               radiusKey="s"
-              shadowKey="none"
-              backgroundColor="white"
+              shadowKey={isSelectedCities(item.id) ? 'shadow1' : 'none'}
+              backgroundColor="transparent"
               style={{
                 cursor: `${selectedCities.length === 3 ? 'not-allowed' : 'pointer'}`,
                 border: `${isSelectedCities(item.id) ? `1px solid ${palette.primaryGreen}` : 'none'}`,
               }}
               onClick={() => handleCityClick(item)}
             >
-              <Txt
-                fontSize={16}
-                fontWeight={isSelectedCities(item.id) ? 'bold' : 'normal'}
-                fontColor={isSelectedCities(item.id) ? 'primaryGreen' : 'grey600'}
-              >
+              <Txt fontSize={16} fontWeight="normal" fontColor={isSelectedCities(item.id) ? 'greenDark100' : 'grey600'}>
                 {item.city}
               </Txt>
             </Square>
@@ -116,13 +122,15 @@ export default function Location() {
 
 const Container = styled.section`
   display: flex;
+  gap: 14px;
+  width: 100%;
   justify-content: space-between;
 `;
 
 const LocationContainer = styled.div`
   display: flex;
   width: auto;
-  height: 21.375rem;
+  height: 19.5rem;
   border: 1px solid ${palette.grey200};
   border-radius: ${radius.s};
   overflow-y: auto;
@@ -137,7 +145,7 @@ const LocationContainer = styled.div`
     }
   }
   ::-webkit-scrollbar-track {
-    background-color: rgba(241, 241, 245, 0.3);
+    background-color: transparent;
     border-radius: 999px;
   }
   ::-webkit-scrollbar-thumb {
@@ -150,7 +158,7 @@ const Wrapper = styled.div<{ type?: string }>`
   display: grid;
   height: fit-content;
   gap: 0;
-  grid-template-columns: ${({ type }) => (type === 'city' ? 'repeat(5, 1fr)' : 'repeat(2, 1fr)')};
+  grid-template-columns: ${({ type }) => (type === 'city' ? 'repeat(4, 1fr)' : 'repeat(1, 1fr)')};
   grid-template-rows: repeat(auto-fill);
   grid-auto-rows: minmax(50px, auto);
 `;
