@@ -5,19 +5,17 @@ import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import { ProgressBar } from '@/components/molecules';
-import { useAuthStore } from '@/stores/auth';
 import { SContainer, SFlexColumnCenter, SJoinForm } from '@/styles/components';
 
 import JoinHeader from '../JoinHeader';
 
 import SelectLocation from './SelectLocation';
+import SelectPersonality from './SelectPersonality';
 import SelectPosition from './SelectPosition';
-import SelectPropensity from './SelectPropensity';
 
 export default function JoinDetail() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { nickname } = useAuthStore(state => state);
   const detailNum = searchParams.get('num');
   const hrefLabel = detailNum !== '1' ? '뒤로가기' : '';
 
@@ -49,7 +47,7 @@ export default function JoinDetail() {
         prevStep: Number(detailNum) > 3,
         completed: false,
         stepLabel: `성향선택(${Number(detailNum) - 2 < 0 ? 0 : Number(detailNum) - 2}/4)`,
-        component: <SelectPropensity />,
+        component: <SelectPersonality />,
       },
     ];
   }, [detailNum]);
@@ -84,6 +82,7 @@ export default function JoinDetail() {
             .map(item => (
               <SFlexColumnCenter key={item.stepNum}>{item.component}</SFlexColumnCenter>
             ))}
+          {Number(detailNum) > 3 && <SelectPersonality />}
         </JoinDetailWrapper>
       </SJoinForm>
     </SContainer>

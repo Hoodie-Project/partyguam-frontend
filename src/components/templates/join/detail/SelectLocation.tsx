@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
@@ -67,6 +69,7 @@ export default function SelectLocation() {
             e.preventDefault();
             router.push('/join/detail?num=2');
           }}
+          disabled={selectedCities.length === 0}
         >
           <Txt fontColor="black" fontSize={18} fontWeight="bold">
             다음
@@ -76,7 +79,7 @@ export default function SelectLocation() {
           fontColor="grey500"
           fontSize={18}
           fontWeight="bold"
-          textDecoration
+          textDecoration="underline"
           style={{ cursor: 'pointer' }}
           onClick={() => {
             router.push('/join/detail?num=2');
@@ -98,6 +101,7 @@ const SectionTitle = styled.div`
 
 const ChipWrapper = styled.div`
   display: flex;
+  width: 120%;
   gap: 11px;
   margin-top: 4.4375rem;
 `;

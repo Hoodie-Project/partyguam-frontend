@@ -5,13 +5,13 @@ import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
-import { button, padding, palette, radius, shadow } from '@/styles';
+import { padding, palette, radius, shadow, size } from '@/styles';
 import { svgSizeMap } from '@/utils/svg';
 
 import Txt from '../txt';
 
 type OwnProps = {
-  height: keyof typeof button.height;
+  height: keyof typeof size.height;
   radius: keyof typeof radius;
   padding: keyof typeof padding;
   inputState: 'warn' | 'success' | 'default';
@@ -101,7 +101,7 @@ const InputContainer = styled.div<Props>`
   flex-direction: row;
   align-items: center;
   width: 100%;
-  height: ${props => button.height[props.height || 'base']};
+  height: ${props => size.height[props.height || 'base']};
   padding: ${props => padding[props.padding || 'horizontalBase']};
   border-radius: ${props => radius[props.radius || 'base']};
   border-color: ${props =>

@@ -9,7 +9,9 @@ type OwnProps = {
   radiusKey?: keyof typeof radius;
   shadowKey: keyof typeof shadow;
   backgroundColor: keyof typeof palette;
+  borderColor?: keyof typeof palette;
   children?: React.ReactNode;
+  position?: string;
 };
 
 export type Props = OwnProps & React.HTMLAttributes<HTMLDivElement>;
@@ -20,7 +22,9 @@ export default function Square({
   radiusKey = 'none',
   shadowKey,
   backgroundColor,
+  borderColor = 'transparent',
   children,
+  position = 'center',
   ...divAttributes
 }: Props) {
   return (
@@ -30,6 +34,8 @@ export default function Square({
       radiusKey={radiusKey}
       shadowKey={shadowKey}
       backgroundColor={backgroundColor}
+      borderColor={borderColor}
+      position={position}
       {...divAttributes}
     >
       {children}
@@ -43,13 +49,16 @@ const SquareContainer = styled.div<{
   radiusKey: keyof typeof radius;
   shadowKey: keyof typeof shadow;
   backgroundColor: keyof typeof palette;
+  borderColor?: keyof typeof palette;
+  position?: string;
 }>`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: ${({ position }) => position};
   width: ${({ width }) => width};
   height: ${({ height }) => height};
   border-radius: ${({ radiusKey }) => radius[radiusKey]};
-  background-color: ${({ backgroundColor }) => palette[`${backgroundColor}`]};
-  box-shadow: ${({ shadowKey }) => shadow[`${shadowKey}`]};
+  background-color: ${({ backgroundColor }) => palette[backgroundColor]};
+  box-shadow: ${({ shadowKey }) => shadow[shadowKey]};
+  ${props => props.borderColor && `border: 1px solid ${palette[props.borderColor]}`};
 `;

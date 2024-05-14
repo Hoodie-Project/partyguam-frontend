@@ -9,7 +9,7 @@ type OwnProps = {
   fontWeight: keyof typeof fontWeight;
   fontColor: keyof typeof palette;
   fontSize: number;
-  textDecoration: boolean;
+  textDecoration: 'underline' | 'none';
   onClick: () => void;
 };
 
@@ -19,7 +19,7 @@ export default function Txt({
   fontWeight = 'normal',
   fontColor = 'black',
   fontSize = 18,
-  textDecoration,
+  textDecoration = 'none',
   onClick,
   ...spanAttributes
 }: Props) {
@@ -41,6 +41,6 @@ const Span = styled.span<Props>`
   color: ${props => (props.fontColor ? palette[props.fontColor] : palette.black)};
   cursor: ${props => props.onClick && 'pointer'};
   white-space: 'pre-wrap';
-  text-decoration: ${props => (props.textDecoration ? 'underline' : 'none')};
+  text-decoration: ${props => props.textDecoration};
   text-underline-offset: 2px;
 `;

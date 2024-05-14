@@ -4,11 +4,11 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { forwardRef } from 'react';
 import styled from '@emotion/styled';
 
-import { button, palette, radius, shadow } from '@/styles';
+import { palette, radius, shadow, size } from '@/styles';
 
 type OwnProps = {
-  height: keyof typeof button.height;
-  width: keyof typeof button.width;
+  height: keyof typeof size.height;
+  width: keyof typeof size.width;
   backgroudColor: keyof typeof palette;
   radius: keyof typeof radius;
   shadow?: keyof typeof shadow;
@@ -52,8 +52,8 @@ const Button = forwardRef<HTMLButtonElement, Props>(
 );
 
 const SquareButton = styled.button<Props>`
-  width: ${props => button.width[props.width || 'base']};
-  height: ${props => button.height[props.height || 'base']};
+  width: ${props => size.width[props.width || 'base']};
+  height: ${props => size.height[props.height || 'base']};
 
   background-color: ${props =>
     props.disabled && props.backgroudColor === 'primaryGreen'
