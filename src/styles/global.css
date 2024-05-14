@@ -9,7 +9,7 @@ body {
   overflow-wrap: break-word;
   box-sizing: border-box;
   letter-spacing: -0.025em;
-  line-height: 1.4em;
+  line-height: 200%;
 }
 
 * {
@@ -69,5 +69,5 @@ textarea {
   background: linear-gradient(45deg, #00ffc2, #00c2ff);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  line-height: normal !important;
+  line-height: normal;
 }

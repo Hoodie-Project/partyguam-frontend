@@ -1,0 +1,22 @@
+[
+	{
+		"id" : 2,
+		"content" : "가장 가깝다고 생각하는 성향은 무엇인가요?",
+		"response_count" : 1
+	},
+	{
+		"id" : 3,
+		"content" : "아래 항목 중 자신 있는 것은 무엇인가요?",
+		"response_count" : 2
+	},
+	{
+		"id" : 4,
+		"content" : "아래 항목 중 도전하고 싶은 것은 무엇인가요?",
+		"response_count" : 2
+	},
+	{
+		"id" : 1,
+		"content" : "집중이 잘 되는 시간은 언제인가요?",
+		"response_count" : 2
+	}
+]

@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import { Button, Txt } from '@/components/atoms';
 import { SContainer } from '@/styles/components/join';
 
-import JoinHeader from './JoinHeader';
+import JoinHeader from '../JoinHeader';
 
 export default function JoinSuccess() {
   const router = useRouter();
@@ -33,6 +33,9 @@ export default function JoinSuccess() {
           width="base"
           backgroudColor="primaryGreen"
           radius="base"
+          onClick={() => {
+            router.push('/join/detail?num=1');
+          }}
         >
           <Txt fontWeight="bold" fontColor="black">
             작성하러 가기

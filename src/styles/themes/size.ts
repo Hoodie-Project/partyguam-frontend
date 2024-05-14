@@ -1,5 +1,6 @@
-export const button = {
+export const size = {
   height: {
+    l: '3.5rem',
     base: '3.25rem',
     m: '3.25rem',
     s: '3rem',
