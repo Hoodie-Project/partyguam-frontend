@@ -19,8 +19,12 @@ export default function Join() {
 
   useEffect(() => {
     const fetchSignupData = async () => {
-      const response = await fetchGetOauthInfo();
-      setSignupData(response);
+      try {
+        const response = await fetchGetOauthInfo();
+        setSignupData(response);
+      } catch (err) {
+        console.error('Error fetching fetchGetOauthInfo >> ', err);
+      }
     };
 
     fetchSignupData();

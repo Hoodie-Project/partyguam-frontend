@@ -7,8 +7,11 @@ import { Button, Txt } from '@/components/atoms';
 export default function KaKaoLogin() {
   const { push } = useRouter();
 
+  const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
   const handleKakaoLogin = () => {
-    const kakaoAuthUrl = `${process.env.NEXT_PUBLIC_API_HOST}/users/kakao/login`;
+    const kakaoAuthUrl = isDev
+      ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/users/kakao/login`
+      : `${process.env.NEXT_PUBLIC_API_HOST}/users/kakao/login`;
     push(kakaoAuthUrl);
   };
 

@@ -45,10 +45,10 @@ class HttpClient {
   }
 
   private onRequestFulfilled(config: InternalAxiosRequestConfig) {
-    const token = getCookie('accessToken');
+    const accessToken = getCookie('accessToken');
 
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
   }
