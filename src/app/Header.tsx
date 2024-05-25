@@ -1,10 +1,13 @@
 'use client';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import styled from '@emotion/styled';
+import { getCookie } from 'cookies-next';
 
 import { Dropdown, Menus } from '@/components/molecules';
 import { LoginModal } from '@/components/organisms';
 import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 import { palette, zIndex } from '@/styles';
 
 /**
@@ -13,6 +16,21 @@ import { palette, zIndex } from '@/styles';
  */
 export default function Header() {
   const { openModal } = useModalContext();
+
+  const { isLoggedIn, login, logout } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    login: state.login,
+    logout: state.logout,
+  }));
+
+  useEffect(() => {
+    const accessToken = getCookie('accessToken');
+    if (accessToken) {
+      login();
+    } else {
+      logout();
+    }
+  }, [login, logout]);
 
   return (
     <HeaderContainer>
@@ -26,7 +44,11 @@ export default function Header() {
 
         <HeaderRight>
           <Dropdown />
-          <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
+          {isLoggedIn ? (
+            <></>
+          ) : (
+            <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
+          )}
         </HeaderRight>
       </HeaderWrapper>
     </HeaderContainer>

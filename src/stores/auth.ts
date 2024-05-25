@@ -5,30 +5,38 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 type Auth = {
   nickname: string;
   email: string;
+  image: string;
   gender: string;
   birth: string;
 };
 
 type AuthAction = {
+  login: () => void;
+  logout: () => void;
+
   setAuth: (newAuth: Auth) => void;
-  resetAuth: () => void;
 };
 
 export const useAuthStore = create(
-  persist<Auth & AuthAction>(
+  persist<{ isLoggedIn: boolean } & Auth & AuthAction>(
     set => ({
-      nickname: '',
-      email: '',
-      gender: '',
-      birth: '',
-      setAuth: (newAuth: Partial<Auth>) => set(newAuth),
-      resetAuth: () =>
+      isLoggedIn: false,
+      login: () => set({ isLoggedIn: true }),
+      logout: () =>
         set({
+          isLoggedIn: false,
           nickname: '',
           email: '',
+          image: '',
           gender: '',
           birth: '',
         }),
+      nickname: '',
+      email: '',
+      image: '',
+      gender: '',
+      birth: '',
+      setAuth: (newAuth: Partial<Auth>) => set(newAuth),
     }),
     {
       name: 'auth-storage',

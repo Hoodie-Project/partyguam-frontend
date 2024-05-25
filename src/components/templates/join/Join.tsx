@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
+import { setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
@@ -205,11 +206,13 @@ export default function Join() {
               const data = {
                 nickname: joinInput.nickname,
                 email: signupData.email,
+                image: signupData.image,
                 birth: formattedBirth,
                 gender: joinInput.gender,
               };
 
               const response = await fetchJoinFormSubmit(data);
+              setCookie('accessToken', response.data.accessToken);
               if (response.status === 201) {
                 setAuth(data);
                 router.push('/join/success');

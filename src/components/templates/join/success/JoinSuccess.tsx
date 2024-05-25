@@ -1,15 +1,32 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
+import { getCookie } from 'cookies-next';
 
 import { Button, Txt } from '@/components/atoms';
+import { useAuthStore } from '@/stores/auth';
 import { SContainer } from '@/styles/components/join';
 
 import JoinHeader from '../JoinHeader';
 
 export default function JoinSuccess() {
   const router = useRouter();
+
+  const { login, logout } = useAuthStore(state => ({
+    login: state.login,
+    logout: state.logout,
+  }));
+
+  useEffect(() => {
+    const accessToken = getCookie('accessToken');
+    if (accessToken) {
+      login();
+    } else {
+      logout();
+    }
+  }, [login, logout]);
+
   return (
     <SContainer>
       <JoinHeader
