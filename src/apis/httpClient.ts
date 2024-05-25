@@ -6,12 +6,14 @@ import axios, {
   type InternalAxiosRequestConfig,
   isAxiosError,
 } from 'axios';
-import { deleteCookie, getCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 
 const getResult = (response: AxiosResponse) => response;
 
 class HttpClient {
   private client: AxiosInstance;
+  private isRefreshing: boolean = false;
+  private refreshSubscribers: ((token: string) => void)[] = [];
 
   public constructor(config?: AxiosRequestConfig) {
     this.client = axios.create(config);
@@ -44,26 +46,59 @@ class HttpClient {
     this.client.interceptors.response.use(this.onResponseFulfilled, this.onResponseRejected);
   }
 
-  private onRequestFulfilled(config: InternalAxiosRequestConfig) {
+  private onRequestFulfilled = (config: InternalAxiosRequestConfig) => {
     const accessToken = getCookie('accessToken');
 
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
-  }
+  };
 
-  private onRequestRejected(error: AxiosError) {
+  private onRequestRejected = (error: AxiosError) => {
     return Promise.reject(error);
-  }
+  };
 
-  private onResponseFulfilled(response: AxiosResponse) {
+  private onResponseFulfilled = (response: AxiosResponse) => {
     return response;
-  }
+  };
 
-  private onResponseRejected(error: AxiosError) {
+  private onResponseRejected = async (error: AxiosError) => {
     if (!isAxiosError(error) || !error.response) return Promise.reject(error);
-    const { status: errorStatus } = error.response;
+    const { status: errorStatus, config } = error.response;
+
+    if (errorStatus === 401) {
+      const retryOriginalRequest = new Promise<AxiosResponse>(resolve => {
+        this.refreshSubscribers.push((token: string) => {
+          config.headers['Authorization'] = `Bearer ${token}`;
+          resolve(this.client(config));
+        });
+      });
+
+      if (!this.isRefreshing) {
+        this.isRefreshing = true;
+        const refreshToken = getCookie('refreshToken');
+
+        if (refreshToken) {
+          try {
+            const response = await axios.post('/auth/access-token', { token: refreshToken });
+            const newAccessToken = response.data.accessToken;
+
+            setCookie('accessToken', newAccessToken);
+            this.refreshSubscribers.forEach(callback => callback(newAccessToken));
+            this.refreshSubscribers = [];
+          } catch (refreshError) {
+            this.handleRefreshTokenError();
+          } finally {
+            this.isRefreshing = false;
+          }
+        } else {
+          this.handleRefreshTokenError();
+        }
+      }
+
+      return retryOriginalRequest;
+    }
 
     if (errorStatus === 500) {
       alert('로그인을 다시 해주세요');
@@ -72,6 +107,12 @@ class HttpClient {
     }
 
     return Promise.reject(error.response);
+  };
+
+  private handleRefreshTokenError() {
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
+    window.location.href = '/';
   }
 }
 

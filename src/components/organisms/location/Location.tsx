@@ -1,13 +1,14 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 
+import { fetchGetLocations } from '@/apis/detailProfile';
 import { Square, Txt } from '@/components/atoms';
-import { useSelectLocationStore } from '@/stores/user';
+import { useSelectLocationStore } from '@/stores/detailProfile';
 import { palette, radius } from '@/styles/themes';
 
-import locationData from './mock.json';
+// import locationData from './mock.json';
 
 /**
  * NOTE
@@ -21,6 +22,7 @@ interface Location {
 }
 
 export default function Location() {
+  const [locationData, setLocationData] = useState<Location[]>([]);
   const {
     selectedProvince,
     setSelectedProvince,
@@ -29,6 +31,15 @@ export default function Location() {
     removeSelectedCity,
     removeSelectedCitiesByProvince,
   } = useSelectLocationStore();
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  const getLocation = async () => {
+    const location = await fetchGetLocations();
+    setLocationData(location);
+  };
 
   const uniqueProvinces: { province: string }[] = locationData.reduce(
     (acc: { province: string }[], current: Location) => {
@@ -47,7 +58,7 @@ export default function Location() {
         acc.push({ id: current.id, city: current.city });
         return acc;
       }, []);
-  }, [selectedProvince]);
+  }, [locationData, selectedProvince]);
 
   const handleCityClick = (item: { id: number; city: string }) => {
     if (item.city === '전체') {

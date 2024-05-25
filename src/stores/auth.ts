@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+
 import type { User } from '@/types/user';
 
 /* 회원가입 시 */
