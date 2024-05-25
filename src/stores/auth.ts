@@ -1,14 +1,9 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import type { User } from '@/types/user';
 
 /* 회원가입 시 */
-type Auth = {
-  nickname: string;
-  email: string;
-  image: string;
-  gender: string;
-  birth: string;
-};
+type Auth = User;
 
 type AuthAction = {
   login: () => void;
@@ -25,17 +20,21 @@ export const useAuthStore = create(
       logout: () =>
         set({
           isLoggedIn: false,
+          id: 0,
           nickname: '',
           email: '',
           image: '',
           gender: '',
           birth: '',
+          createdAt: '',
         }),
+      id: 0,
       nickname: '',
       email: '',
       image: '',
       gender: '',
       birth: '',
+      createdAt: '',
       setAuth: (newAuth: Partial<Auth>) => set(newAuth),
     }),
     {

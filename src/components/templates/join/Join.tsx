@@ -204,11 +204,13 @@ export default function Join() {
 
               const formattedBirth = (joinInput.birth && format(joinInput.birth, 'yyyy-MM-dd')) || '';
               const data = {
+                id: 0,
                 nickname: joinInput.nickname,
                 email: signupData.email,
                 image: signupData.image,
                 birth: formattedBirth,
                 gender: joinInput.gender,
+                createdAt: '',
               };
 
               const response = await fetchJoinFormSubmit(data);
