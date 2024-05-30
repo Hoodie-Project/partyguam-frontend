@@ -14,6 +14,7 @@ type OwnProps = {
   defaultBackground: keyof typeof palette;
   clickBorder: keyof typeof palette;
   defaultBorder: keyof typeof palette;
+  pointer?: boolean;
   onClick: (event: React.MouseEvent<HTMLDivElement>) => void;
 };
 
@@ -26,6 +27,7 @@ function CheckItem({
   defaultBackground,
   clickBorder,
   defaultBorder,
+  pointer,
   ...divAttributes
 }: Props) {
   return (
@@ -38,6 +40,7 @@ function CheckItem({
       borderColor={isClick ? clickBorder : defaultBorder}
       position="flex-start"
       {...divAttributes}
+      style={pointer ? { cursor: 'pointer' } : { cursor: 'not-allowed' }}
     >
       <LabelDiv isClick={isClick}>
         {isClick ? <CheckCircleRoundedIcon fontSize="medium" /> : <CheckCircleOutlineRoundedIcon fontSize="medium" />}

@@ -64,11 +64,6 @@ export default function SelectPosition() {
     }
   }, [secondaryPosition.직군, positionData]);
 
-  useEffect(() => {
-    console.log(primaryPosition);
-    console.log(secondaryPosition);
-  }, [primaryPosition, secondaryPosition]);
-
   const handleSelectChange =
     (
       setter: React.Dispatch<React.SetStateAction<{ id: number; 직군: string; 직무: string; 경력: string }>>,

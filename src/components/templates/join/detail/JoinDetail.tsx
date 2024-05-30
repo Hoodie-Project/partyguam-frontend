@@ -6,7 +6,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import { SelectLocation, SelectPersonality, SelectPosition } from '@/components/features/detailProfile';
 import { ProgressBar } from '@/components/molecules';
-import { useSelectLocationStore } from '@/stores/detailProfile';
+import { useSelectLocationStore, useSelectPositionStore } from '@/stores/detailProfile';
 import { SContainer, SFlexColumnCenter, SJoinForm } from '@/styles/components';
 
 import JoinHeader from '../JoinHeader';
@@ -17,6 +17,7 @@ export default function JoinDetail() {
   const detailNum = searchParams.get('num');
   const hrefLabel = detailNum !== '1' ? '뒤로가기' : '';
   const { locationCompletion } = useSelectLocationStore();
+  const { positionCompletion } = useSelectPositionStore();
 
   /**
    * NOTE
@@ -36,7 +37,7 @@ export default function JoinDetail() {
         stepNum: 2,
         currentStep: Number(detailNum) === 2,
         prevStep: Number(detailNum) > 2,
-        completed: false,
+        completed: positionCompletion,
         stepLabel: '경력/포지션',
         component: <SelectPosition />,
       },

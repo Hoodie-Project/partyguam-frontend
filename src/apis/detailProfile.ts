@@ -3,6 +3,7 @@
  */
 
 import type { Career } from '@/stores/detailProfile';
+import type { SelectedPersonality } from '@/types/user';
 
 import { privateApi } from '.';
 
@@ -58,4 +59,31 @@ const fetchPostPositions = async (data: Career[]) => {
  * 세부 프로필 - 성향질문
  */
 
-export { fetchGetLocations, fetchGetPositions, fetchPostLocations, fetchPostPositions };
+const fetchGetPersonality = async () => {
+  try {
+    const response = await privateApi.get('/personality');
+    return response.data;
+  } catch (error) {
+    console.error('fetchGetPersonality error : ', error);
+  }
+};
+
+const fetchPostPersonality = async (data: SelectedPersonality[]) => {
+  try {
+    const response = await privateApi.post('/users/me/personality', {
+      personality: data,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchPostPersonality error : ', error);
+  }
+};
+
+export {
+  fetchGetLocations,
+  fetchGetPersonality,
+  fetchGetPositions,
+  fetchPostLocations,
+  fetchPostPersonality,
+  fetchPostPositions,
+};
