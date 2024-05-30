@@ -4,15 +4,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
+import { SelectLocation, SelectPersonality, SelectPosition } from '@/components/features/detailProfile';
 import { ProgressBar } from '@/components/molecules';
 import { useSelectLocationStore } from '@/stores/detailProfile';
 import { SContainer, SFlexColumnCenter, SJoinForm } from '@/styles/components';
 
 import JoinHeader from '../JoinHeader';
-
-import SelectLocation from './SelectLocation';
-import SelectPersonality from './SelectPersonality';
-import SelectPosition from './SelectPosition';
 
 export default function JoinDetail() {
   const searchParams = useSearchParams();

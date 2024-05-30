@@ -8,8 +8,8 @@ import { Txt } from '@/components/atoms';
 import { palette } from '@/styles';
 
 interface Props {
-  currentStep: boolean; // 현재 스템
-  prevStep: boolean; // 이전 스템
+  currentStep: boolean; // 현재 스텝
+  prevStep: boolean; // 이전 스텝
   completed: boolean; // check 여부
   label: string;
   stepNum: number;

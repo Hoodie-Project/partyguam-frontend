@@ -8,8 +8,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 
 import { fetchPostLocations } from '@/apis/detailProfile';
 import { Button, Chip, Txt } from '@/components/atoms';
+import { Location } from '@/components/features';
 import { Toast } from '@/components/molecules';
-import { Location } from '@/components/organisms';
 import { useSelectLocationStore } from '@/stores/detailProfile';
 
 export default function SelectLocation() {

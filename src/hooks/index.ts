@@ -1,1 +1,1 @@
-export * from './join';
+export { default as usePersonalInfo } from './usePersonalInfo';

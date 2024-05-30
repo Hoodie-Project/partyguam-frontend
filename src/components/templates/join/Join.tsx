@@ -7,7 +7,7 @@ import { format, startOfDay } from 'date-fns';
 
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
-import { usePersonalInfo } from '@/hooks/join';
+import { usePersonalInfo } from '@/hooks';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SJoinForm } from '@/styles/components/join';
 
@@ -27,7 +27,6 @@ export default function Join() {
         console.error('Error fetching fetchGetOauthInfo >> ', err);
       }
     };
-
     fetchSignupData();
   }, []);
 

@@ -17,7 +17,7 @@ interface Props {
   onClick: (e: React.MouseEvent<HTMLLIElement>) => void;
   options?: {
     id: number;
-    value: string;
+    label: string;
   }[];
 
   fontWeight?: keyof typeof fontWeight;

@@ -77,29 +77,23 @@ class HttpClient {
 
       if (!this.isRefreshing) {
         this.isRefreshing = true;
-        const refreshToken = getCookie('refreshToken');
 
-        if (refreshToken) {
-          try {
-            const response = await axios.post('/auth/access-token', { token: refreshToken });
-            const newAccessToken = response.data.accessToken;
+        try {
+          const response = await axios.post('/auth/access-token', { withCredentials: true });
+          const newAccessToken = response.data.accessToken;
 
-            setCookie('accessToken', newAccessToken);
-            this.refreshSubscribers.forEach(callback => callback(newAccessToken));
-            this.refreshSubscribers = [];
-          } catch (refreshError) {
-            this.handleRefreshTokenError();
-          } finally {
-            this.isRefreshing = false;
-          }
-        } else {
+          setCookie('accessToken', newAccessToken);
+          this.refreshSubscribers.forEach(callback => callback(newAccessToken));
+          this.refreshSubscribers = [];
+        } catch (refreshError) {
           this.handleRefreshTokenError();
+        } finally {
+          this.isRefreshing = false;
         }
+
+        return retryOriginalRequest;
       }
-
-      return retryOriginalRequest;
     }
-
     if (errorStatus === 500) {
       alert('로그인을 다시 해주세요');
       deleteCookie('accessToken');
@@ -111,7 +105,6 @@ class HttpClient {
 
   private handleRefreshTokenError() {
     deleteCookie('accessToken');
-    deleteCookie('refreshToken');
     window.location.href = '/';
   }
 }

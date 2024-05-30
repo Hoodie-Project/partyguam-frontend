@@ -5,7 +5,7 @@ import { palette, radius, size } from '@/styles';
 
 type OptionType = {
   id: number;
-  value: string;
+  label: string;
 };
 
 type Props = {
@@ -26,7 +26,7 @@ export default function Options({ options, onClick, setIsOpen, height }: Props) 
       {options &&
         options.map(option => (
           <SelectOption key={option.id} onClick={e => handleOptionClick(e, option)}>
-            {option.value}
+            {option.label}
           </SelectOption>
         ))}
     </SelectOptions>

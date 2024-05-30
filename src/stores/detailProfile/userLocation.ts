@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+/** 세부 프로핑 - location */
 interface Location {
   id: number;
   province: string;
@@ -57,3 +58,5 @@ export const useSelectLocationStore = create<SelectLocationState>(set => ({
 
   setLocationCompletion: (completed: boolean) => set({ locationCompletion: completed }),
 }));
+
+/** 세부 프로필 - position */
