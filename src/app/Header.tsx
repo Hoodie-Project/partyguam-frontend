@@ -1,18 +1,32 @@
 'use client';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import styled from '@emotion/styled';
+import { getCookie } from 'cookies-next';
 
+import { LoginModal } from '@/components/features';
 import { Dropdown, Menus } from '@/components/molecules';
-import { LoginModal } from '@/components/organisms';
 import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 import { palette, zIndex } from '@/styles';
 
-/**
- * NOTE.
- * 전역 헤더임 -> 매번 page template에 넣을 건지 전역에 때려박을건지 결정
- */
 export default function Header() {
   const { openModal } = useModalContext();
+
+  const { isLoggedIn, login, logout } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+    login: state.login,
+    logout: state.logout,
+  }));
+
+  useEffect(() => {
+    const accessToken = getCookie('accessToken');
+    if (!accessToken) {
+      logout();
+    } else {
+      login();
+    }
+  }, [login, logout]);
 
   return (
     <HeaderContainer>
@@ -26,7 +40,11 @@ export default function Header() {
 
         <HeaderRight>
           <Dropdown />
-          <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
+          {isLoggedIn ? (
+            <></>
+          ) : (
+            <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
+          )}
         </HeaderRight>
       </HeaderWrapper>
     </HeaderContainer>

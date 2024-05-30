@@ -4,20 +4,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
+import { SelectLocation, SelectPersonality, SelectPosition } from '@/components/features/detailProfile';
 import { ProgressBar } from '@/components/molecules';
+import { useSelectLocationStore } from '@/stores/detailProfile';
 import { SContainer, SFlexColumnCenter, SJoinForm } from '@/styles/components';
 
 import JoinHeader from '../JoinHeader';
-
-import SelectLocation from './SelectLocation';
-import SelectPersonality from './SelectPersonality';
-import SelectPosition from './SelectPosition';
 
 export default function JoinDetail() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const detailNum = searchParams.get('num');
   const hrefLabel = detailNum !== '1' ? '뒤로가기' : '';
+  const { locationCompletion } = useSelectLocationStore();
 
   /**
    * NOTE
@@ -29,7 +28,7 @@ export default function JoinDetail() {
         stepNum: 1,
         currentStep: Number(detailNum) === 1,
         prevStep: Number(detailNum) > 1,
-        completed: false, // api 호출 성공 시 True
+        completed: locationCompletion, // api 호출 성공 시 True
         stepLabel: '관심지역',
         component: <SelectLocation />,
       },

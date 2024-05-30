@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
-import { keyframes } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { Portal, Txt } from '@/components/atoms';
@@ -63,7 +63,11 @@ const ToastContainer = styled.div<{ position: number }>`
   left: 50%;
   bottom: ${({ position }) => `${position}px`};
   transform: translateX(-50%);
-  animation: ${({ position }) => `${slideUp(position)} 0.5s ease, ${fadeOut} 2s 3s ease`};
+  ${({ position }) => css`
+    animation:
+      ${slideUp(position)} 0.3s ease,
+      ${fadeOut} 1s 2s ease;
+  `}
   background-color: ${palette.grey600};
   display: flex;
   align-items: center;

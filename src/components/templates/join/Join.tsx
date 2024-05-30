@@ -2,11 +2,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
+import { setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
-import { usePersonalInfo } from '@/hooks/join';
+import { usePersonalInfo } from '@/hooks';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SJoinForm } from '@/styles/components/join';
 
@@ -26,7 +27,6 @@ export default function Join() {
         console.error('Error fetching fetchGetOauthInfo >> ', err);
       }
     };
-
     fetchSignupData();
   }, []);
 
@@ -203,13 +203,17 @@ export default function Join() {
 
               const formattedBirth = (joinInput.birth && format(joinInput.birth, 'yyyy-MM-dd')) || '';
               const data = {
+                id: 0,
                 nickname: joinInput.nickname,
                 email: signupData.email,
+                image: signupData.image,
                 birth: formattedBirth,
                 gender: joinInput.gender,
+                createdAt: '',
               };
 
               const response = await fetchJoinFormSubmit(data);
+              setCookie('accessToken', response.data.accessToken);
               if (response.status === 201) {
                 setAuth(data);
                 router.push('/join/success');

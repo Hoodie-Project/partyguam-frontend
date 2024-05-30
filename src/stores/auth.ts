@@ -1,34 +1,42 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+import type { User } from '@/types/user';
+
 /* 회원가입 시 */
-type Auth = {
-  nickname: string;
-  email: string;
-  gender: string;
-  birth: string;
-};
+type Auth = User;
 
 type AuthAction = {
+  login: () => void;
+  logout: () => void;
+
   setAuth: (newAuth: Auth) => void;
-  resetAuth: () => void;
 };
 
 export const useAuthStore = create(
-  persist<Auth & AuthAction>(
+  persist<{ isLoggedIn: boolean } & Auth & AuthAction>(
     set => ({
-      nickname: '',
-      email: '',
-      gender: '',
-      birth: '',
-      setAuth: (newAuth: Partial<Auth>) => set(newAuth),
-      resetAuth: () =>
+      isLoggedIn: false,
+      login: () => set({ isLoggedIn: true }),
+      logout: () =>
         set({
+          isLoggedIn: false,
+          id: 0,
           nickname: '',
           email: '',
+          image: '',
           gender: '',
           birth: '',
+          createdAt: '',
         }),
+      id: 0,
+      nickname: '',
+      email: '',
+      image: '',
+      gender: '',
+      birth: '',
+      createdAt: '',
+      setAuth: (newAuth: Partial<Auth>) => set(newAuth),
     }),
     {
       name: 'auth-storage',

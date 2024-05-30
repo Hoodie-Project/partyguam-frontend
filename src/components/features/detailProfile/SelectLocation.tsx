@@ -6,14 +6,15 @@ import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ErrorIcon from '@mui/icons-material/Error';
 
+import { fetchPostLocations } from '@/apis/detailProfile';
 import { Button, Chip, Txt } from '@/components/atoms';
+import { Location } from '@/components/features';
 import { Toast } from '@/components/molecules';
-import { Location } from '@/components/organisms';
-import { useSelectLocationStore } from '@/stores/user';
+import { useSelectLocationStore } from '@/stores/detailProfile';
 
 export default function SelectLocation() {
   const [isToast, setIsToast] = useState(false);
-  const { selectedCities, removeSelectedCity } = useSelectLocationStore();
+  const { selectedCities, selectedCitiesById, removeSelectedCity, setLocationCompletion } = useSelectLocationStore();
   const router = useRouter();
 
   useEffect(() => {
@@ -21,6 +22,14 @@ export default function SelectLocation() {
       setIsToast(true);
     }
   }, [selectedCities]);
+
+  const handleClickNextBtn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const res = await fetchPostLocations(selectedCitiesById);
+    setLocationCompletion(true);
+    router.push('/join/detail?num=2');
+    return res;
+  };
 
   return (
     <div>
@@ -63,14 +72,7 @@ export default function SelectLocation() {
         ))}
       </ChipWrapper>
       <ButtonsContainer>
-        <Button
-          shadow="shadow2"
-          onClick={e => {
-            e.preventDefault();
-            router.push('/join/detail?num=2');
-          }}
-          disabled={selectedCities.length === 0}
-        >
+        <Button shadow="shadow2" onClick={handleClickNextBtn} disabled={selectedCities.length === 0}>
           <Txt fontColor="black" fontSize={18} fontWeight="bold">
             다음
           </Txt>
