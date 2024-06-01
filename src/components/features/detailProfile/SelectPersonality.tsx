@@ -4,104 +4,142 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import ErrorIcon from '@mui/icons-material/Error';
 
+import { fetchDeletePersonality, fetchGetPersonality, fetchPostPersonality } from '@/apis/detailProfile';
 import { Button, Txt } from '@/components/atoms';
 import { CheckItem, Toast } from '@/components/molecules';
-
-import questionOptionData from './personality_option.json';
-import questionData from './personality_question.json';
+import { useSelectPersonalityStore } from '@/stores/detailProfile';
+import type { PersonalityOption, PersonalityQuestion, SelectedPersonality } from '@/types/user';
 
 export default function SelectPersonality() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [personalityData, setPersonalityData] = useState<PersonalityQuestion[]>([]);
   const [detailNum, setDetailNum] = useState(searchParams.get('num') || 1);
   const [isToast, setIsToast] = useState(false);
 
-  const [selected, setSelected] = useState<
-    {
-      id: number;
-      content: string;
-    }[]
-  >([]);
+  const [selected, setSelected] = useState<PersonalityOption[]>([]);
+  const { setSelectedQ1, setSelectedQ2, setSelectedQ3, setSelectedQ4, setPersonalityCompletion } =
+    useSelectPersonalityStore();
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetchGetPersonality();
+      setPersonalityData(response);
+    })();
+  }, []);
 
   useEffect(() => {
     if (searchParams.get('num')) setDetailNum(Number(searchParams.get('num')));
+    setSelected([]);
   }, [searchParams]);
-
-  const groupedByQuestionId = useMemo(
-    () =>
-      questionOptionData.reduce(
-        (
-          acc: Record<string, { id: number; content: string }[]>,
-          item: { id: number; personality_question_id: number; content: string },
-        ) => {
-          const { personality_question_id, id, content } = item;
-          acc[personality_question_id] = acc[personality_question_id] || [];
-          acc[personality_question_id].push({ id, content });
-          return acc;
-        },
-        {},
-      ),
-    [],
-  );
 
   const progress = useMemo(
     () =>
-      questionData.map(question => ({
+      personalityData.map((question, index) => ({
         stepNum: question.id,
         currentStep: Number(detailNum) - 2 === question.id,
-        questionCnt: question.response_count,
+        questionCnt: question.responseCount,
         question: question.content,
-        questionOptions: groupedByQuestionId[question.id] || [],
+        questionOptions: personalityData[index].personalityOption || [],
       })),
-    [detailNum, groupedByQuestionId],
+    [detailNum, personalityData],
   );
 
-  const currentStep = progress.find(step => step.currentStep) || progress[0];
+  const currentStep = progress.find(step => step.currentStep) || progress[0] || '';
 
-  function handleSelectOption(selectedOption: { id: number; content: string }, questionCnt: number) {
-    const index = selected.findIndex(option => option.id === selectedOption.id);
-    const newSelected = [...selected];
+  const handleSelectOption = (selectedOption: PersonalityOption, questionCnt: number) => {
+    setSelected(prevSelected => {
+      const index = prevSelected.findIndex(option => option.id === selectedOption.id);
+      const newSelected = [...prevSelected];
 
-    if (index > -1) {
-      newSelected.splice(index, 1);
-    } else {
-      if (newSelected.length >= questionCnt) {
-        setIsToast(true);
-        return;
+      if (index > -1) {
+        newSelected.splice(index, 1);
+      } else {
+        if (newSelected.length >= questionCnt) {
+          setIsToast(true);
+          return prevSelected;
+        }
+        newSelected.push(selectedOption);
       }
-      newSelected.push(selectedOption);
+
+      setIsToast(false);
+      return newSelected;
+    });
+  };
+
+  const convertToSelectedPersonality = (options: PersonalityOption[]): SelectedPersonality[] => {
+    const grouped = options.reduce<Record<number, number[]>>((acc, option) => {
+      if (!acc[option.personalityQuestionId]) {
+        acc[option.personalityQuestionId] = [];
+      }
+      acc[option.personalityQuestionId].push(option.id);
+      return acc;
+    }, {});
+
+    return Object.entries(grouped).map(([questionId, optionIds]) => ({
+      personalityQuestionId: Number(questionId),
+      personalityOptionId: optionIds,
+    }));
+  };
+
+  const handleClickNextBtn = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    const selectedPersonality = convertToSelectedPersonality(selected);
+
+    switch (Number(detailNum) - 2) {
+      case 1:
+        setSelectedQ1(selectedPersonality);
+        break;
+      case 2:
+        setSelectedQ2(selectedPersonality);
+        break;
+      case 3:
+        setSelectedQ3(selectedPersonality);
+        break;
+      case 4:
+        setSelectedQ4(selectedPersonality);
+        break;
+      default:
+        break;
     }
 
-    setSelected(newSelected);
-    setIsToast(false);
-  }
+    const res = await fetchPostPersonality(selectedPersonality);
+
+    if (res && res.status === 409) {
+      await fetchDeletePersonality(Number(detailNum) - 2);
+      await fetchPostPersonality(selectedPersonality);
+    }
+    setPersonalityCompletion(Number(detailNum) - 2);
+    router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+  };
 
   return (
     <Container>
       <SectionTitle>
         <Txt fontWeight="bold" fontSize={24} fontColor="black">
-          {currentStep.question}
+          {currentStep?.question}
         </Txt>
 
         <Txt fontColor="black" fontWeight="normal" fontSize={18}>
           비슷한 성향의 파티원을 추천해 드려요. (최대 {currentStep.questionCnt}개)
         </Txt>
       </SectionTitle>
-      {/* Note. ButtonContainer 공통 분리 로직 작성 필요
-    -----> 다음 버튼 비활성화 로직 추가 */}
       <OptionListWrapper>
-        {currentStep.questionOptions.map(option => (
-          <CheckItem
-            key={option.id}
-            label={option.content}
-            isClick={selected.some(item => item.id === option.id)}
-            clickBackground="greenLight300"
-            defaultBackground="white"
-            clickBorder="greenLight100"
-            defaultBorder="grey200"
-            onClick={() => handleSelectOption(option, currentStep.questionCnt)}
-          />
-        ))}
+        {currentStep.questionOptions &&
+          currentStep.questionOptions.map(option => (
+            <CheckItem
+              key={option.id}
+              label={option.content}
+              isClick={selected.some(item => item.id === option.id)}
+              clickBackground="greenLight300"
+              defaultBackground="white"
+              clickBorder="greenLight100"
+              defaultBorder="grey200"
+              pointer={selected.length < currentStep.questionCnt}
+              onClick={() => handleSelectOption(option, currentStep.questionCnt)}
+            />
+          ))}
       </OptionListWrapper>
       <Toast
         visible={isToast}
@@ -111,14 +149,7 @@ export default function SelectPersonality() {
         icon={<ErrorIcon fontSize="small" />}
       />
       <ButtonsContainer>
-        <Button
-          shadow="shadow2"
-          onClick={e => {
-            e.preventDefault();
-            router.push(`/join/detail?num=${Number(detailNum) + 1}`);
-          }}
-          disabled={selected.length === 0}
-        >
+        <Button shadow="shadow2" onClick={handleClickNextBtn} disabled={selected.length === 0}>
           <Txt fontColor="black" fontSize={18} fontWeight="bold">
             {Number(detailNum) === 6 ? '완료' : '다음'}
           </Txt>

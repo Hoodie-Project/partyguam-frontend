@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ErrorIcon from '@mui/icons-material/Error';
 
-import { fetchPostLocations } from '@/apis/detailProfile';
+import { fetchDeleteLocations, fetchPostLocations } from '@/apis/detailProfile';
 import { Button, Chip, Txt } from '@/components/atoms';
 import { Location } from '@/components/features';
 import { Toast } from '@/components/molecules';
@@ -15,6 +15,7 @@ import { useSelectLocationStore } from '@/stores/detailProfile';
 export default function SelectLocation() {
   const [isToast, setIsToast] = useState(false);
   const { selectedCities, selectedCitiesById, removeSelectedCity, setLocationCompletion } = useSelectLocationStore();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -26,9 +27,14 @@ export default function SelectLocation() {
   const handleClickNextBtn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const res = await fetchPostLocations(selectedCitiesById);
+
+    if (res && res.status === 409) {
+      await fetchDeleteLocations();
+      await fetchPostLocations(selectedCitiesById);
+    }
+
     setLocationCompletion(true);
     router.push('/join/detail?num=2');
-    return res;
   };
 
   return (
