@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
-import { fetchGetPositions, fetchPostPositions } from '@/apis/detailProfile';
+import { fetchDeletePositions, fetchGetPositions, fetchPostPositions } from '@/apis/detailProfile';
 import { Button, Txt } from '@/components/atoms';
 import { Select } from '@/components/molecules';
 import { useAuthStore } from '@/stores/auth';
+import type { Career } from '@/stores/detailProfile';
 import { useSelectPositionStore } from '@/stores/detailProfile';
 import type { Position } from '@/types/user';
 
@@ -94,9 +95,18 @@ export default function SelectPosition() {
       careerType: 'secondary' as const,
     };
 
-    setSelectedPosition([primaryCareer, secondaryCareer]);
+    const validPositions: Career[] = [
+      ...(primaryCareer.positionId !== 0 ? [primaryCareer] : []),
+      ...(secondaryCareer.positionId !== 0 ? [secondaryCareer] : []),
+    ];
 
-    const res = await fetchPostPositions([primaryCareer, secondaryCareer]);
+    setSelectedPosition(validPositions);
+
+    const res = await fetchPostPositions(validPositions);
+    if (res && res.status === 409) {
+      await fetchDeletePositions();
+      await fetchPostPositions(validPositions);
+    }
     setPositionCompletion(true);
     router.push('/join/detail?num=3');
     return res;

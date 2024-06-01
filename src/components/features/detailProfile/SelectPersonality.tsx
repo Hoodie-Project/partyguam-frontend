@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import ErrorIcon from '@mui/icons-material/Error';
 
-import { fetchGetPersonality, fetchPostPersonality } from '@/apis/detailProfile';
+import { fetchDeletePersonality, fetchGetPersonality, fetchPostPersonality } from '@/apis/detailProfile';
 import { Button, Txt } from '@/components/atoms';
 import { CheckItem, Toast } from '@/components/molecules';
 import { useSelectPersonalityStore } from '@/stores/detailProfile';
@@ -87,7 +87,7 @@ export default function SelectPersonality() {
 
     const selectedPersonality = convertToSelectedPersonality(selected);
 
-    switch (Number(detailNum)) {
+    switch (Number(detailNum) - 2) {
       case 1:
         setSelectedQ1(selectedPersonality);
         break;
@@ -105,9 +105,13 @@ export default function SelectPersonality() {
     }
 
     const res = await fetchPostPersonality(selectedPersonality);
+
+    if (res && res.status === 409) {
+      await fetchDeletePersonality(Number(detailNum) - 2);
+      await fetchPostPersonality(selectedPersonality);
+    }
     setPersonalityCompletion(Number(detailNum) - 2);
     router.push(`/join/detail?num=${Number(detailNum) + 1}`);
-    return res;
   };
 
   return (

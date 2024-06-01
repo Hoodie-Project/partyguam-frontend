@@ -58,5 +58,3 @@ export const useSelectLocationStore = create<SelectLocationState>(set => ({
 
   setLocationCompletion: (completed: boolean) => set({ locationCompletion: completed }),
 }));
-
-/** 세부 프로필 - position */

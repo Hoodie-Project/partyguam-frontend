@@ -9,6 +9,12 @@ export interface User {
 }
 
 /** detailProfile start */
+export interface UserLocationResponse {
+  id: number;
+  userId: number;
+  locationId: number;
+}
+
 export interface Position {
   id: number;
   main: string;
@@ -18,6 +24,14 @@ export interface Position {
 export interface PositionPerCategory {
   id: number;
   label: string;
+}
+
+export interface UserPositionResponse {
+  id: number;
+  userId: number;
+  positionId: number;
+  years: number;
+  careerType: 'primary' | 'secondary';
 }
 
 export interface PersonalityOption {
@@ -36,5 +50,11 @@ export interface PersonalityQuestion {
 export interface SelectedPersonality {
   personalityQuestionId: number;
   personalityOptionId: number[];
+}
+
+export interface UserPersonalityResponse {
+  id: number;
+  userId: number;
+  personalityOptionId: number;
 }
 /** detailProfile End */
