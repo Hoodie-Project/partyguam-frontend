@@ -111,7 +111,11 @@ export default function SelectPersonality() {
       await fetchPostPersonality(selectedPersonality);
     }
     setPersonalityCompletion(Number(detailNum) - 2);
-    router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+    if (Number(detailNum) == 6) {
+      router.push('/join/detail/success');
+    } else {
+      router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+    }
   };
 
   return (
@@ -160,7 +164,13 @@ export default function SelectPersonality() {
           fontWeight="bold"
           textDecoration="underline"
           style={{ cursor: 'pointer' }}
-          onClick={() => router.push(`/join/detail?num=${Number(detailNum) + 1}`)}
+          onClick={() => {
+            if (Number(detailNum) == 6) {
+              router.push('/join/detail/success');
+            } else {
+              router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+            }
+          }}
         >
           건너뛰기
         </Txt>

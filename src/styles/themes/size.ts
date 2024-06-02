@@ -9,6 +9,7 @@ export const size = {
   },
   width: {
     base: '25rem',
+    xl: '22.25rem',
     l: '20.9375rem',
     m: '12.25rem',
     s: '5.125rem',
