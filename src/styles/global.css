@@ -62,12 +62,3 @@ input,
 textarea {
   font-family: 'SUIT Variable';
 }
-
-.app-title {
-  font-size: 40px;
-  font-weight: 900;
-  background: linear-gradient(45deg, #00ffc2, #00c2ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: normal;
-}

@@ -1,17 +1,22 @@
 'use client';
 import { useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import { getCookie } from 'cookies-next';
 
 import { LoginModal } from '@/components/features';
+import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
 import { Dropdown, Menus } from '@/components/molecules';
+import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { palette, zIndex } from '@/styles';
 
 export default function Header() {
-  const { openModal } = useModalContext();
+  const router = useRouter();
+
+  const { openModal, closeModal } = useModalContext();
+  const { isFormDirty, formType } = useFormContext();
 
   const { isLoggedIn, login, logout } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -28,13 +33,57 @@ export default function Header() {
     }
   }, [login, logout]);
 
+  const handleClickLogo = () => {
+    if (isFormDirty) {
+      openModal({
+        children: (
+          <>
+            {formType == '필수회원가입' && (
+              <ConfirmModal
+                modalTitle="나가기"
+                modalContents={
+                  <>
+                    회원가입이 완료되지 않았습니다.
+                    <br />
+                    나가시겠습니까?
+                  </>
+                }
+                cancelBtnTxt="취소"
+                submitBtnTxt="나가기"
+              />
+            )}
+            {formType == '세부프로필작성' && (
+              <ConfirmModal
+                modalTitle="나가기"
+                modalContents={
+                  <>
+                    입력한 내용들이 모두 초기화됩니다.
+                    <br />
+                    나가시겠습니까?
+                  </>
+                }
+                cancelBtnTxt="취소"
+                submitBtnTxt="나가기"
+              />
+            )}
+          </>
+        ),
+        onCancel: () => {
+          closeModal();
+        },
+        onSubmit: () => {
+          router.push('/');
+          closeModal();
+        },
+      });
+    }
+  };
+
   return (
     <HeaderContainer>
       <HeaderWrapper>
         <HeaderLeft>
-          <Link className="app-title" href="/">
-            GUAM.
-          </Link>
+          <LogoButton onClick={handleClickLogo}>GUAM.</LogoButton>
           <Menus />
         </HeaderLeft>
 
@@ -74,6 +123,15 @@ const HeaderWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+`;
+
+const LogoButton = styled.button`
+  font-size: 40px;
+  font-weight: 900;
+  background: linear-gradient(45deg, #00ffc2, #00c2ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: normal;
 `;
 
 /** NOTE

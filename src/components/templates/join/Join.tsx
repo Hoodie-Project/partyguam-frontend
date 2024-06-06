@@ -7,6 +7,9 @@ import { format, startOfDay } from 'date-fns';
 
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
+import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
+import { useFormContext } from '@/contexts/FormContext';
+import { useModalContext } from '@/contexts/ModalContext';
 import { usePersonalInfo } from '@/hooks';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SJoinForm } from '@/styles/components/join';
@@ -17,6 +20,8 @@ export default function Join() {
   const router = useRouter();
   const setAuth = useAuthStore(state => state.setAuth);
   const [signupData, setSignupData] = useState({ email: '', image: '' });
+  const { openModal, closeModal } = useModalContext();
+  const { setFormDirty, setFormType } = useFormContext();
 
   useEffect(() => {
     const fetchSignupData = async () => {
@@ -29,6 +34,15 @@ export default function Join() {
     };
     fetchSignupData();
   }, []);
+
+  useEffect(() => {
+    setFormDirty(true);
+    setFormType('필수회원가입');
+    return () => {
+      setFormDirty(false);
+      setFormType('');
+    };
+  }, [setFormDirty, setFormType]);
 
   const {
     joinInput,
@@ -64,10 +78,31 @@ export default function Join() {
         <JoinHeader
           title="가입하기"
           hrefLabel="뒤로 가기"
-          onClickHref={() => {
-            alert('뒤로 가시면 회원 가입이 취소됩니다. 뒤로가기 하실? ');
-            router.push('/');
-          }}
+          onClickHref={() =>
+            openModal({
+              children: (
+                <ConfirmModal
+                  modalTitle="나가기"
+                  modalContents={
+                    <>
+                      회원가입이 완료되지 않았습니다.
+                      <br />
+                      나가시겠습니까?
+                    </>
+                  }
+                  cancelBtnTxt="취소"
+                  submitBtnTxt="나가기"
+                />
+              ),
+              onCancel: () => {
+                closeModal();
+              },
+              onSubmit: () => {
+                router.push('/');
+                closeModal();
+              },
+            })
+          }
         />
         <SJoinForm>
           <JoinField>
