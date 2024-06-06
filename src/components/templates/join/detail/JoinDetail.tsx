@@ -1,11 +1,14 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
+import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
 import { SelectLocation, SelectPersonality, SelectPosition } from '@/components/features/detailProfile';
 import { ProgressBar } from '@/components/molecules';
+import { useFormContext } from '@/contexts/FormContext';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useSelectLocationStore, useSelectPositionStore } from '@/stores/detailProfile';
 import { SContainer, SFlexColumnCenter, SJoinForm } from '@/styles/components';
 
@@ -18,6 +21,17 @@ export default function JoinDetail() {
   const hrefLabel = detailNum !== '1' ? '뒤로가기' : '';
   const { locationCompletion } = useSelectLocationStore();
   const { positionCompletion } = useSelectPositionStore();
+  const { openModal, closeModal } = useModalContext();
+  const { setFormDirty, setFormType } = useFormContext();
+
+  useEffect(() => {
+    setFormDirty(true);
+    setFormType('세부프로필작성');
+    return () => {
+      setFormDirty(false);
+      setFormType('');
+    };
+  }, [setFormDirty, setFormType]);
 
   /**
    * NOTE
@@ -60,6 +74,31 @@ export default function JoinDetail() {
         onClickHref={() => {
           router.push(`/join/detail?num=${Number(detailNum) - 1}`);
         }}
+        onClickIcon={() =>
+          openModal({
+            children: (
+              <ConfirmModal
+                modalTitle="나가기"
+                modalContents={
+                  <>
+                    입력한 내용들이 모두 초기화됩니다.
+                    <br />
+                    나가시겠습니까?
+                  </>
+                }
+                cancelBtnTxt="취소"
+                submitBtnTxt="나가기"
+              />
+            ),
+            onCancel: () => {
+              closeModal();
+            },
+            onSubmit: () => {
+              router.push('/');
+              closeModal();
+            },
+          })
+        }
         icon={<CloseRoundedIcon />}
       />
       <SJoinForm>
