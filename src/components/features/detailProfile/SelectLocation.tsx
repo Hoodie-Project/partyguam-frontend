@@ -79,7 +79,7 @@ export default function SelectLocation() {
       </ChipWrapper>
       <ButtonsContainer>
         <Button shadow="shadow2" onClick={handleClickNextBtn} disabled={selectedCities.length === 0}>
-          <Txt fontColor="black" fontSize={18} fontWeight="bold">
+          <Txt fontColor={selectedCities.length === 0 ? 'grey400' : 'black'} fontSize={18} fontWeight="bold">
             다음
           </Txt>
         </Button>

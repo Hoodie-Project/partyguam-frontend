@@ -174,7 +174,11 @@ export default function SelectPosition() {
           onClick={handleClickNextBtn}
           disabled={!primaryPosition.직군 || !primaryPosition.직무 || !primaryPosition.경력}
         >
-          <Txt fontColor="black" fontSize={18} fontWeight="bold">
+          <Txt
+            fontColor={!primaryPosition.직군 || !primaryPosition.직무 || !primaryPosition.경력 ? 'grey400' : 'black'}
+            fontSize={18}
+            fontWeight="bold"
+          >
             다음
           </Txt>
         </Button>

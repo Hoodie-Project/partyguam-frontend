@@ -154,7 +154,7 @@ export default function SelectPersonality() {
       />
       <ButtonsContainer>
         <Button shadow="shadow2" onClick={handleClickNextBtn} disabled={selected.length === 0}>
-          <Txt fontColor="black" fontSize={18} fontWeight="bold">
+          <Txt fontColor={selected.length === 0 ? 'grey400' : 'black'} fontSize={18} fontWeight="bold">
             {Number(detailNum) === 6 ? '완료' : '다음'}
           </Txt>
         </Button>
