@@ -28,7 +28,7 @@ export default function SelectLocation() {
     e.preventDefault();
     const res = await fetchPostLocations(selectedCitiesById);
 
-    if (res && res.status === 409) {
+    if (res.status === 409) {
       await fetchDeleteLocations();
       await fetchPostLocations(selectedCitiesById);
     }
