@@ -8,13 +8,12 @@ import { format, startOfDay } from 'date-fns';
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/atoms';
 import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
+import { PageHeader } from '@/components/molecules';
 import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { usePersonalInfo } from '@/hooks';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SJoinForm } from '@/styles/components/join';
-
-import JoinHeader from './JoinHeader';
 
 export default function Join() {
   const router = useRouter();
@@ -75,7 +74,7 @@ export default function Join() {
   return (
     <>
       <SContainer>
-        <JoinHeader
+        <PageHeader
           title="가입하기"
           hrefLabel="뒤로 가기"
           onClickHref={() =>

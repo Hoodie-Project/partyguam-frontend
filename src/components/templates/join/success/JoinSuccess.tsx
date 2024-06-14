@@ -5,10 +5,9 @@ import styled from '@emotion/styled';
 import { getCookie } from 'cookies-next';
 
 import { Button, Txt } from '@/components/atoms';
+import { PageHeader } from '@/components/molecules';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer } from '@/styles/components/join';
-
-import JoinHeader from '../JoinHeader';
 
 export default function JoinSuccess() {
   const router = useRouter();
@@ -29,7 +28,7 @@ export default function JoinSuccess() {
 
   return (
     <SContainer>
-      <JoinHeader
+      <PageHeader
         title="가입완료"
         hrefLabel="홈으로 가기"
         onClickHref={() => {

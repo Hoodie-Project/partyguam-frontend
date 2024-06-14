@@ -6,13 +6,11 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
 import { SelectLocation, SelectPersonality, SelectPosition } from '@/components/features/detailProfile';
-import { ProgressBar } from '@/components/molecules';
+import { PageHeader, ProgressBar } from '@/components/molecules';
 import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useSelectLocationStore, useSelectPositionStore } from '@/stores/detailProfile';
 import { SContainer, SFlexColumnCenter, SJoinForm } from '@/styles/components';
-
-import JoinHeader from '../JoinHeader';
 
 export default function JoinDetail() {
   const searchParams = useSearchParams();
@@ -68,7 +66,7 @@ export default function JoinDetail() {
 
   return (
     <SContainer>
-      <JoinHeader
+      <PageHeader
         title="세부 프로필"
         hrefLabel={hrefLabel}
         onClickHref={() => {

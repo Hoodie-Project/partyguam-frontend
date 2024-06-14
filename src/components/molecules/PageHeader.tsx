@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import styled from '@emotion/styled';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
@@ -12,10 +13,9 @@ type Props = {
   onClickIcon: () => void;
   icon: JSX.Element;
 };
-
-export default function JoinHeader({ onClickHref, hrefLabel, title, icon, onClickIcon }: Partial<Props>) {
+export default function PageHeader({ onClickHref, hrefLabel, title, icon, onClickIcon }: Partial<Props>) {
   return (
-    <JoinHeaderContainer>
+    <PageHeaderContainer>
       <GoBackBtn onClick={onClickHref}>
         {hrefLabel && <ArrowBackIosNewRoundedIcon />}
         <Txt fontColor="grey500" fontWeight="bold" style={{ marginTop: '2px', marginLeft: '10px' }}>
@@ -26,11 +26,11 @@ export default function JoinHeader({ onClickHref, hrefLabel, title, icon, onClic
         {title}
       </Txt>
       {icon && <IconContainer onClick={onClickIcon}>{icon}</IconContainer>}
-    </JoinHeaderContainer>
+    </PageHeaderContainer>
   );
 }
 
-const JoinHeaderContainer = styled.section`
+const PageHeaderContainer = styled.section`
   display: grid;
   position: fixed;
   background-color: white;
