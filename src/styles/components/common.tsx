@@ -9,7 +9,7 @@ const SContainer = styled.section`
   align-items: center;
 `;
 
-const SJoinForm = styled.form`
+const SForm = styled.form`
   display: flex;
   padding-top: 5rem;
   flex-direction: column;
@@ -18,4 +18,4 @@ const SJoinForm = styled.form`
   width: 77.75rem;
 `;
 
-export { SContainer, SJoinForm };
+export { SContainer, SForm };

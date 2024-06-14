@@ -10,7 +10,7 @@ import { PageHeader, ProgressBar } from '@/components/molecules';
 import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useSelectLocationStore, useSelectPositionStore } from '@/stores/detailProfile';
-import { SContainer, SFlexColumnCenter, SJoinForm } from '@/styles/components';
+import { SContainer, SFlexColumnCenter, SForm } from '@/styles/components';
 
 export default function JoinDetail() {
   const searchParams = useSearchParams();
@@ -99,7 +99,7 @@ export default function JoinDetail() {
         }
         icon={<CloseRoundedIcon />}
       />
-      <SJoinForm>
+      <SForm>
         <JoinDetailWrapper>
           <ProgressContainer>
             {progress.map((item, index) => (
@@ -121,7 +121,7 @@ export default function JoinDetail() {
             ))}
           {Number(detailNum) > 3 && <SelectPersonality />}
         </JoinDetailWrapper>
-      </SJoinForm>
+      </SForm>
     </SContainer>
   );
 }

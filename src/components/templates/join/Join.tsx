@@ -13,7 +13,7 @@ import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { usePersonalInfo } from '@/hooks';
 import { useAuthStore } from '@/stores/auth';
-import { SContainer, SJoinForm } from '@/styles/components/join';
+import { SContainer, SForm } from '@/styles/components';
 
 export default function Join() {
   const router = useRouter();
@@ -103,7 +103,7 @@ export default function Join() {
             })
           }
         />
-        <SJoinForm>
+        <SForm>
           <JoinField>
             <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
               이메일을 확인해 주세요.
@@ -258,7 +258,7 @@ export default function Join() {
               가입 완료
             </Txt>
           </Button>
-        </SJoinForm>
+        </SForm>
       </SContainer>
     </>
   );

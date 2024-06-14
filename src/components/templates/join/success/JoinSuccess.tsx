@@ -7,7 +7,7 @@ import { getCookie } from 'cookies-next';
 import { Button, Txt } from '@/components/atoms';
 import { PageHeader } from '@/components/molecules';
 import { useAuthStore } from '@/stores/auth';
-import { SContainer } from '@/styles/components/join';
+import { SContainer } from '@/styles/components';
 
 export default function JoinSuccess() {
   const router = useRouter();
