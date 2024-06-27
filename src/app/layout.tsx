@@ -2,7 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 import '@/styles/global.css';
-import { Modal } from '@/components/molecules';
+import { Modal } from '@/components/_molecules';
 import FormContextProvider from '@/contexts/FormContext/FormProvider';
 import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
 

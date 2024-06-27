@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import { Txt } from '@/components/atoms';
+import { Txt } from '@/components/_atoms';
 import { useModalContext } from '@/contexts/ModalContext';
 import { palette } from '@/styles';
 

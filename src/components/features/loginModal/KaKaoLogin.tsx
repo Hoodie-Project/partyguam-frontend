@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 import KakaoIcon from '@/assets/icon/kakao-icon.svg';
-import { Button, Txt } from '@/components/atoms';
+import { Button, Txt } from '@/components/_atoms';
 
 export default function KaKaoLogin() {
   const { push } = useRouter();

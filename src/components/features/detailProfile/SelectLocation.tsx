@@ -7,9 +7,9 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ErrorIcon from '@mui/icons-material/Error';
 
 import { fetchDeleteLocations, fetchPostLocations } from '@/apis/detailProfile';
-import { Button, Chip, Txt } from '@/components/atoms';
+import { Button, Chip, Txt } from '@/components/_atoms';
+import { Toast } from '@/components/_molecules';
 import { Location } from '@/components/features';
-import { Toast } from '@/components/molecules';
 import { useSelectLocationStore } from '@/stores/detailProfile';
 
 export default function SelectLocation() {
