@@ -3,10 +3,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
+import { Txt } from '@/components/_atoms';
 import type { fontWeight } from '@/styles';
 import { palette, radius, shadow, size } from '@/styles';
-
-import Txt from '../../atoms/txt';
 
 import Options from './Options';
 

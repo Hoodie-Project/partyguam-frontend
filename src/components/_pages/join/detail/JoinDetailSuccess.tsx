@@ -3,8 +3,8 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
-import { Button, Txt } from '@/components/atoms';
-import { SContainer } from '@/styles/components/join';
+import { Button, Txt } from '@/components/_atoms';
+import { SContainer } from '@/styles/components/common';
 
 export default function JoinDetailSuccess() {
   const router = useRouter();

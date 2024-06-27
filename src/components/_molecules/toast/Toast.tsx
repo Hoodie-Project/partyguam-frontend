@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { Portal, Txt } from '@/components/atoms';
+import { Portal, Txt } from '@/components/_atoms';
 import { palette } from '@/styles';
 
 type Props = {

@@ -4,7 +4,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 
-import { Txt } from '@/components/atoms';
+import { Txt } from '@/components/_atoms';
 import { palette } from '@/styles';
 
 interface Props {

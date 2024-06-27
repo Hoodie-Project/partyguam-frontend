@@ -3,7 +3,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 
-import { Txt } from '@/components/atoms';
+import { Txt } from '@/components/_atoms';
 import { palette } from '@/styles';
 
 type Props = {

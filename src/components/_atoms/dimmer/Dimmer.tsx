@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import Portal from '@/components/atoms/portal';
+import { Portal } from '@/components/_atoms';
 import { zIndex } from '@/styles';
 
 type Props = {

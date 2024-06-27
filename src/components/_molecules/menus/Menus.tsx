@@ -1,7 +1,7 @@
 'use client';
 import styled from '@emotion/styled';
 
-import { Txt } from '@/components/atoms';
+import { Txt } from '@/components/_atoms';
 /**
  * NOTE. 추후 확장 가능하게 변경
  */

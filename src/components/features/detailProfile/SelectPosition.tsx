@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
 import { fetchDeletePositions, fetchGetPositions, fetchPostPositions } from '@/apis/detailProfile';
-import { Button, Txt } from '@/components/atoms';
-import { Select } from '@/components/molecules';
+import { Button, Txt } from '@/components/_atoms';
+import { Select } from '@/components/_molecules';
 import { useAuthStore } from '@/stores/auth';
 import type { Career } from '@/stores/detailProfile';
 import { useSelectPositionStore } from '@/stores/detailProfile';

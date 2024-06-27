@@ -5,8 +5,8 @@ import styled from '@emotion/styled';
 import ErrorIcon from '@mui/icons-material/Error';
 
 import { fetchDeletePersonality, fetchGetPersonality, fetchPostPersonality } from '@/apis/detailProfile';
-import { Button, Txt } from '@/components/atoms';
-import { CheckItem, Toast } from '@/components/molecules';
+import { Button, Txt } from '@/components/_atoms';
+import { CheckItem, Toast } from '@/components/_molecules';
 import { useSelectPersonalityStore } from '@/stores/detailProfile';
 import type { PersonalityOption, PersonalityQuestion, SelectedPersonality } from '@/types/user';
 

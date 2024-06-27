@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { fetchGetLocations } from '@/apis/detailProfile';
-import { Square, Txt } from '@/components/atoms';
+import { Square, Txt } from '@/components/_atoms';
 import { useSelectLocationStore } from '@/stores/detailProfile';
 import { palette, radius } from '@/styles/themes';
 

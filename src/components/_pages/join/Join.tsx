@@ -6,9 +6,9 @@ import { setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
 import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
-import { Button, DateInput, Input, Txt } from '@/components/atoms';
+import { Button, DateInput, Input, Txt } from '@/components/_atoms';
+import { PageHeader } from '@/components/_molecules';
 import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
-import { PageHeader } from '@/components/molecules';
 import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { usePersonalInfo } from '@/hooks';

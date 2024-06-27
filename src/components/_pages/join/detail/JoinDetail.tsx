@@ -4,9 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
+import { PageHeader, ProgressBar } from '@/components/_molecules';
 import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
 import { SelectLocation, SelectPersonality, SelectPosition } from '@/components/features/detailProfile';
-import { PageHeader, ProgressBar } from '@/components/molecules';
 import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useSelectLocationStore, useSelectPositionStore } from '@/stores/detailProfile';

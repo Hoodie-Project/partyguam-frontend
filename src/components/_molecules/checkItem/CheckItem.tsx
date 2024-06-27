@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 
-import { Square, Txt } from '@/components/atoms';
+import { Square, Txt } from '@/components/_atoms';
 import { palette } from '@/styles/themes';
 
 type OwnProps = {

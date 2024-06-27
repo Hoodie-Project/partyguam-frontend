@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import { getCookie } from 'cookies-next';
 
-import { Button, Txt } from '@/components/atoms';
-import { PageHeader } from '@/components/molecules';
+import { Button, Txt } from '@/components/_atoms';
+import { PageHeader } from '@/components/_molecules';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer } from '@/styles/components';
 

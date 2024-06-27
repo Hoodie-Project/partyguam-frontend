@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 import GoogleIcon from '@/assets/icon/google-icon.svg';
-import { Button, Txt } from '@/components/atoms';
+import { Button, Txt } from '@/components/_atoms';
 
 export default function GoogleLogin() {
   const { push } = useRouter();

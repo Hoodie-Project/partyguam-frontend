@@ -3,7 +3,7 @@
 import styled from '@emotion/styled';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { Txt } from '@/components/atoms';
+import { Txt } from '@/components/_atoms';
 
 /**
  *

@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import { Dimmer, Portal } from '@/components/atoms';
+import { Dimmer, Portal } from '@/components/_atoms';
 import { useModalContext } from '@/contexts/ModalContext';
 import { zIndex } from '@/styles';
 
