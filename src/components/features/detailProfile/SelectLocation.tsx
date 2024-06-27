@@ -9,7 +9,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { fetchDeleteLocations, fetchPostLocations } from '@/apis/detailProfile';
 import { Button, Chip, Txt } from '@/components/_atoms';
 import { Toast } from '@/components/_molecules';
-import { Location } from '@/components/features';
+import { Location } from '@/components/_features';
 import { useSelectLocationStore } from '@/stores/detailProfile';
 
 export default function SelectLocation() {
