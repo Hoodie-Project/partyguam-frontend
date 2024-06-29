@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 
 import { Balloon, Input, Square, Txt } from '@/components/_atoms';
-import { PageHeader } from '@/components/_molecules';
+import { PageHeader, TipBox } from '@/components/_molecules';
 import { SContainer, SFlexColumnFull, SFlexRowFull } from '@/styles/components';
 
 export default function PartyCreate() {
@@ -60,6 +60,32 @@ export default function PartyCreate() {
           <Txt fontSize={16} style={{ marginBottom: 20 }}>
             파티의 방향성, 참고사항 등을 자유롭게 적어 주세요.
           </Txt>
+          <TipBox
+            shadowKey="shadow1"
+            width="100%"
+            height="92px"
+            backgroundColor="grey100"
+            borderColor="grey200"
+            radiusKey="base"
+            chipFontColor="white"
+            chipSize="small"
+            chipLabel="TIP"
+            chipFontWeight="semibold"
+            chipFontSize={16}
+            chipColor="primaryGreen"
+            chipHeight="20px"
+            chipWidth="41px"
+            titleText={
+              <TipBox.Txt fontWeight="semibold" fontSize={16}>
+                내용을 추천해 드려요.
+              </TipBox.Txt>
+            }
+            contentText={
+              <TipBox.Txt fontWeight="normal" fontSize={16}>
+                어떤 활동을 하나요? 규칙이 있나요? (출석, 강퇴 등)
+              </TipBox.Txt>
+            }
+          />
         </SFlexColumnFull>
       </PartyCreateContainer>
     </SContainer>
