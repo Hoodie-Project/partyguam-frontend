@@ -1,17 +1,15 @@
 'use client';
 
-import type { InputHTMLAttributes } from 'react';
+import type { TextareaHTMLAttributes } from 'react';
 import { forwardRef } from 'react';
 import styled from '@emotion/styled';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
-import { padding, palette, radius, shadow, size } from '@/styles';
-import { svgSizeMap } from '@/utils/svg';
+import { padding, palette, radius, shadow } from '@/styles';
 
 import Txt from '../txt';
 
 type OwnProps = {
-  height: keyof typeof size.height;
+  height: string;
   radius: keyof typeof radius;
   padding: keyof typeof padding;
   inputState: 'warn' | 'success' | 'default';
@@ -24,9 +22,9 @@ type OwnProps = {
   onClear: (value: any) => void;
 };
 
-export type Props = Partial<OwnProps> & Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'>;
+export type Props = Partial<OwnProps> & Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'type' | 'size'>;
 
-export const Input = forwardRef<HTMLInputElement, Props>(
+const TextArea = forwardRef<HTMLTextAreaElement, Props>(
   (
     {
       value,
@@ -41,7 +39,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
       placeholder,
       maxCount,
       disabled,
-      ...inputAttributes
+      ...textareaAttributes
     },
     ref,
   ) => {
@@ -56,28 +54,25 @@ export const Input = forwardRef<HTMLInputElement, Props>(
           inputState={inputState}
           disabled={disabled}
         >
-          <TextInput ref={ref} value={value} placeholder={placeholder} disabled={disabled} {...inputAttributes} />
+          <STextArea
+            ref={ref}
+            value={value}
+            placeholder={placeholder || ''}
+            disabled={disabled}
+            {...textareaAttributes}
+          />
           {value && maxCount && (
             <Txt
               fontWeight="normal"
               fontColor="grey400"
               fontSize={14}
-              style={{ display: 'inline-block', width: '60px', marginLeft: '16px' }}
+              style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '5px' }}
             >
-              {value?.length} / {maxCount}
+              {value.length} / {maxCount}
             </Txt>
           )}
-          {value && (
-            <CancelOutlinedIcon
-              onClick={onClear}
-              sx={{
-                width: `${svgSizeMap['s'].size}`,
-                strokeWidth: `${svgSizeMap['s'].strokeWidth}`,
-                cursor: 'pointer',
-              }}
-            />
-          )}
         </InputContainer>
+        <ClearButton onClick={() => onClear && onClear(value)}>전체 삭제</ClearButton>
         {inputState && <Message inputState={inputState}>{bottomMessage}</Message>}
       </InputWrapper>
     );
@@ -98,10 +93,9 @@ const InputWrapper = styled.div`
 
 const InputContainer = styled.div<Props>`
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
   width: 100%;
-  height: ${props => size.height[props.height || 'base']};
+  height: ${props => props.height};
   padding: ${props => padding[props.padding || 'horizontalBase']};
   border-radius: ${props => radius[props.radius || 'base']};
   border-color: ${props =>
@@ -112,11 +106,30 @@ const InputContainer = styled.div<Props>`
   box-shadow: ${props => (props.shadow ? shadow[props.shadow] : 'none')};
 `;
 
-const TextInput = styled.input<Props>`
+const STextArea = styled.textarea<Props>`
   width: 100%;
+  border: none;
+  outline: none;
+  height: 100%;
   font-size: 16px;
   font-weight: normal;
   background-color: ${props => props.disabled && palette.grey100};
+  resize: none;
+  white-space: pre-wrap;
+  ::placeholder {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+`;
+
+const ClearButton = styled.div`
+  text-align: right;
+  margin-top: 5px;
+  margin-right: 15px;
+  color: ${palette.grey400};
+  font-size: 14px;
+  cursor: pointer;
 `;
 
 const Message = styled.div<Props>`
@@ -124,3 +137,5 @@ const Message = styled.div<Props>`
   margin: ${props => (props.inputState ? '8px 0 0 20px' : '0 0 0 20px')};
   font-size: 14px;
 `;
+
+export default TextArea;

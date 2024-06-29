@@ -53,15 +53,6 @@ const BalloonWrapper = styled.div<{ width?: string; height?: string }>`
     border-style: solid;
     border-color: transparent transparent ${palette.grey500} transparent;
   }
-`;
 
-const CloseButton = styled.button`
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+  z-index: -1;
 `;
