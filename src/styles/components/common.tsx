@@ -18,4 +18,8 @@ const SForm = styled.form`
   width: 77.75rem;
 `;
 
-export { SContainer, SForm };
+const SMargin = styled.div<{ margin: string }>`
+  margin: ${props => props.margin};
+`;
+
+export { SContainer, SForm, SMargin };

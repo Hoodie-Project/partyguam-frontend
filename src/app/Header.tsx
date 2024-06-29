@@ -5,8 +5,7 @@ import styled from '@emotion/styled';
 import { getCookie } from 'cookies-next';
 
 import { Dropdown, Menus } from '@/components/_molecules';
-import { LoginModal } from '@/components/features';
-import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
+import { ConfirmModal, LoginModal } from '@/components/features';
 import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
