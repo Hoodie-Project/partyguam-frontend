@@ -7,4 +7,5 @@ const Input = Object.assign(InputComponent, {
 });
 
 export default Input;
+
 export * from './Input';
