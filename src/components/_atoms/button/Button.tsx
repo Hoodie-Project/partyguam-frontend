@@ -29,6 +29,7 @@ const Button = forwardRef<HTMLButtonElement, Props>(
       borderColor,
       children,
       disabled,
+      onClick,
       ...buttonAttributes
     },
     ref,
@@ -43,6 +44,10 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         ref={ref}
         borderColor={borderColor}
         shadow={shadow}
+        onClick={e => {
+          e.preventDefault();
+          onClick();
+        }}
         {...buttonAttributes}
       >
         {children}
