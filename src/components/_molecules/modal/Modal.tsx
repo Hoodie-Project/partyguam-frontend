@@ -18,7 +18,6 @@ export default function Modal({ ...divAttributes }: Props) {
   }
 
   const onCancelInternal = () => {
-    onCancel?.();
     closeModal();
   };
 
