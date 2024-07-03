@@ -1,20 +1,44 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 
+import ImageAddIcon from '@/assets/icon/image_add.svg';
 import { Balloon, Button, Input, Square, Txt } from '@/components/_atoms';
-import { PageHeader, TipBox } from '@/components/_molecules';
+import { PageHeader, Select, TipBox } from '@/components/_molecules';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 
 export default function PartyCreate() {
+  const [파티명value, set파티명value] = useState<string>('');
+  const [파티유형value, set파티유형value] = useState<string>('');
+  const [파티유형optionList, set파티유형optionList] = useState<{ id: number; type: string }[]>([]);
+  const [파티소개글value, set파티소개글value] = useState<string>('');
   const [isVisibleBalloon, setIsVisibleBalloon] = useState(true);
   const [createDisable, setCreateDisable] = useState(true);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await fetchGetPartyTypes();
+  //     set파티유형optionList(response);
+  //   })();
+  // }, []);
+
+  const 파티명InputState = useMemo(() => {
+    if (파티명value.length > 15) return 'warn';
+    if (파티명value.length > 0 && 파티명value.length <= 15) return 'success';
+    return 'default';
+  }, [파티명value]);
+
+  const handle파티명Change = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    set파티명value(e.target.value);
+  }, []);
 
   return (
     <SContainer>
       <PageHeader title="파티 생성하기" />
       <PartyCreateContainer>
-        <Square width="390px" height="293px" radiusKey="base" backgroundColor="grey300" shadowKey="none"></Square>
+        <Square width="390px" height="293px" radiusKey="base" backgroundColor="grey300" shadowKey="none">
+          <ImageAddIcon />
+        </Square>
         {isVisibleBalloon && (
           <Balloon
             width="163px"
@@ -42,7 +66,17 @@ export default function PartyCreate() {
             <Txt fontSize={16} style={{ marginBottom: 20 }}>
               직관적인 파티명을 사용하시면 조회 수가 올라가요.
             </Txt>
-            <Input placeholder="15자 이내로 입력해 주세요" shadow="shadow1" />
+            <Input
+              value={파티명value}
+              inputState={파티명InputState}
+              onChange={handle파티명Change}
+              onClear={() => {
+                set파티명value('');
+              }}
+              placeholder="15자 이내로 입력해 주세요"
+              shadow="shadow1"
+              maxCount={15}
+            />
           </SFlexColumnFull>
           <SFlexColumnFull>
             <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
@@ -51,7 +85,7 @@ export default function PartyCreate() {
             <Txt fontSize={16} style={{ marginBottom: 20 }}>
               파티가 목표로 하는 유형을 선택해 주세요.
             </Txt>
-            <Input placeholder="미정" shadow="shadow1" />
+            <Select placeholder="미정" height="m" onClick={() => {}} />
           </SFlexColumnFull>
         </SFlexRowFull>
         <SMargin margin="120px 0px 0px 0px" />
@@ -100,6 +134,20 @@ export default function PartyCreate() {
             &#13;&#10;함께하고 싶으신 분들은 언제든지 환영입니다!"
           />
         </SFlexColumnFull>
+        <SMargin margin="120px 0px 0px 0px" />
+        <SFlexColumnFull>
+          <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
+            내 포지션
+          </Txt>
+          <Txt fontSize={16} style={{ marginBottom: 20 }}>
+            파티 내에서 본인의 포지션을 입력해 주세요.
+          </Txt>
+          <SFlexRowFull style={{ justifyContent: 'space-between', gap: '20px' }}>
+            <Select placeholder="직군" height="m" onClick={() => {}} />
+            <Select placeholder="직무" height="m" onClick={() => {}} />
+          </SFlexRowFull>
+        </SFlexColumnFull>
+        <SMargin margin="200px 0px 0px 0px" />
         <SFlexRowFull style={{ justifyContent: 'space-between' }}>
           <Button
             style={{ marginBottom: 60 }}

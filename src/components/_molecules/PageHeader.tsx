@@ -41,6 +41,7 @@ const PageHeaderContainer = styled.section`
   height: 3.5rem;
   padding: 0.875rem 0px;
   justify-items: stretch;
+  z-index: 1;
 `;
 
 const GoBackBtn = styled.button`

@@ -1,7 +1,7 @@
 'use client';
 
 import type { InputHTMLAttributes } from 'react';
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 import styled from '@emotion/styled';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
@@ -26,7 +26,7 @@ type OwnProps = {
 
 export type Props = Partial<OwnProps> & Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'size'>;
 
-export const Input = forwardRef<HTMLInputElement, Props>(
+const Input = forwardRef<HTMLInputElement, Props>(
   (
     {
       value,
@@ -83,6 +83,8 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     );
   },
 );
+
+export const MemoizedInput = memo(Input);
 
 const inputState = {
   success: palette.greenDark100,

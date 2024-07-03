@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 
@@ -24,7 +24,7 @@ interface Props {
   fontColor?: keyof typeof palette;
 }
 
-export default function Select({
+function Select({
   height = 'l',
   placeholder,
   value,
@@ -68,6 +68,7 @@ export default function Select({
     </PickerWrapper>
   );
 }
+export default memo(Select);
 
 const PickerWrapper = styled.div`
   position: relative;

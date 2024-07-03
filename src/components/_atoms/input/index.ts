@@ -1,5 +1,5 @@
 'use client';
-import { Input as InputComponent } from './Input';
+import { MemoizedInput as InputComponent } from './Input';
 import TextArea from './TextArea';
 
 const Input = Object.assign(InputComponent, {
