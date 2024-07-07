@@ -20,10 +20,11 @@ export const privateApi = new HttpClient({
   withXSRFToken: true,
 });
 
-export const fileUploadInstance = new HttpClient({
+export const fileUploadApi = new HttpClient({
   baseURL: `${BASE_URL}`,
   headers: {
     'Content-Type': 'multipart/form-data',
   },
+  withCredentials: true,
   withXSRFToken: true,
 });

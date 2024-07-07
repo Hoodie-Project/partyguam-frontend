@@ -36,6 +36,7 @@ function Select({
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const isValid: boolean = value !== undefined && value.length > 0;
 
   const handleClickOutside = (e: MouseEvent) => {
     if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
@@ -52,7 +53,7 @@ function Select({
 
   return (
     <PickerWrapper ref={pickerRef}>
-      <PickerDropDown height={height} onClick={() => setIsOpen(prev => !prev)}>
+      <PickerDropDown height={height} isValid={isValid} onClick={() => setIsOpen(prev => !prev)}>
         {!value ? (
           <Txt fontWeight={fontWeight} fontSize={fontSize} fontColor="grey400">
             {placeholder}
@@ -79,7 +80,7 @@ const PickerWrapper = styled.div`
   cursor: pointer;
 `;
 
-const PickerDropDown = styled.div<{ height: keyof typeof size.height }>`
+const PickerDropDown = styled.div<{ height: keyof typeof size.height; isValid: boolean }>`
   width: 100%;
   height: ${props => size.height[props.height || 'base']};
   display: flex;
@@ -89,6 +90,6 @@ const PickerDropDown = styled.div<{ height: keyof typeof size.height }>`
   color: ${palette.grey300};
   background: #ffffff;
   border-radius: ${radius.base};
-  border: 1px solid ${palette.grey200};
+  border: ${({ isValid }) => `1px solid ${isValid ? palette.greenDark100 : palette.grey200}`};
   box-shadow: ${shadow.shadow1};
 `;
