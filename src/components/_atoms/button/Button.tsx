@@ -45,8 +45,10 @@ const Button = forwardRef<HTMLButtonElement, Props>(
         borderColor={borderColor}
         shadow={shadow}
         onClick={e => {
-          e.preventDefault();
-          onClick();
+          if (onClick) {
+            e.preventDefault();
+            onClick(e);
+          }
         }}
         {...buttonAttributes}
       >

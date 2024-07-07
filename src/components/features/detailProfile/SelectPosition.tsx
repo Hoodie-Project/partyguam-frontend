@@ -11,6 +11,7 @@ import type { Career } from '@/stores/detailProfile';
 import { useSelectPositionStore } from '@/stores/detailProfile';
 import type { Position } from '@/types/user';
 
+// TODO. 데이터 정제 로직 걷어내고 query로 api 보내도록 변경 필요
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
   const uniqueMainPositions = Array.from(new Set(data.map(item => item.main)));
   return uniqueMainPositions.map((main, index) => {
