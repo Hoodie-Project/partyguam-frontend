@@ -31,3 +31,19 @@ export const fetchPostCreateParty = async (data: FormData) => {
     return error;
   }
 };
+
+export const fetchPostApplyParty = async ({
+  partyId,
+  partyRecruitmentId,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+}) => {
+  try {
+    const response = await fileUploadApi.post(`/parties/${partyId}/recruitments/${partyRecruitmentId}/applications`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchPostApplyParty error : ', error);
+    return error;
+  }
+};
