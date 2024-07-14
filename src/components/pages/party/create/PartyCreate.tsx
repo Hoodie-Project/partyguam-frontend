@@ -167,8 +167,7 @@ export default function PartyCreate() {
           modalContents={
             <>
               작성된 내용이 저장되지 않았습니다.
-              <br />
-              나가시겠습니까?
+              <br />이 페이지를 떠나시겠습니까?
             </>
           }
           cancelBtnTxt="나가기"

@@ -3,6 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
+import { fetchPostApplyParty } from '@/apis/party';
 import { Button, Input, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';
@@ -37,8 +38,7 @@ export default function PartyApply() {
           modalContents={
             <>
               작성된 내용이 저장되지 않았습니다.
-              <br />
-              나가시겠습니까?
+              <br />이 페이지를 떠나시겠습니까?
             </>
           }
           cancelBtnTxt="나가기"
@@ -55,33 +55,40 @@ export default function PartyApply() {
     });
   };
 
-  const onClickApply = () => {
-    openModal({
-      children: (
-        <ConfirmModal
-          modalTitle="지원 완료"
-          modalContents={
-            <>
-              지원이 완료되었어요!
-              <br />
-              다른 파티도 둘러볼까요?
-            </>
-          }
-          cancelBtnTxt="지원 목록"
-          submitBtnTxt="확인"
-        />
-      ),
-      onCancel: () => {
-        // 지원 목록 어디로 이동하는지 기획 나와야함
-        router.push('/');
-        closeModal();
-      },
-      onSubmit: () => {
-        // 확인 어디로 이동하는지 기획 나와야함
-        router.push('/');
-        closeModal();
-      },
-    });
+  const onClickApply = async () => {
+    try {
+      // TODO. 파티 리스트 페이지에서 partyId, partyRecruitmentId를 뽑아와야 하기에 api 수정 필요
+      const res = await fetchPostApplyParty({ partyId: 1, partyRecruitmentId: 1 });
+      console.log('[RESPONSE POST APPLY PARTY]', res);
+      openModal({
+        children: (
+          <ConfirmModal
+            modalTitle="지원 완료"
+            modalContents={
+              <>
+                지원이 완료되었어요!
+                <br />
+                다른 파티도 둘러볼까요?
+              </>
+            }
+            cancelBtnTxt="지원 목록"
+            submitBtnTxt="확인"
+          />
+        ),
+        onCancel: () => {
+          // 지원 목록 어디로 이동하는지 기획 나와야함
+          router.push('/');
+          closeModal();
+        },
+        onSubmit: () => {
+          // 확인 어디로 이동하는지 기획 나와야함
+          router.push('/');
+          closeModal();
+        },
+      });
+    } catch (err) {
+      console.error('Error Apply party:', err);
+    }
   };
 
   return (
@@ -140,7 +147,7 @@ export default function PartyApply() {
             onClick={onClickApply}
           >
             <Txt fontWeight="bold" fontColor={applyDisabled ? 'grey400' : 'black'}>
-              생성하기
+              지원하기
             </Txt>
           </Button>
         </SFlexRowFull>
