@@ -206,7 +206,7 @@ export default function PartyCreate() {
       },
       // TODO. 모집하기 모달 route 기획 나와야 함
       onSubmit: () => {
-        router.push('/');
+        router.push('/party/recruit');
         closeModal();
       },
     });

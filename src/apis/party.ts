@@ -32,6 +32,27 @@ export const fetchPostCreateParty = async (data: FormData) => {
   }
 };
 
+export const fetchPostRecruitmentParty = async ({
+  partyId,
+  data,
+}: {
+  partyId: number;
+  data: {
+    recruitments: {
+      positionId: number;
+      recruiting_count: number;
+    }[];
+  };
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/recruitments`, data);
+    return response.data;
+  } catch (error) {
+    console.error('fetchPostApplyParty error : ', error);
+    return error;
+  }
+};
+
 export const fetchPostApplyParty = async ({
   partyId,
   partyRecruitmentId,
@@ -40,11 +61,10 @@ export const fetchPostApplyParty = async ({
   partyRecruitmentId: number;
 }) => {
   try {
-    const response = await fileUploadApi.post(`/parties/${partyId}/recruitments/${partyRecruitmentId}/applications`);
+    const response = await privateApi.post(`/parties/${partyId}/recruitments/${partyRecruitmentId}/applications`);
     return response.data;
   } catch (error) {
     console.error('fetchPostApplyParty error : ', error);
     return error;
   }
 };
-

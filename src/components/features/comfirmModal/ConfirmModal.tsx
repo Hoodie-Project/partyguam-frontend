@@ -9,7 +9,7 @@ import { palette } from '@/styles';
 type Props = {
   modalTitle: string;
   modalContents: React.ReactNode | string;
-  cancelBtnTxt: string;
+  cancelBtnTxt?: string;
   submitBtnTxt: string;
   handleCancel?: () => void;
   handleSubmit?: () => void;
@@ -37,26 +37,31 @@ export default function ConfirmModal({
         </Txt>
       </ModalContentsWrapper>
       <ModalButtonWrapper>
-        <Button
-          position="left"
-          backgroundColor={palette.greenLight400}
-          borderRadius="0 0 0 16px"
-          onClick={handleCancel || onCancel}
-        >
-          <Txt fontColor="black" fontWeight="bold" fontSize={16} style={{ textAlign: 'center' }}>
-            {cancelBtnTxt}
-          </Txt>
-        </Button>
-        <Button
-          position="right"
-          backgroundColor={palette.primaryGreen}
-          borderRadius="0 0 16px 0"
-          onClick={handleSubmit || onSubmit}
-        >
-          <Txt fontColor="black" fontWeight="bold" fontSize={16} style={{ textAlign: 'center' }}>
-            {submitBtnTxt}
-          </Txt>
-        </Button>
+        {cancelBtnTxt != null && (
+          <Button
+            position="left"
+            backgroundColor={palette.greenLight400}
+            borderRadius="0 0 0 16px"
+            onClick={handleCancel || onCancel}
+          >
+            <Txt fontColor="black" fontWeight="bold" fontSize={16} style={{ textAlign: 'center' }}>
+              {cancelBtnTxt}
+            </Txt>
+          </Button>
+        )}
+        {submitBtnTxt != null && (
+          <Button
+            position="right"
+            onlySubmit={cancelBtnTxt == null}
+            backgroundColor={palette.primaryGreen}
+            borderRadius={cancelBtnTxt ? '0 0 16px 0' : '0 0 16px 16px'}
+            onClick={handleSubmit || onSubmit}
+          >
+            <Txt fontColor="black" fontWeight="bold" fontSize={16} style={{ textAlign: 'center' }}>
+              {submitBtnTxt}
+            </Txt>
+          </Button>
+        )}
       </ModalButtonWrapper>
     </ConfirmModalContainer>
   );
@@ -92,11 +97,11 @@ const ModalButtonWrapper = styled.div`
   border-radius: 0px 0px 16px 16px;
 `;
 
-const Button = styled.div<{ position: string; backgroundColor: string; borderRadius: string }>`
+const Button = styled.div<{ position: string; backgroundColor: string; borderRadius: string; onlySubmit?: boolean }>`
   position: absolute;
   bottom: 0;
   ${({ position }) => position}: 0;
-  width: 12.5rem;
+  width: ${({ onlySubmit }) => (onlySubmit ? '25rem' : '12.5rem')};
   height: 4.1481rem;
   background-color: ${({ backgroundColor }) => backgroundColor};
   border-radius: ${({ borderRadius }) => borderRadius};
