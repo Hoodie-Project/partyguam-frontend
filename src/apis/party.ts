@@ -47,3 +47,4 @@ export const fetchPostApplyParty = async ({
     return error;
   }
 };
+
