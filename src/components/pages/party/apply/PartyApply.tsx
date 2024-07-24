@@ -34,22 +34,25 @@ export default function PartyApply() {
     openModal({
       children: (
         <ConfirmModal
-          modalTitle="경고!"
+          modalTitle="나가기"
           modalContents={
             <>
-              작성된 내용이 저장되지 않았습니다.
-              <br />이 페이지를 떠나시겠습니까?
+              파티 지원이 완료되지 않았어요.
+              <br />
+              입력하신 내용이 있으면 저장되지 않아요!
+              <br />
+              그래도 해당 페이지에서 정말 나가시겠어요?
             </>
           }
-          cancelBtnTxt="나가기"
-          submitBtnTxt="작성하기"
+          cancelBtnTxt="취소"
+          submitBtnTxt="나가기"
         />
       ),
       onCancel: () => {
-        router.push('/');
         closeModal();
       },
       onSubmit: () => {
+        router.push('/');
         closeModal();
       },
     });
@@ -93,7 +96,7 @@ export default function PartyApply() {
 
   return (
     <SContainer>
-      <PageHeader title="파티 지원하기" />
+      <PageHeader title="파티 지원" />
       <PartyApplyContainer>
         <SFlexColumnFull>
           <SMargin margin="3.125rem 0rem 0rem 0rem" />

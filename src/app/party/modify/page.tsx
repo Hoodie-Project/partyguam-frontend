@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 
 const PartyEdit = dynamic(() => import('@/components/pages/party/edit/PartyEdit'), { ssr: false });
 
-export default function PartyEditPage() {
+export default function PartyModifyPage() {
   return (
     <>
       <PartyEdit />
