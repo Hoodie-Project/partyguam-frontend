@@ -1,1 +1,1 @@
-export { default as FloatingMenu } from './FloatingMenu';
+export { default } from './FloatingMenu';
