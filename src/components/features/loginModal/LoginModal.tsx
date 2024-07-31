@@ -33,7 +33,7 @@ export default function LoginModal() {
       <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 35, textAlign: 'center' }}>
         로그인
       </Txt>
-      <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 90 }}>
+      <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 60 }}>
         파티괌과 함께 <br /> 파티에 참여할 준비가 되었나요?
       </Txt>
       <Txt fontWeight="normal" fontSize={16}>
@@ -67,7 +67,11 @@ export default function LoginModal() {
           에 동의한 것으로 간주합니다.
         </Txt>
       </BottomText>
-      <Txt fontSize={12} fontColor="grey500" style={{ marginBottom: '41px', textAlign: 'center' }}>
+      <Txt
+        fontSize={12}
+        fontColor="grey500"
+        style={{ marginBottom: '41px', textAlign: 'center', textDecoration: 'underline' }}
+      >
         문의하기
       </Txt>
     </LoginModalContainer>
@@ -90,8 +94,8 @@ const LoginButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 56px;
-  margin-bottom: 22px;
+  margin-top: 40px;
+  margin-bottom: 24px;
 `;
 
 const BottomText = styled.div`
@@ -100,4 +104,5 @@ const BottomText = styled.div`
   flex-wrap: wrap;
   align-items: center;
   flex-direction: row;
+  line-height: 120%;
 `;

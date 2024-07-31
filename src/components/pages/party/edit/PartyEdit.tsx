@@ -1,14 +1,15 @@
 'use client';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
 import { fetchGetPartyTypes, fetchGetPositions, fetchPostCreateParty } from '@/apis/party';
 import ImageAddIcon from '@/assets/icon/image_add.svg';
 import { Balloon, Button, Input, Square, Txt } from '@/components/_atoms';
 import { PageHeader, Select, TipBox } from '@/components/_molecules';
-import { ConfirmModal } from '@/components/features';
+import { ConfirmModal, FloatingMenu } from '@/components/features';
+import { PARTY_MODIFY_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { Position } from '@/types/user';
@@ -36,8 +37,15 @@ const filterPositions = (data: Position[], mainCategory: string): { id: number; 
   return data.filter(item => item.main === mainCategory).map(item => ({ id: item.id, label: item.sub }));
 };
 
-export default function PartyCreate() {
+// pathname -> 'CREATE': 파티 생성, 'MODIFY': 파티 수정
+export default function PartyEdit() {
   const router = useRouter();
+  const pathname = usePathname();
+  const pageType: 'CREATE' | 'MODIFY' = useMemo(() => {
+    if (pathname.includes('create')) return 'CREATE';
+    else return 'MODIFY';
+  }, [pathname]);
+
   const { openModal, closeModal } = useModalContext();
 
   const [positionData, setPositionData] = useState<Position[]>([]);
@@ -48,6 +56,7 @@ export default function PartyCreate() {
   const [파티유형List, set파티유형List] = useState<{ id: number; label: string }[]>([]);
   const [파티소개글value, set파티소개글value] = useState<string>('');
   const [내포지션, set내포지션] = useState({ id: 0, 직군: '', 직무: '' });
+  const [파티상태, set파티상태] = useState<string>('');
   const [isVisibleBalloon, setIsVisibleBalloon] = useState(true);
 
   const [imgFile, setImgFile] = useState<File | null>(null);
@@ -89,16 +98,16 @@ export default function PartyCreate() {
   }, [파티소개글value]);
 
   const buttonDisabled = useMemo(() => {
-    if (
-      파티명InputState == 'success' &&
-      파티소개글InputState == 'success' &&
-      파티유형value.id != 0 &&
-      내포지션.id != 0
-    ) {
-      return false;
+    const commonConditions =
+      파티명InputState == 'success' && 파티소개글InputState == 'success' && 파티유형value.id != 0 && 내포지션.id != 0;
+
+    if (pageType === 'CREATE') {
+      return !commonConditions;
+    } else if (pageType === 'MODIFY') {
+      return !(commonConditions && 파티상태 !== '');
     }
     return true;
-  }, [파티명InputState, 파티소개글InputState, 파티유형value, 내포지션]);
+  }, [파티명InputState, 파티소개글InputState, 파티유형value, 내포지션, 파티상태, pageType]);
 
   const handle파티명Change = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     set파티명value(e.target.value);
@@ -163,22 +172,25 @@ export default function PartyCreate() {
     openModal({
       children: (
         <ConfirmModal
-          modalTitle="경고!"
+          modalTitle="나가기"
           modalContents={
             <>
-              작성된 내용이 저장되지 않았습니다.
-              <br />이 페이지를 떠나시겠습니까?
+              파티 생성이 완료되지 않았어요.
+              <br />
+              입력하신 내용이 있으면 저장되지 않아요!
+              <br />
+              그래도 해당 페이지에서 정말 나가시겠어요?
             </>
           }
-          cancelBtnTxt="나가기"
-          submitBtnTxt="작성하기"
+          cancelBtnTxt="취소"
+          submitBtnTxt="나가기"
         />
       ),
       onCancel: () => {
-        router.push('/');
         closeModal();
       },
       onSubmit: () => {
+        router.push('/');
         closeModal();
       },
     });
@@ -191,7 +203,7 @@ export default function PartyCreate() {
           modalTitle="생성 완료"
           modalContents={
             <>
-              파티가 생성되었습니다.
+              파티가 생성되었어요!
               <br />
               파티원을 모집해 볼까요?
             </>
@@ -212,9 +224,36 @@ export default function PartyCreate() {
     });
   };
 
+  const onClickDeleteParty = () => {
+    openModal({
+      children: (
+        <ConfirmModal
+          modalTitle="파티 삭제"
+          modalContents={
+            <>
+              정말로 이 파티를 삭제하시겠어요?
+              <br />
+              삭제할 시 데이터 복구가 불가해요.
+            </>
+          }
+          cancelBtnTxt="닫기"
+          submitBtnTxt="삭제하기"
+        />
+      ),
+      onCancel: () => {
+        closeModal();
+      },
+      onSubmit: () => {
+        router.push('/');
+        closeModal();
+      },
+    });
+  };
+
   return (
     <SContainer>
-      <PageHeader title="파티 생성하기" />
+      <PageHeader title={pageType === 'CREATE' ? '파티 생성' : '파티 수정'} />
+      <FloatingMenu menu={PARTY_MODIFY_MENU} />
       <PartyCreateContainer>
         <Square
           width="390px"
@@ -378,37 +417,94 @@ export default function PartyCreate() {
             />
           </SFlexRowFull>
         </SFlexColumnFull>
-        <SMargin margin="200px 0px 0px 0px" />
-        <SFlexRowFull style={{ justifyContent: 'space-between' }}>
-          <Button
-            style={{ marginBottom: 60 }}
-            height="l"
-            width="base"
-            backgroudColor="grey100"
-            radius="base"
-            shadow="shadow1"
-            borderColor="grey200"
-            onClick={onClickCancel}
-          >
-            <Txt fontWeight="bold" fontColor="grey400">
-              취소
+        <SMargin margin="7.5rem 0px 0px 0px" />
+        {pageType === 'MODIFY' && (
+          <>
+            <SFlexColumnFull>
+              <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
+                파티 상태
+              </Txt>
+              <Txt fontSize={16} style={{ marginBottom: 20 }}>
+                파티의 진행 상태를 선택해 주세요.
+              </Txt>
+              <SFlexRowFull style={{ justifyContent: 'space-between' }}>
+                {['진행중', '종료'].map((item, index) => (
+                  <Button
+                    key={index}
+                    onClick={e => {
+                      e.preventDefault();
+                      set파티상태(item);
+                    }}
+                    height="base"
+                    backgroudColor={파티상태 === item ? 'greenLight200' : 'white'}
+                    borderColor={파티상태 === item ? 'transparent' : 'grey200'}
+                    radius="base"
+                    shadow="shadow1"
+                  >
+                    <Txt fontColor="grey500">{item}</Txt>
+                  </Button>
+                ))}
+              </SFlexRowFull>
+            </SFlexColumnFull>
+            <SMargin margin="7.5rem 0px 0px 0px" />
+            <Button
+              style={{ width: '100%', marginBottom: 60 }}
+              disabled={buttonDisabled}
+              height="l"
+              backgroudColor="primaryGreen"
+              radius="base"
+              shadow="shadow1"
+              onClick={e => handleCreatePartyButton(e)}
+            >
+              <Txt fontWeight="bold" fontColor={buttonDisabled ? 'grey400' : 'black'}>
+                수정 완료
+              </Txt>
+            </Button>
+            <Txt
+              fontColor="failRed"
+              fontSize={16}
+              fontWeight="normal"
+              textDecoration="underline"
+              style={{ cursor: 'pointer' }}
+              onClick={onClickDeleteParty}
+            >
+              파티 삭제하기
             </Txt>
-          </Button>
-          <Button
-            style={{ marginBottom: 60 }}
-            disabled={buttonDisabled}
-            height="l"
-            width="base"
-            backgroudColor="primaryGreen"
-            radius="base"
-            shadow="shadow1"
-            onClick={e => handleCreatePartyButton(e)}
-          >
-            <Txt fontWeight="bold" fontColor={buttonDisabled ? 'grey400' : 'black'}>
-              생성하기
-            </Txt>
-          </Button>
-        </SFlexRowFull>
+            <SMargin margin="7.5rem 0px 0px 0px" />
+          </>
+        )}
+        {pageType === 'CREATE' && (
+          <SFlexRowFull style={{ justifyContent: 'space-between' }}>
+            <Button
+              style={{ marginBottom: 60 }}
+              height="l"
+              width="base"
+              backgroudColor="grey100"
+              radius="base"
+              shadow="shadow1"
+              borderColor="grey200"
+              onClick={onClickCancel}
+            >
+              <Txt fontWeight="bold" fontColor="grey400">
+                취소
+              </Txt>
+            </Button>
+            <Button
+              style={{ marginBottom: 60 }}
+              disabled={buttonDisabled}
+              height="l"
+              width="base"
+              backgroudColor="primaryGreen"
+              radius="base"
+              shadow="shadow1"
+              onClick={e => handleCreatePartyButton(e)}
+            >
+              <Txt fontWeight="bold" fontColor={buttonDisabled ? 'grey400' : 'black'}>
+                생성하기
+              </Txt>
+            </Button>
+          </SFlexRowFull>
+        )}
       </PartyCreateContainer>
     </SContainer>
   );
