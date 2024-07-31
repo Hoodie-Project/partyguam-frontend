@@ -224,6 +224,32 @@ export default function PartyEdit() {
     });
   };
 
+  const onClickDeleteParty = () => {
+    openModal({
+      children: (
+        <ConfirmModal
+          modalTitle="파티 삭제"
+          modalContents={
+            <>
+              정말로 이 파티를 삭제하시겠어요?
+              <br />
+              삭제할 시 데이터 복구가 불가해요.
+            </>
+          }
+          cancelBtnTxt="닫기"
+          submitBtnTxt="삭제하기"
+        />
+      ),
+      onCancel: () => {
+        closeModal();
+      },
+      onSubmit: () => {
+        router.push('/');
+        closeModal();
+      },
+    });
+  };
+
   return (
     <SContainer>
       <PageHeader title={pageType === 'CREATE' ? '파티 생성' : '파티 수정'} />
@@ -440,7 +466,7 @@ export default function PartyEdit() {
               fontWeight="normal"
               textDecoration="underline"
               style={{ cursor: 'pointer' }}
-              onClick={() => {}}
+              onClick={onClickDeleteParty}
             >
               파티 삭제하기
             </Txt>
