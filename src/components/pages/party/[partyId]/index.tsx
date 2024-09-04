@@ -8,7 +8,7 @@ import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 import { fetchGetPartyHome } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import { Tabs } from '@/components/_molecules';
-import { PartyHomeTab, PartyPeopleTab, PartyRecruitmentsTab } from '@/components/pages/party/[partyId]/tabs';
+import { PartyHomeTab, PartyPeopleTab, PartyRecruitmentsTab } from '@/components/features/party';
 import { SContainer } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
 
@@ -99,7 +99,7 @@ function PartyHome({ partyId }: PageParams) {
                     }}
                     style={{
                       position: 'absolute',
-                      top: 50,
+                      top: 20,
                       left: -70,
                       marginTop: '20px',
                       zIndex: 1,
@@ -119,7 +119,7 @@ function PartyHome({ partyId }: PageParams) {
                 <PartyHomeTab partyIntro={partyHomeData?.content} />
               </Tabs.TabPanel>
               <Tabs.TabPanel index={1}>
-                <PartyPeopleTab />
+                <PartyPeopleTab partyId={partyId} />
               </Tabs.TabPanel>
               <Tabs.TabPanel index={2}>
                 <PartyRecruitmentsTab />
@@ -181,7 +181,7 @@ const ChipWrapper = styled.div`
 const PartyTabsWrapper = styled.div`
   position: -webkit-sticky;
   position: sticky;
-  top: 165px;
+  top: 145px;
   width: 100%;
   background-color: white;
 `;

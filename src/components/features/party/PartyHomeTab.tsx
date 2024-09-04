@@ -36,6 +36,6 @@ function PartyHomeTab({ partyIntro }: Props) {
 
 export default PartyHomeTab;
 
-const PartyHomeTabContainer = styled.div`
+const PartyHomeTabContainer = styled.section`
   height: 100vh;
 `;

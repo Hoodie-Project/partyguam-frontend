@@ -70,12 +70,22 @@ export const fetchPostApplyParty = async ({
   }
 };
 
-// 파티 페이지
+// 파티 페이지 - 홈탭
 export const fetchGetPartyHome = async ({ partyId }: { partyId: number }) => {
   try {
     const response = await privateApi.get(`parties/${partyId}`);
     return response.data;
   } catch (error) {
     console.error('fetchGetPartyHome error : ', error);
+  }
+};
+
+// 파티 페이지 - 파티원탭
+export const fetchGetPartyUsers = async ({ partyId }: { partyId: number }) => {
+  try {
+    const response = await privateApi.get(`parties/${partyId}/users`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchGetPartyUsers error : ', error);
   }
 };
