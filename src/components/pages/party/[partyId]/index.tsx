@@ -43,7 +43,7 @@ function PartyHome({ partyId }: PageParams) {
           <PartyTitleWrapper>
             <PartyTitle>
               <Txt fontSize={32} fontWeight="bold">
-                파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명파티명
+                {partyHomeData?.title}
               </Txt>
             </PartyTitle>
             <ChipWrapper>
