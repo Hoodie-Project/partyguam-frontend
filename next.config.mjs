@@ -36,8 +36,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/:path*',
-        destination: `https://partyguam.net/dev/api/:path*`,
+        source: '/api/:path*', // '/api/'로 시작하는 경로만 리다이렉트
+        destination: 'https://partyguam.net/dev/api/:path*',
       },
     ];
   },

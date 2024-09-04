@@ -109,7 +109,7 @@ const TabButton = styled.button<{ isActive: boolean; width?: string }>`
 `;
 
 const TabPanelContainer = styled.div`
-  padding: 10px;
+  padding: 5px;
 `;
 
 Tabs.TabList = TabList;

@@ -1,6 +1,6 @@
-// 파티 생성하기 페이지
-
 import { fileUploadApi, privateApi } from '.';
+
+// 파티 생성하기 페이지
 
 export const fetchGetPartyTypes = async () => {
   try {
@@ -53,6 +53,7 @@ export const fetchPostRecruitmentParty = async ({
   }
 };
 
+// 파티 지원하기 페이지
 export const fetchPostApplyParty = async ({
   partyId,
   partyRecruitmentId,
@@ -66,5 +67,15 @@ export const fetchPostApplyParty = async ({
   } catch (error) {
     console.error('fetchPostApplyParty error : ', error);
     return error;
+  }
+};
+
+// 파티 페이지
+export const fetchGetPartyHome = async ({ partyId }: { partyId: number }) => {
+  try {
+    const response = await privateApi.get(`parties/${partyId}`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchGetPartyHome error : ', error);
   }
 };
