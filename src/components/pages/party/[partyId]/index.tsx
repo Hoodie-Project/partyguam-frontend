@@ -184,6 +184,7 @@ const PartyTabsWrapper = styled.div`
   top: 145px;
   width: 100%;
   background-color: white;
+  z-index: 10;
 `;
 
 const PartyTabsButtonWrapper = styled.div`
