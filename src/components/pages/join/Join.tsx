@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
-import { fetchGetOauthInfo, fetchJoinFormSubmit } from '@/apis/join';
+import { fetchGetOauthInfo, fetchGetUsers, fetchJoinFormSubmit } from '@/apis/join';
 import { Button, DateInput, Input, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
@@ -249,7 +249,8 @@ export default function Join() {
               const response = await fetchJoinFormSubmit(data);
               setCookie('accessToken', response.data.accessToken);
               if (response.status === 201) {
-                setAuth(data);
+                const userResponse = await fetchGetUsers();
+                setAuth(userResponse.data);
                 router.push('/join/success');
               }
             }}

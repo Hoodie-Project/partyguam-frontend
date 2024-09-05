@@ -18,7 +18,11 @@ function PartyPeopleTab({ partyId }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchGetPartyUsers({ partyId: Number(partyId.toString()) });
+        const response = await fetchGetPartyUsers({
+          partyId: Number(partyId.toString()),
+          sort: 'createdAt',
+          order: 'DESC',
+        });
         setPartyUserData(response);
       } catch (error) {
         console.error('Error fetching party user data : ', error);

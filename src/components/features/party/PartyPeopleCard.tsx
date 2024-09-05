@@ -4,8 +4,11 @@ import FlagIcon from '@mui/icons-material/Flag';
 
 import Emergency from '@/assets/icon/emergency.svg';
 import { Square, Txt } from '@/components/_atoms';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { SFlexRow } from '@/styles/components';
+
+import { ReportModal } from '../reportModal';
 
 type Props = {
   authority?: 'master' | 'deputy' | 'member';
@@ -30,6 +33,19 @@ const PARTY_AUTHORITY_MAP = (authority?: 'master' | 'deputy' | 'member') => {
 
 function PartyPeopleCard({ authority, position, user }: Props) {
   const userId = useAuthStore(state => state.id);
+  const { openModal, closeModal } = useModalContext();
+
+  const handleClickEmergency = () => {
+    openModal({
+      children: <ReportModal reportType="party" reportTypeId={user?.id as number} />,
+      onCancel: () => {
+        closeModal();
+      },
+      onSubmit: () => {
+        closeModal();
+      },
+    });
+  };
 
   return (
     <StyledSquare
@@ -75,7 +91,7 @@ function PartyPeopleCard({ authority, position, user }: Props) {
             </Txt>
           </UserPositionWrapper>
           <UserNameWrapper>
-            <MeTag>나</MeTag>
+            {userId === user?.id && <MeTag>나</MeTag>}
             <Txt
               fontSize={16}
               fontColor="black"
@@ -91,7 +107,7 @@ function PartyPeopleCard({ authority, position, user }: Props) {
             </Txt>
           </UserNameWrapper>
         </UserInfoContainer>
-        <Emergency />
+        {userId !== user?.id && <Emergency onClick={handleClickEmergency} style={{ cursor: 'pointer' }} />}
       </CardWrapper>
     </StyledSquare>
   );

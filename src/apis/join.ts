@@ -56,4 +56,17 @@ const fetchJoinFormSubmit = async (data: { nickname: string; email: string; birt
   }
 };
 
-export { fetchGetOauthInfo, fetchJoinFormSubmit, fetchNicknameDuplicated };
+/**
+ * 내 정보 조회
+ */
+const fetchGetUsers = async () => {
+  try {
+    const response = await privateApi.get('/users/me');
+
+    return response;
+  } catch (error) {
+    throw new Error('fetchGetUsers Network error');
+  }
+};
+
+export { fetchGetOauthInfo, fetchGetUsers, fetchJoinFormSubmit, fetchNicknameDuplicated };

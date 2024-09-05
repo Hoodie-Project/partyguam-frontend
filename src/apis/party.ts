@@ -81,11 +81,47 @@ export const fetchGetPartyHome = async ({ partyId }: { partyId: number }) => {
 };
 
 // 파티 페이지 - 파티원탭
-export const fetchGetPartyUsers = async ({ partyId }: { partyId: number }) => {
+export const fetchGetPartyUsers = async ({
+  partyId,
+  sort,
+  order,
+  main,
+  nickname,
+}: {
+  partyId: number;
+  sort: string;
+  order: string;
+  main?: string;
+  nickname?: string;
+}) => {
   try {
-    const response = await privateApi.get(`parties/${partyId}/users`);
+    const response = await privateApi.get(`parties/${partyId}/users`, {
+      params: { sort, order, main, nickname },
+    });
     return response.data;
   } catch (error) {
     console.error('fetchGetPartyUsers error : ', error);
+  }
+};
+
+// 리포트 제출 함수
+export const fetchPostReports = async ({
+  type,
+  typeId,
+  content,
+}: {
+  type: string;
+  typeId: number;
+  content: string;
+}) => {
+  try {
+    const response = await privateApi.post(`reports`, {
+      type,
+      typeId,
+      content,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchPostReports error : ', error);
   }
 };
