@@ -4,7 +4,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import type { fontWeight } from '@/styles';
-import { chip, palette } from '@/styles';
+import { chip, palette, shadow } from '@/styles';
 
 import Txt from '../txt';
 
@@ -12,8 +12,9 @@ type OwnProps = {
   chipType: 'filled' | 'outlined';
   size: keyof typeof chip;
   fontWeight: keyof typeof fontWeight;
-  chipColor: keyof typeof palette;
+  chipColor: keyof typeof palette | string;
   fontColor: keyof typeof palette;
+  shadow: keyof typeof shadow;
 
   label: string;
   onClick: () => void;
@@ -29,22 +30,24 @@ export default function Chip({
   chipType = 'filled',
   size = 'medium',
   chipColor = 'primaryGreen',
+  fontColor = 'black',
+  shadow = 'none',
   label,
   icon,
   closeButton,
   onClick,
   onIconClick,
   fontWeight = 'normal',
-  fontColor,
 }: Props) {
   const handleOnclick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     onClick && onClick();
   };
+
   return (
-    <ChipContainer chipType={chipType} size={size} chipColor={chipColor} onClick={handleOnclick}>
+    <ChipContainer chipType={chipType} size={size} chipColor={chipColor} shadow={shadow} onClick={handleOnclick}>
       {icon && <IconContainer onClick={onIconClick}>{icon}</IconContainer>}
-      <Txt fontWeight={fontWeight} color={fontColor} fontSize={chip[`${size}`].fontsize}>
+      <Txt fontWeight={fontWeight} fontColor={fontColor} fontSize={chip[size].fontsize}>
         {label}
       </Txt>
       {closeButton}
@@ -56,17 +59,30 @@ const ChipContainer = styled.button<{
   chipType: OwnProps['chipType'];
   size: OwnProps['size'];
   chipColor?: OwnProps['chipColor'];
+  shadow: OwnProps['shadow'];
 }>`
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
   border: 1px solid;
-  border-color: ${({ chipType, chipColor }) => (chipType === 'outlined' ? palette[`${chipColor || `white`}`] : 'none')};
+  border-color: ${({ chipType, chipColor }) =>
+    chipType === 'outlined'
+      ? chipColor?.startsWith('#')
+        ? chipColor
+        : palette[chipColor as keyof typeof palette] || 'transparent'
+      : 'transparent'};
   background-color: ${({ chipType, chipColor }) =>
-    chipType === 'outlined' ? 'transparent' : palette[`${chipColor || `white`}`]};
-  height: ${({ size }) => chip[`${size}`].height};
-  padding-right: ${({ size }) => chip[`${size}`].padding};
-  padding-left: ${({ size }) => chip[`${size}`].padding};
+    chipType === 'outlined'
+      ? 'transparent'
+      : chipColor?.startsWith('#')
+        ? chipColor
+        : palette[chipColor as keyof typeof palette] || 'transparent'};
+  height: ${({ size }) => chip[size].height};
+  padding-right: ${({ size }) => chip[size].padding};
+  padding-left: ${({ size }) => chip[size].padding};
+
+  box-shadow: ${props => (props.shadow ? shadow[props.shadow] : 'none')};
+
   color: var(--black);
   cursor: pointer;
 `;

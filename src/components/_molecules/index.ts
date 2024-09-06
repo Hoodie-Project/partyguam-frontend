@@ -5,5 +5,6 @@ export { default as Modal } from './modal';
 export { default as PageHeader } from './PageHeader';
 export { default as ProgressBar } from './progressbar';
 export { default as Select } from './select';
+export { default as Tabs } from './tabs';
 export { default as TipBox } from './tipBox';
 export { default as Toast } from './toast';

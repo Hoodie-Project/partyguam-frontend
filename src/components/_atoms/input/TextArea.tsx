@@ -18,6 +18,7 @@ type OwnProps = {
   borderColor?: keyof typeof palette;
   value: string;
   maxCount: number;
+  clearAll: boolean;
   bottomMessage: string;
   onClear: (value: any) => void;
 };
@@ -38,6 +39,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
       bottomMessage,
       placeholder,
       maxCount,
+      clearAll = true,
       disabled,
       ...textareaAttributes
     },
@@ -61,18 +63,18 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
             disabled={disabled}
             {...textareaAttributes}
           />
-          {value && maxCount && (
+          {maxCount && (
             <Txt
               fontWeight="normal"
               fontColor="grey400"
               fontSize={14}
               style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '5px' }}
             >
-              {value.length} / {maxCount}
+              {value?.length} / {maxCount}
             </Txt>
           )}
         </InputContainer>
-        <ClearButton onClick={() => onClear && onClear(value)}>전체 삭제</ClearButton>
+        {clearAll && <ClearButton onClick={() => onClear && onClear(value)}>전체 삭제</ClearButton>}
         {inputState && <Message inputState={inputState}>{bottomMessage}</Message>}
       </InputWrapper>
     );
