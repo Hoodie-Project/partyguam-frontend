@@ -15,7 +15,6 @@ type OwnProps = {
   chipColor: keyof typeof palette | string;
   fontColor: keyof typeof palette | string;
   shadow: keyof typeof shadow;
-
   label: string;
   onClick: () => void;
   onIconClick: () => void;

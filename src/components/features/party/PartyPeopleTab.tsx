@@ -23,8 +23,6 @@ function PartyPeopleTab({ partyId }: Props) {
           sort: 'createdAt',
           order: 'DESC',
         });
-
-        console.log('response >> ', response);
         setPartyUserData(response);
       } catch (error) {
         console.error('Error fetching party user data : ', error);
