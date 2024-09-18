@@ -38,12 +38,19 @@ function PartyPeopleTab({ partyId }: Props) {
         <Txt fontSize={20} fontWeight="bold">
           파티원
           <Txt fontColor="greenDark100" fontSize={20} fontWeight="bold" style={{ marginLeft: '4px' }}>
-            {partyUserData?.partyUser.length}
+            {partyUserData?.partyUser.partyUser.length != null || partyUserData?.partyAdmin.partyUser.length != null
+              ? partyUserData?.partyUser.partyUser.length + partyUserData?.partyAdmin.partyUser.length
+              : 0}
           </Txt>
         </Txt>
         <SMargin margin="20px 0px 0px 0px" />
         <PeopleListContainer>
-          {partyUserData?.partyUser.map(item => (
+          {/* 관리자 유저 */}
+          {partyUserData?.partyAdmin.partyUser.map(item => (
+            <PartyPeopleCard key={item.user.id} authority={item.authority} position={item.position} user={item.user} />
+          ))}
+          {/* 일반 유저 */}
+          {partyUserData?.partyUser?.partyUser.map(item => (
             <PartyPeopleCard key={item.user.id} authority={item.authority} position={item.position} user={item.user} />
           ))}
         </PeopleListContainer>

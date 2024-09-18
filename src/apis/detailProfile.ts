@@ -85,7 +85,7 @@ const fetchDeletePositions = async () => {
 
 const fetchGetPersonality = async () => {
   try {
-    const response = await privateApi.get('/personality');
+    const response = await privateApi.get('/personalities');
     return response.data;
   } catch (error) {
     console.error('fetchGetPersonality error : ', error);

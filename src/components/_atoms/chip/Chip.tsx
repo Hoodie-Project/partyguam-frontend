@@ -13,9 +13,8 @@ type OwnProps = {
   size: keyof typeof chip;
   fontWeight: keyof typeof fontWeight;
   chipColor: keyof typeof palette | string;
-  fontColor: keyof typeof palette;
+  fontColor: keyof typeof palette | string;
   shadow: keyof typeof shadow;
-
   label: string;
   onClick: () => void;
   onIconClick: () => void;
@@ -67,14 +66,15 @@ const ChipContainer = styled.button<{
   border: 1px solid;
   border-color: ${({ chipType, chipColor }) =>
     chipType === 'outlined'
-      ? chipColor?.startsWith('#')
+      ? typeof chipColor === 'string' && chipColor.startsWith('#')
         ? chipColor
         : palette[chipColor as keyof typeof palette] || 'transparent'
       : 'transparent'};
+
   background-color: ${({ chipType, chipColor }) =>
     chipType === 'outlined'
       ? 'transparent'
-      : chipColor?.startsWith('#')
+      : typeof chipColor === 'string' && chipColor.startsWith('#')
         ? chipColor
         : palette[chipColor as keyof typeof palette] || 'transparent'};
   height: ${({ size }) => chip[size].height};

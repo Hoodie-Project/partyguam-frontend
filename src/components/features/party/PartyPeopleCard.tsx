@@ -19,7 +19,7 @@ type Props = {
   user?: {
     id: number;
     nickname: string;
-    image: string;
+    image?: string;
   };
 };
 
