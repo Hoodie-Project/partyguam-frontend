@@ -22,15 +22,17 @@ export interface PartyType {
 }
 
 // [GET] 파티 홈 - 파티원탭
+
 export interface PartyUserResponse {
   id: number;
-  partyUser: PartyUser[];
-  title: string;
-  content: string;
-  image: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
+  partyUser: {
+    id: number;
+    partyUser: PartyUser[];
+  };
+  partyAdmin: {
+    id: number;
+    partyUser: PartyUser[];
+  };
 }
 
 export interface PartyUser {
@@ -47,5 +49,5 @@ export interface Position {
 export interface User {
   id: number;
   nickname: string;
-  image: any;
+  image?: any;
 }

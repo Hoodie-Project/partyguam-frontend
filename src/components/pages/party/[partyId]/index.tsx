@@ -16,6 +16,24 @@ type PageParams = {
   partyId: string;
 };
 
+// 파티 상태 칩
+const renderPartyState = (stateTag: string) => {
+  return {
+    진행중: {
+      fontColor: '#016110',
+      backgroundColor: '#D5F0E3',
+    },
+    모집중: {
+      fontColor: '#ef6400',
+      backgroundColor: '#fff1dc',
+    },
+    파티종료: {
+      fontColor: '#ffffff',
+      backgroundColor: '#505050',
+    },
+  }[stateTag];
+};
+
 function PartyHome({ partyId }: PageParams) {
   const [partyHomeData, setPartyHomeData] = useState<PartyHomeResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
@@ -52,8 +70,8 @@ function PartyHome({ partyId }: PageParams) {
                 size="small"
                 label={partyHomeData?.tag}
                 chipType="filled"
-                chipColor="#FFF1DC"
-                fontColor="orange"
+                chipColor={renderPartyState(partyHomeData?.tag as string)?.backgroundColor}
+                fontColor={renderPartyState(partyHomeData?.tag as string)?.fontColor}
                 fontWeight="semibold"
                 shadow="shadow1"
               />

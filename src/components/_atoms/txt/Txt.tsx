@@ -7,7 +7,7 @@ import { fontWeight, palette } from '@/styles';
 
 type OwnProps = {
   fontWeight: keyof typeof fontWeight;
-  fontColor: keyof typeof palette;
+  fontColor: keyof typeof palette | string;
   fontSize: number;
   textDecoration: 'underline' | 'none';
   onClick: () => void;
@@ -38,7 +38,12 @@ export default function Txt({
 const Span = styled.span<Props>`
   font-weight: ${props => (props.fontWeight ? fontWeight[props.fontWeight] : fontWeight.normal)};
   font-size: ${props => `${props.fontSize}px`};
-  color: ${props => (props.fontColor ? palette[props.fontColor] : palette.black)};
+  color: ${props =>
+    typeof props.fontColor === 'string'
+      ? props.fontColor.startsWith('#')
+        ? props.fontColor
+        : palette[props.fontColor as keyof typeof palette]
+      : palette.black};
   cursor: ${props => props.onClick && 'pointer'};
   white-space: 'pre-wrap';
   text-decoration: ${props => props.textDecoration};

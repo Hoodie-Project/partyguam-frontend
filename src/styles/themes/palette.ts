@@ -1,4 +1,4 @@
-export const palette = {
+export const palette: { [key: string]: string } = {
   primaryGreen: '#21ecc7',
   greenLight100: '#7ff4df',
   greenLight200: '#aef8eb',
