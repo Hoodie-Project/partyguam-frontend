@@ -125,3 +125,13 @@ export const fetchPostReports = async ({
     console.error('fetchPostReports error : ', error);
   }
 };
+
+// 파티 모집 상세 조회
+export const fetchGetPartyRecruitments = async ({ partyRecruitmentId }: { partyRecruitmentId: number }) => {
+  try {
+    const response = await privateApi.get(`parties/recruitments/${partyRecruitmentId}`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchGetPartyRecruitments error : ', error);
+  }
+};

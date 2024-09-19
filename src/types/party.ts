@@ -51,3 +51,17 @@ export interface User {
   nickname: string;
   image?: any;
 }
+
+// [GET] 파티 공고 상세 조회
+export interface PartyRecruitDetailResponse {
+  tag: string;
+  title: string;
+  image: string;
+  main: string;
+  sub: string;
+  content: string;
+  recruitingCount: number;
+  recruitedCount: number;
+  applicationCount: number;
+  createdAt: string;
+}
