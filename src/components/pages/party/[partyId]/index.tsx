@@ -53,7 +53,7 @@ function PartyHome({ partyId }: PageParams) {
 
   return (
     <SContainer>
-      <PartyApplyContainer>
+      <PartyHomeContainer>
         <Square width="820px" height="614px" radiusKey="base" backgroundColor="grey300" shadowKey="none">
           <Image alt="파티 홈 이미지" src="" width={390} height={293} style={{ borderRadius: '16px' }} />
         </Square>
@@ -145,14 +145,14 @@ function PartyHome({ partyId }: PageParams) {
             </Tabs.TabPanels>
           </Tabs>
         </PartyContentsWrapper>
-      </PartyApplyContainer>
+      </PartyHomeContainer>
     </SContainer>
   );
 }
 
 export default PartyHome;
 
-const PartyApplyContainer = styled.section`
+const PartyHomeContainer = styled.section`
   position: relative;
   display: flex;
   flex-direction: column;
