@@ -11,5 +11,4 @@ required_labels:
 apply_labels:
   - approved
 
-blacklisted_labels:
-  - []
+blacklisted_labels: []
