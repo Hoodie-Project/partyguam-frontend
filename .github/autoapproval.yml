@@ -1,0 +1,14 @@
+_extends: github-settings
+
+from_owner:
+  - dependabot[bot]
+
+# 트리거가 될 label
+required_labels:
+  - auto-approve
+
+# 승인 후 붙게 될 label
+apply_labels:
+  - approved
+
+blacklisted_labels: []
