@@ -1,0 +1,22 @@
+name: Autoapproval
+# github actions가 실행되는 트리거 이벤트 정의
+on:
+  pull_request: # 특정 pr 이벤트 발생했을 때 워크플로우 실행
+    types: [opened, reopened, labeled, edited]
+    # opened: pr이 열릴 때, reopened: 다시 열릴 때, labeled: 라벨 추가될 때, edited: pr이 수정될 때
+  pull_request_review: # pr리뷰에 관련된 이벤트가 발생할 때 워크플로우 실행
+    types: [dismissed]
+    # 이전에 승인이 된 pr리뷰가 무효화되었을 떄 트리거
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  autoapproval:
+    runs-on: ubuntu-latest
+    name: Autoapproval
+    steps:
+      - uses: dkhmelenko/autoapproval@v1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
