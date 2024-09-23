@@ -10,3 +10,6 @@ required_labels:
 # 승인 후 붙게 될 label
 apply_labels:
   - approved
+
+blacklisted_labels:
+  - []
