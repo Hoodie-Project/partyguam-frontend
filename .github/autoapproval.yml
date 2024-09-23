@@ -1,6 +1,8 @@
 _extends: github-settings
 
-from_owner: []
+from_owner:
+  - dependabot[bot]
+  - Hayoung8957
 
 # 트리거가 될 label
 required_labels:
