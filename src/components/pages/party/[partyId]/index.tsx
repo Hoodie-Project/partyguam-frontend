@@ -105,6 +105,9 @@ function PartyHome({ partyId }: PageParams) {
                 <ShareOutlinedIcon
                   onClick={() => {
                     setIsShowCopyBalloon(true);
+                    setTimeout(() => {
+                      setIsShowCopyBalloon(false);
+                    }, 3000); // 3초 후 자동으로 닫힘
                   }}
                   style={{ position: 'relative', cursor: 'pointer' }}
                 />

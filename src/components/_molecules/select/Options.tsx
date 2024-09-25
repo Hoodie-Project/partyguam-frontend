@@ -13,16 +13,19 @@ type Props = {
   onClick: (e: React.MouseEvent<HTMLLIElement>, id: number) => void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   height?: keyof typeof size.height;
+
+  optionRadius?: keyof typeof radius;
+  optionStyle?: React.CSSProperties;
 };
 
-export default function Options({ options, onClick, setIsOpen, height }: Props) {
+export default function Options({ options, onClick, setIsOpen, height, optionRadius = 'base', optionStyle }: Props) {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>, option: OptionType) => {
     onClick(e, option.id);
     setIsOpen(false);
   };
 
   return (
-    <SelectOptions top={height}>
+    <SelectOptions top={height} optionRadius={optionRadius} style={optionStyle}>
       {options &&
         options.map(option => (
           <SelectOption key={option.id} onClick={e => handleOptionClick(e, option)}>
@@ -33,7 +36,7 @@ export default function Options({ options, onClick, setIsOpen, height }: Props) 
   );
 }
 
-const SelectOptions = styled.ul<{ top?: keyof typeof size.height }>`
+const SelectOptions = styled.ul<{ top?: keyof typeof size.height; optionRadius?: keyof typeof radius }>`
   position: absolute;
   display: flex;
   flex-direction: column;
@@ -44,7 +47,8 @@ const SelectOptions = styled.ul<{ top?: keyof typeof size.height }>`
   max-height: 16.5rem;
   overflow-y: scroll;
   background-color: white;
-  border-radius: ${radius.base};
+  border-radius: ${({ optionRadius: radiusProp }) => radius[radiusProp!] || radius.base};
+
   z-index: 10;
   border: 1px solid ${palette.primaryGreen};
 
