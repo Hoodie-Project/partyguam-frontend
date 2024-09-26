@@ -65,3 +65,17 @@ export interface PartyRecruitDetailResponse {
   applicationCount: number;
   createdAt: string;
 }
+
+// [GET] 파티 공고 리스트 전체 조회
+export interface PartyRecruitment {
+  partyRecruitmentId: number; // 모집 ID
+  main: string; // 직군 (예: "기획", "디자이너" 등)
+  sub: string; // 직무 (예: "UI/UX 기획자")
+  content: string; // 모집 설명
+  recruitingCount: number; // 모집 인원
+  recruitedCount: number; // 이미 모집된 인원
+  applicationCount: number; // 지원자 수
+  createdAt: string; // 생성일
+}
+
+export type PartyRecruitmentListResponse = PartyRecruitment[];

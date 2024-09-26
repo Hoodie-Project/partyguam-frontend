@@ -6,10 +6,11 @@ import CreateIcon from '@mui/icons-material/Create';
 import ShareIcon from '@mui/icons-material/Share';
 
 import { fetchGetPartyRecruitments } from '@/apis/party';
-import { Chip, Square, Txt } from '@/components/_atoms';
+import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import Button from '@/components/_atoms/button';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyRecruitDetailResponse } from '@/types/party';
+import { formatDate } from '@/utils/date';
 
 type PageParams = {
   recruitId: string;
@@ -37,8 +38,8 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
   const [partyRecruitDetailData, setPartyRecruitDetailData] = useState<PartyRecruitDetailResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
   const formattedDate = useMemo(() => {
-    const date = new Date(partyRecruitDetailData?.createdAt as string);
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+    if (!partyRecruitDetailData?.createdAt) return '';
+    return formatDate(partyRecruitDetailData.createdAt);
   }, [partyRecruitDetailData?.createdAt]);
 
   useEffect(() => {
@@ -143,6 +144,7 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                 backgroudColor="white"
                 borderColor="grey200"
                 style={{
+                  position: 'relative',
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -150,11 +152,37 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                   width: '194px',
                   borderRadius: '12px',
                 }}
+                onClick={() => {
+                  setIsShowCopyBalloon(true);
+                  setTimeout(() => {
+                    setIsShowCopyBalloon(false);
+                  }, 3000); // 3초 후 자동으로 닫힘
+                }}
               >
                 <Txt fontColor="grey500" fontSize={16}>
                   공유하기
                 </Txt>
                 <ShareIcon style={{ color: '#999999' }} />
+                {isShowCopyBalloon && (
+                  <Balloon
+                    width="163px"
+                    height="30px"
+                    onClose={() => {
+                      setIsShowCopyBalloon(false);
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: 45,
+                      left: 15,
+                      marginTop: '20px',
+                      zIndex: 1,
+                    }}
+                  >
+                    <Txt fontSize={14} fontColor="white">
+                      URL이 복사되었어요
+                    </Txt>
+                  </Balloon>
+                )}
               </Button>
             </SFlexRowFull>
           </PartyInfoContainer>
