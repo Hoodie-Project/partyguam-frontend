@@ -131,7 +131,7 @@ export const fetchGetPartyRecruitmentsList = async ({
   partyId,
   sort = 'createdAt',
   order = 'ASC',
-  main,
+  main
 }: {
   partyId: number;
   sort?: string;
