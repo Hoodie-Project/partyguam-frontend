@@ -25,7 +25,11 @@ const filterMainCategories = (data: Position[]): { id: number; label: string }[]
   return [{ id: 0, label: '전체' }, ...mainOptions];
 };
 
-function PartyRecruitmentsTab() {
+type Props = {
+  partyId: string;
+};
+
+function PartyRecruitmentsTab({ partyId }: Props) {
   const [partyRecruitList, setPartyRecruitList] = useState<PartyRecruitmentListResponse>([]);
   const [primaryPosition, setPrimaryPosition] = useState({ id: 0, 직군: '전체', 직무: '', 경력: '' });
   const [mainFiltered, setMainFiltered] = useState<{ id: number; label: string }[]>([]);
@@ -35,13 +39,24 @@ function PartyRecruitmentsTab() {
   // 파티 모집 목록을 가져오는 함수
   const fetchRecruitments = async () => {
     try {
-      const data = await fetchGetPartyRecruitmentsList({
-        partyId: 8, // PartyId를 8로 설정
-        sort: 'createdAt', // createdAt 기준으로 정렬
-        order: order, // ASC 또는 DESC 상태 전달
-        main: primaryPosition.직군 === '전체' ? '' : primaryPosition.직군, // 직군 필터 선택
-      });
-      setPartyRecruitList(data); // 데이터를 상태에 저장
+      const requestParams: {
+        partyId: number;
+        sort: string;
+        order: 'ASC' | 'DESC';
+        main?: string;
+      } = {
+        partyId: Number(partyId),
+        sort: 'createdAt',
+        order: order,
+      };
+
+      // 직군이 '전체'가 아닐 경우에만 main 파라미터 추가
+      if (primaryPosition.직군 !== '전체') {
+        requestParams.main = primaryPosition.직군;
+      }
+
+      const data = await fetchGetPartyRecruitmentsList(requestParams);
+      setPartyRecruitList(data);
     } catch (error) {
       console.error('Error fetching recruitments:', error);
     }
@@ -50,7 +65,7 @@ function PartyRecruitmentsTab() {
   // 첫 번째 렌더 시 API 호출
   useEffect(() => {
     fetchRecruitments();
-  }, [primaryPosition, order]); // primaryPosition과 order가 변경될 때마다 호출
+  }, [primaryPosition, order]);
 
   // 직군 데이터 가져오기
   useEffect(() => {
@@ -166,7 +181,7 @@ function PartyRecruitmentsTab() {
             {partyRecruitList.map((item, index) => (
               <RecruitmentCard
                 key={index}
-                width="calc(50% - 20px)"
+                width="calc(50% - 8px)"
                 height="155px"
                 shadowKey="shadow1"
                 radiusKey="base"
@@ -289,9 +304,4 @@ const EmptyState = styled.div`
   align-items: center;
   color: #767676;
   margin-top: 60px;
-
-  .fas {
-    font-size: 48px;
-    margin-bottom: 16px;
-  }
 `;
