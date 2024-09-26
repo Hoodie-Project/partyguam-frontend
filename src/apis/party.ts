@@ -126,6 +126,33 @@ export const fetchPostReports = async ({
   }
 };
 
+// 파티 모집 리스트 조회
+export const fetchGetPartyRecruitmentsList = async ({
+  partyId,
+  sort = 'createdAt',
+  order = 'ASC',
+  main = '',
+}: {
+  partyId: number;
+  sort?: string;
+  order?: string;
+  main?: string;
+}) => {
+  try {
+    const response = await privateApi.get(`/parties/${partyId}/recruitments`, {
+      params: {
+        sort,
+        order,
+        main,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchGetPartyRecruitmentsList error: ', error);
+    throw error;
+  }
+};
+
 // 파티 모집 상세 조회
 export const fetchGetPartyRecruitments = async ({ partyRecruitmentId }: { partyRecruitmentId: number }) => {
   try {

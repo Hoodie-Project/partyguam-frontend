@@ -2,13 +2,18 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { fetchGetPositions } from '@/apis/detailProfile';
-import { Txt } from '@/components/_atoms';
+import { fetchGetPartyRecruitmentsList } from '@/apis/party';
+import { Square, Txt } from '@/components/_atoms';
 import { Select } from '@/components/_molecules';
 import { SFlexColumnFull, SMargin } from '@/styles/components';
+import type { PartyRecruitmentListResponse } from '@/types/party';
 import type { Position } from '@/types/user';
+import { formatDate } from '@/utils/date';
 
+// 직군 필터링 함수
 const filterMainCategories = (data: Position[]): { id: number; label: string }[] => {
   const uniqueMain = Array.from(new Set(data.map(item => item.main)));
   const mainOptions = uniqueMain.map((main, index) => ({
@@ -21,11 +26,33 @@ const filterMainCategories = (data: Position[]): { id: number; label: string }[]
 };
 
 function PartyRecruitmentsTab() {
+  const [partyRecruitList, setPartyRecruitList] = useState<PartyRecruitmentListResponse>([]);
   const [primaryPosition, setPrimaryPosition] = useState({ id: 0, 직군: '전체', 직무: '', 경력: '' });
   const [mainFiltered, setMainFiltered] = useState<{ id: number; label: string }[]>([]);
+  const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // ASC (오름차순) / DESC (내림차순)
   const [isArrowUp, setIsArrowUp] = useState(false);
 
-  // API로부터 데이터 가져오기
+  // 파티 모집 목록을 가져오는 함수
+  const fetchRecruitments = async () => {
+    try {
+      const data = await fetchGetPartyRecruitmentsList({
+        partyId: 8, // PartyId를 8로 설정
+        sort: 'createdAt', // createdAt 기준으로 정렬
+        order: order, // ASC 또는 DESC 상태 전달
+        main: primaryPosition.직군 === '전체' ? '' : primaryPosition.직군, // 직군 필터 선택
+      });
+      setPartyRecruitList(data); // 데이터를 상태에 저장
+    } catch (error) {
+      console.error('Error fetching recruitments:', error);
+    }
+  };
+
+  // 첫 번째 렌더 시 API 호출
+  useEffect(() => {
+    fetchRecruitments();
+  }, [primaryPosition, order]); // primaryPosition과 order가 변경될 때마다 호출
+
+  // 직군 데이터 가져오기
   useEffect(() => {
     (async () => {
       const response = await fetchGetPositions();
@@ -48,16 +75,11 @@ function PartyRecruitmentsTab() {
       }
     };
 
+  // 등록순 정렬 토글
   const toggleArrow = () => {
-    setIsArrowUp(prev => !prev); // 상태 토글
+    setOrder(prevOrder => (prevOrder === 'ASC' ? 'DESC' : 'ASC')); // ASC, DESC 토글
+    setIsArrowUp(prev => !prev); // 화살표 토글
   };
-
-  const recruitments = [
-    { date: '2024.06.20', title: '디자이너 | UI/UX', status: '모집중', count: '1/3', applicants: 2 },
-    { date: '2024.06.19', title: '기획자 | PM', status: '모집중', count: '0/2', applicants: 2 },
-    { date: '2024.06.18', title: '개발자 | 프론트엔드', status: '모집중', count: '0/1', applicants: 2 },
-    { date: '2024.06.17', title: '개발자 | 백엔드', status: '모집중', count: '0/1', applicants: 0 },
-  ];
 
   return (
     <PartyRecruitmentsTabContainer>
@@ -72,13 +94,14 @@ function PartyRecruitmentsTab() {
               모집공고
             </Txt>
             <Txt fontColor="greenDark100" fontSize={14} fontWeight="normal" style={{ marginLeft: '4px' }}>
-              4
+              {partyRecruitList.length}
             </Txt>
             <Txt fontColor="black" fontSize={14} fontWeight="normal" style={{ marginLeft: '8px' }}>
               지원자
             </Txt>
             <Txt fontColor="greenDark100" fontSize={14} fontWeight="normal" style={{ marginLeft: '4px' }}>
-              6
+              {/* 지원자 수는 각 모집 공고의 지원자 수의 합계를 표시 */}
+              {partyRecruitList.reduce((acc, curr) => acc + Number(curr.applicationCount), 0)}
             </Txt>
           </HeaderLeft>
           <HeaderRight>
@@ -91,7 +114,7 @@ function PartyRecruitmentsTab() {
             >
               지원자 관리
             </Txt>
-            <Divider />
+            <Divider height="10px" margin="0px 10px" />
             <Txt
               fontColor="grey500"
               fontSize={14}
@@ -130,25 +153,54 @@ function PartyRecruitmentsTab() {
           </IconContainer>
         </FilterContainer>
 
-        {/* 모집 공고 카드 리스트 */}
-        <RecruitmentList>
-          {recruitments.map((item, index) => (
-            <RecruitmentCard key={index}>
-              <Txt fontSize={12} fontColor="grey500">
-                모집일 {item.date}
-              </Txt>
-              <Txt fontSize={16} fontWeight="bold" style={{ margin: '8px 0' }}>
-                {item.title}
-              </Txt>
-              <Info>
-                <Txt fontColor="red">
-                  {item.status} {item.count}
+        {/* 모집 공고가 없는 경우 */}
+        {partyRecruitList.length === 0 ? (
+          <EmptyState>
+            <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+            <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+              모집 공고가 없습니다.
+            </Txt>
+          </EmptyState>
+        ) : (
+          <RecruitmentList>
+            {partyRecruitList.map((item, index) => (
+              <RecruitmentCard
+                key={index}
+                width="calc(50% - 20px)"
+                height="155px"
+                shadowKey="shadow1"
+                radiusKey="base"
+                backgroundColor="white"
+                style={{ alignItems: 'flex-start', justifyContent: 'center' }}
+              >
+                <Txt fontSize={12} fontColor="grey500">
+                  모집일 &nbsp;{formatDate(item.createdAt)}
                 </Txt>
-                <Txt fontColor="greenDark100">지원자 {item.applicants}</Txt>
-              </Info>
-            </RecruitmentCard>
-          ))}
-        </RecruitmentList>
+                <Txt
+                  fontSize={16}
+                  fontWeight="semibold"
+                  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+                >
+                  {item.main} <Divider height="12px" margin="0px 8px" /> {item.sub}
+                </Txt>
+                <Info>
+                  <Txt fontSize={14} fontColor="black">
+                    모집중
+                  </Txt>
+                  <Txt fontSize={14} fontColor="failRed">
+                    {item.recruitedCount}/{item.recruitingCount}
+                  </Txt>
+                  <Txt fontSize={14} fontColor="black" style={{ marginLeft: '20px' }}>
+                    지원자
+                  </Txt>
+                  <Txt fontSize={14} fontColor="greenDark100">
+                    {item.applicationCount}
+                  </Txt>
+                </Info>
+              </RecruitmentCard>
+            ))}
+          </RecruitmentList>
+        )}
       </SFlexColumnFull>
     </PartyRecruitmentsTabContainer>
   );
@@ -180,12 +232,12 @@ const HeaderRight = styled.div`
   align-items: center;
 `;
 
-const Divider = styled.div`
+const Divider = styled.div<{ height?: string; margin: string }>`
   width: 2px;
-  height: 10px;
+  height: ${({ height }) => height};
   background-color: #d4d4d4;
   border-radius: 999px;
-  margin: 0 12px;
+  margin: ${({ margin }) => margin};
 `;
 
 const FilterContainer = styled.div`
@@ -214,17 +266,32 @@ const RecruitmentList = styled.div`
   margin-top: 20px;
 `;
 
-const RecruitmentCard = styled.div`
+const RecruitmentCard = styled(Square)`
   background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border: 1px solid #e5e5ec;
   padding: 16px;
-  width: calc(50% - 8px); /* 두 개씩 보여주기 위한 너비 설정 */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Info = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 8px;
+  gap: 4px;
+`;
+
+const EmptyState = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #767676;
+  margin-top: 60px;
+
+  .fas {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
 `;

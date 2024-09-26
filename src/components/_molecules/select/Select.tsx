@@ -2,7 +2,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
-import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded'; // 새로운 아이콘 추가
+import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
 
 import { Txt } from '@/components/_atoms';
 import type { fontWeight } from '@/styles';
@@ -14,7 +14,7 @@ interface Props {
   height?: keyof typeof size.height;
   placeholder: string;
   value?: string;
-  onClick: (e: React.MouseEvent<HTMLLIElement>) => void;
+  onClick: (e: React.MouseEvent<HTMLLIElement>, id: number) => void; // id를 받도록 수정
   options?: {
     id: number;
     label: string;
@@ -62,9 +62,20 @@ function Select({
     };
   }, []);
 
+  const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>, id: number) => {
+    onClick(e, id); // 옵션 선택시 `onClick` 호출
+    setIsOpen(false); // 옵션 선택 후 드롭다운 닫기
+  };
+
   return (
-    <PickerWrapper ref={pickerRef} onClick={() => setIsOpen(prev => !prev)}>
-      <PickerDropDown height={height} selectRadius={selectRadius} isValid={isValid} style={selectStyle}>
+    <PickerWrapper ref={pickerRef}>
+      <PickerDropDown
+        height={height}
+        selectRadius={selectRadius}
+        isValid={isValid}
+        style={selectStyle}
+        onClick={() => setIsOpen(prev => !prev)}
+      >
         {!value ? (
           <Txt fontWeight={fontWeight} fontSize={fontSize} fontColor="grey400">
             {placeholder}
@@ -79,7 +90,7 @@ function Select({
       {isOpen && (
         <Options
           options={options}
-          onClick={onClick}
+          onClick={handleOptionClick} // `handleOptionClick`을 전달
           setIsOpen={setIsOpen}
           height={height}
           optionRadius={optionRadius}
