@@ -143,7 +143,7 @@ function PartyHome({ partyId }: PageParams) {
                 <PartyPeopleTab partyId={partyId} />
               </Tabs.TabPanel>
               <Tabs.TabPanel index={2}>
-                <PartyRecruitmentsTab />
+                <PartyRecruitmentsTab partyId={partyId} />
               </Tabs.TabPanel>
             </Tabs.TabPanels>
           </Tabs>
