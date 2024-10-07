@@ -11,11 +11,10 @@ type PageParams = {
 };
 
 function PartyRecruitSetting({ partyId }: PageParams) {
-
   return (
     <SContainer>
       <PageHeader title="모집 편집" />
-      <FloatingMenu menu={PARTY_SETTING_MENU} />
+      <FloatingMenu menu={PARTY_SETTING_MENU(partyId)} />
     </SContainer>
   );
 }

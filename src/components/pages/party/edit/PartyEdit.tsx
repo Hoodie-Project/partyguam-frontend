@@ -250,10 +250,13 @@ export default function PartyEdit() {
     });
   };
 
+  // TODO. 지우기
+  const partyId = 8;
+
   return (
     <SContainer>
       <PageHeader title={pageType === 'CREATE' ? '파티 생성' : '파티 수정'} />
-      <FloatingMenu menu={PARTY_SETTING_MENU} />
+      <FloatingMenu menu={PARTY_SETTING_MENU(partyId.toString())} />
       <PartyCreateContainer>
         <Square
           width="390px"
