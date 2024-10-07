@@ -9,7 +9,7 @@ import ImageAddIcon from '@/assets/icon/image_add.svg';
 import { Balloon, Button, Input, Square, Txt } from '@/components/_atoms';
 import { PageHeader, Select, TipBox } from '@/components/_molecules';
 import { ConfirmModal, FloatingMenu } from '@/components/features';
-import { PARTY_MODIFY_MENU } from '@/constants';
+import { PARTY_SETTING_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { Position } from '@/types/user';
@@ -253,7 +253,7 @@ export default function PartyEdit() {
   return (
     <SContainer>
       <PageHeader title={pageType === 'CREATE' ? '파티 생성' : '파티 수정'} />
-      <FloatingMenu menu={PARTY_MODIFY_MENU} />
+      <FloatingMenu menu={PARTY_SETTING_MENU} />
       <PartyCreateContainer>
         <Square
           width="390px"

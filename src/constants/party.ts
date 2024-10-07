@@ -1,4 +1,4 @@
-export const PARTY_MODIFY_MENU: {
+export const PARTY_SETTING_MENU: {
   대메뉴: string;
   소메뉴: {
     label: string;
@@ -15,7 +15,7 @@ export const PARTY_MODIFY_MENU: {
   {
     대메뉴: '모집 관리',
     소메뉴: [
-      { label: '모집 수정', route: '/' },
+      { label: '모집 편집', route: '/' },
       { label: '지원자 관리', route: '/' },
     ],
   },
