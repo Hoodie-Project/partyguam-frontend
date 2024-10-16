@@ -10,12 +10,15 @@ import PartyRecruitSettingTable from '@/components/features/party/PartyRecruitSe
 import { PARTY_SETTING_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SChildContainer, SContainer } from '@/styles/components';
+import type { PartyRecruitmentListResponse } from '@/types/party';
 
 type PageParams = {
   partyId: string;
 };
 
 function PartyRecruitSetting({ partyId }: PageParams) {
+  const [partyRecruitList, setPartyRecruitList] = useState<PartyRecruitmentListResponse>([]);
+
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
@@ -106,7 +109,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
               모집 공고
             </Txt>
             <Txt fontSize={20} fontWeight="bold" fontColor="greenDark100" style={{ marginLeft: '8px' }}>
-              20
+              {partyRecruitList.length}
             </Txt>
           </div>
           <div>
@@ -126,7 +129,13 @@ function PartyRecruitSetting({ partyId }: PageParams) {
             </DeleteButton>
           </div>
         </TitleContainer>
-        <PartyRecruitSettingTable selectedRows={selectedRows} setSelectedRows={setSelectedRows} />
+        <PartyRecruitSettingTable
+          partyId={Number(partyId)}
+          selectedRows={selectedRows}
+          setSelectedRows={setSelectedRows}
+          partyRecruitList={partyRecruitList}
+          setPartyRecruitList={setPartyRecruitList}
+        />
       </SChildContainer>
     </SContainer>
   );
