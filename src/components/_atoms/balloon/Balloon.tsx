@@ -20,7 +20,10 @@ export default function Balloon({ children, onClose, width, height, ...divAttrib
       <CloseRoundedIcon
         onClick={onClose}
         sx={{
-          width: '12px',
+          position: 'absolute',
+          width: '14px',
+          top: '5px',
+          right: '8px',
           cursor: 'pointer',
           fill: 'white',
           marginLeft: '4px',
@@ -42,6 +45,7 @@ const BalloonWrapper = styled.div<{ width?: string; height?: string }>`
   position: relative;
   width: ${props => props.width || 'auto'};
   height: ${props => props.height || 'auto'};
+  box-shadow: 0px 2px 10px -1px rgba(17, 17, 17, 0.16);
 
   &::after {
     content: '';

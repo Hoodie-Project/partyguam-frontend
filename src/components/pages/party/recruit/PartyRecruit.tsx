@@ -1,4 +1,5 @@
 'use client';
+// 파티 모집하기를 생성하는 페이지
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
