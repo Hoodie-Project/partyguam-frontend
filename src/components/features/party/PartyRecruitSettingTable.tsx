@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -28,6 +29,7 @@ function PartyRecruitSettingTable({
   partyRecruitList,
   setPartyRecruitList,
 }: Props) {
+  const router = useRouter();
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
   const { openModal, closeModal } = useModalContext();
 
@@ -210,7 +212,13 @@ function PartyRecruitSettingTable({
                     <CircleButton onClick={() => onClick미리보기Button(item.id)}>미리보기</CircleButton>
                   </StyledCell>
                   <StyledCell>
-                    <CircleButton>수정하기</CircleButton>
+                    <CircleButton
+                      onClick={() =>
+                        router.push(`/party/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}`)
+                      }
+                    >
+                      수정하기
+                    </CircleButton>
                   </StyledCell>
                 </Row>
               ))}

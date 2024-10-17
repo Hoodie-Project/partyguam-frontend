@@ -1,14 +1,17 @@
 'use client';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
+import { fetchDeletePartyRecruitments } from '@/apis/party';
 import { Balloon, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { ConfirmModal, FloatingMenu } from '@/components/features';
 import PartyRecruitSettingTable from '@/components/features/party/PartyRecruitSettingTable';
 import { PARTY_SETTING_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
+import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SChildContainer, SContainer } from '@/styles/components';
 import type { PartyRecruitmentListResponse } from '@/types/party';
 
@@ -24,6 +27,13 @@ function PartyRecruitSetting({ partyId }: PageParams) {
 
   const isDeleteButtonActive = useMemo(() => selectedRows.length > 0, [selectedRows]);
   const { openModal, closeModal } = useModalContext();
+  const { setResetEditPartyRecruitForm } = useEditPartyRecruitForm();
+  const router = useRouter();
+
+  useEffect(() => {
+    // zustand store 초기화
+    setResetEditPartyRecruitForm();
+  }, []);
 
   const onClickDeleteButton = () => {
     openModal({
@@ -44,9 +54,19 @@ function PartyRecruitSetting({ partyId }: PageParams) {
       onCancel: () => {
         closeModal();
       },
-      onSubmit: () => {
-        // 삭제 api
-        closeModal();
+      onSubmit: async () => {
+        try {
+          // 삭제 API 호출
+          await fetchDeletePartyRecruitments({
+            partyId: Number(partyId),
+            recruitmentIds: selectedRows,
+          });
+          console.log('모집공고 삭제 완료');
+        } catch (error) {
+          console.error('모집공고 삭제 에러:', error);
+        } finally {
+          closeModal();
+        }
       },
     });
   };
@@ -113,7 +133,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
             </Txt>
           </div>
           <div>
-            <AddButton>
+            <AddButton onClick={() => router.push(`/party/recruit/edit?type=ADD&partyId=${partyId}`)}>
               <Txt fontColor="primaryGreen" fontSize={14} fontWeight="semibold">
                 추가하기
               </Txt>

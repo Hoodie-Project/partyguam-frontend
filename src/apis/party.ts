@@ -32,23 +32,27 @@ export const fetchPostCreateParty = async (data: FormData) => {
   }
 };
 
+// 파티 모집 생성하기
 export const fetchPostRecruitmentParty = async ({
   partyId,
-  data,
+  positionId,
+  content,
+  recruiting_count,
 }: {
   partyId: number;
-  data: {
-    recruitments: {
-      positionId: number;
-      recruiting_count: number;
-    }[];
-  };
+  positionId: number;
+  content: string;
+  recruiting_count: number;
 }) => {
   try {
-    const response = await privateApi.post(`/parties/${partyId}/recruitments`, data);
+    const response = await privateApi.post(`/parties/${partyId}/recruitments`, {
+      positionId,
+      content,
+      recruiting_count,
+    });
     return response.data;
   } catch (error) {
-    console.error('fetchPostApplyParty error : ', error);
+    console.error('fetchPostRecruitmentParty error:', error);
     return error;
   }
 };
@@ -160,5 +164,60 @@ export const fetchGetPartyRecruitments = async ({ partyRecruitmentId }: { partyR
     return response.data;
   } catch (error) {
     console.error('fetchGetPartyRecruitments error : ', error);
+  }
+};
+
+// 여러 개의 특정 파티 모집 삭제
+export const fetchDeletePartyRecruitments = async ({
+  partyId,
+  recruitmentIds,
+}: {
+  partyId: number;
+  recruitmentIds: number[];
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/recruitments/batch-delete`, {
+      partyRecruitmentIds: recruitmentIds,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchDeletePartyRecruitments error:', error);
+  }
+};
+
+// 파티 모집 수정
+export const fetchUpdatePartyRecruitment = async ({
+  partyId,
+  partyRecruitmentId,
+  positionId,
+  content,
+  recruiting_count,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+  positionId: number;
+  content: string;
+  recruiting_count: number;
+}) => {
+  try {
+    const response = await privateApi.patch(`/parties/${partyId}/recruitments/${partyRecruitmentId}`, {
+      positionId,
+      content,
+      recruiting_count,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchUpdatePartyRecruitment error:', error);
+  }
+};
+
+// 파티 모집 단일 조회
+export const fetchPartyRecruitmentDetails = async (partyRecruitmentId: number) => {
+  try {
+    const response = await privateApi.get(`/parties/recruitments/${partyRecruitmentId}`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchPartyRecruitmentDetails error:', error);
+    return null;
   }
 };

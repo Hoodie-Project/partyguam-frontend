@@ -11,7 +11,7 @@ export const size = {
     base: '25rem',
     xl: '22.25rem',
     l: '20.9375rem',
-    m: '12.25rem',
+    m: '12.1875rem',
     s: '5.125rem',
   },
 };
