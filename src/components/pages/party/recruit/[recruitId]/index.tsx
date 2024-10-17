@@ -1,4 +1,5 @@
 'use client';
+// 파티 모집하기 페이지
 import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import styled from '@emotion/styled';
@@ -8,6 +9,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import { fetchGetPartyRecruitments } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import Button from '@/components/_atoms/button';
+import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyRecruitDetailResponse } from '@/types/party';
 import { formatDate } from '@/utils/date';
@@ -15,6 +17,11 @@ import { formatDate } from '@/utils/date';
 type PageParams = {
   recruitId: string;
 };
+// 페이지가 아닌 모달 안 컴포넌트로 들어갈 때의 상황을 위한 props
+type PartyRecruitProps = {
+  isReadOnly?: boolean;
+  pageModalType?: 'ADD' | 'MODIFY';
+} & PageParams;
 
 // 파티 상태 칩
 const renderPartyState = (stateTag: string) => {
@@ -34,13 +41,20 @@ const renderPartyState = (stateTag: string) => {
   }[stateTag];
 };
 
-function PartyRecruitDetail({ recruitId }: PageParams) {
+function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecruitProps) {
   const [partyRecruitDetailData, setPartyRecruitDetailData] = useState<PartyRecruitDetailResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
+
+  const { editPartyRecruitForm } = useEditPartyRecruitForm();
+
   const formattedDate = useMemo(() => {
     if (!partyRecruitDetailData?.createdAt) return '';
     return formatDate(partyRecruitDetailData.createdAt);
   }, [partyRecruitDetailData?.createdAt]);
+
+  // 일반 사용자일 경우 혹은 isReadonly가 아닐 경우 편집하기 버튼 안보이게
+  const isVisible편집하기 = useMemo(() => !Boolean(isReadOnly), [isReadOnly]);
+  const isDisable지원하기 = useMemo(() => Boolean(isReadOnly), [isReadOnly]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,8 +71,8 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
   }, [recruitId]);
 
   return (
-    <SContainer>
-      <PartyRecruitDetailContainer>
+    <SContainer style={{ padding: isReadOnly ? '0' : 'default-padding-value' }}>
+      <PartyRecruitDetailContainer isReadOnly={isReadOnly}>
         <SFlexRowFull style={{ gap: '20px', width: '100%' }}>
           <Square
             width="400px"
@@ -75,7 +89,7 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
               {/* 파티 모집중 칩 */}
               <Chip
                 size="small"
-                label={partyRecruitDetailData?.tag}
+                label={!Boolean(pageModalType) ? partyRecruitDetailData?.tag : '모집중'}
                 chipType="filled"
                 chipColor={renderPartyState(partyRecruitDetailData?.tag as string)?.backgroundColor}
                 fontColor={renderPartyState(partyRecruitDetailData?.tag as string)?.fontColor}
@@ -102,7 +116,9 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                   모집중
                 </Txt>
                 <Txt fontColor="red" fontSize={16}>
-                  {partyRecruitDetailData?.recruitedCount} / {partyRecruitDetailData?.recruitingCount}
+                  {Boolean(pageModalType) && `0 / ${editPartyRecruitForm?.recruiting_count}`}
+                  {!Boolean(pageModalType) &&
+                    `${partyRecruitDetailData?.recruitedCount} / ${partyRecruitDetailData?.recruitingCount}`}
                 </Txt>
               </PartyInfo>
               <PartyInfo>
@@ -111,6 +127,7 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                 </Txt>
                 <Txt fontColor="greenDark100" fontSize={16}>
                   {partyRecruitDetailData?.applicationCount}
+                  {Boolean(pageModalType) && 0}
                 </Txt>
               </PartyInfo>
               <PartyInfo>
@@ -118,28 +135,31 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                   모집일
                 </Txt>
                 <Txt fontColor="black" fontSize={16}>
-                  {formattedDate}
+                  {!Boolean(pageModalType) && formattedDate}
+                  {Boolean(pageModalType) && formatDate(String(new Date()))}
                 </Txt>
               </PartyInfo>
             </PartyInfoWrapper>
             <SFlexRowFull style={{ gap: '12px', marginTop: '30px' }}>
-              <Button
-                backgroudColor="white"
-                borderColor="grey200"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '4px',
-                  width: '194px',
-                  borderRadius: '12px',
-                }}
-              >
-                <Txt fontColor="grey500" fontSize={16}>
-                  편집하기
-                </Txt>
-                <CreateIcon style={{ color: '#999999' }} />
-              </Button>
+              {isVisible편집하기 && (
+                <Button
+                  backgroudColor="white"
+                  borderColor="grey200"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '4px',
+                    width: '194px',
+                    borderRadius: '12px',
+                  }}
+                >
+                  <Txt fontColor="grey500" fontSize={16}>
+                    편집하기
+                  </Txt>
+                  <CreateIcon style={{ color: '#999999' }} />
+                </Button>
+              )}
               <Button
                 backgroudColor="white"
                 borderColor="grey200"
@@ -158,6 +178,7 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                     setIsShowCopyBalloon(false);
                   }, 3000); // 3초 후 자동으로 닫힘
                 }}
+                disabled={Boolean(isReadOnly)}
               >
                 <Txt fontColor="grey500" fontSize={16}>
                   공유하기
@@ -209,7 +230,8 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                 인원
               </Txt>
               <Txt fontColor="black" fontWeight="semibold" fontSize={16}>
-                {partyRecruitDetailData?.recruitingCount}명
+                {!Boolean(pageModalType) && `${partyRecruitDetailData?.recruitingCount}명`}
+                {Boolean(pageModalType) && `${editPartyRecruitForm?.recruiting_count}명`}
               </Txt>
             </div>
             <div style={{ display: 'flex', gap: '12px', width: 'calc(50%)' }}>
@@ -217,7 +239,8 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
                 포지션
               </Txt>
               <Txt fontColor="black" fontWeight="semibold" fontSize={16}>
-                {partyRecruitDetailData?.main} {partyRecruitDetailData?.sub}
+                {!Boolean(pageModalType) && `${partyRecruitDetailData?.main} ${partyRecruitDetailData?.sub}`}
+                {Boolean(pageModalType) && `${editPartyRecruitForm?.직군} ${editPartyRecruitForm.직무}`}
               </Txt>
             </div>
           </Square>
@@ -238,12 +261,22 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
             position="flex-start"
             style={{ padding: '28px' }}
           >
-            <Txt fontSize={16}>{partyRecruitDetailData?.content}</Txt>
+            <Txt fontSize={16}>
+              {!Boolean(pageModalType) && `${partyRecruitDetailData?.content}`}
+              {Boolean(pageModalType) && `${editPartyRecruitForm.content}`}
+            </Txt>
           </Square>
         </SFlexColumnFull>
       </PartyRecruitDetailContainer>
       <FloatingButton>
-        <Button style={{ width: '100%' }} height="l" backgroudColor="primaryGreen" radius="base" shadow="shadow1">
+        <Button
+          style={{ width: '100%' }}
+          height="l"
+          backgroudColor="primaryGreen"
+          radius="base"
+          shadow="shadow1"
+          disabled={isDisable지원하기}
+        >
           <Txt fontWeight="bold" fontColor="black">
             지원하기
           </Txt>
@@ -255,14 +288,14 @@ function PartyRecruitDetail({ recruitId }: PageParams) {
 
 export default PartyRecruitDetail;
 
-const PartyRecruitDetailContainer = styled.section`
+const PartyRecruitDetailContainer = styled.section<{ isReadOnly?: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 820px;
   height: auto;
-  padding-top: 52px;
+  padding-top: ${({ isReadOnly }) => (isReadOnly ? '0px' : '52px')};
 `;
 
 const ChipWrapper = styled.div`

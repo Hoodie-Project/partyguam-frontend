@@ -8,12 +8,25 @@ import { palette } from '@/styles';
 
 type Props = {
   title: string;
+  titleIcon?: JSX.Element; // 제목 옆 아이콘
+  headerTooltip?: JSX.Element; // 아이콘에 달리는 툴팁
   hrefLabel: string;
+  onClickTitleIcon?: () => void;
   onClickHref: () => void;
   onClickIcon: () => void;
   icon: JSX.Element;
 };
-export default function PageHeader({ onClickHref, hrefLabel, title, icon, onClickIcon }: Partial<Props>) {
+
+export default function PageHeader({
+  hrefLabel,
+  title,
+  titleIcon,
+  headerTooltip,
+  icon,
+  onClickTitleIcon,
+  onClickIcon,
+  onClickHref,
+}: Partial<Props>) {
   return (
     <PageHeaderContainer>
       <GoBackBtn onClick={onClickHref}>
@@ -22,9 +35,13 @@ export default function PageHeader({ onClickHref, hrefLabel, title, icon, onClic
           {hrefLabel}
         </Txt>
       </GoBackBtn>
-      <Txt fontSize={20} fontWeight="bold" style={{ textAlign: 'center' }}>
-        {title}
-      </Txt>
+      <PageTitleContainer>
+        <Txt fontSize={20} fontWeight="bold">
+          {title}
+        </Txt>
+        {titleIcon && <IconContainer onClick={onClickTitleIcon}>{titleIcon}</IconContainer>}
+        {headerTooltip}
+      </PageTitleContainer>
       {icon && <IconContainer onClick={onClickIcon}>{icon}</IconContainer>}
     </PageHeaderContainer>
   );
@@ -34,7 +51,7 @@ const PageHeaderContainer = styled.section`
   display: grid;
   position: fixed;
   background-color: white;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: auto 1fr auto;
   place-items: center;
   width: 100%;
   max-width: 77.75rem;
@@ -42,6 +59,14 @@ const PageHeaderContainer = styled.section`
   padding: 0.875rem 0px;
   justify-items: stretch;
   z-index: 1;
+`;
+
+const PageTitleContainer = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 `;
 
 const GoBackBtn = styled.button`
