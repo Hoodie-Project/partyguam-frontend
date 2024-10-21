@@ -1,3 +1,4 @@
+export { default as BreadCrumb } from './breadcrumb';
 export { default as CheckItem } from './checkItem';
 export { default as Dropdown } from './dropdown';
 export { default as Menus } from './menus';

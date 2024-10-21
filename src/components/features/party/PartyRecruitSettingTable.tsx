@@ -112,8 +112,8 @@ function PartyRecruitSettingTable({
 
   return (
     <>
-      <Table data={data} style={{ width: '100%' }}>
-        {(tableList: any[]) => (
+      <Table data={data} style={{ width: '100%', zIndex: 0, marginBottom: 'calc(3.125rem + 3.5rem)' }}>
+        {(tableList: TablePartyRecruitment[]) => (
           <>
             <Header>
               <HeaderRow>
@@ -172,7 +172,7 @@ function PartyRecruitSettingTable({
             </Header>
 
             <Body>
-              {tableList.map(item => (
+              {tableList.map((item: TablePartyRecruitment) => (
                 <Row item={item} key={item.id}>
                   <StyledCell>
                     <CenteredCheckbox>
@@ -214,7 +214,9 @@ function PartyRecruitSettingTable({
                   <StyledCell>
                     <CircleButton
                       onClick={() =>
-                        router.push(`/party/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}`)
+                        router.push(
+                          `/party/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.main}&sub=${item.sub}`,
+                        )
                       }
                     >
                       수정하기

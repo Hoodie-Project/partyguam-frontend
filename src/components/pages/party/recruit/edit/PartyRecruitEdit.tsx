@@ -7,7 +7,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { fetchGetPositions } from '@/apis/detailProfile';
 import { fetchPartyRecruitmentDetails, fetchPostRecruitmentParty, fetchUpdatePartyRecruitment } from '@/apis/party';
 import { Button, Input, Txt } from '@/components/_atoms';
-import { PageHeader, Select, TipBox } from '@/components/_molecules';
+import { BreadCrumb, PageHeader, Select, TipBox } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
@@ -35,6 +35,8 @@ function PartyRecruitEdit() {
   const partyId = searchParams.get('partyId');
   const pageType = searchParams.get('type'); // 'ADD': 추가, 'MODIFY': 수정
   const recruitId = searchParams.get('recruitId'); // 모집 공고 Id
+  const mainPosition = searchParams.get('main'); // 직군
+  const subPosition = searchParams.get('sub'); // 직무
 
   const { editPartyRecruitForm, setEditPartyRecruitForm } = useEditPartyRecruitForm();
 
@@ -200,6 +202,7 @@ function PartyRecruitEdit() {
   return (
     <SContainer>
       <PageHeader title={pageType === 'ADD' ? '모집 추가' : '모집 수정'} />
+      <BreadCrumb contents={['모집 관리', '모집 수정', `${mainPosition} ${subPosition}`]} />
       <PartyRecruitContainer>
         <SFlexColumnFull>
           <SMargin margin="3.125rem 0rem 0rem 0rem" />
