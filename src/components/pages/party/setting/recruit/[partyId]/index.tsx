@@ -133,7 +133,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
             </Txt>
           </div>
           <div>
-            <AddButton onClick={() => router.push(`/party/recruit/edit?type=ADD&partyId=${partyId}`)}>
+            <AddButton onClick={() => router.push(`/party/setting/recruit/edit?type=ADD&partyId=${partyId}`)}>
               <Txt fontColor="primaryGreen" fontSize={14} fontWeight="semibold">
                 추가하기
               </Txt>

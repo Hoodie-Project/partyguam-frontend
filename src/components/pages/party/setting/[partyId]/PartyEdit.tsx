@@ -1,4 +1,5 @@
 'use client';
+// 파티 수정 및 생성 페이지
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
@@ -37,8 +38,12 @@ const filterPositions = (data: Position[], mainCategory: string): { id: number; 
   return data.filter(item => item.main === mainCategory).map(item => ({ id: item.id, label: item.sub }));
 };
 
+type PageParams = {
+  partyId?: string;
+};
+
 // pathname -> 'CREATE': 파티 생성, 'MODIFY': 파티 수정
-export default function PartyEdit() {
+export default function PartyEdit({ partyId }: PageParams) {
   const router = useRouter();
   const pathname = usePathname();
   const pageType: 'CREATE' | 'MODIFY' = useMemo(() => {
@@ -250,13 +255,10 @@ export default function PartyEdit() {
     });
   };
 
-  // TODO. 지우기
-  const partyId = 8;
-
   return (
     <SContainer>
       <PageHeader title={pageType === 'CREATE' ? '파티 생성' : '파티 수정'} />
-      <FloatingMenu menu={PARTY_SETTING_MENU(partyId.toString())} />
+      {pageType === 'MODIFY' && <FloatingMenu menu={PARTY_SETTING_MENU(partyId?.toString())} />}
       <PartyCreateContainer>
         <Square
           width="390px"

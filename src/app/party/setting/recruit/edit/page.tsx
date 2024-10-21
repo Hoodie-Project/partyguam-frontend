@@ -1,7 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const PartyRecruitEdit = dynamic(() => import('@/components/pages/party/recruit/edit/PartyRecruitEdit'), {
+const PartyRecruitEdit = dynamic(() => import('@/components/pages/party/setting/recruit/edit/PartyRecruitEdit'), {
   ssr: false,
 });
 

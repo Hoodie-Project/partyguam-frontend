@@ -14,7 +14,7 @@ import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { Position } from '@/types/user';
 
-import PartyRecruitDetail from '../[recruitId]';
+import PartyRecruitDetail from '../../../recruit/[recruitId]';
 
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
   const uniqueMainPositions = Array.from(new Set(data.map(item => item.main)));
@@ -202,7 +202,7 @@ function PartyRecruitEdit() {
   return (
     <SContainer>
       <PageHeader title={pageType === 'ADD' ? '모집 추가' : '모집 수정'} />
-      <BreadCrumb contents={['모집 관리', '모집 수정', `${mainPosition} ${subPosition}`]} />
+      {pageType === 'MODIFY' && <BreadCrumb contents={['모집 관리', '모집 수정', `${mainPosition} ${subPosition}`]} />}
       <PartyRecruitContainer>
         <SFlexColumnFull>
           <SMargin margin="3.125rem 0rem 0rem 0rem" />

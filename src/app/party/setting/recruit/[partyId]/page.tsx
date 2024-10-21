@@ -1,7 +1,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 
-const PartyRecruitSetting = dynamic(() => import('@/components/pages/party/recruit/setting/[partyId]'), {
+const PartyRecruitSetting = dynamic(() => import('@/components/pages/party/setting/recruit/[partyId]'), {
   ssr: false,
 });
 

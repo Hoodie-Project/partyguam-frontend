@@ -215,7 +215,7 @@ function PartyRecruitSettingTable({
                     <CircleButton
                       onClick={() =>
                         router.push(
-                          `/party/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.main}&sub=${item.sub}`,
+                          `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.main}&sub=${item.sub}`,
                         )
                       }
                     >
