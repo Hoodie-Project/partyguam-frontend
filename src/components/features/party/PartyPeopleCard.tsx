@@ -1,14 +1,13 @@
-import Image from 'next/image';
 import styled from '@emotion/styled';
-import FlagIcon from '@mui/icons-material/Flag';
 
 import Emergency from '@/assets/icon/emergency.svg';
 import { Square, Txt } from '@/components/_atoms';
+import { ProfileImage } from '@/components/_molecules';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { SFlexRow } from '@/styles/components';
 
-import { ReportModal } from '../reportModal';
+import ReportModal from '../reportModal';
 
 type Props = {
   authority?: 'master' | 'deputy' | 'member';
@@ -57,21 +56,7 @@ function PartyPeopleCard({ authority, position, user }: Props) {
       borderColor="grey200"
     >
       <CardWrapper>
-        <ImageWrapper>
-          <Image
-            src="/images/zzz.png"
-            width={72}
-            height={72}
-            alt="파티원 프로필 이미지"
-            style={{ borderRadius: '50%' }}
-          />
-          {authority != 'member' && (
-            <TagWrapper type={authority}>
-              <FlagIcon style={{ width: '18px', height: '18px', color: 'white' }} />
-            </TagWrapper>
-          )}
-        </ImageWrapper>
-
+        <ProfileImage imageUrl={user?.image} size={72} authority={authority} />
         <UserInfoContainer>
           <UserPositionWrapper>
             {authority != 'member' && (
