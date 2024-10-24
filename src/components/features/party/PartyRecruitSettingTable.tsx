@@ -13,6 +13,8 @@ import PartyRecruitDetail from '@/components/pages/party/recruit/[recruitId]';
 import { useModalContext } from '@/contexts/ModalContext';
 import type { PartyRecruitment, PartyRecruitmentListResponse } from '@/types/party';
 
+import { formatDate } from '@/utils/date';
+
 type Props = {
   partyId: number;
 
@@ -205,7 +207,7 @@ function PartyRecruitSettingTable({
                   </StyledCell>
                   <StyledCell>
                     <Txt fontWeight="normal" fontSize={14} fontColor="grey500">
-                      {item.createdAt}
+                      {formatDate(item.createdAt)}
                     </Txt>
                   </StyledCell>
                   <StyledCell>

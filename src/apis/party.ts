@@ -1,3 +1,5 @@
+import type { PartyUserListByAdminResponse } from '@/types/party';
+
 import { fileUploadApi, privateApi } from '.';
 
 // 파티 생성하기 페이지
@@ -219,5 +221,97 @@ export const fetchPartyRecruitmentDetails = async (partyRecruitmentId: number) =
   } catch (error) {
     console.error('fetchPartyRecruitmentDetails error:', error);
     return null;
+  }
+};
+
+// [GET] 관리자-파티원 목록 조회
+export const fetchPartyAdminUsers = async ({
+  partyId,
+  sort,
+  order,
+  main,
+  nickname,
+}: {
+  partyId: number;
+  sort: string;
+  order: string;
+  main?: string;
+  nickname?: string;
+}): Promise<PartyUserListByAdminResponse | null> => {
+  try {
+    // 쿼리 파라미터를 먼저 객체로 설정
+    const params: any = {
+      sort,
+      order,
+      limit: 17,
+      page: 1,
+    };
+
+    // main과 nickname이 존재할 때만 추가
+    if (main && main !== '전체') {
+      params.main = main;
+    }
+    if (nickname) {
+      params.nickname = nickname;
+    }
+
+    const response = await privateApi.get(`/parties/${partyId}/admin/users`, { params });
+    return response.data;
+  } catch (error) {
+    console.error('fetchPartyAdminUsers error:', error);
+    return null;
+  }
+};
+
+// [POST] 파티원 다수 내보내기
+export const fetchBatchDeletePartyUsers = async ({
+  partyId,
+  partyUserIds,
+}: {
+  partyId: number;
+  partyUserIds: number[];
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/party-users/batch-delete`, {
+      partyUserIds,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchBatchDeletePartyUsers error:', error);
+    return error;
+  }
+};
+
+// [POST] 파티장 위임
+export const fetchDelegateParty = async ({ partyId, delegateUserId }: { partyId: number; delegateUserId: number }) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/delegation`, {
+      delegateUserId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchDelegateParty error:', error);
+    return error;
+  }
+};
+
+// [PATCH] 파티원 데이터 변경
+export const fetchUpdatePartyUserPosition = async ({
+  partyId,
+  partyUserId,
+  positionId,
+}: {
+  partyId: number;
+  partyUserId: number;
+  positionId: number;
+}) => {
+  try {
+    const response = await privateApi.patch(`/parties/${partyId}/party-users/${partyUserId}`, {
+      positionId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchUpdatePartyUserPosition error:', error);
+    return error;
   }
 };

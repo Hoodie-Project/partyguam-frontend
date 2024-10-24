@@ -79,3 +79,23 @@ export interface PartyRecruitment {
 }
 
 export type PartyRecruitmentListResponse = PartyRecruitment[];
+
+// [GET] 관리자-파티원 목록 조회
+export interface PartyUserListByAdminResponse {
+  total: number;
+  partyUser: PartyUserByAdmin[];
+}
+
+export interface PartyUserByAdmin {
+  createdAt: string; // 참여 날짜
+  authority: string; // 직책
+  position: {
+    main: string; // 직군
+    sub: string; // 직무
+  };
+  user: {
+    id: number;
+    nickname: string;
+    image?: string | null;
+  };
+}
