@@ -228,11 +228,9 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
                     </Txt>
                   </StyledCell>
                   <StyledCell>
-                    {item.authority !== 'master' && (
-                      <CircleButton onClick={() => handleClick수정하기(item.user, item.authority, item.position)}>
-                        수정하기
-                      </CircleButton>
-                    )}
+                    <CircleButton onClick={() => handleClick수정하기(item.user, item.authority, item.position)}>
+                      수정하기
+                    </CircleButton>
                   </StyledCell>
                 </Row>
               ))}
@@ -242,7 +240,7 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
       </Table>
       {partyUserList?.partyUser.length === 0 && (
         <Txt fontSize={16} fontColor="grey400" style={{ width: '100%', textAlign: 'center', marginTop: '138px' }}>
-          모집 공고가 없어요
+          해당 파티원이 없어요.
         </Txt>
       )}
     </>

@@ -160,10 +160,10 @@ function PartyUsersManage({ partyId }: PageParams) {
             </Txt>
             <div style={{ width: 'auto', display: 'flex', flexDirection: 'row', flexShrink: 0 }}>
               <Txt fontSize={20} fontWeight="bold" fontColor="greenDark100" style={{ marginLeft: '8px' }}>
-                {partyUserList?.partyUser.length}
+                {partyUserList?.total}
               </Txt>
               <Txt fontSize={16} fontWeight="bold" fontColor="grey500" style={{ marginLeft: '2px' }}>
-                / {partyUserList?.total}
+                / {partyUserList?.totalPartyUserCount}
               </Txt>
             </div>
             <Select
@@ -193,8 +193,22 @@ function PartyUsersManage({ partyId }: PageParams) {
                 value={nicknameSearch}
                 onChange={handleChangeNicknameSearch}
                 onKeyDown={handleKeyDownNicknameSearch}
-                onClear={() => {
+                onClear={async () => {
                   setNicknameSearch('');
+                  try {
+                    const requestParams = {
+                      partyId: Number(partyId),
+                      sort: 'createdAt',
+                      order,
+                      main: mainPositionSearch.label || '',
+                      nickname: '',
+                    };
+
+                    const data = await fetchPartyAdminUsers(requestParams);
+                    setPartyUserList(data);
+                  } catch (err) {
+                    console.error('Error fetching partyUsers : ', err);
+                  }
                 }}
               />
             </div>

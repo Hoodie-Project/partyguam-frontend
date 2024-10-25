@@ -82,6 +82,7 @@ export type PartyRecruitmentListResponse = PartyRecruitment[];
 
 // [GET] 관리자-파티원 목록 조회
 export interface PartyUserListByAdminResponse {
+  totalPartyUserCount: number;
   total: number;
   partyUser: PartyUserByAdmin[];
 }

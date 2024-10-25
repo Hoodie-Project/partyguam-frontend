@@ -303,6 +303,7 @@ export default function PartyUserEditModal({ partyId, user, authority, position 
           borderColor={changedAuthority === 'member' ? 'transparent' : 'grey200'}
           radius="base"
           shadow="shadow1"
+          disabled={authority === 'master'}
         >
           <Txt fontColor="black">파티원</Txt>
         </Button>
