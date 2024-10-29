@@ -8,7 +8,11 @@ import axios, {
 } from 'axios';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 const getResult = (response: AxiosResponse) => response;
+axios.defaults.withCredentials = true;
 
 class HttpClient {
   private client: AxiosInstance;
@@ -79,14 +83,16 @@ class HttpClient {
         this.isRefreshing = true;
 
         try {
-          const response = await axios.post('/auth/access-token', { withCredentials: true });
+          const response = await axios.post(`${BASE_URL}/auth/access-token`, { withCredentials: true });
           const newAccessToken = response.data.accessToken;
 
           setCookie('accessToken', newAccessToken);
           this.refreshSubscribers.forEach(callback => callback(newAccessToken));
           this.refreshSubscribers = [];
         } catch (refreshError) {
-          this.handleRefreshTokenError();
+          if (isAxiosError(refreshError) && refreshError.response?.status === 401) {
+            this.handleRefreshTokenError();
+          }
         } finally {
           this.isRefreshing = false;
         }
