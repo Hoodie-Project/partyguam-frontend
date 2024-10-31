@@ -100,11 +100,11 @@ class HttpClient {
         return retryOriginalRequest;
       }
     }
-    if (errorStatus === 500) {
-      alert('로그인을 다시 해주세요');
-      deleteCookie('accessToken');
-      window.location.href = '/';
-    }
+    // if (errorStatus === 500) {
+    //   alert('로그인을 다시 해주세요');
+    //   deleteCookie('accessToken');
+    //   window.location.href = '/';
+    // }
 
     return Promise.reject(error.response);
   };

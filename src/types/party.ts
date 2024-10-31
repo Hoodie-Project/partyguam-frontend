@@ -100,3 +100,21 @@ export interface PartyUserByAdmin {
     image?: string | null;
   };
 }
+
+// [GET] 파티 포지션별 모집 공고 지원자
+export interface PartyApplicationData {
+  total: number;
+  partyApplicationUser: PartyApplicationUser[];
+}
+
+export interface PartyApplicationUser {
+  id: number;
+  message: string;
+  status: string;
+  createdAt: string;
+  user: {
+    id: number;
+    nickname: string;
+    image?: string | null;
+  };
+}

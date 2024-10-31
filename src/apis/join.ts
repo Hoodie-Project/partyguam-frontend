@@ -1,5 +1,16 @@
 import { privateApi } from '.';
 
+// [POST] accessToken 재발급
+const fetchPostAccessToken = async () => {
+  try {
+    const response = await privateApi.get('/auth/access-token');
+    return response.data;
+  } catch (error) {
+    console.error('error : ', error);
+    throw new Error('Error fetching data');
+  }
+};
+
 const fetchGetOauthInfo = async () => {
   try {
     const response = await privateApi.get('/users/me/oauth');
@@ -69,4 +80,4 @@ const fetchGetUsers = async () => {
   }
 };
 
-export { fetchGetOauthInfo, fetchGetUsers, fetchJoinFormSubmit, fetchNicknameDuplicated };
+export { fetchGetOauthInfo, fetchGetUsers, fetchJoinFormSubmit, fetchNicknameDuplicated, fetchPostAccessToken };

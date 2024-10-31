@@ -38,7 +38,7 @@ function ProfileImage({
       ) : (
         <Avatar name="sacagawea" variant="beam" size={size} colors={['#7ff4df', '#00c2ff']} />
       )}
-      {authority != 'member' && (
+      {authority && authority != 'member' && (
         <TagWrapper type={authority} style={flagWrapperStyle}>
           <FlagIcon style={flagIconStyle || { width: '18px', height: '18px', color: 'white' }} />
         </TagWrapper>

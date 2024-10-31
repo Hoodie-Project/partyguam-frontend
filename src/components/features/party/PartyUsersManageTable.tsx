@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -25,7 +24,6 @@ type Props = {
 };
 
 function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, setOrder, partyUserList }: Props) {
-  const router = useRouter();
   const { openModal } = useModalContext();
 
   interface TablePartyUserManage extends PartyUserByAdmin {

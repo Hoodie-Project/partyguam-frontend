@@ -6,12 +6,13 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { fetchGetPositions } from '@/apis/detailProfile';
 import { fetchGetPartyRecruitmentsList } from '@/apis/party';
-import { Square, Txt } from '@/components/_atoms';
+import { Txt } from '@/components/_atoms';
 import { Select } from '@/components/_molecules';
 import { SFlexColumnFull, SMargin } from '@/styles/components';
 import type { PartyRecruitmentListResponse } from '@/types/party';
 import type { Position } from '@/types/user';
-import { formatDate } from '@/utils/date';
+
+import PartyRecruitmentsCard from './PartyRecruitmentsCard';
 
 // 직군 필터링 함수
 const filterMainCategories = (data: Position[]): { id: number; label: string }[] => {
@@ -179,40 +180,15 @@ function PartyRecruitmentsTab({ partyId }: Props) {
         ) : (
           <RecruitmentList>
             {partyRecruitList.map((item, index) => (
-              <RecruitmentCard
-                key={index}
-                width="calc(50% - 8px)"
-                height="155px"
-                shadowKey="shadow1"
-                radiusKey="base"
-                backgroundColor="white"
-                style={{ alignItems: 'flex-start', justifyContent: 'center' }}
-              >
-                <Txt fontSize={12} fontColor="grey500">
-                  모집일 &nbsp;{formatDate(item.createdAt)}
-                </Txt>
-                <Txt
-                  fontSize={16}
-                  fontWeight="semibold"
-                  style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-                >
-                  {item.main} <Divider height="12px" margin="0px 8px" /> {item.sub}
-                </Txt>
-                <Info>
-                  <Txt fontSize={14} fontColor="black">
-                    모집중
-                  </Txt>
-                  <Txt fontSize={14} fontColor="failRed">
-                    {item.recruitedCount}/{item.recruitingCount}
-                  </Txt>
-                  <Txt fontSize={14} fontColor="black" style={{ marginLeft: '20px' }}>
-                    지원자
-                  </Txt>
-                  <Txt fontSize={14} fontColor="greenDark100">
-                    {item.applicationCount}
-                  </Txt>
-                </Info>
-              </RecruitmentCard>
+              <PartyRecruitmentsCard
+                key={item.partyRecruitmentId}
+                createdAt={item.createdAt}
+                main={item.main}
+                sub={item.sub}
+                recruitedCount={item.recruitedCount}
+                recruitingCount={item.recruitingCount}
+                applicationCount={item.applicationCount}
+              />
             ))}
           </RecruitmentList>
         )}
@@ -279,22 +255,6 @@ const RecruitmentList = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 20px;
-`;
-
-const RecruitmentCard = styled(Square)`
-  background-color: white;
-  border: 1px solid #e5e5ec;
-  padding: 16px;
-  padding: 32px 24px;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Info = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  gap: 4px;
 `;
 
 const EmptyState = styled.div`

@@ -2,8 +2,9 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
 
+import { fetchPostAccessToken } from '@/apis/join';
 import { Dropdown, Menus } from '@/components/_molecules';
 import { ConfirmModal, LoginModal } from '@/components/features';
 import { useFormContext } from '@/contexts/FormContext';
@@ -23,10 +24,22 @@ export default function Header() {
     logout: state.logout,
   }));
 
+  const setAccessToken = async () => {
+    const res = await fetchPostAccessToken();
+    setCookie('accessToken', res);
+  };
+
   useEffect(() => {
     const accessToken = getCookie('accessToken');
+    console.log('asf');
     if (!accessToken) {
-      logout();
+      const refreshToken = getCookie('refreshToken');
+      if (refreshToken) {
+        setAccessToken();
+        login();
+      } else {
+        logout();
+      }
     } else {
       login();
     }
