@@ -24,3 +24,32 @@ export const PARTY_SETTING_MENU = (partyId?: string) => {
     },
   ] as Menu[];
 };
+
+// 파티 지원 상태 리턴 (영어 -> 한글)
+/**
+ * 
+ * @param status string ('active', 'approved', 'pending', 'rejected')
+ * @returns {
+    active: { label: '검토중', color: '#111111' },
+    approved: { label: '수락', color: '#11C9A7' },
+    pending: { label: '응답대기', color: '#FFAA00' },
+    rejected: { label: '거절', color: '#767676' },
+  }
+ */
+export const PARTY_APPLICANTS_STATUS = (status: string) => {
+  return {
+    active: { label: '검토중', color: '#111111' },
+    approved: { label: '수락', color: '#11C9A7' },
+    pending: { label: '응답대기', color: '#FFAA00' },
+    rejected: { label: '거절', color: '#767676' },
+  }[status];
+};
+
+export const TRANSFORM_PARTY_APPLICANTS_STATUS = (status: string) => {
+  return {
+    검토중: 'active',
+    수락: 'approved',
+    응답대기: 'pending',
+    거절: 'rejected',
+  }[status];
+};

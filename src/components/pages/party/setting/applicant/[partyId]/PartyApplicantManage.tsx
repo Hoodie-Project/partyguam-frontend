@@ -1,10 +1,11 @@
 'use client';
 import React, { useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
-import styled from '@emotion/styled';
 
 import { PageHeader } from '@/components/_molecules';
+import { FloatingMenu } from '@/components/features';
 import { Party모집공고관리, Party모집공고별지원자관리 } from '@/components/features/party';
+import { PARTY_SETTING_MENU } from '@/constants';
 import { SContainer } from '@/styles/components';
 
 type PageParams = {
@@ -24,7 +25,7 @@ function PartyApplicantManage({ partyId }: PageParams) {
 
   return (
     <SContainer>
-      {/* <FloatingMenu menu={PARTY_SETTING_MENU(partyId)} /> */}
+      <FloatingMenu menu={PARTY_SETTING_MENU(partyId)} />
       <PageHeader title="지원자 관리" />
       {pageType === '모집공고' && <Party모집공고관리 partyId={partyId} />}
       {pageType === '모집공고별지원자' && <Party모집공고별지원자관리 partyId={partyId} />}
@@ -33,12 +34,3 @@ function PartyApplicantManage({ partyId }: PageParams) {
 }
 
 export default PartyApplicantManage;
-
-const TitleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
-  margin-top: 50px;
-`;
