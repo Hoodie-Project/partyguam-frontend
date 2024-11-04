@@ -350,3 +350,41 @@ export const fetchPartyRecruitmentApplications = async ({
     throw error;
   }
 };
+
+// [POST] 파티 지원자 승인
+export const fetchApprovePartyApplication = async ({
+  partyId,
+  partyRecruitmentId,
+  partyApplicationId,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+  partyApplicationId: number;
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/applications/${partyApplicationId}/approval`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchApprovePartyApplication error:', error);
+    return error;
+  }
+};
+
+// [POST] 파티 지원자 거절
+export const fetchRejectPartyApplication = async ({
+  partyId,
+  partyRecruitmentId,
+  partyApplicationId,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+  partyApplicationId: number;
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/applications/${partyApplicationId}/rejection`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchRejectPartyApplication error:', error);
+    return error;
+  }
+};

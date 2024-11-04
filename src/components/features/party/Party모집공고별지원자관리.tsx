@@ -1,9 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
+import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import { Body, Cell, Header, HeaderCell, HeaderRow, Row, Table } from '@table-library/react-table-library/table';
 import { useTheme } from '@table-library/react-table-library/theme';
@@ -15,12 +17,13 @@ import { BreadCrumb, ProfileImage } from '@/components/_molecules';
 import { PARTY_APPLICANTS_STATUS } from '@/constants';
 import { SChildContainer } from '@/styles/components';
 import type { PartyApplicationUser } from '@/types/party';
-import { formatDate } from '@/utils/date';
+import { formatRelativeTime } from '@/utils/date';
 
 function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
   const [status, setStatus] = useState<'active' | 'approved' | 'pending' | 'rejected' | undefined>(undefined);
+  const [expand지원서, setExpand지원서] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const partyRecruitmentId = searchParams.get('partyRecruitmentId');
   const mainPosition = searchParams.get('main');
@@ -226,56 +229,84 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
 
             <Body>
               {tableList.map((item: PartyApplicationUser) => (
-                <Row item={item} key={item.id}>
-                  <StyledCell>
-                    <div
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'flex-start',
-                        paddingLeft: '60px',
-                        gap: '8px',
-                      }}
-                    >
-                      <ProfileImage imageUrl={item.user.image || ''} size={40} />
-                      <Txt
-                        fontWeight="normal"
-                        fontSize={14}
+                <Fragment key={item.id}>
+                  <Row item={item}>
+                    <StyledCell isExpend={expand지원서 === item.id}>
+                      <div
                         style={{
-                          textAlign: 'start',
                           width: '100%',
-                          overflow: 'hidden',
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                          marginLeft: '8px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'flex-start',
+                          paddingLeft: '60px',
+                          gap: '8px',
                         }}
                       >
-                        {item.user.nickname}
+                        <ProfileImage imageUrl={item.user.image || ''} size={40} />
+                        <Txt
+                          fontWeight="normal"
+                          fontSize={14}
+                          style={{
+                            textAlign: 'start',
+                            width: '100%',
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            marginLeft: '8px',
+                          }}
+                        >
+                          {item.user.nickname}
+                        </Txt>
+                      </div>
+                    </StyledCell>
+                    <StyledCell isExpend={expand지원서 === item.id}>
+                      <Txt fontWeight="normal" fontSize={14} fontColor="grey500">
+                        {formatRelativeTime(item.createdAt)}
                       </Txt>
-                    </div>
-                  </StyledCell>
-                  <StyledCell>
-                    <Txt fontWeight="normal" fontSize={14} fontColor="grey500">
-                      {formatDate(item.createdAt)}
-                    </Txt>
-                  </StyledCell>
-                  <StyledCell>
-                    <Txt
-                      fontWeight="semibold"
-                      fontSize={14}
-                      style={{ color: `${PARTY_APPLICANTS_STATUS(item.status)?.color}` }}
-                    >
-                      {PARTY_APPLICANTS_STATUS(item.status)?.label}
-                    </Txt>
-                  </StyledCell>
-                  <StyledCell>
-                    <Txt fontWeight="normal" fontSize={14}>
-                      지원서
-                    </Txt>
-                  </StyledCell>
-                </Row>
+                    </StyledCell>
+                    <StyledCell isExpend={expand지원서 === item.id}>
+                      <Txt
+                        fontWeight="semibold"
+                        fontSize={14}
+                        style={{ color: `${PARTY_APPLICANTS_STATUS(item.status)?.color}` }}
+                      >
+                        {PARTY_APPLICANTS_STATUS(item.status)?.label}
+                      </Txt>
+                    </StyledCell>
+                    <StyledCell isExpend={expand지원서 === item.id}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <CircleButton onClick={() => setExpand지원서(prevId => (prevId === item.id ? null : item.id))}>
+                          지원서 보기
+                          {expand지원서 === item.id ? (
+                            <ExpandLessRoundedIcon fontSize="small" style={{ marginLeft: '4px' }} />
+                          ) : (
+                            <ExpandMoreRoundedIcon fontSize="small" style={{ marginLeft: '4px' }} />
+                          )}
+                        </CircleButton>
+                      </div>
+                    </StyledCell>
+                  </Row>
+                  {expand지원서 === item.id && (
+                    <Row item={item}>
+                      <Styled지원서Cell gridColumnStart={1} gridColumnEnd={5}>
+                        <Styled지원서TxtBox>{item.message}</Styled지원서TxtBox>
+                        <div
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            gap: '12px',
+                            justifyContent: 'flex-end',
+                            marginTop: '12px',
+                          }}
+                        >
+                          <SquareButton isAccept={false}>거절하기</SquareButton>
+                          <SquareButton isAccept={true}>수락하기</SquareButton>
+                        </div>
+                      </Styled지원서Cell>
+                    </Row>
+                  )}
+                </Fragment>
               ))}
             </Body>
           </>
@@ -305,9 +336,50 @@ const StyledHeaderCell = styled(HeaderCell)`
   text-align: center;
 `;
 
-const StyledCell = styled(Cell)`
+const StyledCell = styled(Cell)<{ isExpend: boolean }>`
   padding: 10px;
-  border-bottom: 1px solid #f1f1f5;
+  border-bottom: ${({ isExpend }) => (isExpend ? 'none' : '1px solid #f1f1f5')};
   text-align: center;
   height: 100px;
+`;
+
+const Styled지원서Cell = styled(Cell)`
+  padding: 0px 20px 32px;
+  border-bottom: 1px solid #f1f1f5;
+  height: 300px;
+`;
+
+const Styled지원서TxtBox = styled.div`
+  height: 220px;
+  padding: 20px;
+  border-radius: 16px;
+  text-wrap: wrap;
+  border: 1px solid #d4d4d4;
+  box-shadow: 0px 2px 6px -1px rgba(17, 17, 17, 0.08);
+  font-size: 16px;
+`;
+
+const SquareButton = styled.button<{ isAccept: boolean }>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: ${({ isAccept }) => (isAccept ? '1px solid #7FF4DF' : '1px solid #E5E5EC')};
+  background-color: ${({ isAccept }) => (isAccept ? '#C5FAF0' : '#FFFFFF')};
+  text-align: center;
+  font-size: 14px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px -1px rgba(17, 17, 17, 0.08);
+  padding: 8px 26px;
+`;
+
+const CircleButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 1px solid #e5e5ec;
+  border-radius: 999px;
+  padding: 7.5px 12px;
+  color: #767676;
+  font-size: 12px;
 `;
