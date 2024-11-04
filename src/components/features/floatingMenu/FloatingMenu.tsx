@@ -46,7 +46,7 @@ export default function FloatingMenu({ menu, ...divAttributes }: Props) {
 const MenuContainer = styled.div`
   position: fixed;
   top: 182px;
-  left: 180px;
+  left: 280px;
   z-index: 20;
 `;
 

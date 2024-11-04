@@ -1,4 +1,4 @@
-import type { PartyUserListByAdminResponse } from '@/types/party';
+import type { PartyApplicationData, PartyUserListByAdminResponse } from '@/types/party';
 
 import { fileUploadApi, privateApi } from '.';
 
@@ -149,7 +149,7 @@ export const fetchGetPartyRecruitmentsList = async ({
       params: {
         sort,
         order,
-        main,
+        ...(main && { main }), // main 값이 있을 때만 쿼리 파라미터에 포함
       },
     });
     return response.data;
@@ -312,6 +312,79 @@ export const fetchUpdatePartyUserPosition = async ({
     return response.data;
   } catch (error) {
     console.error('fetchUpdatePartyUserPosition error:', error);
+    return error;
+  }
+};
+
+// [GET] 파티 포지션 모집별 지원자 목록 조회 API
+export const fetchPartyRecruitmentApplications = async ({
+  partyId,
+  partyRecruitmentId,
+  page = 1,
+  limit = 5,
+  sort = 'createdAt',
+  order = 'ASC',
+  status,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+  page?: number;
+  limit?: number;
+  sort?: 'createdAt';
+  order?: string;
+  status?: 'active' | 'approved' | 'pending' | 'rejected';
+}): Promise<PartyApplicationData> => {
+  try {
+    const response = await privateApi.get(`/parties/${partyId}/recruitments/${partyRecruitmentId}/applications`, {
+      params: {
+        page,
+        limit,
+        sort,
+        order,
+        ...(status && { status }), // status 값이 있을 때만 포함
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchPartyRecruitmentApplications error:', error);
+    throw error;
+  }
+};
+
+// [POST] 파티 지원자 승인
+export const fetchApprovePartyApplication = async ({
+  partyId,
+  partyRecruitmentId,
+  partyApplicationId,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+  partyApplicationId: number;
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/applications/${partyApplicationId}/approval`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchApprovePartyApplication error:', error);
+    return error;
+  }
+};
+
+// [POST] 파티 지원자 거절
+export const fetchRejectPartyApplication = async ({
+  partyId,
+  partyRecruitmentId,
+  partyApplicationId,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+  partyApplicationId: number;
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/applications/${partyApplicationId}/rejection`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchRejectPartyApplication error:', error);
     return error;
   }
 };
