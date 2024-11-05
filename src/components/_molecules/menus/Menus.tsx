@@ -1,19 +1,31 @@
 'use client';
+import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
 import { Txt } from '@/components/_atoms';
-/**
- * NOTE. 추후 확장 가능하게 변경
- */
 
-const menuList = ['파티', '길드'];
+const menuList = [
+  { id: 0, label: '파티', route: '/home/party' },
+  { id: 1, label: '길드', route: '/home/guild' },
+  { id: 2, label: '모집공고', route: '/home/recruitment' },
+];
 
 export default function Menus() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   return (
     <MenuContainer>
-      {menuList.map((item, index) => (
-        <Txt key={index} fontSize={20} onClick={() => {}}>
-          {item}
+      {menuList.map(item => (
+        <Txt
+          key={item.id}
+          fontSize={20}
+          onClick={() => {
+            router.push(item.route);
+          }}
+          fontWeight={pathname === item.route ? 'bold' : 'normal'}
+        >
+          {item.label}
         </Txt>
       ))}
     </MenuContainer>

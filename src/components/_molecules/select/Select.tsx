@@ -8,6 +8,7 @@ import { Txt } from '@/components/_atoms';
 import type { fontWeight } from '@/styles';
 import { palette, radius, shadow, size } from '@/styles';
 
+import MultiOptions from './MultiOptions';
 import Options from './Options';
 
 interface Props {
@@ -15,7 +16,9 @@ interface Props {
   placeholder: string;
   value?: string;
   onClick: (e: React.MouseEvent<HTMLLIElement>, id: number) => void; // id를 받도록 수정
+  optionsType?: 'basic' | 'multi';
   options?: {
+    // 기본 option
     id: number;
     label: string;
   }[];
@@ -29,6 +32,13 @@ interface Props {
 
   selectStyle?: React.CSSProperties;
   optionStyle?: React.CSSProperties;
+  children?: React.ReactNode;
+  // MultiOptions 전용 props
+  parentOptions?: { id: number; label: string }[] | null;
+  selectedParentOptions?: { id: number; label: string }[] | null;
+  setSelectedParentOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
+  selectedOptions?: { id: number; label: string }[] | null;
+  setSelectedOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
 }
 
 function Select({
@@ -36,6 +46,7 @@ function Select({
   placeholder,
   value,
   onClick,
+  optionsType = 'basic',
   options,
   fontWeight = 'normal',
   fontSize = 16,
@@ -44,6 +55,14 @@ function Select({
   optionRadius = 'base',
   selectStyle,
   optionStyle,
+  children,
+
+  // MultiOptions 전용 props
+  parentOptions,
+  selectedParentOptions = [],
+  setSelectedParentOptions,
+  selectedOptions = [],
+  setSelectedOptions,
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -87,21 +106,35 @@ function Select({
         )}
         {isOpen ? <KeyboardArrowUpRoundedIcon fontSize="medium" /> : <KeyboardArrowDownRoundedIcon fontSize="medium" />}
       </PickerDropDown>
-      {isOpen && (
+      {isOpen && optionsType === 'basic' && (
         <Options
           options={options}
-          onClick={handleOptionClick} // `handleOptionClick`을 전달
+          onClick={handleOptionClick}
           setIsOpen={setIsOpen}
           height={height}
           optionRadius={optionRadius}
           optionStyle={optionStyle}
         />
       )}
+      {isOpen && optionsType === 'multi' && (
+        <MultiOptions
+          parentOptions={parentOptions}
+          options={options}
+          setIsOpen={setIsOpen}
+          height={height}
+          optionRadius={optionRadius}
+          optionStyle={optionStyle}
+          selectedParentOptions={selectedParentOptions}
+          setSelectedParentOptions={setSelectedParentOptions}
+          selectedOptions={selectedOptions}
+          setSelectedOptions={setSelectedOptions}
+        />
+      )}
     </PickerWrapper>
   );
 }
 
-export default memo(Select);
+export const SelectComponent = memo(Select);
 
 const PickerWrapper = styled.div`
   position: relative;
