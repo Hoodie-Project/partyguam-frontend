@@ -15,7 +15,7 @@ interface Props {
   height?: keyof typeof size.height;
   placeholder: string;
   value?: string;
-  onClick: (e: React.MouseEvent<HTMLLIElement>, id: number) => void; // id를 받도록 수정
+  onClick?: (e: React.MouseEvent<HTMLLIElement>, id: number) => void; // id를 받도록 수정
   optionsType?: 'basic' | 'multi';
   options?: {
     // 기본 option
@@ -39,6 +39,9 @@ interface Props {
   setSelectedParentOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
   selectedOptions?: { id: number; label: string }[] | null;
   setSelectedOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
+  // 초기화, 적용하기 button handler
+  handleClickReset?: () => void;
+  handleClickSubmit?: () => void;
 }
 
 function Select({
@@ -63,6 +66,8 @@ function Select({
   setSelectedParentOptions,
   selectedOptions = [],
   setSelectedOptions,
+  handleClickReset,
+  handleClickSubmit,
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -82,7 +87,7 @@ function Select({
   }, []);
 
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>, id: number) => {
-    onClick(e, id); // 옵션 선택시 `onClick` 호출
+    onClick?.(e, id); // 옵션 선택시 `onClick` 호출
     setIsOpen(false); // 옵션 선택 후 드롭다운 닫기
   };
 
@@ -128,6 +133,8 @@ function Select({
           setSelectedParentOptions={setSelectedParentOptions}
           selectedOptions={selectedOptions}
           setSelectedOptions={setSelectedOptions}
+          handleClickReset={handleClickReset}
+          handleClickSubmit={handleClickSubmit}
         />
       )}
     </PickerWrapper>
@@ -138,7 +145,7 @@ export const SelectComponent = memo(Select);
 
 const PickerWrapper = styled.div`
   position: relative;
-  width: 100%;
+  width: auto;
   display: flex;
   flex-direction: column;
   align-items: center;

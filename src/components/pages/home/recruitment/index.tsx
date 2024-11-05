@@ -26,9 +26,12 @@ const transformPartyTypes = (data: { id: number; type: string }[]): { id: number
 function HomeRecruitment() {
   const [파티유형List, set파티유형List] = useState<{ id: number; label: string }[]>([]);
   const [positionList, setPositionList] = useState<{ id: number; label: string }[]>([]);
-  const [selectedParent직무Options, setSelectedParent직무Options] = useState<{ id: number; label: string }[] | null>(
-    null,
-  );
+  const [selectedParent직무Options, setSelectedParent직무Options] = useState<{ id: number; label: string }[] | null>([
+    {
+      id: 0,
+      label: '기획자',
+    },
+  ]);
   const [selected직무Options, setSelected직무Options] = useState<{ id: number; label: string }[] | null>(null);
   const [selected파티타입Options, setSelected파티타입Options] = useState<{ id: number; label: string }[] | null>(null);
 
@@ -43,7 +46,7 @@ function HomeRecruitment() {
   useEffect(() => {
     (async () => {
       const response = await fetchGetPositions(selectedParent직무Options?.[0].label);
-      setPositionList(transformPositionData(response));
+      setPositionList([{ id: 0, label: '전체' }, ...transformPositionData(response)]);
     })();
   }, [selectedParent직무Options]);
 
@@ -57,6 +60,13 @@ function HomeRecruitment() {
           <LeftFilter>
             <Select
               optionsType="multi"
+              value={
+                selectedParent직무Options && selected직무Options && selected직무Options?.length > 1
+                  ? `${selectedParent직무Options?.[0].label} ${selected직무Options?.[0].label} 외 ${selected직무Options.length - 1}`
+                  : selected직무Options?.[0].label == null
+                    ? undefined
+                    : `${selectedParent직무Options?.[0].label} ${selected직무Options?.[0].label}`
+              }
               parentOptions={[
                 { id: 0, label: '기획자' },
                 { id: 1, label: '디자이너' },
@@ -73,19 +83,36 @@ function HomeRecruitment() {
               fontSize={14}
               selectStyle={{ borderRadius: '999px', padding: '8px 12px' }}
               optionStyle={{ width: '400px', height: '310px' }}
-              onClick={() => {}}
+              handleClickReset={() => {
+                setSelected직무Options(null);
+                setSelectedParent직무Options([
+                  {
+                    id: 0,
+                    label: '기획자',
+                  },
+                ]);
+              }}
             />
             <Select
               optionsType="multi"
+              value={
+                selected파티타입Options && selected파티타입Options?.length > 1
+                  ? `${selected파티타입Options[0].label} 외 ${selected파티타입Options.length - 1}`
+                  : selected파티타입Options?.[0].label == null
+                    ? undefined
+                    : `${selected파티타입Options?.[0].label}`
+              }
               options={파티유형List}
               selectedOptions={selected파티타입Options}
               setSelectedOptions={setSelected파티타입Options}
+              handleClickReset={() => {
+                setSelected파티타입Options(null);
+              }}
               height="xs"
               placeholder="파티유형"
               fontSize={14}
               selectStyle={{ borderRadius: '999px', padding: '8px 12px' }}
               optionStyle={{ width: '320px', height: '310px' }}
-              onClick={() => {}}
             />
           </LeftFilter>
           <RightFilter></RightFilter>

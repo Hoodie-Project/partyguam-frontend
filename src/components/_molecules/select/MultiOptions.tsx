@@ -29,6 +29,10 @@ type Props = {
   // 선택한 option list들 관리
   selectedOptions?: { id: number; label: string }[] | null;
   setSelectedOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
+
+  // 초기화, 적용하기 button handler
+  handleClickReset?: () => void;
+  handleClickSubmit?: () => void;
 };
 
 export default function MultiOptions({
@@ -42,6 +46,8 @@ export default function MultiOptions({
   setSelectedParentOptions,
   selectedOptions = [],
   setSelectedOptions,
+  handleClickReset,
+  handleClickSubmit,
 }: Props) {
   const handleParentOptionSelect = (parentOption: OptionType) => {
     if (setSelectedParentOptions) {
@@ -63,11 +69,13 @@ export default function MultiOptions({
   };
 
   const handleReset = () => {
-    setSelectedOptions && setSelectedOptions([]);
-    setSelectedParentOptions && setSelectedParentOptions([]);
+    handleClickReset?.();
+    // setSelectedOptions && setSelectedOptions([]);
+    // setSelectedParentOptions && setSelectedParentOptions([]);
   };
 
   const handleApply = () => {
+    handleClickSubmit?.();
     setIsOpen?.(false);
   };
 
