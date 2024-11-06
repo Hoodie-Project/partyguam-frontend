@@ -22,14 +22,11 @@ type Props = {
   optionRadius?: keyof typeof radius;
   optionStyle?: React.CSSProperties;
 
-  // 부모 필터 option List 관리 -> 직무필터시 왼쪽 UI를 위한
-  selectedParentOptions?: { id: number; label: string }[] | null;
-  setSelectedParentOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
+  selectedParentOptions?: { id: number; label: string }[] | null; // 부모 필터 option List 관리 -> 직무필터시 왼쪽 UI를 위한
+  selectedOptions?: { id: number; label: string }[] | null; // 선택한 option list들 관리
 
-  // 선택한 option list들 관리
-  selectedOptions?: { id: number; label: string }[] | null;
-  setSelectedOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
-
+  handleParentOptionSelect?: (parentOption: OptionType) => void; // parent option select
+  handleOptionToggle?: (option: OptionType) => void; // option toggle
   // 초기화, 적용하기 button handler
   handleClickReset?: () => void;
   handleClickSubmit?: () => void;
@@ -43,35 +40,14 @@ export default function MultiOptions({
   optionRadius = 'base',
   optionStyle,
   selectedParentOptions = [],
-  setSelectedParentOptions,
   selectedOptions = [],
-  setSelectedOptions,
+  handleParentOptionSelect,
+  handleOptionToggle,
   handleClickReset,
   handleClickSubmit,
 }: Props) {
-  const handleParentOptionSelect = (parentOption: OptionType) => {
-    if (setSelectedParentOptions) {
-      if (selectedParentOptions?.[0]?.id === parentOption.id) {
-        setSelectedParentOptions([]); // 같은 옵션 클릭 시 선택 해제
-      } else {
-        setSelectedParentOptions([parentOption]); // 다른 옵션 선택 시 해당 옵션으로 교체
-      }
-    }
-  };
-
-  // Options는 다중 선택 가능하게 설정
-  const handleOptionToggle = (option: OptionType) => {
-    if (selectedOptions?.some(selected => selected.id === option.id)) {
-      setSelectedOptions && setSelectedOptions(selectedOptions.filter(selected => selected.id !== option.id));
-    } else {
-      setSelectedOptions && setSelectedOptions([...(Array.isArray(selectedOptions) ? selectedOptions : []), option]);
-    }
-  };
-
   const handleReset = () => {
     handleClickReset?.();
-    // setSelectedOptions && setSelectedOptions([]);
-    // setSelectedParentOptions && setSelectedParentOptions([]);
   };
 
   const handleApply = () => {
@@ -87,7 +63,7 @@ export default function MultiOptions({
             {parentOptions.map((parentOption, index) => (
               <OptionItem
                 key={parentOption.id}
-                onClick={() => handleParentOptionSelect(parentOption)}
+                onClick={() => handleParentOptionSelect?.(parentOption)}
                 style={{
                   borderRadius: index === 0 ? '16px 0px 0px 0px' : '0px 0px 0px 0px',
                   justifyContent: 'space-between',
@@ -115,7 +91,7 @@ export default function MultiOptions({
           {options?.map((option, index) => (
             <OptionItem
               key={option.id}
-              onClick={() => handleOptionToggle(option)}
+              onClick={() => handleOptionToggle?.(option)}
               style={{
                 borderRadius:
                   parentOptions && index === 0

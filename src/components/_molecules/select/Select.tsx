@@ -11,6 +11,11 @@ import { palette, radius, shadow, size } from '@/styles';
 import MultiOptions from './MultiOptions';
 import Options from './Options';
 
+type OptionType = {
+  id: number;
+  label: string;
+};
+
 interface Props {
   height?: keyof typeof size.height;
   placeholder: string;
@@ -36,10 +41,9 @@ interface Props {
   // MultiOptions 전용 props
   parentOptions?: { id: number; label: string }[] | null;
   selectedParentOptions?: { id: number; label: string }[] | null;
-  setSelectedParentOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
   selectedOptions?: { id: number; label: string }[] | null;
-  setSelectedOptions?: React.Dispatch<React.SetStateAction<{ id: number; label: string }[] | null>>;
-  // 초기화, 적용하기 button handler
+  handleParentOptionSelect?: (parentOption: OptionType) => void;
+  handleOptionToggle?: (option: OptionType) => void;
   handleClickReset?: () => void;
   handleClickSubmit?: () => void;
 }
@@ -58,14 +62,11 @@ function Select({
   optionRadius = 'base',
   selectStyle,
   optionStyle,
-  children,
-
-  // MultiOptions 전용 props
   parentOptions,
   selectedParentOptions = [],
-  setSelectedParentOptions,
   selectedOptions = [],
-  setSelectedOptions,
+  handleParentOptionSelect,
+  handleOptionToggle,
   handleClickReset,
   handleClickSubmit,
 }: Props) {
@@ -130,9 +131,11 @@ function Select({
           optionRadius={optionRadius}
           optionStyle={optionStyle}
           selectedParentOptions={selectedParentOptions}
-          setSelectedParentOptions={setSelectedParentOptions}
+          // setSelectedParentOptions={setSelectedParentOptions}
           selectedOptions={selectedOptions}
-          setSelectedOptions={setSelectedOptions}
+          // setSelectedOptions={setSelectedOptions}
+          handleParentOptionSelect={handleParentOptionSelect}
+          handleOptionToggle={handleOptionToggle}
           handleClickReset={handleClickReset}
           handleClickSubmit={handleClickSubmit}
         />
@@ -145,7 +148,7 @@ export const SelectComponent = memo(Select);
 
 const PickerWrapper = styled.div`
   position: relative;
-  width: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
