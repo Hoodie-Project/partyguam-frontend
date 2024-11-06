@@ -11,7 +11,11 @@ import { Body, Cell, Header, HeaderCell, HeaderRow, Row, Table } from '@table-li
 import { useTheme } from '@table-library/react-table-library/theme';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { fetchPartyRecruitmentApplications } from '@/apis/party';
+import {
+  fetchApprovePartyApplication,
+  fetchPartyRecruitmentApplications,
+  fetchRejectPartyApplication,
+} from '@/apis/party';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { BreadCrumb, ProfileImage } from '@/components/_molecules';
 import { PARTY_APPLICANTS_STATUS } from '@/constants';
@@ -300,8 +304,38 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                             marginTop: '12px',
                           }}
                         >
-                          <SquareButton isAccept={false}>거절하기</SquareButton>
-                          <SquareButton isAccept={true}>수락하기</SquareButton>
+                          <SquareButton
+                            isAccept={false}
+                            onClick={async () => {
+                              try {
+                                const res = fetchRejectPartyApplication({
+                                  partyId: Number(partyId),
+                                  partyApplicationId: item.id,
+                                });
+                                return res;
+                              } catch (err) {
+                                console.error(err);
+                              }
+                            }}
+                          >
+                            거절하기
+                          </SquareButton>
+                          <SquareButton
+                            isAccept={true}
+                            onClick={async () => {
+                              try {
+                                const res = fetchApprovePartyApplication({
+                                  partyId: Number(partyId),
+                                  partyApplicationId: item.id,
+                                });
+                                return res;
+                              } catch (err) {
+                                console.error(err);
+                              }
+                            }}
+                          >
+                            수락하기
+                          </SquareButton>
                         </div>
                       </Styled지원서Cell>
                     </Row>

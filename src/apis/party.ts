@@ -359,14 +359,12 @@ export const fetchPartyRecruitmentApplications = async ({
   }
 };
 
-// [POST] 파티 지원자 승인
+// [POST] 파티 지원자 승인 /dev/api/parties/{partyId}/applications/{partyApplicationId}/approval
 export const fetchApprovePartyApplication = async ({
   partyId,
-  partyRecruitmentId,
   partyApplicationId,
 }: {
   partyId: number;
-  partyRecruitmentId: number;
   partyApplicationId: number;
 }) => {
   try {
@@ -378,14 +376,12 @@ export const fetchApprovePartyApplication = async ({
   }
 };
 
-// [POST] 파티 지원자 거절
+// [POST] 파티 지원자 거절 /dev/api/parties/{partyId}/applications/{partyApplicationId}/rejection
 export const fetchRejectPartyApplication = async ({
   partyId,
-  partyRecruitmentId,
   partyApplicationId,
 }: {
   partyId: number;
-  partyRecruitmentId: number;
   partyApplicationId: number;
 }) => {
   try {
