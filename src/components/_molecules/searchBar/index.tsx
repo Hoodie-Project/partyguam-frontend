@@ -13,11 +13,12 @@ type SearchBarProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClear: () => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  searchBarStyle?: React.CSSProperties;
 };
 
-function SearchBar({ type, placeholder, value, onChange, onClear, onKeyDown }: SearchBarProps) {
+function SearchBar({ type, placeholder, value, onChange, onClear, onKeyDown, searchBarStyle }: SearchBarProps) {
   return (
-    <SearchContainer type={type}>
+    <SearchContainer type={type} style={searchBarStyle}>
       <SearchIconWrapper>
         <SearchRoundedIcon />
       </SearchIconWrapper>
@@ -42,7 +43,7 @@ const SearchContainer = styled.div<{ type: 'round' | 'line' }>`
   background-color: white;
   border: ${({ type }) => (type === 'line' ? 'none' : `1px solid ${palette.grey200}`)};
   border-radius: ${({ type }) => (type === 'round' ? '18px' : 0)};
-  border-bottom: ${({ type }) => (type === 'line' ? `1px solid ${palette.grey400}` : 'none')};
+  border-bottom: ${({ type }) => (type === 'line' ? `1px solid ${palette.grey400}` : `1px solid ${palette.grey200}`)};
 `;
 
 const SearchIconWrapper = styled.div`

@@ -42,8 +42,14 @@ interface Props {
   parentOptions?: { id: number; label: string }[] | null;
   selectedParentOptions?: { id: number; label: string }[] | null;
   selectedOptions?: { id: number; label: string }[] | null;
+  chipData?: {
+    id: number;
+    parentLabel?: string;
+    label: string;
+  }[];
   handleParentOptionSelect?: (parentOption: OptionType) => void;
   handleOptionToggle?: (option: OptionType) => void;
+  handleRemoveChip?: (id: number) => void; // remove chip
   handleClickReset?: () => void;
   handleClickSubmit?: () => void;
 }
@@ -65,8 +71,10 @@ function Select({
   parentOptions,
   selectedParentOptions = [],
   selectedOptions = [],
+  chipData = [],
   handleParentOptionSelect,
   handleOptionToggle,
+  handleRemoveChip,
   handleClickReset,
   handleClickSubmit,
 }: Props) {
@@ -131,13 +139,13 @@ function Select({
           optionRadius={optionRadius}
           optionStyle={optionStyle}
           selectedParentOptions={selectedParentOptions}
-          // setSelectedParentOptions={setSelectedParentOptions}
           selectedOptions={selectedOptions}
-          // setSelectedOptions={setSelectedOptions}
+          chipData={chipData}
           handleParentOptionSelect={handleParentOptionSelect}
           handleOptionToggle={handleOptionToggle}
           handleClickReset={handleClickReset}
           handleClickSubmit={handleClickSubmit}
+          handleRemoveChip={handleRemoveChip}
         />
       )}
     </PickerWrapper>

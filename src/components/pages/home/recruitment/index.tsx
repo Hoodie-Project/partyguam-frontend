@@ -1,10 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
+import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 
 import { fetchGetPartyTypes, fetchGetPositions } from '@/apis/party';
 import { Txt } from '@/components/_atoms';
-import { Select } from '@/components/_molecules';
+import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
@@ -31,7 +33,8 @@ type OptionType = {
 function HomeRecruitment() {
   const [파티유형List, set파티유형List] = useState<OptionType[]>([]);
   const [positionList, setPositionList] = useState<OptionType[]>([]);
-
+  const [search모집공고Value, setSearch모집공고Value] = useState<string>('');
+  const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // 등록일순
   const {
     selected직무ParentOptions,
     selected직무Options,
@@ -86,11 +89,16 @@ function HomeRecruitment() {
           setSelected직무Options(selected직무Options.filter(selected => selected.id !== option.id));
           remove직무FilterChip(option.id);
         } else {
-          setSelected직무Options([
-            ...(selected직무Options?.filter(selected => selected.label !== '전체') || []),
-            option,
-          ]);
-          add직무FilterChip({ id: option.id, parentLabel, label: option.label });
+          if (selected직무Options?.length && selected직무Options?.length >= 5) {
+            // TODO. 선택 갯수 기획
+            alert('5개까지만 선택이 가능합니다.');
+          } else {
+            setSelected직무Options([
+              ...(selected직무Options?.filter(selected => selected.label !== '전체') || []),
+              option,
+            ]);
+            add직무FilterChip({ id: option.id, parentLabel, label: option.label });
+          }
         }
       }
     }
@@ -105,12 +113,31 @@ function HomeRecruitment() {
         setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== option.id));
         remove파티유형FilterChip(option.id);
       } else {
-        setSelected파티유형Options([
-          ...(selected파티유형Options?.filter(selected => selected.label !== '전체') || []),
-          option,
-        ]);
-        add파티유형FilterChip({ id: option.id, label: option.label });
+        if (selected파티유형Options?.length && selected파티유형Options?.length >= 5) {
+          // TODO. 선택 갯수 기획
+          alert('5개까지만 선택이 가능합니다.');
+        } else {
+          setSelected파티유형Options([
+            ...(selected파티유형Options?.filter(selected => selected.label !== '전체') || []),
+            option,
+          ]);
+          add파티유형FilterChip({ id: option.id, label: option.label });
+        }
       }
+    }
+  };
+
+  const handleRemove직무FilterChip = (id: number) => {
+    if (selected직무Options?.some(selected => selected.id === id)) {
+      setSelected직무Options(selected직무Options.filter(selected => selected.id !== id));
+      remove직무FilterChip(id);
+    }
+  };
+
+  const handleRemove파티유형FilterChip = (id: number) => {
+    if (selected파티유형Options?.some(selected => selected.id === id)) {
+      setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== id));
+      remove파티유형FilterChip(id);
     }
   };
 
@@ -125,6 +152,42 @@ function HomeRecruitment() {
     reset파티유형FilterChip();
   };
 
+  // 닉네임 검색
+  const handleChange모집공고Search = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch모집공고Value(e.target.value);
+  };
+
+  const handleKeyDown모집공고Search = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      // search 포함 fetch
+      // try {
+      //   const requestParams = {
+      //     partyId: Number(partyId),
+      //     sort: 'createdAt',
+      //     order,
+      //     main: mainPositionSearch.label || '',
+      //     nickname: nicknameSearch,
+      //   };
+      //   const data = await fetchPartyAdminUsers(requestParams);
+      //   setPartyUserList(data);
+      // } catch (err) {
+      //   console.error('Error fetching partyUsers : ', err);
+      // }
+    }
+  };
+
+  // 등록일순
+  const getIcon = () => {
+    if (order === 'DESC') {
+      return <ArrowDownwardRoundedIcon fontSize="small" />;
+    }
+
+    if (order === 'ASC') {
+      return <ArrowUpwardRoundedIcon fontSize="small" />;
+    }
+    return <ArrowUpwardRoundedIcon fontSize="small" />;
+  };
+
   return (
     <SContainer>
       <SHomeContainer>
@@ -133,54 +196,116 @@ function HomeRecruitment() {
         </Txt>
         <HeaderWrapper>
           <LeftFilter>
-            <Select
-              optionsType="multi"
-              value={
-                직무FilterChips && 직무FilterChips.length > 0
-                  ? 직무FilterChips.length > 1 && 직무FilterChips[0].parentLabel != null
-                    ? `${직무FilterChips[0].parentLabel} ${직무FilterChips[0].label} 외 ${직무FilterChips.length - 1}`
-                    : `${직무FilterChips[0].parentLabel || ''} ${직무FilterChips[0].label}`
-                  : undefined
-              }
-              parentOptions={[
-                { id: 0, label: '기획자' },
-                { id: 1, label: '디자이너' },
-                { id: 2, label: '개발자' },
-                { id: 3, label: '마케터/광고' },
-              ]}
-              options={positionList}
-              selectedParentOptions={selected직무ParentOptions}
-              handleParentOptionSelect={handleParentOptionSelect}
-              selectedOptions={selected직무Options}
-              handleClickReset={handle직무Reset}
-              handleOptionToggle={handle직무OptionToggle}
-              height="xs"
-              placeholder="직무"
-              fontSize={14}
-              selectStyle={{ borderRadius: '999px', padding: '8px 12px' }}
-              optionStyle={{ width: '400px', height: '310px' }}
-            />
-            <Select
-              optionsType="multi"
-              value={
-                파티유형FilterChips && 파티유형FilterChips.length > 1
-                  ? `${파티유형FilterChips[0].label} 외 ${파티유형FilterChips.length - 1}`
-                  : 파티유형FilterChips[0]?.label || undefined
-              }
-              options={파티유형List}
-              selectedOptions={selected파티유형Options}
-              handleClickReset={handle파티유형Reset}
-              handleOptionToggle={handle파티유형OptionToggle}
-              height="xs"
-              placeholder="파티유형"
-              fontSize={14}
-              selectStyle={{ borderRadius: '999px', padding: '8px 12px' }}
-              optionStyle={{ width: '320px', height: '310px' }}
-            />
+            <div style={{ width: 'auto', minWidth: '67px' }}>
+              <Select
+                optionsType="multi"
+                value={
+                  직무FilterChips && 직무FilterChips.length > 0
+                    ? 직무FilterChips.length > 1 && 직무FilterChips[0].parentLabel != null
+                      ? `${직무FilterChips[0].parentLabel} ${직무FilterChips[0].label} 외 ${직무FilterChips.length - 1}`
+                      : `${직무FilterChips[0].parentLabel || ''} ${직무FilterChips[0].label}`
+                    : undefined
+                }
+                parentOptions={[
+                  { id: 0, label: '기획자' },
+                  { id: 1, label: '디자이너' },
+                  { id: 2, label: '개발자' },
+                  { id: 3, label: '마케터/광고' },
+                ]}
+                options={positionList}
+                selectedParentOptions={selected직무ParentOptions}
+                handleParentOptionSelect={handleParentOptionSelect}
+                selectedOptions={selected직무Options}
+                chipData={직무FilterChips}
+                handleClickReset={handle직무Reset}
+                handleOptionToggle={handle직무OptionToggle}
+                handleRemoveChip={handleRemove직무FilterChip}
+                height="xs"
+                placeholder="직무"
+                fontSize={14}
+                selectStyle={{
+                  borderRadius: '999px',
+                  padding: '8px 12px',
+                  whiteSpace: 'nowrap',
+                }}
+                optionStyle={{ width: '400px', height: 'auto' }}
+              />
+            </div>
+            <div style={{ width: 'auto', minWidth: '67px' }}>
+              <Select
+                optionsType="multi"
+                value={
+                  파티유형FilterChips && 파티유형FilterChips.length > 1
+                    ? `${파티유형FilterChips[0].label} 외 ${파티유형FilterChips.length - 1}`
+                    : 파티유형FilterChips[0]?.label || undefined
+                }
+                options={파티유형List}
+                selectedOptions={selected파티유형Options}
+                chipData={파티유형FilterChips}
+                handleClickReset={handle파티유형Reset}
+                handleOptionToggle={handle파티유형OptionToggle}
+                handleRemoveChip={handleRemove파티유형FilterChip}
+                height="xs"
+                placeholder="파티유형"
+                fontSize={14}
+                selectStyle={{
+                  borderRadius: '999px',
+                  padding: '8px 12px',
+                  width: 'auto',
+                  minWidth: '93px',
+                  whiteSpace: 'nowrap',
+                }}
+                optionStyle={{ width: '320px', height: 'auto' }}
+              />
+            </div>
+            <div style={{ width: '400px' }}>
+              <SearchBar
+                type="round"
+                placeholder="찾고 싶은 모집공고 이름을 입력하세요."
+                value={search모집공고Value}
+                onChange={handleChange모집공고Search}
+                onKeyDown={handleKeyDown모집공고Search}
+                onClear={async () => {
+                  setSearch모집공고Value('');
+                  // try {
+                  //   const requestParams = {
+                  //     partyId: Number(partyId),
+                  //     sort: 'createdAt',
+                  //     order,
+                  //     main: mainPositionSearch.label || '',
+                  //     nickname: '',
+                  //   };
+
+                  //   const data = await fetchPartyAdminUsers(requestParams);
+                  //   setPartyUserList(data);
+                  // } catch (err) {
+                  //   console.error('Error fetching partyUsers : ', err);
+                  // }
+                }}
+                searchBarStyle={{ boxShadow: '0px 2px 6px -1px rgba(17, 17, 17, 0.08)' }}
+              />
+            </div>
           </LeftFilter>
-          <RightFilter></RightFilter>
+          <RightFilter>
+            <Txt
+              fontWeight="semibold"
+              fontSize={14}
+              onClick={() => setOrder(prevOrder => (prevOrder === 'ASC' ? 'DESC' : 'ASC'))}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: '2px',
+                marginRight: '3px',
+              }}
+            >
+              등록일순
+            </Txt>
+            {getIcon()}
+          </RightFilter>
         </HeaderWrapper>
       </SHomeContainer>
+      <ScrollToTop />
     </SContainer>
   );
 }
@@ -198,9 +323,15 @@ const HeaderWrapper = styled.section`
 
 const LeftFilter = styled.div`
   width: auto;
+  min-width: 584px;
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
   gap: 12px;
 `;
 
-const RightFilter = styled.div``;
+const RightFilter = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;

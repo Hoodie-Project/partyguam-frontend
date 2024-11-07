@@ -6,6 +6,7 @@ export { default as Modal } from './modal';
 export { default as PageHeader } from './pageHeader';
 export { default as ProfileImage } from './profileImage';
 export { default as ProgressBar } from './progressbar';
+export { default as ScrollToTop } from './scrollToTop';
 export { default as SearchBar } from './searchBar';
 export { default as Select } from './select';
 export { default as Table } from './table';

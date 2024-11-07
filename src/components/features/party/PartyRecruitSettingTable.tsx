@@ -12,7 +12,6 @@ import { Txt } from '@/components/_atoms';
 import PartyRecruitDetail from '@/components/pages/party/recruit/[recruitId]';
 import { useModalContext } from '@/contexts/ModalContext';
 import type { PartyRecruitment, PartyRecruitmentListResponse } from '@/types/party';
-
 import { formatDate } from '@/utils/date';
 
 type Props = {
