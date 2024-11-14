@@ -271,7 +271,7 @@ export const fetchPartyAdminUsers = async ({
   }
 };
 
-// [POST] 파티원 다수 내보내기
+// [POST] 파티원 다수 내보내기 /dev/api/parties/{partyId}/users/batch-delete
 export const fetchBatchDeletePartyUsers = async ({
   partyId,
   partyUserIds,
@@ -280,7 +280,7 @@ export const fetchBatchDeletePartyUsers = async ({
   partyUserIds: number[];
 }) => {
   try {
-    const response = await privateApi.post(`/parties/${partyId}/party-users/batch-delete`, {
+    const response = await privateApi.post(`/parties/${partyId}/users/batch-delete`, {
       partyUserIds,
     });
     return response.data;
@@ -314,7 +314,7 @@ export const fetchUpdatePartyUserPosition = async ({
   positionId: number;
 }) => {
   try {
-    const response = await privateApi.patch(`/parties/${partyId}/party-users/${partyUserId}`, {
+    const response = await privateApi.patch(`/parties/${partyId}/users/${partyUserId}`, {
       positionId,
     });
     return response.data;

@@ -80,4 +80,36 @@ const fetchGetUsers = async () => {
   }
 };
 
-export { fetchGetOauthInfo, fetchGetUsers, fetchJoinFormSubmit, fetchNicknameDuplicated, fetchPostAccessToken };
+interface UserAuthorityResponse {
+  authority: 'master' | 'deputy' | 'member';
+}
+
+// 나의 파티 권한 조회
+
+/**
+ * 나의 파티 권한 조회
+ * @param partyId
+ * @returns   "authority": "master"
+ */
+const fetchUserAuthority = async (partyId: number): Promise<UserAuthorityResponse | null> => {
+  try {
+    const response = await privateApi.get(`/dev/api/parties/${partyId}/users/me/authority`);
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      console.error('파티에 속한 유저를 찾을 수 없습니다.');
+    } else {
+      console.error('fetchUserAuthority error:', error);
+    }
+    return null;
+  }
+};
+
+export {
+  fetchGetOauthInfo,
+  fetchGetUsers,
+  fetchJoinFormSubmit,
+  fetchNicknameDuplicated,
+  fetchPostAccessToken,
+  fetchUserAuthority,
+};
