@@ -18,6 +18,11 @@ interface SelectionStore {
   직무FilterChips: ChipType[];
   파티유형FilterChips: ChipType[];
 
+  // 적용하기 상태 관리
+  submit직무Main: string[]; // 직무 main 필터
+  submit직무Position: number[]; // 직무 position 필터
+  submit파티유형Filter: string[]; // 파티 유형 필터
+
   // 직무 filter 상태 관리
   setSelected직무ParentOptions: (options: OptionType[] | null) => void;
   setSelected직무Options: (options: OptionType[] | null) => void;
@@ -30,6 +35,9 @@ interface SelectionStore {
   add파티유형FilterChip: (chip: ChipType) => void;
   remove파티유형FilterChip: (id: number) => void;
   reset파티유형FilterChip: () => void;
+
+  handleSubmit직무: () => void;
+  handleSubmit파티유형: () => void;
 }
 
 export const useApplicantFilterStore = create<SelectionStore>(set => ({
@@ -39,6 +47,9 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
   selected파티유형Options: null,
   직무FilterChips: [],
   파티유형FilterChips: [],
+  submit직무Main: [],
+  submit직무Position: [],
+  submit파티유형Filter: [],
 
   // 직무 필터 상태 관리
   setSelected직무ParentOptions: options => set({ selected직무ParentOptions: options }),
@@ -96,4 +107,28 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
     set(() => ({
       파티유형FilterChips: [],
     })),
+
+  // 필터 상태 제출
+
+  handleSubmit직무: () =>
+    set(state => {
+      const submit직무Main = state.직무FilterChips
+        .filter(chip => chip.parentLabel) // parentLabel이 있는 chip만 필터링
+        .map(chip => chip.parentLabel as string); // parentLabel만 추출하여 배열 생성
+
+      const submit직무Position = state.직무FilterChips.map(chip => chip.id); // id만 추출하여 배열 생성
+      return {
+        submit직무Main,
+        submit직무Position,
+      };
+    }),
+
+  handleSubmit파티유형: () =>
+    set(state => {
+      const submit파티유형Filter = state.파티유형FilterChips.map(chip => chip.label); // label만 추출하여 배열 생성
+
+      return {
+        submit파티유형Filter,
+      };
+    }),
 }));

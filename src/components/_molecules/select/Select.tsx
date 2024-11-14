@@ -83,17 +83,18 @@ function Select({
   const isValid: boolean = value !== undefined && value.length > 0;
 
   const handleClickOutside = (e: MouseEvent) => {
-    if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+    if (optionsType !== 'multi' && pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
       setIsOpen(false);
     }
   };
 
   useEffect(() => {
+    if (optionsType === 'multi') return;
     window.addEventListener('click', handleClickOutside);
     return () => {
       window.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [optionsType]);
 
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>, id: number) => {
     onClick?.(e, id); // 옵션 선택시 `onClick` 호출

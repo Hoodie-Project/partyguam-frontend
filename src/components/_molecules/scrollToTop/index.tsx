@@ -3,11 +3,10 @@ import styled from '@emotion/styled';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 
 export default function ScrollToTop() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {
-    // TODO list data들어왔을 때 어느정도 스크롤 내려야 보여지게 할 것인지
-    if (window.scrollY > 10) {
+    if (window.scrollY > 200) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
@@ -35,8 +34,8 @@ export default function ScrollToTop() {
 
 const StyledButton = styled.button`
   position: fixed;
-  bottom: 80px;
-  right: 80px;
+  bottom: 10%;
+  right: 10%;
   width: 80px;
   height: 80px;
   border-radius: 50%;

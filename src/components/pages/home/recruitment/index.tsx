@@ -1,11 +1,15 @@
 'use client';
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useInView } from 'react-intersection-observer';
 import styled from '@emotion/styled';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { fetchPartyRecruitments } from '@/apis/home';
 import { fetchGetPartyTypes, fetchGetPositions } from '@/apis/party';
-import { Txt } from '@/components/_atoms';
+import { Chip, Square, Txt } from '@/components/_atoms';
 import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
@@ -41,6 +45,9 @@ function HomeRecruitment() {
     selected파티유형Options,
     직무FilterChips,
     파티유형FilterChips,
+    submit직무Main,
+    submit직무Position,
+    submit파티유형Filter,
     setSelected직무ParentOptions,
     setSelected직무Options,
     setSelected파티유형Options,
@@ -50,6 +57,8 @@ function HomeRecruitment() {
     add파티유형FilterChip,
     remove파티유형FilterChip,
     reset파티유형FilterChip,
+    handleSubmit직무,
+    handleSubmit파티유형,
   } = useApplicantFilterStore();
 
   useEffect(() => {
@@ -188,6 +197,50 @@ function HomeRecruitment() {
     return <ArrowUpwardRoundedIcon fontSize="small" />;
   };
 
+  // [GET] 포지션 모집 공고별 지원자 조회
+  const fetchRecruitments = async ({ pageParam = 1 }) => {
+    const response = await fetchPartyRecruitments({
+      page: pageParam,
+      limit: 10,
+      sort: 'createdAt',
+      order,
+      main: submit직무Main,
+      position: submit직무Position,
+      // partyTypeFilter: submit파티유형Filter,
+      titleSearch: search모집공고Value,
+    });
+    return response;
+  };
+
+  // 무한스크롤
+  const {
+    data: partyRecruitmentList,
+    hasNextPage,
+    fetchNextPage,
+    isFetched,
+  } = useInfiniteQuery({
+    queryKey: ['recruitments', submit직무Main, submit직무Position, submit파티유형Filter, search모집공고Value, order],
+    queryFn: fetchRecruitments,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const totalFetchedItems = allPages.flatMap(page => page?.partyRecruitments).length;
+
+      if (lastPage == null) return null;
+      if (totalFetchedItems < lastPage.total) {
+        return allPages.length + 1;
+      } else return null;
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, fetchNextPage]);
+
   return (
     <SContainer>
       <SHomeContainer>
@@ -219,6 +272,7 @@ function HomeRecruitment() {
                 chipData={직무FilterChips}
                 handleClickReset={handle직무Reset}
                 handleOptionToggle={handle직무OptionToggle}
+                handleClickSubmit={handleSubmit직무}
                 handleRemoveChip={handleRemove직무FilterChip}
                 height="xs"
                 placeholder="직무"
@@ -245,6 +299,7 @@ function HomeRecruitment() {
                 handleClickReset={handle파티유형Reset}
                 handleOptionToggle={handle파티유형OptionToggle}
                 handleRemoveChip={handleRemove파티유형FilterChip}
+                handleClickSubmit={handleSubmit파티유형}
                 height="xs"
                 placeholder="파티유형"
                 fontSize={14}
@@ -267,20 +322,6 @@ function HomeRecruitment() {
                 onKeyDown={handleKeyDown모집공고Search}
                 onClear={async () => {
                   setSearch모집공고Value('');
-                  // try {
-                  //   const requestParams = {
-                  //     partyId: Number(partyId),
-                  //     sort: 'createdAt',
-                  //     order,
-                  //     main: mainPositionSearch.label || '',
-                  //     nickname: '',
-                  //   };
-
-                  //   const data = await fetchPartyAdminUsers(requestParams);
-                  //   setPartyUserList(data);
-                  // } catch (err) {
-                  //   console.error('Error fetching partyUsers : ', err);
-                  // }
                 }}
                 searchBarStyle={{ boxShadow: '0px 2px 6px -1px rgba(17, 17, 17, 0.08)' }}
               />
@@ -304,6 +345,72 @@ function HomeRecruitment() {
             {getIcon()}
           </RightFilter>
         </HeaderWrapper>
+        <ReCruitmentCardWrapper>
+          {partyRecruitmentList?.pages.flatMap(page =>
+            page?.partyRecruitments.map(recruitment => (
+              <StyledSquare
+                key={recruitment.id}
+                width="100%"
+                height="160px"
+                shadowKey="shadow1"
+                backgroundColor="white"
+                radiusKey="base"
+                borderColor="grey200"
+              >
+                <CardContentsWrapper>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`}
+                    width={160}
+                    height={120}
+                    alt={recruitment.party.title}
+                    style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                  />
+                  <CardRightWrapper>
+                    <div>
+                      <Chip
+                        chipType="filled"
+                        label={recruitment.party.partyType.type}
+                        size="xsmall"
+                        chipColor="#F6F6F6"
+                        fontColor="grey700"
+                        fontWeight="semibold"
+                      />
+                      <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                        {recruitment.party.title} {/* 파티 제목 */}
+                      </EllipsisTitleText>
+                      <Txt
+                        fontSize={14}
+                        color="grey600"
+                        style={{
+                          marginLeft: '2px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          lineHeight: '140%',
+                        }}
+                      >
+                        {recruitment.position.main} <Divider />
+                        {recruitment.position.sub} {/* 포지션 정보 */}
+                      </Txt>
+                    </div>
+
+                    <RecruitsCount>
+                      <Txt fontSize={12} style={{ lineHeight: '140%' }}>
+                        {recruitment.status === 'active' ? '모집중' : '종료'}
+                      </Txt>
+
+                      <Txt fontSize={12} color="failRed" style={{ color: '#DC0000', lineHeight: '140%' }}>
+                        {recruitment.recruitingCount} / {recruitment.recruitedCount}
+                      </Txt>
+                    </RecruitsCount>
+                  </CardRightWrapper>
+                </CardContentsWrapper>
+              </StyledSquare>
+            )),
+          )}
+        </ReCruitmentCardWrapper>
+
+        <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
       </SHomeContainer>
       <ScrollToTop />
     </SContainer>
@@ -334,4 +441,63 @@ const RightFilter = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+`;
+
+const ReCruitmentCardWrapper = styled.section`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+`;
+
+const StyledSquare = styled(Square)`
+  flex: 1 1 calc(33.333% - 12px);
+  max-width: calc(33.333% - 12px);
+  padding: 20px;
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+`;
+
+const CardContentsWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
+const CardRightWrapper = styled.div`
+  width: calc(100% - 172px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 14px;
+  justify-content: space-between;
+`;
+
+const EllipsisTitleText = styled(Txt)`
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  margin: 4px 0px 4px 2px;
+`;
+
+const Divider = styled.div`
+  width: 1.5px;
+  height: 12px;
+  background-color: #999999;
+  border-radius: 9px;
+  margin: 0px 6px 0px 6px;
+`;
+
+const RecruitsCount = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: flex-end;
+  margin-left: auto;
+  text-align: end;
 `;
