@@ -13,6 +13,7 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SChildContainer, SContainer } from '@/styles/components';
 import type { PartyUserListByAdminResponse, Position } from '@/types/party';
+import { fetchUserAuthority } from '@/apis/join';
 
 // 직군 필터링 함수
 const filterMainCategories = (data: Position[]): { id: number; label: string }[] => {
@@ -42,6 +43,16 @@ function PartyUsersManage({ partyId }: PageParams) {
   const { openModal, closeModal } = useModalContext();
   const { setResetEditPartyRecruitForm } = useEditPartyRecruitForm();
   const router = useRouter();
+
+  // 관리자 아니면 party 홈으로 이동
+  useEffect(() => {
+    (async () => {
+      const res = await fetchUserAuthority(Number(partyId));
+      if (res?.authority !== 'master') {
+        router.replace(`/party/${partyId}`);
+      }
+    })();
+  });
 
   useEffect(() => {
     const fetchPartyUsers = async () => {

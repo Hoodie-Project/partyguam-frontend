@@ -49,6 +49,8 @@ function PartyRecruitEdit() {
     return 'default';
   }, [editPartyRecruitForm.content]);
 
+  console.log('pageType >> ', pageType);
+
   useEffect(() => {
     (async () => {
       const response = await fetchGetPositions();
@@ -59,11 +61,12 @@ function PartyRecruitEdit() {
       (async () => {
         try {
           const recruitmentDetails = await fetchPartyRecruitmentDetails(Number(recruitId));
+
           if (recruitmentDetails) {
             setEditPartyRecruitForm({
               positionId: recruitmentDetails.positionId || 3,
-              직군: recruitmentDetails.main,
-              직무: recruitmentDetails.sub,
+              직군: recruitmentDetails.position.main,
+              직무: recruitmentDetails.position.sub,
               recruiting_count: recruitmentDetails.recruitingCount.toString(),
               content: recruitmentDetails.content,
             });
