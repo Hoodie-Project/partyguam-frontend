@@ -11,6 +11,7 @@ import { Tabs } from '@/components/_molecules';
 import { PartyHomeTab, PartyPeopleTab, PartyRecruitmentsTab } from '@/components/features/party';
 import { SContainer } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
+import { useRouter } from 'next/navigation';
 
 type PageParams = {
   partyId: string;
@@ -37,6 +38,7 @@ const renderPartyState = (stateTag: string) => {
 function PartyHome({ partyId }: PageParams) {
   const [partyHomeData, setPartyHomeData] = useState<PartyHomeResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,7 +133,10 @@ function PartyHome({ partyId }: PageParams) {
                     </Txt>
                   </Balloon>
                 )}
-                <SettingsOutlinedIcon style={{ cursor: 'pointer' }} />
+                <SettingsOutlinedIcon
+                  onClick={() => router.push(`/party/setting/${partyId}?type=MODIFY`)}
+                  style={{ cursor: 'pointer' }}
+                />
               </PartyTabsButtonWrapper>
             </PartyTabsWrapper>
 
