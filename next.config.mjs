@@ -4,6 +4,9 @@ import TerserPlugin from 'terser-webpack-plugin';
 const isProduction = process.env.NEXT_PUBLIC_ENV === 'production';
 const nextConfig = {
   reactStrictMode: false,
+  images: {
+    domains: ['partyguam.net'],
+  },
   webpack: config => {
     config.optimization = {
       ...config.optimization,

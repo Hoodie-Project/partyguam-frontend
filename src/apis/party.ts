@@ -14,9 +14,17 @@ export const fetchGetPartyTypes = async () => {
   }
 };
 
-export const fetchGetPositions = async () => {
+/**
+ * [GET] 포지션 항목 조회 api, main string없으면 전체 리스트 반환
+ * (main: 기획자, 디자이너, 개발자, 마케터/광고)
+ */
+export const fetchGetPositions = async (main?: string) => {
   try {
-    const response = await privateApi.get('/positions');
+    const response = await privateApi.get('/positions', {
+      params: {
+        ...(main && { main }),
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('fetchGetPositions error : ', error);
@@ -351,14 +359,12 @@ export const fetchPartyRecruitmentApplications = async ({
   }
 };
 
-// [POST] 파티 지원자 승인
+// [POST] 파티 지원자 승인 /dev/api/parties/{partyId}/applications/{partyApplicationId}/approval
 export const fetchApprovePartyApplication = async ({
   partyId,
-  partyRecruitmentId,
   partyApplicationId,
 }: {
   partyId: number;
-  partyRecruitmentId: number;
   partyApplicationId: number;
 }) => {
   try {
@@ -370,14 +376,12 @@ export const fetchApprovePartyApplication = async ({
   }
 };
 
-// [POST] 파티 지원자 거절
+// [POST] 파티 지원자 거절 /dev/api/parties/{partyId}/applications/{partyApplicationId}/rejection
 export const fetchRejectPartyApplication = async ({
   partyId,
-  partyRecruitmentId,
   partyApplicationId,
 }: {
   partyId: number;
-  partyRecruitmentId: number;
   partyApplicationId: number;
 }) => {
   try {

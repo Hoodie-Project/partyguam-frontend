@@ -31,7 +31,7 @@ export default function Header() {
 
   useEffect(() => {
     const accessToken = getCookie('accessToken');
-    console.log('asf');
+
     if (!accessToken) {
       const refreshToken = getCookie('refreshToken');
       if (refreshToken) {
@@ -88,6 +88,8 @@ export default function Header() {
           closeModal();
         },
       });
+    } else {
+      router.push('/');
     }
   };
 

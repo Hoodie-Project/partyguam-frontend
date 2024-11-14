@@ -18,6 +18,7 @@ type Props = {
   optionStyle?: React.CSSProperties;
 };
 
+// 기본 option ->
 export default function Options({ options, onClick, setIsOpen, height, optionRadius = 'base', optionStyle }: Props) {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>, option: OptionType) => {
     onClick(e, option.id);

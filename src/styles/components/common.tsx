@@ -1,5 +1,18 @@
 import styled from '@emotion/styled';
 
+/**
+ * /home 랜딩 페이지 컨테이너
+ */
+
+const SHomeContainer = styled.section`
+  width: 77.5rem;
+  height: 100vh;
+  margin-top: 50px;
+`;
+
+/**
+ * 모든 페이지 컴포넌트를 감싸주는 컴포넌트
+ */
 const SContainer = styled.section`
   width: 100%;
   height: 100vh;
@@ -34,4 +47,4 @@ const SMargin = styled.div<{ margin: string }>`
   margin: ${props => props.margin};
 `;
 
-export { SChildContainer, SContainer, SForm, SMargin };
+export { SChildContainer, SContainer, SForm, SHomeContainer, SMargin };
