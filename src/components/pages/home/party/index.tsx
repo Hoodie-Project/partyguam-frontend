@@ -15,6 +15,7 @@ import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
+import { useRouter } from 'next/navigation';
 
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
   return data.map(position => ({
@@ -36,6 +37,7 @@ type OptionType = {
 };
 
 function HomeParty() {
+  const router = useRouter();
   const 파티StatusOptions = [
     { id: 0, label: '진행 중', value: 'active' },
     { id: 1, label: '종료', value: 'archived' },
@@ -271,6 +273,8 @@ function HomeParty() {
               등록일순
             </Txt>
             {getIcon()}
+
+            <CircleButton>파티 생성하기 +</CircleButton>
           </RightFilter>
         </HeaderWrapper>
         <PartyCardList>
@@ -284,6 +288,9 @@ function HomeParty() {
                 backgroundColor="white"
                 radiusKey="base"
                 borderColor="grey200"
+                onClick={() => {
+                  router.push(`/party/${party.id}`);
+                }}
               >
                 <CardContentsWrapper>
                   <Image
@@ -385,6 +392,7 @@ const StyledSquare = styled(Square)`
   padding: 16px;
   display: flex;
   box-sizing: border-box;
+  cursor: pointer;
 `;
 
 const CardContentsWrapper = styled.div`
@@ -419,4 +427,14 @@ const EmptyState = styled.div`
   align-items: center;
   color: #767676;
   margin-top: 60px;
+`;
+const CircleButton = styled.button`
+  background-color: #21ecc7;
+  border: 1px solid #21ecc7;
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: #767676;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 12px;
 `;
