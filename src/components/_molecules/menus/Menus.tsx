@@ -6,8 +6,7 @@ import { Txt } from '@/components/_atoms';
 
 const menuList = [
   { id: 0, label: '파티', route: '/home/party' },
-  { id: 1, label: '길드', route: '/home/guild' },
-  { id: 2, label: '모집공고', route: '/home/recruitment' },
+  { id: 1, label: '모집공고', route: '/home/recruitment' },
 ];
 
 export default function Menus() {
