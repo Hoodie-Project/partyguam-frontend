@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { fetchPartyRecruitments } from '@/apis/home';
 import { fetchGetPartyTypes, fetchGetPositions } from '@/apis/party';
@@ -206,7 +207,7 @@ function HomeRecruitment() {
       order,
       main: submit직무Main,
       position: submit직무Position,
-      // partyTypeFilter: submit파티유형Filter,
+      partyType: submit파티유형Filter.map(Number),
       titleSearch: search모집공고Value,
     });
     return response;
@@ -399,7 +400,11 @@ function HomeRecruitment() {
                         {recruitment.status === 'active' ? '모집중' : '종료'}
                       </Txt>
 
-                      <Txt fontSize={12} color="failRed" style={{ color: '#DC0000', lineHeight: '140%' }}>
+                      <Txt
+                        fontSize={12}
+                        color="failRed"
+                        style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
+                      >
                         {recruitment.recruitingCount} / {recruitment.recruitedCount}
                       </Txt>
                     </RecruitsCount>
@@ -407,6 +412,14 @@ function HomeRecruitment() {
                 </CardContentsWrapper>
               </StyledSquare>
             )),
+          )}
+          {partyRecruitmentList?.pages[0]?.total === 0 && (
+            <EmptyState>
+              <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+              <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+                모집공고가 없습니다.
+              </Txt>
+            </EmptyState>
           )}
         </ReCruitmentCardWrapper>
 
@@ -500,4 +513,14 @@ const RecruitsCount = styled.div`
   align-self: flex-end;
   margin-left: auto;
   text-align: end;
+`;
+
+const EmptyState = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #767676;
+  margin-top: 60px;
 `;

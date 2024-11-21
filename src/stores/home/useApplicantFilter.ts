@@ -21,7 +21,7 @@ interface SelectionStore {
   // 적용하기 상태 관리
   submit직무Main: string[]; // 직무 main 필터
   submit직무Position: number[]; // 직무 position 필터
-  submit파티유형Filter: string[]; // 파티 유형 필터
+  submit파티유형Filter: number[]; // 파티 유형 필터
 
   // 직무 filter 상태 관리
   setSelected직무ParentOptions: (options: OptionType[] | null) => void;
@@ -125,7 +125,7 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
 
   handleSubmit파티유형: () =>
     set(state => {
-      const submit파티유형Filter = state.파티유형FilterChips.map(chip => chip.label); // label만 추출하여 배열 생성
+      const submit파티유형Filter = state.파티유형FilterChips.map(chip => chip.id); // label만 추출하여 배열 생성
 
       return {
         submit파티유형Filter,
