@@ -1,17 +1,18 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 
+import { fetchUserAuthority, type UserAuthorityResponse } from '@/apis/join';
 import { fetchGetPartyHome } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import { Tabs } from '@/components/_molecules';
 import { PartyHomeTab, PartyPeopleTab, PartyRecruitmentsTab } from '@/components/features/party';
 import { SContainer } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
-import { useRouter } from 'next/navigation';
 
 type PageParams = {
   partyId: string;
@@ -36,12 +37,13 @@ const renderPartyState = (stateTag: string) => {
 };
 
 function PartyHome({ partyId }: PageParams) {
+  const [userAuthorityInfo, setUserAuthorityInfo] = useState<UserAuthorityResponse | null>(null);
   const [partyHomeData, setPartyHomeData] = useState<PartyHomeResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchPartyHomeData = async () => {
       try {
         const response = await fetchGetPartyHome({ partyId: Number(partyId.toString()) });
         setPartyHomeData(response);
@@ -50,14 +52,30 @@ function PartyHome({ partyId }: PageParams) {
       }
     };
 
-    fetchData();
+    const fetchUserAuthorityInfo = async (partyId: number) => {
+      try {
+        const response = await fetchUserAuthority(partyId);
+        setUserAuthorityInfo(response);
+      } catch (err) {
+        console.log('Error fetching fetchUserAuthority');
+      }
+    };
+
+    fetchPartyHomeData();
+    fetchUserAuthorityInfo(Number(partyId));
   }, [partyId]);
 
   return (
     <SContainer>
       <PartyHomeContainer>
-        <Square width="820px" height="614px" radiusKey="base" backgroundColor="grey300" shadowKey="none">
-          <Image alt="파티 홈 이미지" src="" width={390} height={293} style={{ borderRadius: '16px' }} />
+        <Square width="400px" height="300px" radiusKey="base" backgroundColor="grey300" shadowKey="none">
+          <Image
+            alt="파티 홈 이미지"
+            src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyHomeData?.image}`}
+            width={400}
+            height={300}
+            style={{ borderRadius: '16px' }}
+          />
         </Square>
         <PartyContentsWrapper>
           <PartyTitleWrapper>
@@ -145,7 +163,7 @@ function PartyHome({ partyId }: PageParams) {
                 <PartyHomeTab partyIntro={partyHomeData?.content} />
               </Tabs.TabPanel>
               <Tabs.TabPanel index={1}>
-                <PartyPeopleTab partyId={partyId} />
+                <PartyPeopleTab partyId={partyId} userAuthority={userAuthorityInfo} />
               </Tabs.TabPanel>
               <Tabs.TabPanel index={2}>
                 <PartyRecruitmentsTab partyId={partyId} />

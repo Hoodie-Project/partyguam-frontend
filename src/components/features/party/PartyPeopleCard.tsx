@@ -1,16 +1,18 @@
 import styled from '@emotion/styled';
 
+import type { UserAuthorityResponse } from '@/apis/join';
 import Emergency from '@/assets/icon/emergency.svg';
 import { Square, Txt } from '@/components/_atoms';
 import { ProfileImage } from '@/components/_molecules';
 import { useModalContext } from '@/contexts/ModalContext';
-import { useAuthStore } from '@/stores/auth';
 import { SFlexRow } from '@/styles/components';
+import type { UserCareer } from '@/types/party';
 
 import ReportModal from '../reportModal';
 
 type Props = {
   authority?: 'master' | 'deputy' | 'member';
+  userAuthority: UserAuthorityResponse | null;
   position?: {
     main: string;
     sub: string;
@@ -18,7 +20,8 @@ type Props = {
   user?: {
     id: number;
     nickname: string;
-    image?: string;
+    image: any;
+    userCareers: UserCareer[];
   };
 };
 
@@ -30,8 +33,7 @@ const PARTY_AUTHORITY_MAP = (authority?: 'master' | 'deputy' | 'member') => {
   }[authority!];
 };
 
-function PartyPeopleCard({ authority, position, user }: Props) {
-  const userId = useAuthStore(state => state.id);
+function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
   const { openModal, closeModal } = useModalContext();
 
   const handleClickEmergency = () => {
@@ -74,9 +76,14 @@ function PartyPeopleCard({ authority, position, user }: Props) {
             <Txt fontSize={14} fontColor="black" fontWeight="semibold">
               {position?.sub}
             </Txt>
+            {user && user.userCareers.length > 0 && (
+              <Txt fontSize={14} fontColor="black" fontWeight="semibold">
+                {user?.userCareers[0].years}년
+              </Txt>
+            )}
           </UserPositionWrapper>
           <UserNameWrapper>
-            {userId === user?.id && <MeTag>나</MeTag>}
+            {userAuthority?.userId === user?.id && <MeTag>나</MeTag>}
             <Txt
               fontSize={16}
               fontColor="black"
@@ -92,7 +99,9 @@ function PartyPeopleCard({ authority, position, user }: Props) {
             </Txt>
           </UserNameWrapper>
         </UserInfoContainer>
-        {userId !== user?.id && <Emergency onClick={handleClickEmergency} style={{ cursor: 'pointer' }} />}
+        {userAuthority?.userId !== user?.id && (
+          <Emergency onClick={handleClickEmergency} style={{ cursor: 'pointer' }} />
+        )}
       </CardWrapper>
     </StyledSquare>
   );

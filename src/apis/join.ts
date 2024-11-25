@@ -80,7 +80,8 @@ const fetchGetUsers = async () => {
   }
 };
 
-interface UserAuthorityResponse {
+export interface UserAuthorityResponse {
+  userId: number;
   authority: 'master' | 'deputy' | 'member';
 }
 
@@ -93,7 +94,7 @@ interface UserAuthorityResponse {
  */
 const fetchUserAuthority = async (partyId: number): Promise<UserAuthorityResponse | null> => {
   try {
-    const response = await privateApi.get(`/dev/api/parties/${partyId}/users/me/authority`);
+    const response = await privateApi.get(`/parties/${partyId}/users/me/authority`);
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.status === 404) {

@@ -24,15 +24,16 @@ export interface PartyType {
 // [GET] 파티 홈 - 파티원탭
 
 export interface PartyUserResponse {
-  id: number;
   partyUser: {
-    id: number;
-    partyUser: PartyUser[];
-  };
+    authority: string;
+    position: Position;
+    user: User;
+  }[];
   partyAdmin: {
-    id: number;
-    partyUser: PartyUser[];
-  };
+    authority: string;
+    position: Position;
+    user: User;
+  }[];
 }
 
 export interface PartyUser {
@@ -42,6 +43,7 @@ export interface PartyUser {
 }
 
 export interface Position {
+  id: number;
   main: string;
   sub: string;
 }
@@ -49,7 +51,13 @@ export interface Position {
 export interface User {
   id: number;
   nickname: string;
-  image?: any;
+  image: any;
+  userCareers: UserCareer[];
+}
+
+export interface UserCareer {
+  positionId: number;
+  years: number;
 }
 
 // [GET] 파티 공고 상세 조회

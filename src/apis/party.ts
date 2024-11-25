@@ -1,4 +1,4 @@
-import type { PartyApplicationData, PartyUserListByAdminResponse } from '@/types/party';
+import type { PartyApplicationData, PartyUserListByAdminResponse, PartyUserResponse } from '@/types/party';
 
 import { fileUploadApi, privateApi } from '.';
 
@@ -95,26 +95,46 @@ export const fetchGetPartyHome = async ({ partyId }: { partyId: number }) => {
 };
 
 // 파티 페이지 - 파티원탭
+
 export const fetchGetPartyUsers = async ({
   partyId,
+  page,
+  limit,
   sort,
   order,
   main,
   nickname,
 }: {
   partyId: number;
+  page: number;
+  limit: number;
   sort: string;
   order: string;
   main?: string;
   nickname?: string;
-}) => {
+}): Promise<PartyUserResponse | null> => {
   try {
-    const response = await privateApi.get(`parties/${partyId}/users`, {
-      params: { sort, order, main, nickname },
-    });
+    // 쿼리 파라미터를 먼저 객체로 설정
+    const params: any = {
+      sort,
+      order,
+      limit,
+      page,
+    };
+
+    // main과 nickname이 존재할 때만 추가
+    if (main && main !== '전체') {
+      params.main = main;
+    }
+    if (nickname) {
+      params.nickname = nickname;
+    }
+
+    const response = await privateApi.get(`/parties/${partyId}/users`, { params });
     return response.data;
   } catch (error) {
-    console.error('fetchGetPartyUsers error : ', error);
+    console.error('fetchGetPartyUsers error:', error);
+    return null;
   }
 };
 
