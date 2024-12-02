@@ -40,7 +40,7 @@ export default function SelectPersonality() {
         currentStep: Number(detailNum) - 2 === question.id,
         questionCnt: question.responseCount,
         question: question.content,
-        questionOptions: personalityData[index].personalityOption || [],
+        personalityOptions: personalityData[index].personalityOptions || [],
       })),
     [detailNum, personalityData],
   );
@@ -118,6 +118,8 @@ export default function SelectPersonality() {
     }
   };
 
+  console.log('currentStep', currentStep);
+
   return (
     <Container>
       <SectionTitle>
@@ -130,8 +132,8 @@ export default function SelectPersonality() {
         </Txt>
       </SectionTitle>
       <OptionListWrapper>
-        {currentStep.questionOptions &&
-          currentStep.questionOptions.map(option => (
+        {currentStep.personalityOptions &&
+          currentStep.personalityOptions.map(option => (
             <CheckItem
               key={option.id}
               label={option.content}

@@ -49,13 +49,13 @@ function Party모집공고관리({ partyId }: { partyId: string }) {
       <RecruitmentList>
         {partyRecruitList.map((item, index) => (
           <PartyRecruitmentsCard
-            key={item.partyRecruitmentId}
-            main={item.main}
-            sub={item.sub}
+            key={item.id}
+            main={item.position.main}
+            sub={item.position.sub}
             applicationCount={item.applicationCount}
             handleClick={() =>
               router.push(
-                `/party/setting/applicant/8?partyRecruitmentId=${item.partyRecruitmentId}&main=${item.main}&sub=${item.sub}`,
+                `/party/setting/applicant/8?partyRecruitmentId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
               )
             }
           />

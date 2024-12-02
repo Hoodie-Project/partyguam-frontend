@@ -181,10 +181,10 @@ function PartyRecruitmentsTab({ partyId }: Props) {
           <RecruitmentList>
             {partyRecruitList.map((item, index) => (
               <PartyRecruitmentsCard
-                key={item.partyRecruitmentId}
+                key={item.id}
                 createdAt={item.createdAt}
-                main={item.main}
-                sub={item.sub}
+                main={item.position.main}
+                sub={item.position.sub}
                 recruitedCount={item.recruitedCount}
                 recruitingCount={item.recruitingCount}
                 applicationCount={item.applicationCount}
@@ -200,7 +200,7 @@ function PartyRecruitmentsTab({ partyId }: Props) {
 export default PartyRecruitmentsTab;
 
 const PartyRecruitmentsTabContainer = styled.section`
-  height: 100vh;
+  height: 100%;
 `;
 
 const HeaderArea = styled.div`

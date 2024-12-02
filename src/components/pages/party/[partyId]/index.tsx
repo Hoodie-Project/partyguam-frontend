@@ -74,7 +74,7 @@ function PartyHome({ partyId }: PageParams) {
             src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyHomeData?.image}`}
             width={400}
             height={300}
-            style={{ borderRadius: '16px' }}
+            style={{ borderRadius: '16px', border: '1px solid #E5E5EC' }}
           />
         </Square>
         <PartyContentsWrapper>

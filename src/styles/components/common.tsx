@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 
 const SHomeContainer = styled.section`
   width: 77.5rem;
-  height: 100vh;
+  height: 100%;
   margin-top: 50px;
 `;
 
@@ -15,7 +15,7 @@ const SHomeContainer = styled.section`
  */
 const SContainer = styled.section`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   padding-top: 5.25rem;
   display: flex;
   flex-direction: column;

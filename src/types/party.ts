@@ -62,11 +62,18 @@ export interface UserCareer {
 
 // [GET] 파티 공고 상세 조회
 export interface PartyRecruitDetailResponse {
-  tag: string;
-  title: string;
-  image: string;
-  main: string;
-  sub: string;
+  party: {
+    title: string;
+    image: string;
+    tag: string;
+    partyType: {
+      type: string;
+    };
+  };
+  position: {
+    main: string;
+    sub: string;
+  };
   content: string;
   recruitingCount: number;
   recruitedCount: number;
@@ -76,9 +83,11 @@ export interface PartyRecruitDetailResponse {
 
 // [GET] 파티 공고 리스트 전체 조회
 export interface PartyRecruitment {
-  partyRecruitmentId: number; // 모집 ID
-  main: string; // 직군 (예: "기획", "디자이너" 등)
-  sub: string; // 직무 (예: "UI/UX 기획자")
+  id: number; // 모집 ID
+  position: {
+    main: string; // 직군 (예: "기획", "디자이너" 등)
+    sub: string; // 직무 (예: "UI/UX 기획자")
+  };
   content: string; // 모집 설명
   recruitingCount: number; // 모집 인원
   recruitedCount: number; // 이미 모집된 인원
