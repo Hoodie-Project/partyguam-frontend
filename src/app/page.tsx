@@ -1,11 +1,12 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 
-import Main from '@/components/pages/home/main';
+const HomeMain = dynamic(() => import('@/components/pages/home/main'), { ssr: false });
 
 export default function Home() {
   return (
     <>
-      <Main />
+      <HomeMain />
     </>
   );
 }
