@@ -44,7 +44,7 @@ export interface PersonalityQuestion {
   id: number;
   content: string;
   responseCount: number;
-  personalityOption: PersonalityOption[];
+  personalityOptions: PersonalityOption[];
 }
 
 export interface SelectedPersonality {

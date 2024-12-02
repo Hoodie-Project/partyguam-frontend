@@ -1,12 +1,13 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
+import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { fetchPartyRecruitments } from '@/apis/home';
 import { fetchGetPartyTypes, fetchGetPositions } from '@/apis/party';
@@ -36,9 +37,10 @@ type OptionType = {
 };
 
 function HomeRecruitment() {
+  const searchParams = useSearchParams();
   const [파티유형List, set파티유형List] = useState<OptionType[]>([]);
   const [positionList, setPositionList] = useState<OptionType[]>([]);
-  const [search모집공고Value, setSearch모집공고Value] = useState<string>('');
+  const [search모집공고Value, setSearch모집공고Value] = useState<string>(searchParams.get('search') || '');
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // 등록일순
   const {
     selected직무ParentOptions,
@@ -314,7 +316,7 @@ function HomeRecruitment() {
                 optionStyle={{ width: '320px', height: 'auto' }}
               />
             </div>
-            <div style={{ width: '400px' }}>
+            <div style={{ width: '400px', height: '36px' }}>
               <SearchBar
                 type="round"
                 placeholder="찾고 싶은 모집공고 이름을 입력하세요."

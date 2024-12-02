@@ -1,4 +1,7 @@
 'use client';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -7,6 +10,7 @@ import { Modal } from '@/components/_molecules';
 import FormContextProvider from '@/contexts/FormContext/FormProvider';
 import ModalContextProvider from '@/contexts/ModalContext/ModalProvider';
 
+import Footer from './Footer';
 import Header from './Header';
 
 // export const metadata: Metadata = {
@@ -30,6 +34,7 @@ export default function RootLayout({
               <Header />
               <Modal />
               {children}
+              <Footer />
             </FormContextProvider>
           </ModalContextProvider>
         </QueryClientProvider>

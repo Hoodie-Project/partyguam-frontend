@@ -2,6 +2,28 @@ import type { PartyRecruitmentsResponse } from '@/types/home';
 
 import { privateApi } from '.';
 
+export interface HomeBanner {
+  total: number;
+  banner: {
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+    id: number;
+    title: string;
+    image: string;
+  }[];
+}
+// [GET] 배너 전체 조회
+export const fetchGetBanner = async (): Promise<HomeBanner | null> => {
+  try {
+    const response = await privateApi.get('/banner');
+    return response.data;
+  } catch (error) {
+    console.error('fetchGetBanner error:', error);
+    return null;
+  }
+};
+
 // [GET] 파티 모집 공고 목록 조회
 export const fetchPartyRecruitments = async ({
   page,
@@ -76,7 +98,7 @@ interface Party {
   recruitmentCount: number;
 }
 
-interface PartiesResponse {
+export interface PartiesResponse {
   parties: Party[];
   total: number;
 }
@@ -130,5 +152,33 @@ export const fetchParties = async ({
   } catch (error: any) {
     console.error('fetchParties error:', error);
     return null;
+  }
+};
+
+// [GET] 개인화된 파티 모집 공고 목록 조회
+export const fetchPersonalizedPartiesRecruitments = async ({
+  page,
+  limit,
+  sort = 'createdAt',
+  order = 'ASC',
+}: {
+  page: number;
+  limit: number;
+  sort?: string;
+  order?: 'ASC' | 'DESC';
+}): Promise<PartyRecruitmentsResponse | null> => {
+  try {
+    const params: any = {
+      page,
+      limit,
+      sort,
+      order,
+    };
+
+    const response = await privateApi.get('/parties/recruitments/personalized', { params });
+    return response.data;
+  } catch (error: any) {
+    console.error('fetchPersonalizedParties error:', error);
+    return error.status;
   }
 };

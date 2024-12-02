@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
+import { fetchUserAuthority } from '@/apis/join';
 import { fetchBatchDeletePartyUsers, fetchGetPositions, fetchPartyAdminUsers } from '@/apis/party';
 import { Txt } from '@/components/_atoms';
 import { PageHeader, SearchBar, Select } from '@/components/_molecules';
@@ -13,7 +14,6 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SChildContainer, SContainer } from '@/styles/components';
 import type { PartyUserListByAdminResponse, Position } from '@/types/party';
-import { fetchUserAuthority } from '@/apis/join';
 
 // 직군 필터링 함수
 const filterMainCategories = (data: Position[]): { id: number; label: string }[] => {
@@ -197,7 +197,7 @@ function PartyUsersManage({ partyId }: PageParams) {
             />
           </div>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: 'auto' }}>
-            <div style={{ width: '240px' }}>
+            <div style={{ width: '240px', height: '36px' }}>
               <SearchBar
                 type="line"
                 placeholder="닉네임을 검색해 보세요."

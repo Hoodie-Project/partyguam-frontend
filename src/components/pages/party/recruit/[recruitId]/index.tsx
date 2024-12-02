@@ -82,17 +82,23 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
             backgroundColor="white"
             shadowKey="none"
           >
-            <Image alt="파티 홈 이미지" src="" width={400} height={300} style={{ borderRadius: '16px' }} />
+            <Image
+              alt="파티 홈 이미지"
+              src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyRecruitDetailData?.party.image}`}
+              width={400}
+              height={300}
+              style={{ borderRadius: '16px' }}
+            />
           </Square>
           <PartyInfoContainer>
             <ChipWrapper>
               {/* 파티 모집중 칩 */}
               <Chip
                 size="small"
-                label={!Boolean(pageModalType) ? partyRecruitDetailData?.tag : '모집중'}
+                label={!Boolean(pageModalType) ? partyRecruitDetailData?.party.tag : '모집중'}
                 chipType="filled"
-                chipColor={renderPartyState(partyRecruitDetailData?.tag as string)?.backgroundColor}
-                fontColor={renderPartyState(partyRecruitDetailData?.tag as string)?.fontColor}
+                chipColor={renderPartyState(partyRecruitDetailData?.party.tag as string)?.backgroundColor}
+                fontColor={renderPartyState(partyRecruitDetailData?.party.tag as string)?.fontColor}
                 fontWeight="semibold"
                 shadow="shadow1"
               />
@@ -108,7 +114,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
               />
             </ChipWrapper>
             <Txt fontSize={24} fontWeight="bold">
-              {partyRecruitDetailData?.title}
+              {partyRecruitDetailData?.party.title}
             </Txt>
             <PartyInfoWrapper>
               <PartyInfo>
@@ -239,7 +245,8 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                 포지션
               </Txt>
               <Txt fontColor="black" fontWeight="semibold" fontSize={16}>
-                {!Boolean(pageModalType) && `${partyRecruitDetailData?.main} ${partyRecruitDetailData?.sub}`}
+                {!Boolean(pageModalType) &&
+                  `${partyRecruitDetailData?.position.main} ${partyRecruitDetailData?.position.sub}`}
                 {Boolean(pageModalType) && `${editPartyRecruitForm?.직군} ${editPartyRecruitForm.직무}`}
               </Txt>
             </div>

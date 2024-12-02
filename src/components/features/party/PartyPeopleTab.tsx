@@ -78,7 +78,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
 export default PartyPeopleTab;
 
 const PartyPeopleTabContainer = styled.section`
-  height: 100vh;
+  height: 100%;
 `;
 
 const PeopleListContainer = styled.div`

@@ -1,12 +1,13 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
+import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { fetchParties } from '@/apis/home';
 import { fetchGetPartyTypes } from '@/apis/party';
@@ -15,7 +16,6 @@ import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
-import { useRouter } from 'next/navigation';
 
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
   return data.map(position => ({
@@ -37,6 +37,7 @@ type OptionType = {
 };
 
 function HomeParty() {
+  const searchParams = useSearchParams();
   const router = useRouter();
   const 파티StatusOptions = [
     { id: 0, label: '진행 중', value: 'active' },
@@ -48,7 +49,7 @@ function HomeParty() {
     value: 'active',
   });
   const [파티유형List, set파티유형List] = useState<OptionType[]>([]);
-  const [search파티Value, setSearch파티Value] = useState<string>('');
+  const [search파티Value, setSearch파티Value] = useState<string>(searchParams.get('search') || '');
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // 등록일순
   const {
     selected파티유형Options,
@@ -243,7 +244,7 @@ function HomeParty() {
                 optionStyle={{ width: '320px', height: 'auto' }}
               />
             </div>
-            <div style={{ width: '400px' }}>
+            <div style={{ width: '400px', height: '36px' }}>
               <SearchBar
                 type="round"
                 placeholder="찾고 싶은 파티 이름을 입력하세요."
@@ -388,7 +389,7 @@ const PartyCardList = styled.section`
 const StyledSquare = styled(Square)`
   flex: 1 1 1 calc(25% - 20px);
   max-width: calc(25% - 20px);
-  height: auto;
+  height: 333px;
   padding: 16px;
   display: flex;
   box-sizing: border-box;
@@ -433,7 +434,7 @@ const CircleButton = styled.button`
   border: 1px solid #21ecc7;
   border-radius: 999px;
   padding: 8px 12px;
-  color: #767676;
+  color: #000000;
   font-size: 14px;
   font-weight: 600;
   margin-left: 12px;

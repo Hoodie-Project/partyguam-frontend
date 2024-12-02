@@ -14,18 +14,37 @@ type SearchBarProps = {
   onClear: () => void;
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   searchBarStyle?: React.CSSProperties;
+  searchInputStyle?: React.CSSProperties;
+  iconSize?: number;
 };
 
-function SearchBar({ type, placeholder, value, onChange, onClear, onKeyDown, searchBarStyle }: SearchBarProps) {
+function SearchBar({
+  type,
+  placeholder,
+  value,
+  onChange,
+  onClear,
+  onKeyDown,
+  searchBarStyle,
+  searchInputStyle,
+  iconSize,
+}: SearchBarProps) {
   return (
     <SearchContainer type={type} style={searchBarStyle}>
       <SearchIconWrapper>
         <SearchRoundedIcon />
       </SearchIconWrapper>
-      <SearchInput type="text" placeholder={placeholder} value={value} onChange={onChange} onKeyDown={onKeyDown} />
+      <SearchInput
+        type="text"
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        style={searchInputStyle}
+      />
       {value && (
         <ClearIconWrapper onClick={onClear}>
-          <HighlightOffRoundedIcon />
+          <HighlightOffRoundedIcon style={{ width: `${iconSize}px`, height: `${iconSize}px` }} />
         </ClearIconWrapper>
       )}
     </SearchContainer>
@@ -39,10 +58,10 @@ const SearchContainer = styled.div<{ type: 'round' | 'line' }>`
   align-items: center;
   padding: ${({ type }) => (type === 'line' ? '8px 12px' : '8px 16px')};
   width: 100%;
-  height: 36px;
+  height: 100%;
   background-color: white;
   border: ${({ type }) => (type === 'line' ? 'none' : `1px solid ${palette.grey200}`)};
-  border-radius: ${({ type }) => (type === 'round' ? '18px' : 0)};
+  border-radius: ${({ type }) => (type === 'round' ? '999px' : 0)};
   border-bottom: ${({ type }) => (type === 'line' ? `1px solid ${palette.grey400}` : `1px solid ${palette.grey200}`)};
 `;
 
