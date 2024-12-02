@@ -59,7 +59,7 @@ function PartyRecruitSettingTable({
 
   const partyRecruitListWithId: TablePartyRecruitment[] = partyRecruitList.map(item => ({
     ...item,
-    id: item.partyRecruitmentId,
+    id: item.id,
   }));
 
   const data = { nodes: partyRecruitListWithId };
@@ -186,12 +186,12 @@ function PartyRecruitSettingTable({
                   </StyledCell>
                   <StyledCell>
                     <Txt fontWeight="normal" fontSize={14}>
-                      {item.main}
+                      {item.position.main}
                     </Txt>
                   </StyledCell>
                   <StyledCell>
                     <Txt fontWeight="normal" fontSize={14}>
-                      {item.sub}
+                      {item.position.sub}
                     </Txt>
                   </StyledCell>
                   <StyledCell>
@@ -216,7 +216,7 @@ function PartyRecruitSettingTable({
                     <CircleButton
                       onClick={() =>
                         router.push(
-                          `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.main}&sub=${item.sub}`,
+                          `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
                         )
                       }
                     >
