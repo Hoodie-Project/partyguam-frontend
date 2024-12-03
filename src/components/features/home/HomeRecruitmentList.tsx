@@ -8,9 +8,11 @@ import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftR
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 
 import { fetchPartyRecruitments, fetchPersonalizedPartiesRecruitments } from '@/apis/home';
+import NoteCheckIcon from '@/assets/icon/note-check.svg';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
+import { SFlexColumnCenter } from '@/styles/components';
 import type { PartyRecruitmentsResponse } from '@/types/home';
 
 import LoginModal from '../loginModal';
@@ -66,15 +68,20 @@ function HomeRecruitmentList({ personalized = false }: Props) {
         });
 
         setRecruitmentList(response);
+
+        if (personalized && response == null) set세부프로필미입력(true);
       } catch (err) {
-        console.error('세부프로필 미입력 > ', err);
-        set세부프로필미입력(true);
+        if (err === 404) {
+          set세부프로필미입력(true);
+        }
       }
     };
 
     if (personalized) fetchPersonalizedRecruitment();
     else fetchRecruitments();
-  }, []);
+  }, [personalized]);
+
+  console.log('세부프로필미입력 > ', 세부프로필미입력);
 
   const handleClickRecruitmentCard = (recruitmentId: number) => {
     if (isLoggedIn) {
@@ -119,77 +126,97 @@ function HomeRecruitmentList({ personalized = false }: Props) {
       </div>
       <ReCruitmentCardWrapper>
         {personalized ? (
-          <>
-            <StyledSlider ref={sliderRef} {...sliderSettings}>
-              {recruitmentList?.partyRecruitments?.map(recruitment => (
-                <StyledSquare
-                  key={recruitment.id}
-                  width="514px"
-                  height="226px"
-                  shadowKey="shadow1"
-                  backgroundColor="white"
-                  radiusKey="base"
-                  borderColor="grey200"
-                  personalized={personalized}
-                  style={{ marginRight: '12px' }}
-                  onClick={() => handleClickRecruitmentCard(recruitment.id)}
-                >
-                  <CardContentsWrapper>
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`}
-                      width={202.56}
-                      height={169.5}
-                      alt={recruitment.party.title}
-                      style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                    />
-                    <CardRightWrapper>
-                      <div>
-                        <Chip
-                          chipType="filled"
-                          label={recruitment.party.partyType.type}
-                          size="xsmall"
-                          chipColor="#F6F6F6"
-                          fontColor="grey700"
-                          fontWeight="semibold"
-                        />
-                        <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
-                          {recruitment.party.title} {/* 파티 제목 */}
-                        </EllipsisTitleText>
-                        <Txt
-                          fontSize={14}
-                          color="grey600"
-                          style={{
-                            marginLeft: '2px',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            lineHeight: '140%',
-                          }}
-                        >
-                          {recruitment.position.main} <Divider />
-                          {recruitment.position.sub}
-                        </Txt>
-                      </div>
+          세부프로필미입력 ? (
+            <GoToDetailProfile>
+              <NoteCheckIcon />
+              <SFlexColumnCenter>
+                <Txt fontSize={20} fontWeight="semibold">
+                  세부프로필을 완료하고
+                </Txt>
+                <Txt fontSize={20} fontWeight="semibold">
+                  모집공고를 추천받으세요!
+                </Txt>
+              </SFlexColumnCenter>
+              <CircleButton onClick={() => router.push('/home/party')}>
+                <Txt fontSize={14} fontColor="black" fontWeight="semibold">
+                  세부프로필 설정하기
+                </Txt>
+                <KeyboardArrowRightRoundedIcon />
+              </CircleButton>
+            </GoToDetailProfile>
+          ) : (
+            <>
+              <StyledSlider ref={sliderRef} {...sliderSettings}>
+                {recruitmentList?.partyRecruitments?.map(recruitment => (
+                  <StyledSquare
+                    key={recruitment.id}
+                    width="514px"
+                    height="226px"
+                    shadowKey="shadow1"
+                    backgroundColor="white"
+                    radiusKey="base"
+                    borderColor="grey200"
+                    personalized={personalized}
+                    style={{ marginRight: '12px' }}
+                    onClick={() => handleClickRecruitmentCard(recruitment.id)}
+                  >
+                    <CardContentsWrapper>
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`}
+                        width={202.56}
+                        height={169.5}
+                        alt={recruitment.party.title}
+                        style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                      />
+                      <CardRightWrapper>
+                        <div>
+                          <Chip
+                            chipType="filled"
+                            label={recruitment.party.partyType.type}
+                            size="xsmall"
+                            chipColor="#F6F6F6"
+                            fontColor="grey700"
+                            fontWeight="semibold"
+                          />
+                          <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                            {recruitment.party.title} {/* 파티 제목 */}
+                          </EllipsisTitleText>
+                          <Txt
+                            fontSize={14}
+                            color="grey600"
+                            style={{
+                              marginLeft: '2px',
+                              display: 'flex',
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                              lineHeight: '140%',
+                            }}
+                          >
+                            {recruitment.position.main} <Divider />
+                            {recruitment.position.sub}
+                          </Txt>
+                        </div>
 
-                      <RecruitsCount>
-                        <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                          {recruitment.status === 'active' ? '모집중' : '종료'}
-                        </Txt>
+                        <RecruitsCount>
+                          <Txt fontSize={12} style={{ lineHeight: '140%' }}>
+                            {recruitment.status === 'active' ? '모집중' : '종료'}
+                          </Txt>
 
-                        <Txt
-                          fontSize={12}
-                          color="failRed"
-                          style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
-                        >
-                          {recruitment.recruitingCount} / {recruitment.recruitedCount}
-                        </Txt>
-                      </RecruitsCount>
-                    </CardRightWrapper>
-                  </CardContentsWrapper>
-                </StyledSquare>
-              ))}
-            </StyledSlider>
-          </>
+                          <Txt
+                            fontSize={12}
+                            color="failRed"
+                            style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
+                          >
+                            {recruitment.recruitingCount} / {recruitment.recruitedCount}
+                          </Txt>
+                        </RecruitsCount>
+                      </CardRightWrapper>
+                    </CardContentsWrapper>
+                  </StyledSquare>
+                ))}
+              </StyledSlider>
+            </>
+          )
         ) : (
           <CardListWrapper>
             {recruitmentList?.partyRecruitments?.map(recruitment => (
@@ -296,6 +323,28 @@ const StyledSlider = styled(Slider)`
       pointer-events: none; /* 클릭 이벤트 방지 */
     }
   }
+`;
+
+const CircleButton = styled.button`
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid #21ecc7;
+  border-radius: 999px;
+  padding: 6px 12px;
+  color: #111111;
+`;
+
+const GoToDetailProfile = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
 `;
 
 const StyledSquare = styled(Square)<{ personalized?: boolean }>`

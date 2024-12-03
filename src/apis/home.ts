@@ -179,6 +179,6 @@ export const fetchPersonalizedPartiesRecruitments = async ({
     return response.data;
   } catch (error: any) {
     console.error('fetchPersonalizedParties error:', error);
-    return error.status;
+    return null;
   }
 };
