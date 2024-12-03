@@ -72,10 +72,20 @@ class HttpClient {
     const { status: errorStatus, config } = error.response;
 
     if (errorStatus === 401) {
-      const retryOriginalRequest = new Promise<AxiosResponse>(resolve => {
-        this.refreshSubscribers.push((token: string) => {
-          config.headers['Authorization'] = `Bearer ${token}`;
-          resolve(this.client(config));
+      const refreshToken = getCookie('refreshToken'); // refreshToken 확인
+
+      if (!refreshToken) {
+        return;
+      }
+
+      const retryOriginalRequest = new Promise<AxiosResponse>((resolve, reject) => {
+        this.refreshSubscribers.push((token: string | null) => {
+          if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+            resolve(this.client(config)); // 새 토큰으로 원래 요청 재시도
+          } else {
+            reject(new Error('Failed to refresh token'));
+          }
         });
       });
 
@@ -83,23 +93,39 @@ class HttpClient {
         this.isRefreshing = true;
 
         try {
-          const response = await axios.post(`${BASE_URL}/auth/access-token`, { withCredentials: true });
-          const newAccessToken = response.data.accessToken;
+          const response = await axios.post(
+            `${BASE_URL}/auth/access-token`,
+            {},
+            { withCredentials: true }, // 쿠키 포함 요청
+          );
 
+          const newAccessToken = response?.data?.accessToken;
+
+          if (!newAccessToken) {
+            throw new Error('No accessToken in refresh response');
+          }
+
+          // 새 토큰 저장
           setCookie('accessToken', newAccessToken);
+
+          // 대기 중인 요청 처리
           this.refreshSubscribers.forEach(callback => callback(newAccessToken));
           this.refreshSubscribers = [];
         } catch (refreshError) {
-          if (isAxiosError(refreshError) && refreshError.response?.status === 401) {
-            this.handleRefreshTokenError();
-          }
-        } finally {
-          this.isRefreshing = false;
-        }
+          console.error('Refresh token request failed:', refreshError);
 
-        return retryOriginalRequest;
+          // refreshToken 요청 실패 시 로그아웃
+          this.refreshSubscribers.forEach(callback => callback('TOKEN_REFRESH_FAILED'));
+          this.refreshSubscribers = [];
+          this.handleRefreshTokenError();
+        } finally {
+          this.isRefreshing = false; // 플래그 초기화
+        }
       }
+
+      return retryOriginalRequest; // 대기 중인 요청 처리
     }
+
     // if (errorStatus === 500) {
     //   alert('로그인을 다시 해주세요');
     //   deleteCookie('accessToken');

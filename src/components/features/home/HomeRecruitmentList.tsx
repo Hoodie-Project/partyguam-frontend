@@ -9,8 +9,11 @@ import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRigh
 
 import { fetchPartyRecruitments, fetchPersonalizedPartiesRecruitments } from '@/apis/home';
 import { Chip, Square, Txt } from '@/components/_atoms';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import type { PartyRecruitmentsResponse } from '@/types/home';
+
+import LoginModal from '../loginModal';
 
 type Props = {
   personalized?: boolean;
@@ -22,11 +25,8 @@ function HomeRecruitmentList({ personalized = false }: Props) {
   const [세부프로필미입력, set세부프로필미입력] = useState(false);
   const sliderRef = useRef<Slider | null>(null);
   const router = useRouter();
-  const { nickname } = useAuthStore();
-
-  useEffect(() => {
-    console.log('page>>', page);
-  }, [page]);
+  const { nickname, isLoggedIn } = useAuthStore();
+  const { openModal } = useModalContext();
 
   const handleNext = () => {
     sliderRef.current?.slickNext();
@@ -76,6 +76,14 @@ function HomeRecruitmentList({ personalized = false }: Props) {
     else fetchRecruitments();
   }, []);
 
+  const handleClickRecruitmentCard = (recruitmentId: number) => {
+    if (isLoggedIn) {
+      router.push(`/party/recruit/${recruitmentId}`);
+    } else {
+      openModal({ children: <LoginModal /> });
+    }
+  };
+
   return (
     <>
       <div
@@ -124,9 +132,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   borderColor="grey200"
                   personalized={personalized}
                   style={{ marginRight: '12px' }}
-                  onClick={() => {
-                    router.push(`/party/recruit/${recruitment.id}`);
-                  }}
+                  onClick={() => handleClickRecruitmentCard(recruitment.id)}
                 >
                   <CardContentsWrapper>
                     <Image
@@ -197,9 +203,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   backgroundColor="white"
                   radiusKey="base"
                   borderColor="grey200"
-                  onClick={() => {
-                    router.push(`/party/recruit/${recruitment.id}`);
-                  }}
+                  onClick={() => handleClickRecruitmentCard(recruitment.id)}
                 >
                   <CardContentsWrapper>
                     <Image

@@ -4,8 +4,6 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const refreshToken = searchParams.get('token');
 
-  console.log('refreshToken >> ', refreshToken);
-
   // 이미 쿠키에 설정된 경우 리다이렉트하지 않고 페이지 반환
   const cookies = req.headers.get('cookie');
   if (cookies?.includes('refreshToken')) {

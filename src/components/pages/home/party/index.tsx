@@ -13,6 +13,9 @@ import { fetchParties } from '@/apis/home';
 import { fetchGetPartyTypes } from '@/apis/party';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
+import { LoginModal } from '@/components/features';
+import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
@@ -61,6 +64,9 @@ function HomeParty() {
     reset파티유형FilterChip,
     handleSubmit파티유형,
   } = useApplicantFilterStore();
+
+  const { isLoggedIn } = useAuthStore();
+  const { openModal } = useModalContext();
 
   useEffect(() => {
     (async () => {
@@ -189,6 +195,14 @@ function HomeParty() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+  const handleClickPartyCard = (partyId: number) => {
+    if (isLoggedIn) {
+      router.push(`/party/${partyId}`);
+    } else {
+      openModal({ children: <LoginModal /> });
+    }
+  };
+
   return (
     <SContainer>
       <SHomeContainer>
@@ -289,9 +303,7 @@ function HomeParty() {
                 backgroundColor="white"
                 radiusKey="base"
                 borderColor="grey200"
-                onClick={() => {
-                  router.push(`/party/${party.id}`);
-                }}
+                onClick={() => handleClickPartyCard(party.id)}
               >
                 <CardContentsWrapper>
                   <Image

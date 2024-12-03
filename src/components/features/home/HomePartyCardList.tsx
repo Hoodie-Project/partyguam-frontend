@@ -11,12 +11,18 @@ import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRigh
 import type { PartiesResponse } from '@/apis/home';
 import { fetchParties } from '@/apis/home';
 import { Chip, Square, Txt } from '@/components/_atoms';
+import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
+
+import LoginModal from '../loginModal';
 
 function HomePartyCardList() {
   const [page, setPage] = useState<number>(1);
   const [partyList, setPartyList] = useState<PartiesResponse | null>(null);
   const router = useRouter();
   const sliderRef = useRef<Slider | null>(null); // Slider를 참조할 Ref
+  const { isLoggedIn } = useAuthStore();
+  const { openModal } = useModalContext();
 
   useEffect(() => {
     // [GET] 파티 목록 조회
@@ -49,6 +55,14 @@ function HomePartyCardList() {
     arrows: false,
     cssEase: 'linear',
     afterChange: (index: number) => setPage(index + 1),
+  };
+
+  const handleClickPartyCard = (partyId: number) => {
+    if (isLoggedIn) {
+      router.push(`/party/${partyId}`);
+    } else {
+      openModal({ children: <LoginModal /> });
+    }
   };
 
   return (
@@ -94,9 +108,7 @@ function HomePartyCardList() {
                   backgroundColor="white"
                   radiusKey="base"
                   borderColor="grey200"
-                  onClick={() => {
-                    router.push(`/party/${party.id}`);
-                  }}
+                  onClick={() => handleClickPartyCard(party.id)}
                 >
                   <CardContentsWrapper>
                     <Image

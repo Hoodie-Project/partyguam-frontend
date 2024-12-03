@@ -33,7 +33,7 @@ export default function RootLayout({
             <FormContextProvider>
               <Header />
               <Modal />
-              {children}
+              <main>{children}</main>
               <Footer />
             </FormContextProvider>
           </ModalContextProvider>

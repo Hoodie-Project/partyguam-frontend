@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardRoundedIcon from '@mui/icons-material/ArrowDownwardRounded';
 import ArrowUpwardRoundedIcon from '@mui/icons-material/ArrowUpwardRounded';
@@ -13,6 +13,9 @@ import { fetchPartyRecruitments } from '@/apis/home';
 import { fetchGetPartyTypes, fetchGetPositions } from '@/apis/party';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
+import { LoginModal } from '@/components/features';
+import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
@@ -63,6 +66,9 @@ function HomeRecruitment() {
     handleSubmit직무,
     handleSubmit파티유형,
   } = useApplicantFilterStore();
+  const { isLoggedIn } = useAuthStore();
+  const { openModal } = useModalContext();
+  const router = useRouter();
 
   useEffect(() => {
     (async () => {
@@ -244,6 +250,14 @@ function HomeRecruitment() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
+  const handleClickRecruitmentCard = (recruitmentId: number) => {
+    if (isLoggedIn) {
+      router.push(`/party/recruit/${recruitmentId}`);
+    } else {
+      openModal({ children: <LoginModal /> });
+    }
+  };
+
   return (
     <SContainer>
       <SHomeContainer>
@@ -359,6 +373,7 @@ function HomeRecruitment() {
                 backgroundColor="white"
                 radiusKey="base"
                 borderColor="grey200"
+                onClick={() => handleClickRecruitmentCard(recruitment.id)}
               >
                 <CardContentsWrapper>
                   <Image

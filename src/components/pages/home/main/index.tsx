@@ -6,13 +6,20 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
+import axios from 'axios';
+import { setCookie } from 'cookies-next';
 
 import type { HomeBanner } from '@/apis/home';
 import { fetchGetBanner } from '@/apis/home';
+import { fetchGetUsers } from '@/apis/join';
 import { Txt } from '@/components/_atoms';
 import { SearchBar, Select } from '@/components/_molecules';
 import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';
+import { useAuthStore } from '@/stores/auth';
 import { SContainer, SHomeContainer } from '@/styles/components';
+
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
 function Main() {
   const [banner, setBanner] = useState<HomeBanner | null>(null);
@@ -29,6 +36,56 @@ function Main() {
   const [searchValue, setSearchValue] = useState<string>('');
   const sliderRef = useRef<Slider | null>(null);
   const router = useRouter();
+
+  const setAuth = useAuthStore(state => state.setAuth);
+
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+  }));
+
+  useEffect(() => {
+    // 현재 URL에서 token 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    const fetchAccessToken = async () => {
+      try {
+        // 서버에 토큰 전송하여 새 access-token 요청
+        const response = await axios.post(
+          `${BASE_URL}/auth/access-token`,
+          {},
+          { withCredentials: true }, // 쿠키 포함 요청
+        );
+
+        if (response.status === 201) {
+          const userResponse = await fetchGetUsers();
+          setAuth(userResponse.data);
+        }
+        const newAccessToken = response?.data?.accessToken;
+
+        if (!newAccessToken) {
+          throw new Error('No accessToken in refresh response');
+        }
+
+        // 새 토큰 저장
+        setCookie('accessToken', newAccessToken, {
+          httpOnly: false, // 클라이언트에서도 접근 가능
+          secure: process.env.NEXT_PUBLIC_ENV === 'production',
+          sameSite: 'strict',
+          path: '/',
+        });
+
+        // 홈으로 리다이렉트
+        router.push('/home');
+      } catch (error) {
+        console.error('Failed to fetch access token:', error);
+      }
+    };
+
+    if (token) {
+      fetchAccessToken();
+    } else return;
+  }, [router]);
 
   const settings = {
     dots: false,
@@ -160,10 +217,15 @@ function Main() {
               />
             </div>
           </MainSearchWrapper>
-          <div style={{ marginTop: '75px' }}>
-            <HomeRecruitmentList personalized />
-          </div>
-          <div style={{ marginTop: '130px' }}>
+          {/* 맞춤형 공고 */}
+          {isLoggedIn && (
+            <div style={{ marginTop: '75px' }}>
+              <HomeRecruitmentList personalized />
+            </div>
+          )}
+
+          {/* 신규 공고 */}
+          <div style={{ marginTop: isLoggedIn ? '130px' : '75px' }}>
             <HomeRecruitmentList />
             <CircleButtonWrapper>
               <CircleButton onClick={() => router.push('/home/recruitment')}>
@@ -174,9 +236,10 @@ function Main() {
               </CircleButton>
             </CircleButtonWrapper>
           </div>
+
+          {/* 신규 파티 */}
           <div style={{ marginTop: '134px' }}>
             <HomePartyCardList />
-
             <CircleButtonWrapper>
               <CircleButton onClick={() => router.push('/home/party')}>
                 <Txt fontSize={14} fontColor="grey500">
