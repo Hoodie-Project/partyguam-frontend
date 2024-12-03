@@ -102,6 +102,7 @@ export default function Header() {
         </HeaderLeft>
 
         <HeaderRight>
+          <CircleButton>파티 생성하기 +</CircleButton>
           <Dropdown />
           {isLoggedIn ? (
             <></>
@@ -173,4 +174,16 @@ const HeaderLeft = styled.div`
 const HeaderRight = styled.div`
   display: flex;
   justify-self: right;
+`;
+
+const CircleButton = styled.button`
+  background-color: #21ecc7;
+  border-radius: 999px;
+  padding: 7px 12px;
+  color: #000000;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  margin-right: 24px;
 `;
