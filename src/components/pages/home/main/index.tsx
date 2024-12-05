@@ -35,7 +35,7 @@ function Main() {
   const sliderRef = useRef<Slider | null>(null);
   const router = useRouter();
 
-  const setAuth = useAuthStore(state => state.setAuth);
+  const { login, setAuth } = useAuthStore();
 
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -91,6 +91,7 @@ function Main() {
 
       // 홈으로 리다이렉트
       router.push('/home');
+      login();
     } else return;
   }, [router]);
 
