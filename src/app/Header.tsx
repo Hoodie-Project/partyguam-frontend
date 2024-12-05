@@ -103,9 +103,9 @@ export default function Header() {
 
         <HeaderRight>
           <CircleButton>파티 생성하기 +</CircleButton>
-          <Dropdown />
+
           {isLoggedIn ? (
-            <></>
+            <Dropdown />
           ) : (
             <LoginButton onClick={() => openModal({ children: <LoginModal /> })}>로그인</LoginButton>
           )}
@@ -162,7 +162,6 @@ const LoginButton = styled.button`
   padding: 0.25rem 1.25rem 0.25rem 1.25rem;
   color: ${palette.black};
   cursor: pointer;
-  margin-left: 1rem;
 `;
 
 const HeaderLeft = styled.div`

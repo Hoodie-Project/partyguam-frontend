@@ -6,12 +6,10 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import axios from 'axios';
 import { setCookie } from 'cookies-next';
 
 import type { HomeBanner } from '@/apis/home';
 import { fetchGetBanner } from '@/apis/home';
-import { fetchGetUsers } from '@/apis/join';
 import { Txt } from '@/components/_atoms';
 import { SearchBar, Select } from '@/components/_molecules';
 import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';
@@ -44,46 +42,55 @@ function Main() {
   }));
 
   useEffect(() => {
-    // 현재 URL에서 token 추출
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
-    const fetchAccessToken = async () => {
-      try {
-        // 서버에 토큰 전송하여 새 access-token 요청
-        const response = await axios.post(
-          `${BASE_URL}/auth/access-token`,
-          {},
-          { withCredentials: true }, // 쿠키 포함 요청
-        );
+    // const fetchAccessToken = async () => {
+    //   try {
+    //     // 서버에 토큰 전송하여 새 access-token 요청
+    //     const response = await axios.post(`${BASE_URL}/auth/access-token`);
 
-        if (response.status === 201) {
-          const userResponse = await fetchGetUsers();
-          setAuth(userResponse.data);
-        }
-        const newAccessToken = response?.data?.accessToken;
+    //     if (response.status === 201) {
+    //       const userResponse = await fetchGetUsers();
+    //       setAuth(userResponse.data);
+    //     }
+    //     const newAccessToken = response?.data?.accessToken;
 
-        if (!newAccessToken) {
-          throw new Error('No accessToken in refresh response');
-        }
+    //     console.log('newAccessToken >> ', newAccessToken);
 
-        // 새 토큰 저장
-        setCookie('accessToken', newAccessToken, {
-          httpOnly: false, // 클라이언트에서도 접근 가능
-          secure: process.env.NEXT_PUBLIC_ENV === 'production',
-          sameSite: 'strict',
-          path: '/',
-        });
+    //     if (!newAccessToken) {
+    //       throw new Error('No accessToken in refresh response');
+    //     }
 
-        // 홈으로 리다이렉트
-        router.push('/home');
-      } catch (error) {
-        console.error('Failed to fetch access token:', error);
-      }
-    };
+    //     console.log('hi');
+
+    //     // 새 토큰 저장
+    //     setCookie('accessToken', newAccessToken, {
+    //       httpOnly: false, // 클라이언트에서도 접근 가능
+    //       secure: process.env.NEXT_PUBLIC_ENV === 'production',
+    //       sameSite: 'strict',
+    //       path: '/',
+    //     });
+
+    //     // 홈으로 리다이렉트
+    //     router.push('/home');
+    //   } catch (error) {
+    //     console.error('Failed to fetch access token:', error);
+    //   }
+    // };
 
     if (token) {
-      fetchAccessToken();
+      // fetchAccessToken();
+      // 새 토큰 저장
+      setCookie('accessToken', token, {
+        httpOnly: false, // 클라이언트에서도 접근 가능
+        secure: process.env.NEXT_PUBLIC_ENV === 'production',
+        sameSite: 'strict',
+        path: '/',
+      });
+
+      // 홈으로 리다이렉트
+      router.push('/home');
     } else return;
   }, [router]);
 
@@ -311,7 +318,7 @@ const ControlButtons = styled.div`
   align-items: center;
   justify-content: space-between;
   border-radius: 999px;
-  z-index: 100;
+  z-index: 1;
   color: #767676;
   font-size: 14px;
   font-weight: bold;

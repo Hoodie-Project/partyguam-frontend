@@ -106,6 +106,17 @@ const fetchUserAuthority = async (partyId: number): Promise<UserAuthorityRespons
   }
 };
 
+// 회원 탈퇴
+const fetchUsersSignOut = async () => {
+  try {
+    const response = await privateApi.delete('/users/signout');
+    return response.data;
+  } catch (error) {
+    console.error('fetchUsersSignOut error : ', error);
+    return error;
+  }
+};
+
 export {
   fetchGetOauthInfo,
   fetchGetUsers,
@@ -113,4 +124,5 @@ export {
   fetchNicknameDuplicated,
   fetchPostAccessToken,
   fetchUserAuthority,
+  fetchUsersSignOut,
 };

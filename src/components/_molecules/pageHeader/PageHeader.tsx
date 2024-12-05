@@ -7,7 +7,7 @@ import { Txt } from '@/components/_atoms';
 import { palette } from '@/styles';
 
 type Props = {
-  title: string;
+  title: string | JSX.Element;
   titleIcon?: JSX.Element; // 제목 옆 아이콘
   headerTooltip?: JSX.Element; // 아이콘에 달리는 툴팁
   hrefLabel: string;
@@ -36,9 +36,13 @@ export default function PageHeader({
         </Txt>
       </GoBackBtn>
       <PageTitleContainer>
-        <Txt fontSize={20} fontWeight="bold">
-          {title}
-        </Txt>
+        {typeof title === 'string' ? (
+          <Txt fontSize={20} fontWeight="bold">
+            {title}
+          </Txt>
+        ) : (
+          title
+        )}
         {titleIcon && <IconContainer onClick={onClickTitleIcon}>{titleIcon}</IconContainer>}
         {headerTooltip}
       </PageTitleContainer>

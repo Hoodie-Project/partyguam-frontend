@@ -65,7 +65,7 @@ const DropdownMenu = styled.div`
   border: 1px solid #11c9a7;
   border-radius: 12px;
   padding: 8px 0;
-  z-index: 100;
+  z-index: 1000;
   width: 99px;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.04);
 `;
