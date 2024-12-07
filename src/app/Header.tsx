@@ -25,9 +25,12 @@ export default function Header() {
   }));
 
   const setAccessToken = async () => {
-    console.log('hello');
     const res = await fetchPostAccessToken();
-    setCookie('accessToken', res);
+    setCookie('accessToken', res.data, {
+      httpOnly: false, // 클라이언트에서도 접근 가능
+      secure: process.env.NEXT_PUBLIC_ENV === 'production',
+      sameSite: 'strict',
+    });
   };
 
   useEffect(() => {

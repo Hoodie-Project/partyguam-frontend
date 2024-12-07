@@ -46,11 +46,10 @@ export default function Dropdown() {
   };
 
   const handleLogOut = async () => {
-    await fetchUsersLogOut();
-    setIsOpen(false);
     router.push('/');
-
+    setIsOpen(false);
     logout();
+    await fetchUsersLogOut();
     deleteCookie('accessToken');
     deleteCookie('refreshToken');
   };
@@ -74,7 +73,7 @@ export default function Dropdown() {
           </MenuGroup>
           <Divider />
           <MenuGroup>
-            <MenuItem onClick={handleLogOut}>로그아웃</MenuItem>
+            <MenuItem onClick={() => handleLogOut()}>로그아웃</MenuItem>
           </MenuGroup>
         </DropdownMenu>
       )}
