@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import { getCookie, setCookie } from 'cookies-next';
 
-import { fetchPostAccessToken } from '@/apis/join';
+import { fetchPostAccessToken } from '@/apis/auth';
 import { Dropdown, Menus } from '@/components/_molecules';
 import { ConfirmModal, LoginModal } from '@/components/features';
 import { useFormContext } from '@/contexts/FormContext';
@@ -25,6 +25,7 @@ export default function Header() {
   }));
 
   const setAccessToken = async () => {
+    console.log('hello');
     const res = await fetchPostAccessToken();
     setCookie('accessToken', res);
   };

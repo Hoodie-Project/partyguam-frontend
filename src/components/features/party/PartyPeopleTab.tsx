@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 
-import type { UserAuthorityResponse } from '@/apis/join';
+import type { UserAuthorityResponse } from '@/apis/auth';
 import { fetchGetPartyUsers } from '@/apis/party';
 import { Txt } from '@/components/_atoms';
 import { SFlexColumnFull, SMargin } from '@/styles/components';

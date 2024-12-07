@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import type { UserAuthorityResponse } from '@/apis/join';
+import type { UserAuthorityResponse } from '@/apis/auth';
 import Emergency from '@/assets/icon/emergency.svg';
 import { Square, Txt } from '@/components/_atoms';
 import { ProfileImage } from '@/components/_molecules';

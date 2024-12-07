@@ -1,8 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
+import { fetchGetUsersMeOauth } from '@/apis/auth';
 import GoogleIcon from '@/assets/icon/google-icon.svg';
 import KakaoIcon from '@/assets/icon/kakao-icon.svg';
 import { Square, Txt } from '@/components/_atoms';
@@ -12,8 +13,23 @@ import { MYPAGE_MENU } from '@/constants';
 import { SContainer, SFlexColumn } from '@/styles/components';
 
 function MyAccount() {
-  const [isConnected, setIsConnected] = useState(false);
+  const [isKakaoConnected, setIsKakaoConnected] = useState(false);
+  const [isGoogleConnected, setIsGoogleConnected] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetchGetUsersMeOauth();
+        if (res.includes('kakao')) setIsKakaoConnected(true);
+        if (res.includes('google')) setIsGoogleConnected(true);
+      } catch (err) {
+        console.log('fetchGetUsersMeOauth >> ', err);
+      }
+    })();
+  }, []);
+
+  const handleClickConnect = (isConnected: boolean) => {};
 
   return (
     <SContainer>
@@ -47,9 +63,13 @@ function MyAccount() {
                 유저이메일
               </Txt>
             </SFlexColumn>
-            <CircleButton isConnected={isConnected}>
+            <CircleButton
+              isConnected={isKakaoConnected}
+              onClick={() => handleClickConnect(isKakaoConnected)}
+              disabled={isKakaoConnected}
+            >
               <Txt fontSize={14} fontColor="black" fontWeight="semibold">
-                {isConnected ? '연결중' : '연결하기'}
+                {isKakaoConnected ? '연결중' : '연결하기'}
               </Txt>
             </CircleButton>
           </Square>
@@ -72,9 +92,13 @@ function MyAccount() {
                 유저이메일
               </Txt>
             </SFlexColumn>
-            <CircleButton isConnected={isConnected}>
+            <CircleButton
+              isConnected={isGoogleConnected}
+              onClick={() => handleClickConnect(isGoogleConnected)}
+              disabled={isGoogleConnected}
+            >
               <Txt fontSize={14} fontColor="black" fontWeight="semibold">
-                {isConnected ? '연결중' : '연결하기'}
+                {isGoogleConnected ? '연결중' : '연결하기'}
               </Txt>
             </CircleButton>
           </Square>
@@ -101,6 +125,7 @@ export default MyAccount;
 
 const MyAccountContainer = styled.div`
   width: 550px;
+  height: 100vh;
   margin-top: 112px;
 `;
 

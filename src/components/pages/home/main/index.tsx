@@ -8,6 +8,7 @@ import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftR
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import { setCookie } from 'cookies-next';
 
+import { fetchPostAccessToken } from '@/apis/auth';
 import type { HomeBanner } from '@/apis/home';
 import { fetchGetBanner } from '@/apis/home';
 import { Txt } from '@/components/_atoms';
@@ -41,53 +42,22 @@ function Main() {
     isLoggedIn: state.isLoggedIn,
   }));
 
+  const setAccessToken = async () => {
+    const res = await fetchPostAccessToken();
+    setCookie('accessToken', res.accessToken, {
+      httpOnly: false, // 클라이언트에서도 접근 가능
+      secure: process.env.NEXT_PUBLIC_ENV === 'production',
+      sameSite: 'strict',
+    });
+  };
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
-    // const fetchAccessToken = async () => {
-    //   try {
-    //     // 서버에 토큰 전송하여 새 access-token 요청
-    //     const response = await axios.post(`${BASE_URL}/auth/access-token`);
-
-    //     if (response.status === 201) {
-    //       const userResponse = await fetchGetUsers();
-    //       setAuth(userResponse.data);
-    //     }
-    //     const newAccessToken = response?.data?.accessToken;
-
-    //     console.log('newAccessToken >> ', newAccessToken);
-
-    //     if (!newAccessToken) {
-    //       throw new Error('No accessToken in refresh response');
-    //     }
-
-    //     console.log('hi');
-
-    //     // 새 토큰 저장
-    //     setCookie('accessToken', newAccessToken, {
-    //       httpOnly: false, // 클라이언트에서도 접근 가능
-    //       secure: process.env.NEXT_PUBLIC_ENV === 'production',
-    //       sameSite: 'strict',
-    //       path: '/',
-    //     });
-
-    //     // 홈으로 리다이렉트
-    //     router.push('/home');
-    //   } catch (error) {
-    //     console.error('Failed to fetch access token:', error);
-    //   }
-    // };
-
     if (token) {
-      // fetchAccessToken();
       // 새 토큰 저장
-      setCookie('accessToken', token, {
-        httpOnly: false, // 클라이언트에서도 접근 가능
-        secure: process.env.NEXT_PUBLIC_ENV === 'production',
-        sameSite: 'strict',
-        path: '/',
-      });
+      setAccessToken();
 
       // 홈으로 리다이렉트
       router.push('/home');

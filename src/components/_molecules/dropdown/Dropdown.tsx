@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
+import { deleteCookie } from 'cookies-next';
 
+import { fetchUsersLogOut } from '@/apis/auth';
 import { useAuthStore } from '@/stores/auth';
 
 import ProfileImage from '../profileImage';
@@ -14,11 +16,47 @@ export default function Dropdown() {
   const { image } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { logout } = useAuthStore(state => ({
+    logout: state.logout,
+  }));
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleDropdown = (event: React.MouseEvent) => {
+    event.stopPropagation(); // 클릭 이벤트 전파 방지
+    setIsOpen(prev => !prev);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+  // 메뉴 클릭 시 닫기
+  const handleMenuClick = (path: string) => {
+    router.push(path);
+    setIsOpen(false);
+  };
+
+  const handleLogOut = async () => {
+    await fetchUsersLogOut();
+    setIsOpen(false);
+    router.push('/');
+
+    logout();
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
+  };
 
   return (
-    <Container>
+    <Container ref={dropdownRef}>
       <DropdownTrigger onClick={toggleDropdown}>
         <ProfileImage imageUrl={image || ''} size={32} />
         {isOpen ? <KeyboardArrowUpRoundedIcon fontSize="medium" /> : <KeyboardArrowDownRoundedIcon fontSize="medium" />}
@@ -26,17 +64,17 @@ export default function Dropdown() {
       {isOpen && (
         <DropdownMenu>
           <MenuGroup>
-            <MenuItem onClick={() => router.push('/my/profile')}>내 프로필</MenuItem>
-            <MenuItem onClick={() => router.push('/my/account')}>계정 설정</MenuItem>
+            <MenuItem onClick={() => handleMenuClick('/my/profile')}>내 프로필</MenuItem>
+            <MenuItem onClick={() => handleMenuClick('/my/account')}>계정 설정</MenuItem>
           </MenuGroup>
           <Divider />
           <MenuGroup>
-            <MenuItem>내 파티</MenuItem>
-            <MenuItem>지원 목록</MenuItem>
+            <MenuItem onClick={() => handleMenuClick('/my/party')}>내 파티</MenuItem>
+            <MenuItem onClick={() => handleMenuClick('/my/apply')}>지원 목록</MenuItem>
           </MenuGroup>
           <Divider />
           <MenuGroup>
-            <MenuItem>로그아웃</MenuItem>
+            <MenuItem onClick={handleLogOut}>로그아웃</MenuItem>
           </MenuGroup>
         </DropdownMenu>
       )}

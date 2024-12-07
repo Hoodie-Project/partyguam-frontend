@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 
-import { fetchUserAuthority, type UserAuthorityResponse } from '@/apis/join';
+import { fetchUserAuthority, type UserAuthorityResponse } from '@/apis/auth';
 import { fetchGetPartyHome } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import { Tabs } from '@/components/_molecules';

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { fetchNicknameDuplicated } from '@/apis/join';
+import { fetchNicknameDuplicated } from '@/apis/auth';
 import { JOIN_VALIDATION } from '@/constants';
 
 interface JoinInput {

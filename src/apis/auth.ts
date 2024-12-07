@@ -3,7 +3,7 @@ import { privateApi } from '.';
 // [POST] accessToken 재발급
 const fetchPostAccessToken = async () => {
   try {
-    const response = await privateApi.get('/auth/access-token');
+    const response = await privateApi.post('/auth/access-token');
     return response.data;
   } catch (error) {
     console.error('error : ', error);
@@ -106,6 +106,17 @@ const fetchUserAuthority = async (partyId: number): Promise<UserAuthorityRespons
   }
 };
 
+// 로그아웃
+const fetchUsersLogOut = async () => {
+  try {
+    const response = await privateApi.delete('/users/logout');
+    return response.data;
+  } catch (error) {
+    console.error('fetchUsersLogOut error : ', error);
+    return error;
+  }
+};
+
 // 회원 탈퇴
 const fetchUsersSignOut = async () => {
   try {
@@ -117,12 +128,37 @@ const fetchUsersSignOut = async () => {
   }
 };
 
+// session에서 Oauth 본인 데이터 호출(email, image)
+const fetchGetUsersMeOauthProfile = async () => {
+  try {
+    const response = await privateApi.get('/users/me/oauth/profile');
+    return response.data;
+  } catch (error) {
+    console.error('fetchUsersMeOauthProfile error : ', error);
+    return error;
+  }
+};
+
+// 나의 소셜 계정 조회 /dev/api/users/me/oauth
+const fetchGetUsersMeOauth = async () => {
+  try {
+    const response = await privateApi.get('/users/me/oauth');
+    return response.data;
+  } catch (error) {
+    console.error('fetchUsersMeOauthProfile error : ', error);
+    return error;
+  }
+};
+
 export {
   fetchGetOauthInfo,
   fetchGetUsers,
+  fetchGetUsersMeOauth,
+  fetchGetUsersMeOauthProfile,
   fetchJoinFormSubmit,
   fetchNicknameDuplicated,
   fetchPostAccessToken,
   fetchUserAuthority,
+  fetchUsersLogOut,
   fetchUsersSignOut,
 };

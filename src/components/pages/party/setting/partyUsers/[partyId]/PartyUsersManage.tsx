@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
-import { fetchUserAuthority } from '@/apis/join';
+import { fetchUserAuthority } from '@/apis/auth';
 import { fetchBatchDeletePartyUsers, fetchGetPositions, fetchPartyAdminUsers } from '@/apis/party';
 import { Txt } from '@/components/_atoms';
 import { PageHeader, SearchBar, Select } from '@/components/_molecules';

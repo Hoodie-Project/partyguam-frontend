@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import { deleteCookie } from 'cookies-next';
 
-import { fetchUsersSignOut } from '@/apis/join';
+import { fetchUsersSignOut } from '@/apis/auth';
 import { Button, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { useAuthStore } from '@/stores/auth';
