@@ -115,6 +115,53 @@ const fetchDeletePersonality = async (personalityQuestionId: number) => {
   }
 };
 
+type Party = {
+  id: string;
+  createdAt: string;
+  position: string;
+  sub: string;
+  party: {
+    id: string;
+    title: string;
+    thumbnail: string;
+    status: string;
+    partyType: string;
+  };
+};
+
+type FetchGetUsersMePartiesResponse = {
+  total: number;
+  partyUsers: Party[];
+};
+
+const fetchGetUsersMeParties = async ({
+  page = 1,
+  limit = 5,
+  sort = 'createdAt',
+  order = 'ASC',
+}: {
+  page: number;
+  limit: number;
+  sort: string;
+  order: string;
+}): Promise<FetchGetUsersMePartiesResponse | null> => {
+  try {
+    // 쿼리 파라미터를 먼저 객체로 설정
+    const params: any = {
+      sort,
+      order,
+      limit,
+      page,
+    };
+
+    const response = await privateApi.get('/users/me/parties', { params });
+    return response.data;
+  } catch (err) {
+    console.error('fetchGetUsersMeParties error:', err);
+    return null;
+  }
+};
+
 export {
   fetchDeleteLocations,
   fetchDeletePersonality,
@@ -122,6 +169,7 @@ export {
   fetchGetLocations,
   fetchGetPersonality,
   fetchGetPositions,
+  fetchGetUsersMeParties,
   fetchPostLocations,
   fetchPostPersonality,
   fetchPostPositions,

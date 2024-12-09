@@ -1,4 +1,6 @@
-import { privateApi } from '.';
+import type { UsersMeResponse } from '@/types/user';
+
+import { fileUploadApi, privateApi } from '.';
 
 // [POST] accessToken 재발급
 const fetchPostAccessToken = async () => {
@@ -70,11 +72,11 @@ const fetchJoinFormSubmit = async (data: { nickname: string; email: string; birt
 /**
  * 내 정보 조회
  */
-const fetchGetUsers = async () => {
+
+const fetchGetUsers = async (): Promise<UsersMeResponse> => {
   try {
     const response = await privateApi.get('/users/me');
-
-    return response;
+    return response.data;
   } catch (error) {
     throw new Error('fetchGetUsers Network error');
   }
@@ -85,6 +87,16 @@ export interface UserAuthorityResponse {
   authority: 'master' | 'deputy' | 'member';
 }
 
+// 내 정보 수정
+export const fetchPatchUsers = async (data: FormData) => {
+  try {
+    const response = await fileUploadApi.post('/users/me', data);
+    return response.data;
+  } catch (error) {
+    console.error('fetchPatchUsers error : ', error);
+    return error;
+  }
+};
 // 나의 파티 권한 조회
 
 /**

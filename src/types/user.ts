@@ -1,12 +1,47 @@
-export interface User {
-  id: number;
+/** [GET] /users/me type start */
+export interface UsersMeResponse {
   email: string;
   nickname: string;
   birth: string;
+  birthVisible: boolean;
   gender: string;
+  genderVisible: boolean;
+  portfolioTitle: string;
+  portfolio: string;
   image: string;
   createdAt: string;
+  userPersonalities: UserPersonality[];
+  userCareers: UserCareer[];
+  userLocations: UserLocation[];
 }
+
+export interface UserPersonality {
+  question: string;
+  options: string[];
+}
+
+export interface UserCareer {
+  id: number;
+  years: number;
+  careerType: string; // 'primary', 'secondary'
+  position: UserPosition;
+}
+
+export interface UserPosition {
+  main: string;
+  sub: string;
+}
+
+export interface UserLocation {
+  id: number;
+  location: Location;
+}
+
+export interface Location {
+  province: string;
+  city: string;
+}
+/** [GET] /users/me type end */
 
 /** detailProfile start */
 export interface UserLocationResponse {

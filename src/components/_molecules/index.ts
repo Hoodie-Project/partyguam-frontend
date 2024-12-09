@@ -13,3 +13,4 @@ export { default as Table } from './table';
 export { default as Tabs } from './tabs';
 export { default as TipBox } from './tipBox';
 export { default as Toast } from './toast';
+export { default as Toggle } from './toggle';

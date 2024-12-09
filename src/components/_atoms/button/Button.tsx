@@ -84,6 +84,7 @@ const SquareButton = styled.button<Props>`
 
   box-shadow: ${props => (props.shadow ? shadow[props.shadow] : 'none')};
   flex-shrink: 0;
+  color: ${props => props.disabled && '#999999'};
 `;
 
 export default Button;

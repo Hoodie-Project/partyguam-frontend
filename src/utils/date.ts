@@ -44,3 +44,21 @@ export function formatRelativeTime(dateString: string): string {
   const formatNumber = (num: number) => String(num).padStart(2, '0');
   return `${targetYear}.${formatNumber(targetMonth)}.${formatNumber(targetDay)}`;
 }
+
+export function calculateAge(birthDateString: string): number {
+  const birthDate = new Date(birthDateString); // 문자열을 Date 객체로 변환
+  const today = new Date(); // 현재 날짜
+
+  let age = today.getFullYear() - birthDate.getFullYear(); // 일단 연도로 계산
+
+  // 생일이 지나지 않았다면 나이를 1 줄임
+  const hasBirthdayPassed =
+    today.getMonth() > birthDate.getMonth() ||
+    (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+
+  if (!hasBirthdayPassed) {
+    age -= 1;
+  }
+
+  return age;
+}

@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
-import { fetchGetOauthInfo, fetchGetUsers, fetchJoinFormSubmit } from '@/apis/auth';
+import { fetchGetUsers, fetchGetUsersMeOauthProfile, fetchJoinFormSubmit } from '@/apis/auth';
 import { Button, DateInput, Input, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
@@ -25,7 +25,7 @@ export default function Join() {
   useEffect(() => {
     const fetchSignupData = async () => {
       try {
-        const response = await fetchGetOauthInfo();
+        const response = await fetchGetUsersMeOauthProfile();
         setSignupData(response);
       } catch (err) {
         console.error('Error fetching fetchGetOauthInfo >> ', err);
@@ -250,7 +250,7 @@ export default function Join() {
               setCookie('accessToken', response.data.accessToken);
               if (response.status === 201) {
                 const userResponse = await fetchGetUsers();
-                setAuth(userResponse.data);
+                setAuth(userResponse);
                 router.push('/join/success');
               }
             }}

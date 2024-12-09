@@ -138,7 +138,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   모집공고를 추천받으세요!
                 </Txt>
               </SFlexColumnCenter>
-              <CircleButton onClick={() => router.push('/home/party')}>
+              <CircleButton onClick={() => router.push('/my/profile')}>
                 <Txt fontSize={14} fontColor="black" fontWeight="semibold">
                   세부프로필 설정하기
                 </Txt>

@@ -15,12 +15,13 @@ type OwnProps = {
   chipColor: keyof typeof palette | string;
   fontColor: keyof typeof palette | string;
   shadow: keyof typeof shadow;
-  label: string;
+  label: string | JSX.Element;
   onClick: () => void;
   onIconClick: () => void;
   icon: JSX.Element;
   closeButton: JSX.Element;
   children: ReactNode;
+  chipStyle?: React.CSSProperties;
 };
 
 export type Props = Partial<OwnProps> & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'>;
@@ -37,6 +38,7 @@ export default function Chip({
   onClick,
   onIconClick,
   fontWeight = 'normal',
+  chipStyle,
 }: Props) {
   const handleOnclick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -44,11 +46,22 @@ export default function Chip({
   };
 
   return (
-    <ChipContainer chipType={chipType} size={size} chipColor={chipColor} shadow={shadow} onClick={handleOnclick}>
+    <ChipContainer
+      chipType={chipType}
+      size={size}
+      chipColor={chipColor}
+      shadow={shadow}
+      onClick={handleOnclick}
+      style={chipStyle}
+    >
       {icon && <IconContainer onClick={onIconClick}>{icon}</IconContainer>}
-      <Txt fontWeight={fontWeight} fontColor={fontColor} fontSize={chip[size].fontsize}>
-        {label}
-      </Txt>
+      {typeof label === 'string' ? (
+        <Txt fontWeight={fontWeight} fontColor={fontColor} fontSize={chip[size].fontsize}>
+          {label}
+        </Txt>
+      ) : (
+        label
+      )}
       {closeButton}
     </ChipContainer>
   );
