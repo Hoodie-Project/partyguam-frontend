@@ -123,10 +123,10 @@ function HomePartyCardList() {
                     <ChipWrapper>
                       <Chip
                         chipType="filled"
-                        label={party.tag}
+                        label={party.status === 'active' ? '진행중' : '파티종료'}
                         size="xsmall"
-                        chipColor={party.tag === '진행중' ? '#D5F0E3' : '#F6F6F6'}
-                        fontColor={party.tag === '진행중' ? '#016110' : 'grey700'}
+                        chipColor={party.status === 'active' ? '#D5F0E3' : '#F6F6F6'}
+                        fontColor={party.status === 'active' ? '#016110' : 'grey700'}
                         fontWeight="semibold"
                       />
                       <Chip

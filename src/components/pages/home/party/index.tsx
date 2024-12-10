@@ -44,7 +44,7 @@ function HomeParty() {
   const router = useRouter();
   const 파티StatusOptions = [
     { id: 0, label: '진행 중', value: 'active' },
-    { id: 1, label: '종료', value: 'archived' },
+    { id: 1, label: '파티종료', value: 'archived' },
   ];
   const [파티status, set파티status] = useState<{ id: number; label: string; value: string }>({
     id: 0,
@@ -216,7 +216,7 @@ function HomeParty() {
                 placeholder="파티 상태"
                 options={[
                   { id: 0, label: '진행 중' },
-                  { id: 1, label: '종료' },
+                  { id: 1, label: '파티종료' },
                 ]}
                 height="xs"
                 fontSize={14}
@@ -317,10 +317,10 @@ function HomeParty() {
                   <ChipWrapper>
                     <Chip
                       chipType="filled"
-                      label={party.tag}
+                      label={party.status === 'active' ? '진행중' : '파티종료'}
                       size="xsmall"
-                      chipColor={party.tag === '진행중' ? '#D5F0E3' : '#F6F6F6'}
-                      fontColor={party.tag === '진행중' ? '#016110' : 'grey700'}
+                      chipColor={party.status === 'active' ? '#D5F0E3' : '#F6F6F6'}
+                      fontColor={party.status === 'active' ? '#016110' : 'grey700'}
                       fontWeight="semibold"
                     />
                     <Chip

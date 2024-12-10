@@ -414,7 +414,7 @@ function HomeRecruitment() {
 
                     <RecruitsCount>
                       <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                        {recruitment.status === 'active' ? '모집중' : '종료'}
+                        {recruitment.status === 'active' ? '모집중' : '파티종료'}
                       </Txt>
 
                       <Txt
