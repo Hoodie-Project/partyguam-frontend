@@ -8,7 +8,7 @@ import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftR
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import { setCookie } from 'cookies-next';
 
-import { fetchPostAccessToken } from '@/apis/auth';
+import { fetchGetUsers, fetchPostAccessToken } from '@/apis/auth';
 import type { HomeBanner } from '@/apis/home';
 import { fetchGetBanner } from '@/apis/home';
 import { Txt } from '@/components/_atoms';
@@ -16,9 +16,6 @@ import { SearchBar, Select } from '@/components/_molecules';
 import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SHomeContainer } from '@/styles/components';
-
-const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
-const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
 function Main() {
   const [banner, setBanner] = useState<HomeBanner | null>(null);
@@ -57,11 +54,15 @@ function Main() {
 
     if (token) {
       // 새 토큰 저장
-      setAccessToken();
+      (async () => {
+        await setAccessToken();
+        // 홈으로 리다이렉트
 
-      // 홈으로 리다이렉트
-      router.push('/home');
-      login();
+        const userResponse = await fetchGetUsers();
+        login();
+        setAuth(userResponse);
+        router.push('/home');
+      })();
     } else return;
   }, [router]);
 

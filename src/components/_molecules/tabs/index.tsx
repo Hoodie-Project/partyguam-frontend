@@ -7,16 +7,19 @@ import styled from '@emotion/styled';
 type TabsProps = {
   children: ReactNode;
   defaultIndex?: number;
+  style?: React.CSSProperties;
 };
 
 type TabListProps = {
   children: ReactNode;
+  borderNone?: boolean;
 };
 
 type TabProps = {
   children: ReactNode;
   index: number;
   width?: string;
+  handleClick?: () => void;
 };
 
 type TabPanelsProps = {
@@ -33,23 +36,23 @@ interface TabsContextProps {
   setSelectedIndex: (index: number) => void;
 }
 
-const TabsContext = createContext<TabsContextProps | undefined>(undefined);
+export const TabsContext = createContext<TabsContextProps | undefined>(undefined);
 
-function Tabs({ children, defaultIndex = 0 }: TabsProps) {
+function Tabs({ children, defaultIndex = 0, style }: TabsProps) {
   const [selectedIndex, setSelectedIndex] = useState<number>(defaultIndex);
 
   return (
     <TabsContext.Provider value={{ selectedIndex, setSelectedIndex }}>
-      <TabsContainer>{children}</TabsContainer>
+      <TabsContainer style={style}>{children}</TabsContainer>
     </TabsContext.Provider>
   );
 }
 
-function TabList({ children }: TabListProps) {
-  return <TabListContainer>{children}</TabListContainer>;
+function TabList({ children, borderNone }: TabListProps) {
+  return <TabListContainer borderNone={borderNone}>{children}</TabListContainer>;
 }
 
-function Tab({ children, index }: TabProps) {
+function Tab({ children, index, width, handleClick }: TabProps) {
   const context = useContext(TabsContext);
   if (!context) {
     throw new Error('Tab must be used within a Tabs component');
@@ -59,7 +62,18 @@ function Tab({ children, index }: TabProps) {
   const isActive = selectedIndex === index;
 
   return (
-    <TabButton isActive={isActive} onClick={() => setSelectedIndex(index)} role="tab" aria-selected={isActive}>
+    <TabButton
+      isActive={isActive}
+      width={width}
+      onClick={() => {
+        if (handleClick) {
+          handleClick();
+        }
+        setSelectedIndex(index);
+      }}
+      role="tab"
+      aria-selected={isActive}
+    >
       {children}
     </TabButton>
   );
@@ -84,12 +98,12 @@ const TabsContainer = styled.div`
   flex-direction: column;
 `;
 
-const TabListContainer = styled.div`
+const TabListContainer = styled.div<{ borderNone?: boolean }>`
   display: flex;
   align-items: center;
   width: 100%;
   gap: 20px;
-  border-bottom: 1px solid #e5e5ec;
+  border-bottom: ${({ borderNone }) => (borderNone ? 'none' : '1px solid #e5e5ec')};
 `;
 
 const TabButton = styled.button<{ isActive: boolean; width?: string }>`

@@ -29,6 +29,13 @@ const SFlexRowCenter = styled.div`
   align-items: center;
 `;
 
+const SFlexRowJustifyBetween = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const SFlexColumnCenter = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,4 +68,5 @@ export {
   SFlexRowCenter,
   SFlexRowCenterFull,
   SFlexRowFull,
+  SFlexRowJustifyBetween,
 };

@@ -1,4 +1,6 @@
-import { privateApi } from '.';
+import type { UsersMeResponse } from '@/types/user';
+
+import { fileUploadApi, privateApi } from '.';
 
 // [POST] accessToken 재발급
 const fetchPostAccessToken = async () => {
@@ -52,11 +54,10 @@ const fetchNicknameDuplicated = async (nickname: string) => {
  * @param form data: { nickname: string; email: string; birth: string; gender: string }
  * @returns refreshToken - cookie
  */
-const fetchJoinFormSubmit = async (data: { nickname: string; email: string; birth: string; gender: string }) => {
+const fetchJoinFormSubmit = async (data: { nickname: string; birth: string; gender: string }) => {
   try {
     const response = await privateApi.post('/users', {
       nickname: data.nickname,
-      email: data.email,
       birth: data.birth,
       gender: data.gender,
     });
@@ -70,11 +71,11 @@ const fetchJoinFormSubmit = async (data: { nickname: string; email: string; birt
 /**
  * 내 정보 조회
  */
-const fetchGetUsers = async () => {
+
+const fetchGetUsers = async (): Promise<UsersMeResponse> => {
   try {
     const response = await privateApi.get('/users/me');
-
-    return response;
+    return response.data;
   } catch (error) {
     throw new Error('fetchGetUsers Network error');
   }
@@ -85,6 +86,16 @@ export interface UserAuthorityResponse {
   authority: 'master' | 'deputy' | 'member';
 }
 
+// 내 정보 수정
+export const fetchPatchUsers = async (data: FormData) => {
+  try {
+    const response = await fileUploadApi.patch('/users/me', data);
+    return response.data;
+  } catch (error) {
+    console.error('fetchPatchUsers error : ', error);
+    return error;
+  }
+};
 // 나의 파티 권한 조회
 
 /**
@@ -140,12 +151,39 @@ const fetchGetUsersMeOauthProfile = async () => {
 };
 
 // 나의 소셜 계정 조회 /dev/api/users/me/oauth
-const fetchGetUsersMeOauth = async () => {
+export interface GetUsersMeOauthResponse {
+  email: string;
+  image: string | null;
+  provider: 'kakao' | 'google';
+}
+const fetchGetUsersMeOauth = async (): Promise<GetUsersMeOauthResponse[] | null> => {
   try {
     const response = await privateApi.get('/users/me/oauth');
     return response.data;
   } catch (error) {
     console.error('fetchUsersMeOauthProfile error : ', error);
+    return null;
+  }
+};
+
+// 계정 연동
+const fetchPostUsersMeOauthLink = async () => {
+  try {
+    const response = await privateApi.post('/users/me/oauth/link');
+    return response.data;
+  } catch (err) {
+    console.error('fetchPostUsersMeOauthLink error : ', err);
+    return err;
+  }
+};
+
+// 카카오 계정 연동
+const fetchGetUsersKakaoLink = async () => {
+  try {
+    const response = await privateApi.get('/users/kakao/link');
+    return response;
+  } catch (error) {
+    console.error('fetchGetUsersKakaoLink error : ', error);
     return error;
   }
 };
@@ -153,11 +191,13 @@ const fetchGetUsersMeOauth = async () => {
 export {
   fetchGetOauthInfo,
   fetchGetUsers,
+  fetchGetUsersKakaoLink,
   fetchGetUsersMeOauth,
   fetchGetUsersMeOauthProfile,
   fetchJoinFormSubmit,
   fetchNicknameDuplicated,
   fetchPostAccessToken,
+  fetchPostUsersMeOauthLink,
   fetchUserAuthority,
   fetchUsersLogOut,
   fetchUsersSignOut,

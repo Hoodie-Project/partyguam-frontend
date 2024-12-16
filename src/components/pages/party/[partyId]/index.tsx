@@ -88,10 +88,12 @@ function PartyHome({ partyId }: PageParams) {
               {/* 파티 모집중 칩 */}
               <Chip
                 size="small"
-                label={partyHomeData?.tag}
+                label={partyHomeData?.status === 'active' ? '진행중' : '파티종료'}
                 chipType="filled"
-                chipColor={renderPartyState(partyHomeData?.tag as string)?.backgroundColor}
-                fontColor={renderPartyState(partyHomeData?.tag as string)?.fontColor}
+                chipColor={
+                  renderPartyState(partyHomeData?.status === 'active' ? '진행중' : '파티종료')?.backgroundColor
+                }
+                fontColor={renderPartyState(partyHomeData?.status === 'active' ? '진행중' : '파티종료')?.fontColor}
                 fontWeight="semibold"
                 shadow="shadow1"
               />

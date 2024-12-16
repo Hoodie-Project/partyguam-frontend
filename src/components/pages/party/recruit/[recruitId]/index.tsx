@@ -60,7 +60,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
     const fetchData = async () => {
       try {
         const response = await fetchGetPartyRecruitments({ partyRecruitmentId: Number(recruitId.toString()) });
-        console.log('response >> ', response);
+
         setPartyRecruitDetailData(response);
       } catch (error) {
         console.error('Error fetching party home data:', error);
@@ -95,10 +95,17 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
               {/* 파티 모집중 칩 */}
               <Chip
                 size="small"
-                label={!Boolean(pageModalType) ? partyRecruitDetailData?.party.tag : '모집중'}
+                label={
+                  !Boolean(pageModalType) && partyRecruitDetailData?.party.status === 'active' ? '진행중' : '파티종료'
+                }
                 chipType="filled"
-                chipColor={renderPartyState(partyRecruitDetailData?.party.tag as string)?.backgroundColor}
-                fontColor={renderPartyState(partyRecruitDetailData?.party.tag as string)?.fontColor}
+                chipColor={
+                  renderPartyState(partyRecruitDetailData?.party.status === 'active' ? '진행중' : '파티종료')
+                    ?.backgroundColor
+                }
+                fontColor={
+                  renderPartyState(partyRecruitDetailData?.party.status === 'active' ? '진행중' : '파티종료')?.fontColor
+                }
                 fontWeight="semibold"
                 shadow="shadow1"
               />

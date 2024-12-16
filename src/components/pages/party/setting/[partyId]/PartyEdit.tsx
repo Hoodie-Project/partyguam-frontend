@@ -433,7 +433,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                 파티의 진행 상태를 선택해 주세요.
               </Txt>
               <SFlexRowFull style={{ justifyContent: 'space-between' }}>
-                {['진행중', '종료'].map((item, index) => (
+                {['진행중', '파티종료'].map((item, index) => (
                   <Button
                     key={index}
                     onClick={e => {

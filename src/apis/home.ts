@@ -88,7 +88,6 @@ interface PartyType {
 interface Party {
   id: number;
   partyType: PartyType;
-  tag: string;
   title: string;
   content: string;
   image: string;

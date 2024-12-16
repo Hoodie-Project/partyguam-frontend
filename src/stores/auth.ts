@@ -1,42 +1,53 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-import type { User } from '@/types/user';
+import type { UsersMeResponse } from '@/types/user';
 
-/* 회원가입 시 */
-type Auth = User;
+/* 초기 상태 정의 */
+const initialAuthState: UsersMeResponse = {
+  email: '',
+  nickname: '',
+  birth: '',
+  birthVisible: false,
+  gender: '',
+  genderVisible: false,
+  portfolioTitle: '',
+  portfolio: '',
+  image: '',
+  createdAt: '',
+  updatedAt: '',
+  userPersonalities: [],
+  userCareers: [],
+  userLocations: [],
+};
+
+type Auth = UsersMeResponse;
 
 type AuthAction = {
   login: () => void;
   logout: () => void;
-
-  setAuth: (newAuth: Auth) => void;
+  setAuth: (newAuth: Partial<Auth>) => void;
+  setUserPersonalities: (personalities: Auth['userPersonalities']) => void;
+  setUserCareers: (careers: Auth['userCareers']) => void;
+  setUserLocations: (locations: Auth['userLocations']) => void;
 };
 
 export const useAuthStore = create(
   persist<{ isLoggedIn: boolean } & Auth & AuthAction>(
     set => ({
       isLoggedIn: false,
+      ...initialAuthState,
+
       login: () => set({ isLoggedIn: true }),
       logout: () =>
         set({
           isLoggedIn: false,
-          id: 0,
-          nickname: '',
-          email: '',
-          image: '',
-          gender: '',
-          birth: '',
-          createdAt: '',
+          ...initialAuthState,
         }),
-      id: 0,
-      nickname: '',
-      email: '',
-      image: '',
-      gender: '',
-      birth: '',
-      createdAt: '',
-      setAuth: (newAuth: Partial<Auth>) => set(newAuth),
+      setAuth: (newAuth: Partial<Auth>) => set(state => ({ ...state, ...newAuth })),
+      setUserPersonalities: personalities => set(state => ({ ...state, userPersonalities: personalities })),
+      setUserCareers: careers => set(state => ({ ...state, userCareers: careers })),
+      setUserLocations: locations => set(state => ({ ...state, userLocations: locations })),
     }),
     {
       name: 'auth-storage',

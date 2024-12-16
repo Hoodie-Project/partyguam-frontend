@@ -7,7 +7,6 @@ export interface PartyHomeResponse {
     nickname: string;
     image: string;
   }[];
-  tag: string;
   title: string;
   content: string;
   image: string;
@@ -65,7 +64,7 @@ export interface PartyRecruitDetailResponse {
   party: {
     title: string;
     image: string;
-    tag: string;
+    status: string;
     partyType: {
       type: string;
     };

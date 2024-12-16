@@ -138,7 +138,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   모집공고를 추천받으세요!
                 </Txt>
               </SFlexColumnCenter>
-              <CircleButton onClick={() => router.push('/home/party')}>
+              <CircleButton onClick={() => router.push('/my/profile')}>
                 <Txt fontSize={14} fontColor="black" fontWeight="semibold">
                   세부프로필 설정하기
                 </Txt>
@@ -200,7 +200,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
                         <RecruitsCount>
                           <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                            {recruitment.status === 'active' ? '모집중' : '종료'}
+                            {recruitment.status === 'active' ? '모집중' : '파티종료'}
                           </Txt>
 
                           <Txt
@@ -272,7 +272,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
                       <RecruitsCount>
                         <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                          {recruitment.status === 'active' ? '모집중' : '종료'}
+                          {recruitment.status === 'active' ? '모집중' : '파티종료'}
                         </Txt>
 
                         <Txt

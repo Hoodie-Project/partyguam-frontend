@@ -5,32 +5,34 @@ import styled from '@emotion/styled';
 
 import { fetchGetLocations } from '@/apis/detailProfile';
 import { Square, Txt } from '@/components/_atoms';
+import { useAuthStore } from '@/stores/auth';
 import { useSelectLocationStore } from '@/stores/detailProfile';
 import { palette, radius } from '@/styles/themes';
-
-// import locationData from './mock.json';
 
 /**
  * NOTE
  * - location api data에 따라 코드 변경 가능
  * - 재사용 가능하게 비즈니스 로직 분리 필요
  */
-interface Location {
+interface LocationData {
   id: number;
   province: string;
   city: string;
 }
 
-export default function Location() {
-  const [locationData, setLocationData] = useState<Location[]>([]);
+export default function Location({ editMode }: { editMode?: boolean }) {
+  const [locationData, setLocationData] = useState<LocationData[]>([]);
   const {
     selectedProvince,
     setSelectedProvince,
     selectedCities,
     setSelectedCities,
+    setAlreadySelectedCities,
     removeSelectedCity,
     removeSelectedCitiesByProvince,
   } = useSelectLocationStore();
+  // edit
+  const user = useAuthStore();
 
   useEffect(() => {
     getLocation();
@@ -42,7 +44,7 @@ export default function Location() {
   };
 
   const uniqueProvinces: { province: string }[] = locationData.reduce(
-    (acc: { province: string }[], current: Location) => {
+    (acc: { province: string }[], current: LocationData) => {
       if (!acc.some(item => item.province === current.province)) {
         acc.push({ province: current.province });
       }
@@ -51,20 +53,25 @@ export default function Location() {
     [],
   );
 
-  const cities: { id: number; city: string }[] = useMemo(() => {
+  const cities: LocationData[] = useMemo(() => {
     return locationData
       .filter(item => item.province === selectedProvince)
-      .reduce((acc: { id: number; city: string }[], current: Location) => {
-        acc.push({ id: current.id, city: current.city });
+      .reduce((acc: LocationData[], current: LocationData) => {
+        acc.push({ id: current.id, city: current.city, province: current.province });
         return acc;
       }, []);
   }, [locationData, selectedProvince]);
 
-  const handleCityClick = (item: { id: number; city: string }) => {
+  const handleCityClick = (item: { id: number; city: string; province: string }) => {
     if (item.city === '전체') {
       removeSelectedCitiesByProvince(selectedProvince);
     }
-    if (isSelectedCities(item.id)) {
+    // 중복 데이터 방지: 선택된 cities 중에 동일한 province와 city 확인
+    const isAlreadySelected = selectedCities.some(
+      selected => selected.city === item.city && selected.province === selectedProvince,
+    );
+
+    if (isAlreadySelected) {
       removeSelectedCity(item.id);
     } else if (selectedCities.length < 3) {
       setSelectedCities({ id: item.id, city: item.city, province: selectedProvince });
@@ -75,13 +82,18 @@ export default function Location() {
     return selectedCities.find(selected => cityId === selected.id);
   };
 
+  // user.userLocations에 따라 초기 상태 설정
+  useEffect(() => {
+    setAlreadySelectedCities(user.userLocations.flatMap(item => item.location));
+  }, [user.userLocations]);
+
   return (
     <Container>
       <LocationContainer>
         <Wrapper>
-          {uniqueProvinces.map(item => (
+          {uniqueProvinces.map((item, i) => (
             <Square
-              key={item.province}
+              key={`${item.province}-${i}`}
               width="5.3125rem"
               height="3.25rem"
               shadowKey="none"
