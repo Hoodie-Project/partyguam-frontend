@@ -11,6 +11,7 @@ export const palette: { [key: string]: string } = {
   secondaryBlue: '#00c2ff',
   titleGreen: '#00ffc2',
   kakaoBtn: '#fee500',
+  disableWhite: '#ffffff',
   white: '#ffffff',
   black: '#111111',
   grey100: '#f1f1f5',

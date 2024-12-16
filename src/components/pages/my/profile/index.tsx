@@ -3,25 +3,24 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 
 import { fetchGetUsers, fetchPatchUsers } from '@/apis/auth';
 import { fetchGetUsersMeParties } from '@/apis/detailProfile';
-import { Button, Chip, Square, Txt } from '@/components/_atoms';
+import { Button, Square, Txt } from '@/components/_atoms';
 import { PageHeader, ProfileImage, Toggle } from '@/components/_molecules';
 import { FloatingMenu } from '@/components/features';
+import MyPagePreviewModal from '@/components/features/my/MyPagePreviewModal';
 import { MYPAGE_MENU } from '@/constants';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
-import {
-  SContainer,
-  SFlexColumn,
-  SFlexRow,
-  SFlexRowCenter,
-  SFlexRowFull,
-  SFlexRowJustifyBetween,
-} from '@/styles/components';
+import { SContainer, SFlexRow, SFlexRowCenter, SFlexRowFull, SFlexRowJustifyBetween } from '@/styles/components';
 import { calculateAge } from '@/utils/date';
 import { svgSizeMap } from '@/utils/svg';
+
+import MyCareerSection from './MyCareerSection';
+import MyLocationSection from './MyLocationSection';
+import MyPersonalitySection from './MyPersonalitySection';
+import { MyTimeSection } from './MyTimeSection';
 
 function MyProfile() {
   const { login, setAuth } = useAuthStore();
@@ -38,6 +37,7 @@ function MyProfile() {
   const [시간미포함Options, set시간미포함Options] = useState<string[]>();
 
   const router = useRouter();
+  const { openModal, closeModal } = useModalContext();
 
   const portfolioInputValid = useMemo(() => {
     const { portfolio: portfolioLink, portfolioTitle } = portfolio;
@@ -108,12 +108,16 @@ function MyProfile() {
       });
 
       // '시간'이 포함된 객체와 포함되지 않은 객체를 분리
-      const timeIncluded = userResponse.userPersonalities.filter(personality => personality.question.includes('시간'));
-      const timeExcluded = userResponse.userPersonalities.filter(personality => !personality.question.includes('시간'));
+      const timeIncluded = userResponse.userPersonalities.filter(
+        personality => personality.personalityOption.personalityQuestion.id === 1,
+      );
+      const timeExcluded = userResponse.userPersonalities.filter(
+        personality => personality.personalityOption.personalityQuestion.id !== 1,
+      );
 
       // options만 추출
-      const 시간포함Options = timeIncluded.flatMap(personality => personality.options);
-      const 시간미포함Options = timeExcluded.flatMap(personality => personality.options);
+      const 시간포함Options = timeIncluded.flatMap(personality => personality.personalityOption.content);
+      const 시간미포함Options = timeExcluded.flatMap(personality => personality.personalityOption.content);
 
       set시간포함Options(시간포함Options);
       set시간미포함Options(시간미포함Options);
@@ -156,6 +160,11 @@ function MyProfile() {
     }
   };
 
+  const handleOpenPreviewModal = () => {
+    openModal({
+      children: <MyPagePreviewModal />,
+    });
+  };
   return (
     <SContainer>
       <FloatingMenu menu={MYPAGE_MENU()} />
@@ -192,190 +201,16 @@ function MyProfile() {
         </Square>
         <DetailProfileContainer>
           {/* 세부 프로필 - 경력/포지션*/}
-          <div>
-            <DetailProfilTitleWrapper>
-              <Txt fontWeight="semibold" fontSize={18}>
-                경력/포지션
-              </Txt>
-              <KeyboardArrowRightRoundedIcon style={{ width: '24px', height: '24px', color: '#767676' }} />
-            </DetailProfilTitleWrapper>
-            {user.userCareers.length != 0 && (
-              <SFlexColumn style={{ marginTop: '20px' }}>
-                <SFlexRow style={{ alignItems: 'center' }}>
-                  <Txt fontWeight="semibold" fontSize={16} style={{ marginRight: '24px' }}>
-                    주포지션
-                  </Txt>
-                  <SFlexRow style={{ gap: '8px' }}>
-                    {/* 년수 */}
-                    <Chip
-                      chipType="filled"
-                      chipColor="greenLight400"
-                      label={`${user.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`}
-                      chipStyle={{
-                        fontSize: '16px',
-                        width: 'auto',
-                        height: '24px',
-                        padding: '4px 10px',
-                        boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                        cursor: 'initial',
-                      }}
-                    />
-                    {/* 주포지션 */}
-                    <Chip
-                      chipType="filled"
-                      chipColor="greenLight400"
-                      label={
-                        <>
-                          <Txt fontSize={16}>
-                            {user.userCareers.filter(item => item.careerType === 'primary')[0]?.position.main}
-                          </Txt>
-                          <div
-                            style={{
-                              width: '2px',
-                              height: '12px',
-                              backgroundColor: '#7FF4DF',
-                              margin: '0px 6px 0px 6px',
-                              borderRadius: '12px',
-                            }}
-                          />
-                          <Txt fontSize={16}>
-                            {user.userCareers.filter(item => item.careerType === 'primary')[0]?.position.sub}
-                          </Txt>
-                        </>
-                      }
-                      chipStyle={{
-                        width: 'auto',
-                        height: '24px',
-                        padding: '4px 10px',
-                        boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                        cursor: 'initial',
-                      }}
-                    />
-                  </SFlexRow>
-                </SFlexRow>
-                <SFlexRow style={{ alignItems: 'center' }}>
-                  <Txt fontWeight="semibold" fontSize={16} style={{ marginRight: '24px' }}>
-                    부포지션
-                  </Txt>
-                  <SFlexRow style={{ gap: '8px' }}>
-                    {/* 년수 */}
-                    <Chip
-                      chipType="filled"
-                      chipColor="grey100"
-                      label={`${user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`}
-                      chipStyle={{
-                        fontSize: '16px',
-                        width: 'auto',
-                        height: '24px',
-                        padding: '4px 10px',
-                        boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                        cursor: 'initial',
-                      }}
-                    />
-                    {/* 주포지션 */}
-                    <Chip
-                      chipType="filled"
-                      chipColor="grey100"
-                      label={
-                        <>
-                          <Txt fontSize={16}>
-                            {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
-                          </Txt>
-                          <div
-                            style={{
-                              width: '2px',
-                              height: '12px',
-                              backgroundColor: '#999999',
-                              margin: '0px 6px 0px 6px',
-                              borderRadius: '12px',
-                            }}
-                          />
-                          <Txt fontSize={16}>
-                            {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
-                          </Txt>
-                        </>
-                      }
-                      chipStyle={{
-                        width: 'auto',
-                        height: '24px',
-                        padding: '4px 10px',
-                        boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                        cursor: 'initial',
-                      }}
-                    />
-                  </SFlexRow>
-                </SFlexRow>
-              </SFlexColumn>
-            )}
-          </div>
+          <MyCareerSection userCareers={user.userCareers} />
+
           {/* 세부 프로필 - 관심 지역*/}
-          <div>
-            <DetailProfilTitleWrapper>
-              <Txt fontWeight="semibold" fontSize={18}>
-                관심 지역
-              </Txt>
-              <KeyboardArrowRightRoundedIcon style={{ width: '24px', height: '24px', color: '#767676' }} />
-            </DetailProfilTitleWrapper>
-            <SFlexRow style={{ gap: '8px', marginTop: '20px' }}>
-              {user.userLocations.map(item => (
-                <Chip
-                  key={item.id}
-                  chipType="filled"
-                  chipColor="greenLight400"
-                  label={`${item.location.province} ${item.location.city}`}
-                  chipStyle={{
-                    fontSize: '16px',
-                    width: 'auto',
-                    height: '24px',
-                    padding: '4px 10px',
-                    boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                    cursor: 'initial',
-                  }}
-                />
-              ))}
-            </SFlexRow>
-          </div>
+          <MyLocationSection userLocations={user.userLocations} />
 
           {/* 세부 프로필 - 희망 시간*/}
-          <div>
-            <DetailProfilTitleWrapper>
-              <Txt fontWeight="semibold" fontSize={18}>
-                희망 시간
-              </Txt>
-              <KeyboardArrowRightRoundedIcon style={{ width: '24px', height: '24px', color: '#767676' }} />
-            </DetailProfilTitleWrapper>
-            <SFlexRow style={{ gap: '8px', marginTop: '20px' }}>
-              {시간포함Options?.map((item, i) => (
-                <Chip
-                  key={i}
-                  chipType="filled"
-                  chipColor="greenLight400"
-                  label={item}
-                  chipStyle={{
-                    fontSize: '16px',
-                    width: 'auto',
-                    height: '24px',
-                    padding: '4px 10px',
-                    boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                    cursor: 'initial',
-                  }}
-                />
-              ))}
-            </SFlexRow>
-          </div>
+          <MyTimeSection userTime={시간포함Options} />
 
           {/* 세부 프로필 - 성향*/}
-          <div>
-            <DetailProfilTitleWrapper>
-              <Txt fontWeight="semibold" fontSize={18}>
-                성향
-              </Txt>
-              <KeyboardArrowRightRoundedIcon style={{ width: '24px', height: '24px', color: '#767676' }} />
-            </DetailProfilTitleWrapper>
-            <Personality>
-              <ul>{시간미포함Options?.map((item, i) => <li key={i}>{item}</li>)}</ul>
-            </Personality>
-          </div>
+          <MyPersonalitySection userPersonalities={시간미포함Options} />
 
           {/* 세부 프로필 - 이력서 및 포트폴리오 링크*/}
           <div>
@@ -477,6 +312,7 @@ function MyProfile() {
             borderColor="primaryGreen"
             height="l"
             shadow="shadow1"
+            onClick={handleOpenPreviewModal}
             style={{ width: '196px' }}
           >
             <Txt fontWeight="bold" fontSize={18}>
@@ -518,27 +354,6 @@ const DetailProfileContainer = styled.section`
   display: flex;
   flex-direction: column;
   gap: 60px;
-`;
-
-const DetailProfilTitleWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-`;
-
-const Personality = styled.div`
-  margin-top: 20px;
-  font-weight: normal;
-  > ul {
-    line-height: 1.4;
-    letter-spacing: -0.025em;
-    list-style-position: inside;
-    font-size: 16px;
-    > li {
-      margin-bottom: 6px;
-    }
-  }
 `;
 
 const PortfolioInputContainer = styled.div<{ inputState: 'INITIAL' | 'VALID' | 'INVALID' }>`

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { css, keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { Portal, Txt } from '@/components/_atoms';
+import { Txt } from '@/components/_atoms';
 import { palette } from '@/styles';
 
 type Props = {
@@ -25,14 +25,12 @@ function Toast({ visible, onClose, label, icon, position }: Props) {
   if (!visible) return null;
 
   return (
-    <Portal>
-      <ToastContainer position={position}>
-        <IconContainer>{icon}</IconContainer>
-        <Txt fontWeight="bold" fontSize={14} fontColor="white">
-          {label}
-        </Txt>
-      </ToastContainer>
-    </Portal>
+    <ToastContainer position={position}>
+      <IconContainer>{icon}</IconContainer>
+      <Txt fontWeight="bold" fontSize={14} fontColor="white">
+        {label}
+      </Txt>
+    </ToastContainer>
   );
 }
 
@@ -59,7 +57,7 @@ const fadeOut = keyframes`
 `;
 
 const ToastContainer = styled.div<{ position: number }>`
-  position: relative;
+  position: absolute;
   left: 50%;
   bottom: ${({ position }) => `${position}px`};
   transform: translateX(-50%);

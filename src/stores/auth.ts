@@ -15,6 +15,7 @@ const initialAuthState: UsersMeResponse = {
   portfolio: '',
   image: '',
   createdAt: '',
+  updatedAt: '',
   userPersonalities: [],
   userCareers: [],
   userLocations: [],
@@ -26,6 +27,9 @@ type AuthAction = {
   login: () => void;
   logout: () => void;
   setAuth: (newAuth: Partial<Auth>) => void;
+  setUserPersonalities: (personalities: Auth['userPersonalities']) => void;
+  setUserCareers: (careers: Auth['userCareers']) => void;
+  setUserLocations: (locations: Auth['userLocations']) => void;
 };
 
 export const useAuthStore = create(
@@ -41,6 +45,9 @@ export const useAuthStore = create(
           ...initialAuthState,
         }),
       setAuth: (newAuth: Partial<Auth>) => set(state => ({ ...state, ...newAuth })),
+      setUserPersonalities: personalities => set(state => ({ ...state, userPersonalities: personalities })),
+      setUserCareers: careers => set(state => ({ ...state, userCareers: careers })),
+      setUserLocations: locations => set(state => ({ ...state, userLocations: locations })),
     }),
     {
       name: 'auth-storage',

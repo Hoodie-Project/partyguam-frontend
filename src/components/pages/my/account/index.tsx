@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
+import type { GetUsersMeOauthResponse } from '@/apis/auth';
 import { fetchGetUsersMeOauth } from '@/apis/auth';
 import GoogleIcon from '@/assets/icon/google-icon.svg';
 import KakaoIcon from '@/assets/icon/kakao-icon.svg';
@@ -12,24 +13,50 @@ import { FloatingMenu } from '@/components/features';
 import { MYPAGE_MENU } from '@/constants';
 import { SContainer, SFlexColumn } from '@/styles/components';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 function MyAccount() {
+  const [userMeOauth, setUserMeOauth] = useState<GetUsersMeOauthResponse[] | null>(null);
   const [isKakaoConnected, setIsKakaoConnected] = useState(false);
   const [isGoogleConnected, setIsGoogleConnected] = useState(false);
+  const [kakaoEmail, setKakaoEmail] = useState('');
+  const [googleEmail, setGoogleEmail] = useState('');
   const router = useRouter();
 
   useEffect(() => {
+    // Fetch user OAuth data
     (async () => {
       try {
         const res = await fetchGetUsersMeOauth();
-        if (res.includes('kakao')) setIsKakaoConnected(true);
-        if (res.includes('google')) setIsGoogleConnected(true);
+        setUserMeOauth(res);
+
+        // Set connection states
+        res?.forEach(item => {
+          if (item.provider === 'kakao') {
+            setIsKakaoConnected(true);
+            setKakaoEmail(item.email || ''); // Set Kakao email
+          }
+          if (item.provider === 'google') {
+            setIsGoogleConnected(true);
+            setGoogleEmail(item.email || ''); // Set Google email
+          }
+        });
       } catch (err) {
-        console.log('fetchGetUsersMeOauth >> ', err);
+        console.error('fetchGetUsersMeOauth error:', err);
       }
     })();
   }, []);
 
-  const handleClickConnect = (isConnected: boolean) => {};
+  const handleClickConnect = async (provider: 'kakao' | 'google') => {
+    if (provider === 'kakao') {
+      // const res = await fetchGetUsersKakaoLink();
+
+      const kakaoAuthUrl = isDev
+        ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/users/kakao/login`
+        : `${process.env.NEXT_PUBLIC_API_HOST}/users/kakao/login`;
+      router.push(kakaoAuthUrl);
+    } else {
+    }
+  };
 
   return (
     <SContainer>
@@ -40,6 +67,7 @@ function MyAccount() {
           소셜 로그인 관리
         </Txt>
         <SquareWrapper>
+          {/* Kakao Account */}
           <Square
             width="100%"
             height="auto"
@@ -60,19 +88,20 @@ function MyAccount() {
                 </Txt>
               </AccountLabel>
               <Txt fontSize={14} fontColor="grey500" style={{ marginLeft: '28px' }}>
-                유저이메일
+                {kakaoEmail || ''}
               </Txt>
             </SFlexColumn>
             <CircleButton
               isConnected={isKakaoConnected}
-              onClick={() => handleClickConnect(isKakaoConnected)}
               disabled={isKakaoConnected}
+              onClick={() => handleClickConnect('kakao')}
             >
               <Txt fontSize={14} fontColor="black" fontWeight="semibold">
                 {isKakaoConnected ? '연결중' : '연결하기'}
               </Txt>
             </CircleButton>
           </Square>
+          {/* Google Account */}
           <Square
             width="100%"
             height="auto"
@@ -89,13 +118,13 @@ function MyAccount() {
                 </Txt>
               </AccountLabel>
               <Txt fontSize={14} fontColor="grey500" style={{ marginLeft: '28px' }}>
-                유저이메일
+                {googleEmail || ''}
               </Txt>
             </SFlexColumn>
             <CircleButton
               isConnected={isGoogleConnected}
-              onClick={() => handleClickConnect(isGoogleConnected)}
               disabled={isGoogleConnected}
+              onClick={() => handleClickConnect('google')}
             >
               <Txt fontSize={14} fontColor="black" fontWeight="semibold">
                 {isGoogleConnected ? '연결중' : '연결하기'}
@@ -104,7 +133,7 @@ function MyAccount() {
           </Square>
         </SquareWrapper>
         <ButtonWrapper>
-          <TxtButton fontSize={16} fontWeight="semibold">
+          <TxtButton fontSize={16} fontWeight="semibold" onClick={() => alert('로그아웃')}>
             로그아웃
           </TxtButton>
           <TxtButton

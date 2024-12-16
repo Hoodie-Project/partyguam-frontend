@@ -239,7 +239,6 @@ export default function Join() {
               const data = {
                 id: 0,
                 nickname: joinInput.nickname,
-                email: signupData.email,
                 image: signupData.image,
                 birth: formattedBirth,
                 gender: joinInput.gender,

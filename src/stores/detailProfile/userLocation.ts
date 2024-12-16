@@ -15,8 +15,10 @@ interface SelectLocationState {
 
   setSelectedProvince: (province: string) => void;
   setSelectedCities: (city: Location) => void;
+  setAlreadySelectedCities: (userLocationData: Location[]) => void;
   removeSelectedCity: (cityId: number) => void;
   removeSelectedCitiesByProvince: (province: string) => void;
+  removeAllSelectedCities: () => void;
   setLocationCompletion: (completed: boolean) => void;
 }
 
@@ -24,7 +26,7 @@ export const useSelectLocationStore = create<SelectLocationState>(set => ({
   selectedProvince: '서울',
   selectedCities: [],
   selectedCitiesById: [],
-
+  alreadySelectedCities: [],
   locationCompletion: false,
 
   setSelectedProvince: province => set({ selectedProvince: province }),
@@ -39,6 +41,8 @@ export const useSelectLocationStore = create<SelectLocationState>(set => ({
 
       return { selectedCities: updatedCities, selectedCitiesById: updatedCitiesById };
     }),
+
+  setAlreadySelectedCities: locationData => set({ selectedCities: locationData }),
 
   removeSelectedCity: cityId =>
     set(state => {
@@ -55,6 +59,8 @@ export const useSelectLocationStore = create<SelectLocationState>(set => ({
 
       return { selectedCities: updatedCities, selectedCitiesById: updatedCitiesById };
     }),
+
+  removeAllSelectedCities: () => set({ selectedCities: [] }),
 
   setLocationCompletion: (completed: boolean) => set({ locationCompletion: completed }),
 }));
