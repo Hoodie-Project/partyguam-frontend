@@ -128,7 +128,8 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
               label={item.label}
               size="small"
               chipColor={status === item.value ? '#11C9A7' : '#E5E5EC'}
-              fontColor={status === item.value ? '#11C9A7' : '#767676'}
+              fontColor={status === item.value ? 'black' : '#767676'}
+              fontWeight={status === item.value ? 'bold' : 'normal'}
               onClick={() => {
                 setStatus(item.value as unknown as 'active' | 'approved' | 'pending' | 'rejected');
               }}

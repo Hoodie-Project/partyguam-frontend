@@ -115,21 +115,25 @@ const fetchDeletePersonality = async (personalityQuestionId: number) => {
   }
 };
 
-type Party = {
-  id: string;
+export type Party = {
+  id: number;
   createdAt: string;
-  position: string;
-  sub: string;
+  position: {
+    main: string; // 주요 포지션 (예: "기획")
+    sub: string; // 세부 포지션 (예: "UI/UX 기획자")
+  };
   party: {
-    id: string;
-    title: string;
-    thumbnail: string;
-    status: string;
-    partyType: string;
+    id: number;
+    title: string; // 파티 제목
+    image: string; // 이미지 경로
+    status: 'active' | 'archived'; // 파티 상태
+    partyType: {
+      type: string; // 파티 유형 (예: "포트폴리오", "해커톤")
+    };
   };
 };
 
-type FetchGetUsersMePartiesResponse = {
+export type FetchGetUsersMePartiesResponse = {
   total: number;
   partyUsers: Party[];
 };

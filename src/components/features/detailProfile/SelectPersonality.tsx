@@ -144,6 +144,26 @@ export default function SelectPersonality({ editType }: Props) {
     });
   };
 
+  // const convertToSelectedPersonality = (
+  //   options: {
+  //     id: number;
+  //     personalityQuestionId: number;
+  //     content: string;
+  //   }[],
+  // ): SelectedPersonality[] => {
+  //   const grouped = options.reduce<Record<number, number[]>>((acc, option) => {
+  //     if (!acc[option.id]) {
+  //       acc[option.id] = [];
+  //     }
+  //     acc[option.id].push(option.id);
+  //     return acc;
+  //   }, {});
+
+  //   return Object.entries(grouped).map(([questionId, optionIds]) => ({
+  //     personalityQuestionId: Number(questionId),
+  //     personalityOptionId: optionIds,
+  //   }));
+  // };
   const convertToSelectedPersonality = (
     options: {
       id: number;
@@ -152,16 +172,19 @@ export default function SelectPersonality({ editType }: Props) {
     }[],
   ): SelectedPersonality[] => {
     const grouped = options.reduce<Record<number, number[]>>((acc, option) => {
-      if (!acc[option.id]) {
-        acc[option.id] = [];
+      const questionId = option.personalityQuestionId; // questionId를 키로 사용
+
+      if (!acc[questionId]) {
+        acc[questionId] = [];
       }
-      acc[option.id].push(option.id);
+      acc[questionId].push(option.id); // 옵션 ID만 배열에 추가
+
       return acc;
     }, {});
 
     return Object.entries(grouped).map(([questionId, optionIds]) => ({
-      personalityQuestionId: Number(questionId),
-      personalityOptionId: optionIds,
+      personalityQuestionId: Number(questionId), // questionId를 사용
+      personalityOptionId: optionIds, // optionIds를 배열로 반환
     }));
   };
 
@@ -187,25 +210,38 @@ export default function SelectPersonality({ editType }: Props) {
       default:
         break;
     }
-    await fetchDeletePersonality(Number(detailNum) - 2);
 
-    const res = await fetchPostPersonality(selectedPersonality);
+    try {
+      let res = await fetchPostPersonality(selectedPersonality);
 
-    if (res && res.status === 409) {
-      await fetchDeletePersonality(Number(detailNum) - 2);
-      await fetchPostPersonality(selectedPersonality);
-    }
-    setPersonalityCompletion(Number(detailNum) - 2);
-    const userResponse = await fetchGetUsers();
-    setAuth(userResponse);
-    if (editType == null) {
-      if (Number(detailNum) == 6) {
-        router.push('/join/detail/success');
+      if (res && res.status === 409) {
+        // 409 Conflict 에러 처리
+        await fetchDeletePersonality(Number(detailNum) - 2);
+        res = await fetchPostPersonality(selectedPersonality);
+      }
+
+      if (res.ok) {
+        setPersonalityCompletion(Number(detailNum) - 2);
+        const userResponse = await fetchGetUsers();
+        setAuth(userResponse);
       } else {
-        router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+        console.error('Post request failed:', res.statusText);
+      }
+    } catch (error) {
+      console.error('Error in handleClickNextBtn:', error);
+    } finally {
+      // 다음 단계로 넘어가기
+      if (editType == null) {
+        if (Number(detailNum) === 6) {
+          router.push('/join/detail/success');
+        } else {
+          router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+        }
       }
     }
   };
+
+  console.log('editType > ', editType == null);
 
   return (
     <Container>
