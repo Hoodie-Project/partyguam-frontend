@@ -144,26 +144,6 @@ export default function SelectPersonality({ editType }: Props) {
     });
   };
 
-  // const convertToSelectedPersonality = (
-  //   options: {
-  //     id: number;
-  //     personalityQuestionId: number;
-  //     content: string;
-  //   }[],
-  // ): SelectedPersonality[] => {
-  //   const grouped = options.reduce<Record<number, number[]>>((acc, option) => {
-  //     if (!acc[option.id]) {
-  //       acc[option.id] = [];
-  //     }
-  //     acc[option.id].push(option.id);
-  //     return acc;
-  //   }, {});
-
-  //   return Object.entries(grouped).map(([questionId, optionIds]) => ({
-  //     personalityQuestionId: Number(questionId),
-  //     personalityOptionId: optionIds,
-  //   }));
-  // };
   const convertToSelectedPersonality = (
     options: {
       id: number;
