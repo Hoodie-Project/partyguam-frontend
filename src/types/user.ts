@@ -46,7 +46,6 @@ export interface UserCareer {
 }
 
 export interface UserPosition {
-  id: number;
   main: string;
   sub: string;
 }
