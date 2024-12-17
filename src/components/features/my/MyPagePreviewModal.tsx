@@ -42,6 +42,7 @@ export default function MyPagePreviewModal() {
           width: '24px',
           cursor: 'pointer',
           position: 'absolute',
+          top: 0,
           right: 0,
           margin: '20px',
         }}

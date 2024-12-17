@@ -336,10 +336,7 @@ function HomeParty() {
                   <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
                     {party.title} {/* 파티 제목 */}
                   </EllipsisTitleText>
-                  <Txt
-                    fontSize={12}
-                    style={{ lineHeight: '140%', color: '#24CE85', justifyItems: 'flex-end', marginTop: '16px' }}
-                  >
+                  <Txt fontSize={12} style={{ lineHeight: '140%', color: '#24CE85', marginTop: 'auto' }}>
                     {party.status === 'active' &&
                       party.recruitmentCount > 0 &&
                       `지금 ${party.recruitmentCount}개의 포지션 모집 중`}
@@ -352,7 +349,7 @@ function HomeParty() {
             <EmptyState>
               <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
               <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
-                파티가 없습니다.
+                파티가 없어요.
               </Txt>
             </EmptyState>
           )}
