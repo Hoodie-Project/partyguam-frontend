@@ -186,7 +186,7 @@ const PartyHomeContainer = styled.section`
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: auto;
+  height: 100vh;
   padding-top: 52px;
 `;
 
