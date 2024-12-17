@@ -349,7 +349,7 @@ function HomeParty() {
             <EmptyState>
               <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
               <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
-                파티가 없습니다.
+                파티가 없어요.
               </Txt>
             </EmptyState>
           )}

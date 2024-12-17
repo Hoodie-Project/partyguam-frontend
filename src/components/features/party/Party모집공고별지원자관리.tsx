@@ -398,8 +398,8 @@ const SquareButton = styled.button<{ isAccept: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: ${({ isAccept }) => (isAccept ? '1px solid #7FF4DF' : '1px solid #E5E5EC')};
-  background-color: ${({ isAccept }) => (isAccept ? '#C5FAF0' : '#FFFFFF')};
+  border: '1px solid #21ECC7';
+  background-color: ${({ isAccept }) => (isAccept ? '#21ECC7' : '#FFFFFF')};
   text-align: center;
   font-size: 14px;
   border-radius: 12px;

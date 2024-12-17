@@ -143,11 +143,13 @@ const fetchGetUsersMeParties = async ({
   limit = 5,
   sort = 'createdAt',
   order = 'ASC',
+  status = 'all',
 }: {
   page: number;
   limit: number;
   sort: string;
   order: string;
+  status?: 'all' | 'active' | 'archived';
 }): Promise<FetchGetUsersMePartiesResponse | null> => {
   try {
     // 쿼리 파라미터를 먼저 객체로 설정
@@ -157,6 +159,10 @@ const fetchGetUsersMeParties = async ({
       limit,
       page,
     };
+
+    if (status == 'active' || status == 'archived') {
+      params.status = status;
+    }
 
     const response = await privateApi.get('/users/me/parties', { params });
     return response.data;

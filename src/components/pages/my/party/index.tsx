@@ -1,19 +1,20 @@
 'use client';
 import React, { useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { fetchGetUsersMeParties } from '@/apis/detailProfile';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { FloatingMenu } from '@/components/features';
 import { MYPAGE_MENU } from '@/constants';
 import { SContainer, SFlexRow } from '@/styles/components';
-
-import { MyPartyMockData } from './myPartyMockData';
 
 function MyParty() {
   const [status, setStatus] = useState<'all' | 'active' | 'archived'>('all');
@@ -34,6 +35,42 @@ function MyParty() {
     }
     return <ArrowUpwardIcon fontSize="small" />;
   };
+
+  // [GET] 포지션 모집 공고별 지원자 조회
+  const {
+    data: myPartyList,
+    hasNextPage,
+    fetchNextPage,
+    isFetched,
+  } = useInfiniteQuery({
+    queryKey: [order, status],
+    queryFn: async ({ pageParam }) => {
+      const res = await fetchGetUsersMeParties({
+        page: pageParam as number,
+        limit: 10,
+        sort: 'createdAt',
+        order,
+        status,
+      });
+
+      return res;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const totalFetchedItems = allPages.flatMap(page => page?.partyUsers).length;
+
+      if (lastPage != null && totalFetchedItems < lastPage.total) {
+        return allPages.length + 1;
+      } else return null;
+    },
+  });
+
+  // infiniteQuery refetch 트리거
+  const { ref } = useInView({
+    onChange: inView => {
+      inView && hasNextPage && fetchNextPage();
+    },
+  });
 
   return (
     <SContainer>
@@ -72,66 +109,66 @@ function MyParty() {
           </Txt>
         </SFlexRow>
         <PartyCardList>
-          {/* {partyList?.pages.flatMap(page => */}
-          {MyPartyMockData.partyUsers.map(party => (
-            <StyledSquare
-              key={party.id}
-              width="100%"
-              height="333px"
-              shadowKey="shadow1"
-              backgroundColor="white"
-              radiusKey="base"
-              borderColor="grey200"
-              onClick={() => handleClickPartyCard(party.party.id)}
-            >
-              <CardContentsWrapper>
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.party.image}`}
-                  width={255}
-                  height={180}
-                  alt={party.party.title}
-                  style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                />
-
-                <ChipWrapper>
-                  <Chip
-                    chipType="filled"
-                    label={party.party.status === 'active' ? '진행중' : '파티종료'}
-                    size="xsmall"
-                    chipColor={party.party.status === 'active' ? '#D5F0E3' : '#505050'}
-                    fontColor={party.party.status === 'active' ? '#016110' : '#ffffff'}
-                    fontWeight="semibold"
+          {myPartyList?.pages.flatMap(page =>
+            page?.partyUsers.map(party => (
+              <StyledSquare
+                key={party.id}
+                width="100%"
+                height="333px"
+                shadowKey="shadow1"
+                backgroundColor="white"
+                radiusKey="base"
+                borderColor="grey200"
+                onClick={() => handleClickPartyCard(party.party.id)}
+              >
+                <CardContentsWrapper>
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.party.image}`}
+                    width={255}
+                    height={180}
+                    alt={party.party.title}
+                    style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
                   />
-                  <Chip
-                    chipType="filled"
-                    label={party.party.partyType.type}
-                    size="xsmall"
-                    chipColor="#F6F6F6"
-                    fontColor="grey700"
-                    fontWeight="semibold"
-                  />
-                </ChipWrapper>
 
-                <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
-                  {party.party.title} {/* 파티 제목 */}
-                </EllipsisTitleText>
-                <Txt fontSize={14} style={{ lineHeight: '140%', marginTop: 'auto' }}>
-                  {party.position.main} | {party.position.sub}
-                </Txt>
-              </CardContentsWrapper>
-            </StyledSquare>
-          ))}
-          {/* )} */}
-          {/* {partyList?.pages[0]?.total === 0 && ( */}
-          {MyPartyMockData.total === 0 && (
+                  <ChipWrapper>
+                    <Chip
+                      chipType="filled"
+                      label={party.party.status === 'active' ? '진행중' : '파티종료'}
+                      size="xsmall"
+                      chipColor={party.party.status === 'active' ? '#D5F0E3' : '#505050'}
+                      fontColor={party.party.status === 'active' ? '#016110' : '#ffffff'}
+                      fontWeight="semibold"
+                    />
+                    <Chip
+                      chipType="filled"
+                      label={party.party.partyType.type}
+                      size="xsmall"
+                      chipColor="#F6F6F6"
+                      fontColor="grey700"
+                      fontWeight="semibold"
+                    />
+                  </ChipWrapper>
+
+                  <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                    {party.party.title} {/* 파티 제목 */}
+                  </EllipsisTitleText>
+                  <Txt fontSize={14} style={{ lineHeight: '140%', marginTop: 'auto' }}>
+                    {party.position.main} | {party.position.sub}
+                  </Txt>
+                </CardContentsWrapper>
+              </StyledSquare>
+            )),
+          )}
+          {myPartyList?.pages[0]?.total === 0 && (
             <EmptyState>
               <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
               <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
-                파티가 없습니다.
+                파티가 없어요.
               </Txt>
             </EmptyState>
-          )}{' '}
+          )}
         </PartyCardList>
+        <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
       </MyPartyContainer>
     </SContainer>
   );

@@ -54,7 +54,7 @@ function ProfileImage({
     <ImageWrapper size={size} {...divAttributes}>
       {Boolean(previewImage) ? (
         <Image
-          src={previewImage || ''}
+          src={Boolean(previewImage) ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${previewImage}` : ''}
           width={size}
           height={size}
           alt="파티원 프로필 이미지"
