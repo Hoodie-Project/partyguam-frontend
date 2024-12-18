@@ -82,11 +82,9 @@ function HomeRecruitmentList({ personalized = false }: Props) {
     else fetchRecruitments();
   }, [personalized]);
 
-  console.log('세부프로필미입력 > ', 세부프로필미입력);
-
-  const handleClickRecruitmentCard = (recruitmentId: number) => {
+  const handleClickRecruitmentCard = (recruitmentId: number, partyId: number) => {
     if (isLoggedIn) {
-      router.push(`/party/recruit/${recruitmentId}`);
+      router.push(`/party/recruit/${recruitmentId}?partyId=${partyId}`);
     } else {
       openModal({ children: <LoginModal /> });
     }
@@ -159,7 +157,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                     borderColor="grey200"
                     personalized={personalized}
                     style={{ marginRight: '12px' }}
-                    onClick={() => handleClickRecruitmentCard(recruitment.id)}
+                    onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
                   >
                     <CardContentsWrapper>
                       <Image
@@ -200,7 +198,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
                         <RecruitsCount>
                           <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                            {recruitment.status === 'active' ? '모집중' : '파티종료'}
+                            {recruitment.party.status === 'active' ? '모집중' : '파티종료'}
                           </Txt>
 
                           <Txt
@@ -231,7 +229,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   backgroundColor="white"
                   radiusKey="base"
                   borderColor="grey200"
-                  onClick={() => handleClickRecruitmentCard(recruitment.id)}
+                  onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
                 >
                   <CardContentsWrapper>
                     <Image
@@ -272,7 +270,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
                       <RecruitsCount>
                         <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                          {recruitment.status === 'active' ? '모집중' : '파티종료'}
+                          {recruitment.party.status === 'active' ? '모집중' : '파티종료'}
                         </Txt>
 
                         <Txt

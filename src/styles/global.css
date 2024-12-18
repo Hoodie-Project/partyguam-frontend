@@ -63,3 +63,13 @@ input,
 textarea {
   font-family: 'SUIT Variable';
 }
+
+.custom-side-menu {
+  display: block;
+}
+
+@media (max-width: 1200px) {
+  .custom-side-menu {
+    display: none;
+  }
+}

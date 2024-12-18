@@ -12,9 +12,9 @@ import { useTheme } from '@table-library/react-table-library/theme';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import {
-  fetchApprovePartyApplication,
+  fetchAdminApprovePartyApplication,
+  fetchAdminRejectPartyApplication,
   fetchPartyRecruitmentApplications,
-  fetchRejectPartyApplication,
 } from '@/apis/party';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { BreadCrumb, ProfileImage } from '@/components/_molecules';
@@ -26,7 +26,7 @@ import { formatRelativeTime } from '@/utils/date';
 function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
-  const [status, setStatus] = useState<'active' | 'approved' | 'pending' | 'rejected' | undefined>(undefined);
+  const [status, setStatus] = useState<'processing' | 'approved' | 'pending' | 'rejected' | undefined>(undefined);
   const [expand지원서, setExpand지원서] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const partyRecruitmentId = searchParams.get('partyRecruitmentId');
@@ -117,9 +117,9 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '7px', marginTop: '10px' }}>
           {[
-            { label: '검토중', value: 'active' },
+            { label: '검토중', value: 'pending' },
             { label: ' 수락 ', value: 'approved' },
-            { label: '응답대기', value: 'pending' },
+            { label: '응답대기', value: 'processing' },
             { label: ' 거절 ', value: 'rejected' },
           ].map((item, i) => (
             <Chip
@@ -131,7 +131,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
               fontColor={status === item.value ? 'black' : '#767676'}
               fontWeight={status === item.value ? 'bold' : 'normal'}
               onClick={() => {
-                setStatus(item.value as unknown as 'active' | 'approved' | 'pending' | 'rejected');
+                setStatus(item.value as unknown as 'processing' | 'approved' | 'pending' | 'rejected');
               }}
             />
           ))}
@@ -177,7 +177,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                     <HelpOutlineRoundedIcon
                       onClick={() => setIsShowBalloon(true)}
                       fontSize="small"
-                      style={{ marginLeft: '2px', color: '#999999' }}
+                      style={{ marginLeft: '2px', marginBottom: '2px', color: '#999999' }}
                     />
                     {isShowBalloon ? (
                       <Balloon
@@ -316,7 +316,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                               isAccept={false}
                               onClick={async () => {
                                 try {
-                                  const res = fetchRejectPartyApplication({
+                                  const res = fetchAdminRejectPartyApplication({
                                     partyId: Number(partyId),
                                     partyApplicationId: item.id,
                                   });
@@ -332,7 +332,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                               isAccept={true}
                               onClick={async () => {
                                 try {
-                                  const res = fetchApprovePartyApplication({
+                                  const res = fetchAdminApprovePartyApplication({
                                     partyId: Number(partyId),
                                     partyApplicationId: item.id,
                                   });
@@ -387,7 +387,7 @@ const StyledCell = styled(Cell)<{ isExpend: boolean }>`
 `;
 
 const Styled지원서Cell = styled(Cell)`
-  padding: 0px 20px 27px;
+  padding: 0px 20px 16px;
   border-bottom: 1px solid #f1f1f5;
 
   height: auto;

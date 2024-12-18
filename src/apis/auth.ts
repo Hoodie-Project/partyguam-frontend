@@ -193,6 +193,63 @@ const fetchGetUsersKakaoLink = async () => {
   }
 };
 
+export interface PartyApplicationResponse {
+  total: number;
+  partyApplications: PartyApplication[];
+}
+
+export interface PartyApplication {
+  id: number;
+  message: string;
+  status: 'pending' | 'processing' | 'approved' | 'rejected'; // 상태에 따라 Union 타입 정의
+  createdAt: string;
+  partyRecruitment: {
+    position: {
+      main: string;
+      sub: string;
+    };
+    party: {
+      id: number;
+      title: string;
+      image: string;
+      partyType: {
+        type: string; // "포트폴리오"와 같은 값
+      };
+    };
+  };
+}
+
+// [GET] 파티 포지션 모집별 지원자 목록 조회 API
+export const fetchGetUsersMePartiesApplications = async ({
+  page = 1,
+  limit = 5,
+  sort = 'createdAt',
+  order = 'ASC',
+  status,
+}: {
+  page?: number;
+  limit?: number;
+  sort?: 'createdAt';
+  order?: string;
+  status?: 'processing' | 'approved' | 'pending' | 'rejected' | 'all';
+}): Promise<PartyApplicationResponse> => {
+  try {
+    const response = await privateApi.get(`/users/me/parties/applications`, {
+      params: {
+        page,
+        limit,
+        sort,
+        order,
+        ...(status && status != 'all' && { status }), // status 값이 있을 때만 포함
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('fetchPartyRecruitmentApplications error:', error);
+    throw error;
+  }
+};
+
 export {
   fetchGetOauthInfo,
   fetchGetUsers,

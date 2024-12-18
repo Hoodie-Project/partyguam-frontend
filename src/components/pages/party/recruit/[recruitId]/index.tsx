@@ -2,6 +2,7 @@
 // 파티 모집하기 페이지
 import React, { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CreateIcon from '@mui/icons-material/Create';
 import ShareIcon from '@mui/icons-material/Share';
@@ -44,6 +45,11 @@ const renderPartyState = (stateTag: string) => {
 function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecruitProps) {
   const [partyRecruitDetailData, setPartyRecruitDetailData] = useState<PartyRecruitDetailResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
+
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const partyId = searchParams.get('partyId');
 
   const { editPartyRecruitForm } = useEditPartyRecruitForm();
 
@@ -289,6 +295,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
           backgroudColor="primaryGreen"
           radius="base"
           shadow="shadow1"
+          onClick={() => router.push(`/party/apply?partyId=${partyId}&recruitId=${recruitId}`)}
           disabled={isDisable지원하기}
         >
           <Txt fontWeight="bold" fontColor="black">
