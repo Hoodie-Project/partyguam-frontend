@@ -294,9 +294,9 @@ function HomeParty() {
         </HeaderWrapper>
         <PartyCardList>
           {partyList?.pages.flatMap(page =>
-            page?.parties.map(party => (
+            page?.parties.map((party, i) => (
               <StyledSquare
-                key={party.id}
+                key={`${party.id}_${i}`}
                 width="100%"
                 height="333px"
                 shadowKey="shadow1"

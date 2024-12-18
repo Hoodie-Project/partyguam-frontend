@@ -82,8 +82,13 @@ const fetchGetUsers = async (): Promise<UsersMeResponse> => {
 };
 
 export interface UserAuthorityResponse {
-  userId: number;
+  id: number;
   authority: 'master' | 'deputy' | 'member';
+  position: {
+    id: number;
+    main: string;
+    sub: string;
+  };
 }
 
 // 내 정보 수정

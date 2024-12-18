@@ -25,11 +25,13 @@ export interface PartyType {
 export interface PartyUserResponse {
   partyUser: {
     authority: string;
+    id: number;
     position: Position;
     user: User;
   }[];
   partyAdmin: {
     authority: string;
+    id: number;
     position: Position;
     user: User;
   }[];
@@ -48,7 +50,6 @@ export interface Position {
 }
 
 export interface User {
-  id: number;
   nickname: string;
   image: any;
   userCareers: UserCareer[];

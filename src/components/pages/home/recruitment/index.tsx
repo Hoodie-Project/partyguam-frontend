@@ -364,9 +364,9 @@ function HomeRecruitment() {
         </HeaderWrapper>
         <ReCruitmentCardWrapper>
           {partyRecruitmentList?.pages.flatMap(page =>
-            page?.partyRecruitments.map(recruitment => (
+            page?.partyRecruitments.map((recruitment, i) => (
               <StyledSquare
-                key={recruitment.id}
+                key={`${recruitment.id}_${i}`}
                 width="100%"
                 height="160px"
                 shadowKey="shadow1"

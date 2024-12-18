@@ -36,6 +36,8 @@ const PARTY_AUTHORITY_MAP = (authority?: 'master' | 'deputy' | 'member') => {
 function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
   const { openModal, closeModal } = useModalContext();
 
+  console.log('user id > ', user?.id);
+
   const handleClickEmergency = () => {
     openModal({
       children: <ReportModal reportType="party" reportTypeId={user?.id as number} />,
@@ -83,7 +85,7 @@ function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
             )}
           </UserPositionWrapper>
           <UserNameWrapper>
-            {userAuthority?.userId === user?.id && <MeTag>나</MeTag>}
+            {userAuthority?.id === user?.id && <MeTag>나</MeTag>}
             <Txt
               fontSize={16}
               fontColor="black"
@@ -99,9 +101,7 @@ function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
             </Txt>
           </UserNameWrapper>
         </UserInfoContainer>
-        {userAuthority?.userId !== user?.id && (
-          <Emergency onClick={handleClickEmergency} style={{ cursor: 'pointer' }} />
-        )}
+        {userAuthority?.id !== user?.id && <Emergency onClick={handleClickEmergency} style={{ cursor: 'pointer' }} />}
       </CardWrapper>
     </StyledSquare>
   );

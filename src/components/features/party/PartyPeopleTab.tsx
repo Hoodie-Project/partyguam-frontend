@@ -35,6 +35,8 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
     fetchData();
   }, [partyId]);
 
+  console.log('partyUserData > ', partyUserData);
+
   return (
     <PartyPeopleTabContainer>
       <SMargin margin="35px 0px 0px 0px" />
@@ -52,20 +54,20 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
           {/* 관리자 유저 */}
           {partyUserData?.partyAdmin.map(item => (
             <PartyPeopleCard
-              key={item.user.id}
+              key={item.id}
               authority={item.authority as 'master' | 'deputy' | 'member' | undefined}
               position={item.position}
-              user={item.user}
+              user={{ id: item.id, ...item.user }}
               userAuthority={userAuthority}
             />
           ))}
           {/* 일반 유저 */}
           {partyUserData?.partyUser?.map(item => (
             <PartyPeopleCard
-              key={item.user.id}
+              key={item.id}
               authority={item.authority as 'master' | 'deputy' | 'member' | undefined}
               position={item.position}
-              user={item.user}
+              user={{ id: item.id, ...item.user }}
               userAuthority={userAuthority}
             />
           ))}
