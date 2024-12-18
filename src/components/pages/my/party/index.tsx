@@ -14,7 +14,7 @@ import { Chip, Square, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { FloatingMenu } from '@/components/features';
 import { MYPAGE_MENU } from '@/constants';
-import { SContainer, SFlexRow } from '@/styles/components';
+import { Divider, SContainer, SFlexRow } from '@/styles/components';
 
 function MyParty() {
   const [status, setStatus] = useState<'all' | 'active' | 'archived'>('all');
@@ -152,8 +152,17 @@ function MyParty() {
                   <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
                     {party.party.title} {/* 파티 제목 */}
                   </EllipsisTitleText>
-                  <Txt fontSize={14} style={{ lineHeight: '140%', marginTop: 'auto' }}>
-                    {party.position.main} | {party.position.sub}
+                  <Txt
+                    fontSize={14}
+                    style={{
+                      lineHeight: '140%',
+                      marginTop: 'auto',
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                  >
+                    {party.position.main} <Divider /> {party.position.sub}
                   </Txt>
                 </CardContentsWrapper>
               </StyledSquare>

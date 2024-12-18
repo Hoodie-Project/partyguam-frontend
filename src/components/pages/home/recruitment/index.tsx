@@ -250,9 +250,9 @@ function HomeRecruitment() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const handleClickRecruitmentCard = (recruitmentId: number) => {
+  const handleClickRecruitmentCard = (recruitmentId: number, partyId: number) => {
     if (isLoggedIn) {
-      router.push(`/party/recruit/${recruitmentId}`);
+      router.push(`/party/recruit/${recruitmentId}?partyId=${partyId}`);
     } else {
       openModal({ children: <LoginModal /> });
     }
@@ -373,7 +373,7 @@ function HomeRecruitment() {
                 backgroundColor="white"
                 radiusKey="base"
                 borderColor="grey200"
-                onClick={() => handleClickRecruitmentCard(recruitment.id)}
+                onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
               >
                 <CardContentsWrapper>
                   <Image
@@ -414,7 +414,7 @@ function HomeRecruitment() {
 
                     <RecruitsCount>
                       <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                        {recruitment.status === 'active' ? '모집중' : '파티종료'}
+                        {recruitment.party.status === 'active' ? '모집중' : '파티종료'}
                       </Txt>
 
                       <Txt
@@ -487,6 +487,7 @@ const StyledSquare = styled(Square)`
   display: flex;
   justify-content: flex-start;
   box-sizing: border-box;
+  cursor: pointer;
 `;
 
 const CardContentsWrapper = styled.div`

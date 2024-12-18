@@ -25,7 +25,7 @@ export default function FloatingMenu({ menu, ...divAttributes }: Props) {
 
   return (
     <Portal>
-      <MenuContainer {...divAttributes}>
+      <MenuContainer className="custom-side-menu" {...divAttributes}>
         {menu.map((item, index) => (
           <MenuItem key={index}>
             <MenuTitle>{item.대메뉴}</MenuTitle>

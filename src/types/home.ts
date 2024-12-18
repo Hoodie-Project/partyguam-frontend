@@ -2,17 +2,15 @@ export interface PartyRecruitmentsResponse {
   total: number;
   partyRecruitments: {
     id: number;
-    status: string;
     createdAt: string;
-    updatedAt: string;
-    partyId: number;
-    positionId: number;
     recruitingCount: number;
     recruitedCount: number;
     content: string;
     party: {
+      id: number;
       title: string;
       image: string;
+      status: string;
       partyType: {
         id: number;
         type: string;

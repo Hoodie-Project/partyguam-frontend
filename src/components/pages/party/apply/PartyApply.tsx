@@ -1,6 +1,6 @@
 'use client';
 import React, { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 
 import { fetchPostApplyParty } from '@/apis/party';
@@ -15,6 +15,10 @@ export default function PartyApply() {
   const [applyDisabled, setApplyDisabled] = useState(true);
   const [applyReasonValue, setApplyReasonValue] = useState<string>('');
   const { openModal, closeModal } = useModalContext();
+
+  const searchParams = useSearchParams();
+  const partyId = searchParams.get('partyId');
+  const recruitId = searchParams.get('recruitId');
 
   const validateApplyValue = useMemo(() => {
     const length = applyReasonValue.length;
@@ -61,7 +65,11 @@ export default function PartyApply() {
   const onClickApply = async () => {
     try {
       // TODO. 파티 리스트 페이지에서 partyId, partyRecruitmentId를 뽑아와야 하기에 api 수정 필요
-      const res = await fetchPostApplyParty({ partyId: 1, partyRecruitmentId: 1 });
+      const res = await fetchPostApplyParty({
+        partyId: Number(partyId),
+        partyRecruitmentId: Number(recruitId),
+        body: { message: applyReasonValue },
+      });
       console.log('[RESPONSE POST APPLY PARTY]', res);
       openModal({
         children: (

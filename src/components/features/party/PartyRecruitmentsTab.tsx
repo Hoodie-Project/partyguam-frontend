@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
@@ -36,6 +37,7 @@ function PartyRecruitmentsTab({ partyId }: Props) {
   const [mainFiltered, setMainFiltered] = useState<{ id: number; label: string }[]>([]);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // ASC (오름차순) / DESC (내림차순)
   const [isArrowUp, setIsArrowUp] = useState(false);
+  const router = useRouter();
 
   // 파티 모집 목록을 가져오는 함수
   const fetchRecruitments = async () => {
@@ -188,6 +190,7 @@ function PartyRecruitmentsTab({ partyId }: Props) {
                 recruitedCount={item.recruitedCount}
                 recruitingCount={item.recruitingCount}
                 applicationCount={item.applicationCount}
+                handleClick={() => router.push(`/party/recruit/${item.id}?partyId=${partyId}`)}
               />
             ))}
           </RecruitmentList>

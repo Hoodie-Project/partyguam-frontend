@@ -12,9 +12,9 @@ import { useTheme } from '@table-library/react-table-library/theme';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import {
-  fetchApprovePartyApplication,
+  fetchAdminApprovePartyApplication,
+  fetchAdminRejectPartyApplication,
   fetchPartyRecruitmentApplications,
-  fetchRejectPartyApplication,
 } from '@/apis/party';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { BreadCrumb, ProfileImage } from '@/components/_molecules';
@@ -26,7 +26,7 @@ import { formatRelativeTime } from '@/utils/date';
 function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
-  const [status, setStatus] = useState<'active' | 'approved' | 'pending' | 'rejected' | undefined>(undefined);
+  const [status, setStatus] = useState<'processing' | 'approved' | 'pending' | 'rejected' | undefined>(undefined);
   const [expand지원서, setExpand지원서] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const partyRecruitmentId = searchParams.get('partyRecruitmentId');
@@ -117,9 +117,9 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '7px', marginTop: '10px' }}>
           {[
-            { label: '검토중', value: 'active' },
+            { label: '검토중', value: 'pending' },
             { label: ' 수락 ', value: 'approved' },
-            { label: '응답대기', value: 'pending' },
+            { label: '응답대기', value: 'processing' },
             { label: ' 거절 ', value: 'rejected' },
           ].map((item, i) => (
             <Chip
@@ -131,7 +131,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
               fontColor={status === item.value ? 'black' : '#767676'}
               fontWeight={status === item.value ? 'bold' : 'normal'}
               onClick={() => {
-                setStatus(item.value as unknown as 'active' | 'approved' | 'pending' | 'rejected');
+                setStatus(item.value as unknown as 'processing' | 'approved' | 'pending' | 'rejected');
               }}
             />
           ))}
@@ -177,11 +177,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                     <HelpOutlineRoundedIcon
                       onClick={() => setIsShowBalloon(true)}
                       fontSize="small"
-                      style={{ marginLeft: '2px', color: '#999999' }}
+                      style={{ marginLeft: '2px', marginBottom: '2px', color: '#999999' }}
                     />
                     {isShowBalloon ? (
                       <Balloon
-                        width="309px"
+                        width="321px"
                         onClose={() => {
                           setIsShowBalloon(false);
                         }}
@@ -195,10 +195,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                           transform: 'translate(12px, 0px)',
                           marginTop: '20px',
                           zIndex: 999,
+                          borderRadius: '12px',
                           textAlign: 'start',
                         }}
                       >
-                        <div style={{ textAlign: 'start' }}>
+                        <div style={{ width: '100%', textAlign: 'start', marginBottom: '12px' }}>
                           <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
                             상태
                           </Txt>
@@ -206,7 +207,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                             에 대해 알려드릴게요
                           </Txt>
                         </div>
-                        <Txt fontSize={14} fontColor="white">
+                        <Txt fontSize={14} fontColor="white" style={{ lineHeight: '140%' }}>
                           검토중 : 지원서 확인 전이에요.
                           <br />
                           응답대기 : 파티장 수락 후, 지원자의 수락을 기다려요.
@@ -215,7 +216,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                           <br />
                           거절 : 파티장 또는 지원자가 거절했어요.
                         </Txt>
-                        <Txt fontSize={14} fontColor="greenLight100" style={{ textAlign: 'start' }}>
+                        <Txt
+                          fontSize={14}
+                          fontColor="greenLight100"
+                          style={{ width: '100%', textAlign: 'start', marginTop: '20px' }}
+                        >
                           일주일 이내 상대방이 수락하지 않으면 거절됩니다
                         </Txt>
                       </Balloon>
@@ -296,48 +301,51 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                     <Row item={item}>
                       <Styled지원서Cell gridColumnStart={1} gridColumnEnd={5}>
                         <Styled지원서TxtBox>{item.message}</Styled지원서TxtBox>
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            gap: '12px',
-                            justifyContent: 'flex-end',
-                            marginTop: '12px',
-                          }}
-                        >
-                          <SquareButton
-                            isAccept={false}
-                            onClick={async () => {
-                              try {
-                                const res = fetchRejectPartyApplication({
-                                  partyId: Number(partyId),
-                                  partyApplicationId: item.id,
-                                });
-                                return res;
-                              } catch (err) {
-                                console.error(err);
-                              }
+                        {item.status === 'pending' && (
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              gap: '12px',
+                              justifyContent: 'flex-end',
+                              marginTop: '12px',
+                              marginBottom: '5px',
                             }}
                           >
-                            거절하기
-                          </SquareButton>
-                          <SquareButton
-                            isAccept={true}
-                            onClick={async () => {
-                              try {
-                                const res = fetchApprovePartyApplication({
-                                  partyId: Number(partyId),
-                                  partyApplicationId: item.id,
-                                });
-                                return res;
-                              } catch (err) {
-                                console.error(err);
-                              }
-                            }}
-                          >
-                            수락하기
-                          </SquareButton>
-                        </div>
+                            <SquareButton
+                              isAccept={false}
+                              onClick={async () => {
+                                try {
+                                  const res = fetchAdminRejectPartyApplication({
+                                    partyId: Number(partyId),
+                                    partyApplicationId: item.id,
+                                  });
+                                  return res;
+                                } catch (err) {
+                                  console.error(err);
+                                }
+                              }}
+                            >
+                              거절하기
+                            </SquareButton>
+                            <SquareButton
+                              isAccept={true}
+                              onClick={async () => {
+                                try {
+                                  const res = fetchAdminApprovePartyApplication({
+                                    partyId: Number(partyId),
+                                    partyApplicationId: item.id,
+                                  });
+                                  return res;
+                                } catch (err) {
+                                  console.error(err);
+                                }
+                              }}
+                            >
+                              수락하기
+                            </SquareButton>
+                          </div>
+                        )}
                       </Styled지원서Cell>
                     </Row>
                   )}
@@ -379,9 +387,10 @@ const StyledCell = styled(Cell)<{ isExpend: boolean }>`
 `;
 
 const Styled지원서Cell = styled(Cell)`
-  padding: 0px 20px 32px;
+  padding: 0px 20px 16px;
   border-bottom: 1px solid #f1f1f5;
-  height: 300px;
+
+  height: auto;
 `;
 
 const Styled지원서TxtBox = styled.div`
@@ -398,7 +407,7 @@ const SquareButton = styled.button<{ isAccept: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: '1px solid #21ECC7';
+  border: 1px solid #21ecc7;
   background-color: ${({ isAccept }) => (isAccept ? '#21ECC7' : '#FFFFFF')};
   text-align: center;
   font-size: 14px;

@@ -47,4 +47,16 @@ const SMargin = styled.div<{ margin: string }>`
   margin: ${props => props.margin};
 `;
 
-export { SChildContainer, SContainer, SForm, SHomeContainer, SMargin };
+/**
+ * 개발자 | 프론트엔드
+ * -> |에 해당하는 컴포넌트
+ */
+const Divider = styled.div`
+  width: 1.5px;
+  height: 10px;
+  background-color: #999999;
+  border-radius: 9px;
+  margin: 0px 6px 0px 6px;
+`;
+
+export { Divider, SChildContainer, SContainer, SForm, SHomeContainer, SMargin };
