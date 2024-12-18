@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
+import type { CreatePartyResponse } from '@/apis/party';
 import { fetchGetPartyTypes, fetchGetPositions, fetchPostCreateParty } from '@/apis/party';
 import ImageAddIcon from '@/assets/icon/image_add.svg';
 import { Balloon, Button, Input, Square, Txt } from '@/components/_atoms';
@@ -67,6 +68,7 @@ export default function PartyEdit({ partyId }: PageParams) {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [imgPath, setImgPath] = useState('');
 
+  const [postResponse, setPostResponse] = useState<CreatePartyResponse | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -167,7 +169,8 @@ export default function PartyEdit({ partyId }: PageParams) {
 
     try {
       const res = await fetchPostCreateParty(formData);
-      onClickApply();
+      setPostResponse(res);
+      onClickApply(res?.id);
     } catch (err) {
       console.error('Error creating party:', err);
     }
@@ -201,7 +204,7 @@ export default function PartyEdit({ partyId }: PageParams) {
     });
   };
 
-  const onClickApply = () => {
+  const onClickApply = (partyId?: number) => {
     openModal({
       children: (
         <ConfirmModal
@@ -218,12 +221,12 @@ export default function PartyEdit({ partyId }: PageParams) {
         />
       ),
       onCancel: () => {
-        router.push('/');
+        router.push(`/`);
         closeModal();
       },
       // TODO. 모집하기 모달 route 기획 나와야 함
       onSubmit: () => {
-        router.push('/party/recruit');
+        router.push(`/party/setting/recruit/edit?type=ADD&partyId=${partyId}`);
         closeModal();
       },
     });

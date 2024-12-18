@@ -106,7 +106,7 @@ export default function Header() {
         </HeaderLeft>
 
         <HeaderRight>
-          <CircleButton>파티 생성하기 +</CircleButton>
+          <CircleButton onClick={() => router.push('/party/create')}>파티 생성하기 +</CircleButton>
 
           {isLoggedIn ? (
             <Dropdown />

@@ -32,13 +32,25 @@ export const fetchGetPositions = async (main?: string) => {
   }
 };
 
-export const fetchPostCreateParty = async (data: FormData) => {
+export interface CreatePartyResponse {
+  partyTypeId: number;
+  title: string;
+  content: string;
+  image: any;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+}
+
+export const fetchPostCreateParty = async (data: FormData): Promise<CreatePartyResponse | null> => {
   try {
-    const response = await fileUploadApi.post('/parties', data);
+    const response = await fileUploadApi.post<CreatePartyResponse>('/parties', data);
     return response.data;
   } catch (error) {
-    console.error('fetchPostCreateParty error : ', error);
-    return error;
+    console.error('fetchPostCreateParty error:', error);
+    // 에러를 호출하는 쪽에서 처리하게 하려면 아래와 같이 `throw` 처리 가능
+    throw error;
   }
 };
 
