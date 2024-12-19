@@ -2,7 +2,7 @@
 import React, { Fragment, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -30,10 +30,7 @@ function MyApply() {
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
   const [status, setStatus] = useState<'processing' | 'approved' | 'pending' | 'rejected' | 'all'>('all');
   const [expand지원서, setExpand지원서] = useState<number | null>(null);
-  const searchParams = useSearchParams();
-  const partyRecruitmentId = searchParams.get('partyRecruitmentId');
-  const mainPosition = searchParams.get('main');
-  const subPosition = searchParams.get('sub');
+
   const { openModal, closeModal } = useModalContext();
   const router = useRouter();
   // [GET] 포지션 모집 공고별 지원자 조회
@@ -42,8 +39,9 @@ function MyApply() {
     hasNextPage,
     fetchNextPage,
     isFetched,
+    refetch: myPartyApplicationsRefetch,
   } = useInfiniteQuery({
-    queryKey: [order, status, partyRecruitmentId, mainPosition, subPosition],
+    queryKey: [order, status],
     queryFn: async ({ pageParam }) => {
       const res = await fetchGetUsersMePartiesApplications({
         page: pageParam as number,
@@ -63,6 +61,7 @@ function MyApply() {
         return allPages.length + 1;
       } else return null;
     },
+    staleTime: 0,
   });
   // infiniteQuery refetch 트리거
   const { ref } = useInView({
@@ -134,7 +133,7 @@ function MyApply() {
               modalContents={
                 <>
                   지원을 취소하면 목록에서 삭제되어요 <br />
-                  정말로 취소하시겠어요?{' '}
+                  정말로 취소하시겠어요?
                 </>
               }
               cancelBtnTxt="닫기"
@@ -153,12 +152,15 @@ function MyApply() {
               partyId: Number(partyId),
               partyApplicationId: Number(partyApplicationId),
             });
-            router.refresh();
           } catch (err) {
             console.error(err);
           }
         }
+
         closeModal();
+        setExpand지원서(null);
+        router.refresh();
+        myPartyApplicationsRefetch();
       },
     });
   };
