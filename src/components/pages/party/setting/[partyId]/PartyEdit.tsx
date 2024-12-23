@@ -73,8 +73,10 @@ export default function PartyEdit({ partyId }: PageParams) {
 
   useEffect(() => {
     (async () => {
-      const response = await fetchGetPositions();
-      setPositionData(response);
+      if (pageType === 'CREATE') {
+        const response = await fetchGetPositions();
+        setPositionData(response);
+      }
     })();
   }, []);
 
@@ -106,10 +108,10 @@ export default function PartyEdit({ partyId }: PageParams) {
 
   const buttonDisabled = useMemo(() => {
     const commonConditions =
-      파티명InputState == 'success' && 파티소개글InputState == 'success' && 파티유형value.id != 0 && 내포지션.id != 0;
+      파티명InputState == 'success' && 파티소개글InputState == 'success' && 파티유형value.id != 0;
 
     if (pageType === 'CREATE') {
-      return !commonConditions;
+      return !commonConditions && 내포지션.id != 0;
     } else if (pageType === 'MODIFY') {
       return !(commonConditions && 파티상태 !== '');
     }
@@ -400,31 +402,35 @@ export default function PartyEdit({ partyId }: PageParams) {
             &#13;&#10;함께하고 싶으신 분들은 언제든지 환영입니다!"
           />
         </SFlexColumnFull>
-        <SMargin margin="120px 0px 0px 0px" />
-        <SFlexColumnFull>
-          <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
-            내 포지션
-          </Txt>
-          <Txt fontSize={16} style={{ marginBottom: 20 }}>
-            파티 내에서 본인의 포지션을 입력해 주세요.
-          </Txt>
-          <SFlexRowFull style={{ justifyContent: 'space-between', gap: '20px' }}>
-            <Select
-              placeholder="직군"
-              height="m"
-              options={positionList}
-              value={내포지션.직군}
-              onClick={handleSelectChange(set내포지션, '직군')}
-            />
-            <Select
-              placeholder="직무"
-              height="m"
-              options={내포지션Filtered}
-              value={내포지션.직무}
-              onClick={handleSelectChange(set내포지션, '직무', 내포지션Filtered)}
-            />
-          </SFlexRowFull>
-        </SFlexColumnFull>
+        {pageType === 'CREATE' && (
+          <>
+            <SMargin margin="120px 0px 0px 0px" />
+            <SFlexColumnFull>
+              <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
+                내 포지션
+              </Txt>
+              <Txt fontSize={16} style={{ marginBottom: 20 }}>
+                파티 내에서 본인의 포지션을 입력해 주세요.
+              </Txt>
+              <SFlexRowFull style={{ justifyContent: 'space-between', gap: '20px' }}>
+                <Select
+                  placeholder="직군"
+                  height="m"
+                  options={positionList}
+                  value={내포지션.직군}
+                  onClick={handleSelectChange(set내포지션, '직군')}
+                />
+                <Select
+                  placeholder="직무"
+                  height="m"
+                  options={내포지션Filtered}
+                  value={내포지션.직무}
+                  onClick={handleSelectChange(set내포지션, '직무', 내포지션Filtered)}
+                />
+              </SFlexRowFull>
+            </SFlexColumnFull>
+          </>
+        )}
         <SMargin margin="7.5rem 0px 0px 0px" />
         {pageType === 'MODIFY' && (
           <>

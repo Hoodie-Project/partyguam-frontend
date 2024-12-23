@@ -21,7 +21,7 @@ import { SContainer, SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
 
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
-  return data.map(position => ({
+  return data?.map(position => ({
     id: position.id,
     label: position.sub,
   }));

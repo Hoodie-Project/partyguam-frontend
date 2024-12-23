@@ -112,7 +112,7 @@ function MyApply() {
         <>
           {(modalType == '수락' || modalType == '거절') && (
             <ConfirmModal
-              modalTitle={modalType == '거절' ? '파티를 거절했어요.' : '파티를 수작했어요.'}
+              modalTitle={modalType == '거절' ? '파티를 거절했어요.' : '파티를 수락했어요.'}
               modalContents={
                 modalType == '거절' ? (
                   <>언제든지 새로운 프로젝트에 도전해보세요!</>

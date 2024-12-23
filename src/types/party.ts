@@ -105,14 +105,15 @@ export interface PartyUserListByAdminResponse {
 }
 
 export interface PartyUserByAdmin {
+  id: number;
   createdAt: string; // 참여 날짜
+  updateAt: string; // 참여 날짜
   authority: string; // 직책
   position: {
     main: string; // 직군
     sub: string; // 직무
   };
   user: {
-    id: number;
     nickname: string;
     image?: string | null;
   };

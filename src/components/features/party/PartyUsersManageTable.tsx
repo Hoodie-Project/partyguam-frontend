@@ -33,7 +33,7 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
   const partyUserListWithId: TablePartyUserManage[] | undefined = Array.isArray(partyUserList?.partyUser)
     ? partyUserList?.partyUser.map(item => ({
         ...item,
-        id: item.user.id,
+        id: item.id,
       }))
     : [];
 
@@ -78,6 +78,7 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
       sub: string;
     },
   ) => {
+    console.log('user > ', user);
     openModal({
       children: <PartyUserEditModal partyId={partyId} user={user} authority={authority} position={position} />,
     });
@@ -226,7 +227,9 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
                     </Txt>
                   </StyledCell>
                   <StyledCell>
-                    <CircleButton onClick={() => handleClick수정하기(item.user, item.authority, item.position)}>
+                    <CircleButton
+                      onClick={() => handleClick수정하기({ id: item.id, ...item.user }, item.authority, item.position)}
+                    >
                       수정하기
                     </CircleButton>
                   </StyledCell>

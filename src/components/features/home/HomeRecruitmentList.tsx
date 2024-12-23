@@ -360,8 +360,8 @@ const StyledSquare = styled(Square)<{ personalized?: boolean }>`
 `;
 
 const CardListWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 항상 3개의 열 */
   gap: 12px;
 `;
 

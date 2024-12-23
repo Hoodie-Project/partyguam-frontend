@@ -28,11 +28,13 @@ export default function FloatingMenu({ menu, ...divAttributes }: Props) {
       <MenuContainer className="custom-side-menu" {...divAttributes}>
         {menu.map((item, index) => (
           <MenuItem key={index}>
-            <MenuTitle>{item.대메뉴}</MenuTitle>
+            <MenuTitle style={{ lineHeight: '140%' }}>{item.대메뉴}</MenuTitle>
             <SubMenuList>
               {item.소메뉴.map((subItem, subIndex) => (
                 <SubMenuItem key={subIndex} active={pathname === subItem.route}>
-                  <Link href={subItem.route}>{subItem.label}</Link>
+                  <Link href={subItem.route} style={{ lineHeight: '140%' }}>
+                    {subItem.label}
+                  </Link>
                 </SubMenuItem>
               ))}
             </SubMenuList>

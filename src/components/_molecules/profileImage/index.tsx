@@ -31,7 +31,7 @@ function ProfileImage({
   ...divAttributes
 }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | undefined>(imageUrl);
+  const [previewImage, setPreviewImage] = useState<string | undefined>(undefined);
 
   const handleEditClick = () => {
     if (fileInputRef.current) {
@@ -43,6 +43,7 @@ function ProfileImage({
     const file = event.target.files?.[0];
     if (file) {
       const objectUrl = URL.createObjectURL(file); // 파일의 임시 URL 생성
+      console.log('objectUrl > ', objectUrl);
       setPreviewImage(objectUrl); // 미리 보기 이미지 업데이트
       if (setImage) {
         setImage(file); // 부모 상태 업데이트
@@ -52,9 +53,9 @@ function ProfileImage({
 
   return (
     <ImageWrapper size={size} {...divAttributes}>
-      {Boolean(previewImage) ? (
+      {Boolean(imageUrl) ? (
         <Image
-          src={Boolean(previewImage) ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${previewImage}` : ''}
+          src={Boolean(previewImage) ? `${previewImage}` : `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${imageUrl}`}
           width={size}
           height={size}
           alt="파티원 프로필 이미지"

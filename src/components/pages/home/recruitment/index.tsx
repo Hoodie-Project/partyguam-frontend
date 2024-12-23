@@ -28,7 +28,7 @@ export const transformPositionData = (data: Position[]): { id: number; label: st
 };
 
 const transformPartyTypes = (data: { id: number; type: string }[]): { id: number; label: string }[] => {
-  return data.map(item => ({
+  return data?.map(item => ({
     id: item.id,
     label: item.type,
   }));

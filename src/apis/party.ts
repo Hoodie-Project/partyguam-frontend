@@ -1,12 +1,12 @@
 import type { PartyApplicationData, PartyUserListByAdminResponse, PartyUserResponse } from '@/types/party';
 
-import { fileUploadApi, privateApi } from '.';
+import { fileUploadApi, privateApi, publicApi } from '.';
 
 // 파티 생성하기 페이지
 
 export const fetchGetPartyTypes = async () => {
   try {
-    const response = await privateApi.get('/parties/types');
+    const response = await publicApi.get('/parties/types');
     return response.data;
   } catch (error) {
     console.error('fetchGetPartyTypes error : ', error);
@@ -20,7 +20,7 @@ export const fetchGetPartyTypes = async () => {
  */
 export const fetchGetPositions = async (main?: string) => {
   try {
-    const response = await privateApi.get('/positions', {
+    const response = await publicApi.get('/positions', {
       params: {
         ...(main && { main }),
       },
@@ -359,7 +359,7 @@ export const fetchUpdatePartyUserPosition = async ({
   positionId: number;
 }) => {
   try {
-    const response = await privateApi.patch(`/parties/${partyId}/users/${partyUserId}`, {
+    const response = await privateApi.patch(`/parties/${partyId}/admin/users/${partyUserId}`, {
       positionId,
     });
     return response.data;
