@@ -13,7 +13,6 @@ import { fetchParties } from '@/apis/home';
 import { fetchGetPartyTypes } from '@/apis/party';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
-import { LoginModal } from '@/components/features';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
@@ -196,11 +195,7 @@ function HomeParty() {
   }, [inView, hasNextPage, fetchNextPage]);
 
   const handleClickPartyCard = (partyId: number) => {
-    if (isLoggedIn) {
-      router.push(`/party/${partyId}`);
-    } else {
-      openModal({ children: <LoginModal /> });
-    }
+    router.push(`/party/${partyId}`);
   };
 
   return (

@@ -1,16 +1,23 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import Image from 'next/image';
 import Link from 'next/link';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { fetchGetUsersMeParties } from '@/apis/detailProfile';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { ProfileImage } from '@/components/_molecules';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
-import { SFlexColumn, SFlexRow } from '@/styles/components';
+import { Divider, SFlexColumn, SFlexColumnCenter, SFlexRow } from '@/styles/components';
 import { calculateAge } from '@/utils/date';
 
 export default function MyPagePreviewModal() {
+  const [visibleItemsCount, setVisibleItemsCount] = useState(3); // 초기 표시할 아이템 개수
+
   const { modalData, closeModal } = useModalContext();
   const { onCancel } = modalData;
   const user = useAuthStore();
@@ -34,6 +41,46 @@ export default function MyPagePreviewModal() {
     onCancel?.();
     closeModal();
   };
+
+  // [GET] 포지션 모집 공고별 지원자 조회
+  const {
+    data: myPartyList,
+    hasNextPage,
+    fetchNextPage,
+    isFetched,
+  } = useInfiniteQuery({
+    queryKey: [],
+    queryFn: async ({ pageParam }) => {
+      const res = await fetchGetUsersMeParties({
+        page: pageParam as number,
+        limit: 10,
+        sort: 'createdAt',
+        order: 'DESC',
+      });
+
+      return res;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const totalFetchedItems = allPages.flatMap(page => page?.partyUsers).length;
+
+      if (lastPage != null && totalFetchedItems < lastPage.total) {
+        return allPages.length + 1;
+      } else return null;
+    },
+  });
+
+  // infiniteQuery refetch 트리거
+  const { ref } = useInView({
+    onChange: inView => {
+      inView && hasNextPage && fetchNextPage();
+    },
+  });
+
+  const handleShowMore = () => {
+    setVisibleItemsCount(myPartyList?.pages[0]?.total as number); // 추가로 3개 더 보여줌
+  };
+
   return (
     <MyPageEditModalContainer>
       <CloseRoundedIcon
@@ -275,6 +322,82 @@ export default function MyPagePreviewModal() {
               건
             </Txt>
           </SFlexRow>
+
+          <PartyCardList>
+            {myPartyList?.pages.flatMap(page =>
+              page?.partyUsers.slice(0, visibleItemsCount).map(party => (
+                <StyledSquare
+                  key={party.id}
+                  width="100%"
+                  height="333px"
+                  shadowKey="shadow1"
+                  backgroundColor="white"
+                  radiusKey="base"
+                  borderColor="grey200"
+                >
+                  <CardContentsWrapper>
+                    <Image
+                      src={
+                        party.party.image
+                          ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.party.image}`
+                          : '/images/guam.png'
+                      }
+                      width={165}
+                      height={150}
+                      alt={party.party.title}
+                      style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                    />
+
+                    <ChipWrapper>
+                      <Chip
+                        chipType="filled"
+                        label={party.party.status === 'active' ? '진행중' : '파티종료'}
+                        size="xsmall"
+                        chipColor={party.party.status === 'active' ? '#D5F0E3' : '#505050'}
+                        fontColor={party.party.status === 'active' ? '#016110' : '#ffffff'}
+                        fontWeight="semibold"
+                      />
+                      <Chip
+                        chipType="filled"
+                        label={party.party.partyType.type}
+                        size="xsmall"
+                        chipColor="#F6F6F6"
+                        fontColor="grey700"
+                        fontWeight="semibold"
+                      />
+                    </ChipWrapper>
+
+                    <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                      {party.party.title} {/* 파티 제목 */}
+                    </EllipsisTitleText>
+                    <Txt
+                      fontSize={14}
+                      style={{
+                        lineHeight: '140%',
+                        marginTop: 'auto',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}
+                    >
+                      {party.position.main} <Divider /> {party.position.sub}
+                    </Txt>
+                  </CardContentsWrapper>
+                </StyledSquare>
+              )),
+            )}
+            <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
+          </PartyCardList>
+          <SFlexColumnCenter>
+            {visibleItemsCount !== myPartyList?.pages[0]?.total && (
+              <CircleButton onClick={handleShowMore}>
+                <Txt fontSize={14} fontColor="grey500">
+                  파티 더보기
+                </Txt>
+                <KeyboardArrowDownRoundedIcon />
+              </CircleButton>
+            )}
+          </SFlexColumnCenter>
         </div>
       </MyPageDetailProfileContainer>
     </MyPageEditModalContainer>
@@ -291,6 +414,7 @@ const MyPageEditModalContainer = styled.div`
   padding: 70px 102px 86px 102px;
   background-color: white;
   border-radius: 12px;
+  overflow-y: auto;
 `;
 
 const MyPageDetailProfileContainer = styled.div`
@@ -318,4 +442,55 @@ const Personality = styled.div`
       margin-bottom: 6px;
     }
   }
+`;
+
+const PartyCardList = styled.section`
+  width: 600px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+`;
+
+const StyledSquare = styled(Square)`
+  width: 100%;
+  height: 270px;
+  padding: 12px;
+  display: flex;
+  box-sizing: border-box;
+  cursor: pointer;
+`;
+
+const CardContentsWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const EllipsisTitleText = styled(Txt)`
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  margin: 8px 0px 0px 2px;
+`;
+const ChipWrapper = styled.div`
+  display: flex;
+  margin-top: 14px;
+  gap: 4px;
+`;
+const CircleButton = styled.button`
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 1px solid #e5e5ec;
+  border-radius: 999px;
+  padding: 8px 16px;
+  color: #999999;
+  box-shadow: 0px 2px 10px -1px rgba(17, 17, 17, 0.16);
 `;

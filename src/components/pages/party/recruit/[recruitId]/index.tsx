@@ -10,6 +10,9 @@ import ShareIcon from '@mui/icons-material/Share';
 import { fetchGetPartyRecruitments } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import Button from '@/components/_atoms/button';
+import { LoginModal } from '@/components/features';
+import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyRecruitDetailResponse } from '@/types/party';
@@ -46,6 +49,12 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
   const [partyRecruitDetailData, setPartyRecruitDetailData] = useState<PartyRecruitDetailResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
 
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+  }));
+
+  const { openModal, closeModal } = useModalContext();
+
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -75,6 +84,14 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
 
     fetchData();
   }, [recruitId]);
+
+  const handleClickApplyBtn = () => {
+    if (isLoggedIn) {
+      router.push(`/party/apply?partyId=${partyId}&recruitId=${recruitId}`);
+    } else {
+      openModal({ children: <LoginModal /> });
+    }
+  };
 
   return (
     <SContainer style={{ padding: isReadOnly ? '0' : 'default-padding-value' }}>
@@ -299,7 +316,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
           backgroudColor="primaryGreen"
           radius="base"
           shadow="shadow1"
-          onClick={() => router.push(`/party/apply?partyId=${partyId}&recruitId=${recruitId}`)}
+          onClick={handleClickApplyBtn}
           disabled={isDisable지원하기}
         >
           <Txt fontWeight="bold" fontColor="black">
@@ -357,6 +374,6 @@ const Divider = styled.div`
 
 const FloatingButton = styled.div`
   position: fixed;
-  bottom: 20px;
+  bottom: 50px;
   width: 820px;
 `;

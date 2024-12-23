@@ -11,12 +11,9 @@ import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRigh
 import { fetchPartyRecruitments, fetchPersonalizedPartiesRecruitments } from '@/apis/home';
 import NoteCheckIcon from '@/assets/icon/note-check.svg';
 import { Chip, Square, Txt } from '@/components/_atoms';
-import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { SFlexColumnCenter } from '@/styles/components';
 import type { PartyRecruitmentsResponse } from '@/types/home';
-
-import LoginModal from '../loginModal';
 
 type Props = {
   personalized?: boolean;
@@ -28,8 +25,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
   const [세부프로필미입력, set세부프로필미입력] = useState(false);
   const sliderRef = useRef<Slider | null>(null);
   const router = useRouter();
-  const { nickname, isLoggedIn } = useAuthStore();
-  const { openModal } = useModalContext();
+  const { nickname } = useAuthStore();
 
   const handleNext = () => {
     sliderRef.current?.slickNext();
@@ -83,11 +79,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
   }, [personalized]);
 
   const handleClickRecruitmentCard = (recruitmentId: number, partyId: number) => {
-    if (isLoggedIn) {
-      router.push(`/party/recruit/${recruitmentId}?partyId=${partyId}`);
-    } else {
-      openModal({ children: <LoginModal /> });
-    }
+    router.push(`/party/recruit/${recruitmentId}?partyId=${partyId}`);
   };
 
   return (

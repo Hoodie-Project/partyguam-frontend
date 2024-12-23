@@ -36,7 +36,6 @@ function MyParty() {
     return <ArrowUpwardIcon fontSize="small" />;
   };
 
-  // [GET] 포지션 모집 공고별 지원자 조회
   const {
     data: myPartyList,
     hasNextPage,
@@ -242,15 +241,4 @@ const EmptyState = styled.div`
   align-items: center;
   color: #767676;
   margin-top: 60px;
-`;
-
-const CircleButton = styled.button`
-  background-color: #21ecc7;
-  border: 1px solid #21ecc7;
-  border-radius: 999px;
-  padding: 8px 12px;
-  color: #000000;
-  font-size: 14px;
-  font-weight: 600;
-  margin-left: 12px;
 `;

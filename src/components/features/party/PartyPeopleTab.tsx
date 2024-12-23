@@ -3,9 +3,13 @@ import styled from '@emotion/styled';
 
 import type { UserAuthorityResponse } from '@/apis/auth';
 import { fetchGetPartyUsers } from '@/apis/party';
-import { Txt } from '@/components/_atoms';
+import { Button, Txt } from '@/components/_atoms';
+import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 import { SFlexColumnFull, SMargin } from '@/styles/components';
 import type { PartyUserResponse } from '@/types/party';
+
+import LoginModal from '../loginModal';
 
 import PartyPeopleCard from './PartyPeopleCard';
 
@@ -16,7 +20,8 @@ type Props = {
 
 function PartyPeopleTab({ partyId, userAuthority }: Props) {
   const [partyUserData, setPartyUserData] = useState<PartyUserResponse | null>();
-
+  const { openModal } = useModalContext();
+  const { isLoggedIn } = useAuthStore();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -73,6 +78,22 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
           ))}
         </PeopleListContainer>
       </SFlexColumnFull>
+      {!isLoggedIn && (
+        <FloatingButton>
+          <Button
+            style={{ width: '100%' }}
+            height="l"
+            backgroudColor="primaryGreen"
+            radius="base"
+            shadow="shadow1"
+            onClick={() => openModal({ children: <LoginModal /> })}
+          >
+            <Txt fontWeight="bold" fontColor="black">
+              로그인하고 확인하세요!
+            </Txt>
+          </Button>
+        </FloatingButton>
+      )}
     </PartyPeopleTabContainer>
   );
 }
@@ -98,4 +119,10 @@ const PeopleListContainer = styled.div`
   & > div:nth-of-type(2n) {
     margin-right: 0;
   }
+`;
+
+const FloatingButton = styled.div`
+  position: fixed;
+  bottom: 50px;
+  width: 820px;
 `;

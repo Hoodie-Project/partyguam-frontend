@@ -269,7 +269,7 @@ export const fetchUpdatePartyRecruitment = async ({
 // 파티 모집 단일 조회 /dev/api/parties/recruitments/{partyRecruitmentId}
 export const fetchPartyRecruitmentDetails = async (partyRecruitmentId: number) => {
   try {
-    const response = await privateApi.get(`/parties/recruitments/${partyRecruitmentId}`);
+    const response = await publicApi.get(`/parties/recruitments/${partyRecruitmentId}`);
     return response.data;
   } catch (error) {
     console.error('fetchPartyRecruitmentDetails error:', error);
