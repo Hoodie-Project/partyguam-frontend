@@ -182,17 +182,6 @@ const fetchPostUsersMeOauthLink = async () => {
   }
 };
 
-// 카카오 계정 연동
-const fetchGetUsersKakaoLink = async () => {
-  try {
-    const response = await privateApi.get('/users/kakao/link');
-    return response;
-  } catch (error) {
-    console.error('fetchGetUsersKakaoLink error : ', error);
-    return error;
-  }
-};
-
 export interface PartyApplicationResponse {
   total: number;
   partyApplications: PartyApplication[];
@@ -253,7 +242,6 @@ export const fetchGetUsersMePartiesApplications = async ({
 export {
   fetchGetOauthInfo,
   fetchGetUsers,
-  fetchGetUsersKakaoLink,
   fetchGetUsersMeOauth,
   fetchGetUsersMeOauthProfile,
   fetchJoinFormSubmit,

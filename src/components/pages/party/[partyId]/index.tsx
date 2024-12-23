@@ -71,7 +71,11 @@ function PartyHome({ partyId }: PageParams) {
         <Square width="400px" height="300px" radiusKey="base" backgroundColor="grey300" shadowKey="none">
           <Image
             alt="파티 홈 이미지"
-            src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyHomeData?.image}`}
+            src={
+              partyHomeData?.image
+                ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyHomeData?.image}`
+                : '/images/guam.png'
+            }
             width={400}
             height={300}
             style={{ borderRadius: '16px', border: '1px solid #E5E5EC' }}

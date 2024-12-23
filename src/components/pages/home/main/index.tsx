@@ -138,7 +138,7 @@ function Main() {
               {banner?.banner.map(item => (
                 <StyledImageWrapper key={item.id}>
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${item.image}`}
+                    src={item.image ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${item.image}` : '/images/guam.png'}
                     width={1240}
                     height={370}
                     alt={item.title}

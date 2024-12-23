@@ -325,7 +325,11 @@ function MyApply() {
                             }}
                           >
                             <Image
-                              src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${item.partyRecruitment.party.image}`}
+                              src={
+                                item.partyRecruitment.party.image
+                                  ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${item.partyRecruitment.party.image}`
+                                  : '/images/guam.png'
+                              }
                               width={120}
                               height={90}
                               alt={item.partyRecruitment.party.title}

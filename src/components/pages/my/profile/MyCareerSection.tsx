@@ -94,53 +94,55 @@ export default function MyCareerSection({ userCareers }: Props) {
             <Txt fontWeight="semibold" fontSize={16} style={{ marginRight: '24px' }}>
               부포지션
             </Txt>
-            <SFlexRow style={{ gap: '8px' }}>
-              {/* 년수 */}
-              <Chip
-                chipType="filled"
-                chipColor="grey100"
-                label={`${userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`}
-                chipStyle={{
-                  fontSize: '16px',
-                  width: 'auto',
-                  height: '24px',
-                  padding: '4px 10px',
-                  boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                  cursor: 'initial',
-                }}
-              />
-              {/* 주포지션 */}
-              <Chip
-                chipType="filled"
-                chipColor="grey100"
-                label={
-                  <>
-                    <Txt fontSize={16}>
-                      {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
-                    </Txt>
-                    <div
-                      style={{
-                        width: '2px',
-                        height: '12px',
-                        backgroundColor: '#999999',
-                        margin: '0px 6px 0px 6px',
-                        borderRadius: '12px',
-                      }}
-                    />
-                    <Txt fontSize={16}>
-                      {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
-                    </Txt>
-                  </>
-                }
-                chipStyle={{
-                  width: 'auto',
-                  height: '24px',
-                  padding: '4px 10px',
-                  boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                  cursor: 'initial',
-                }}
-              />
-            </SFlexRow>
+            {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main && (
+              <SFlexRow style={{ gap: '8px' }}>
+                {/* 년수 */}
+                <Chip
+                  chipType="filled"
+                  chipColor="grey100"
+                  label={`${userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`}
+                  chipStyle={{
+                    fontSize: '16px',
+                    width: 'auto',
+                    height: '24px',
+                    padding: '4px 10px',
+                    boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
+                    cursor: 'initial',
+                  }}
+                />
+                {/* 부포지션 */}
+                <Chip
+                  chipType="filled"
+                  chipColor="grey100"
+                  label={
+                    <>
+                      <Txt fontSize={16}>
+                        {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
+                      </Txt>
+                      <div
+                        style={{
+                          width: '2px',
+                          height: '12px',
+                          backgroundColor: '#999999',
+                          margin: '0px 6px 0px 6px',
+                          borderRadius: '12px',
+                        }}
+                      />
+                      <Txt fontSize={16}>
+                        {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
+                      </Txt>
+                    </>
+                  }
+                  chipStyle={{
+                    width: 'auto',
+                    height: '24px',
+                    padding: '4px 10px',
+                    boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
+                    cursor: 'initial',
+                  }}
+                />
+              </SFlexRow>
+            )}
           </SFlexRow>
         </SFlexColumn>
       )}

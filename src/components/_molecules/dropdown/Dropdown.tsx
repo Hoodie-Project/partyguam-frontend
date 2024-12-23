@@ -46,12 +46,12 @@ export default function Dropdown() {
   };
 
   const handleLogOut = async () => {
-    router.push('/');
-    setIsOpen(false);
-    logout();
     await fetchUsersLogOut();
     deleteCookie('accessToken');
     deleteCookie('refreshToken');
+    router.push('/');
+    setIsOpen(false);
+    logout();
   };
 
   return (

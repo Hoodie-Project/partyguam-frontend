@@ -90,7 +90,11 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
           >
             <Image
               alt="파티 홈 이미지"
-              src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyRecruitDetailData?.party.image}`}
+              src={
+                partyRecruitDetailData?.party.image
+                  ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyRecruitDetailData?.party.image}`
+                  : '/images/guam.png'
+              }
               width={400}
               height={300}
               style={{ borderRadius: '16px' }}

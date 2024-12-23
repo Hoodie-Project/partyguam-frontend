@@ -161,7 +161,11 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   >
                     <CardContentsWrapper>
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`}
+                        src={
+                          recruitment.party.image
+                            ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`
+                            : '/images/guam.png'
+                        }
                         width={202.56}
                         height={169.5}
                         alt={recruitment.party.title}
@@ -233,7 +237,11 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                 >
                   <CardContentsWrapper>
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`}
+                      src={
+                        recruitment.party.image
+                          ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`
+                          : '/images/guam.png'
+                      }
                       width={160}
                       height={120}
                       alt={recruitment.party.title}

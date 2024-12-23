@@ -307,7 +307,7 @@ function HomeParty() {
               >
                 <CardContentsWrapper>
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.image}`}
+                    src={party.image ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.image}` : '/images/guam.png'}
                     width={255}
                     height={180}
                     alt={party.title}

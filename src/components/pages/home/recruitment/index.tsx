@@ -377,7 +377,11 @@ function HomeRecruitment() {
               >
                 <CardContentsWrapper>
                   <Image
-                    src={`${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`}
+                    src={
+                      recruitment.party.image
+                        ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`
+                        : '/images/guam.png'
+                    }
                     width={160}
                     height={120}
                     alt={recruitment.party.title}

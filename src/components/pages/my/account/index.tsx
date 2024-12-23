@@ -1,19 +1,23 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
+import { deleteCookie } from 'cookies-next';
 
 import type { GetUsersMeOauthResponse } from '@/apis/auth';
-import { fetchGetUsersMeOauth } from '@/apis/auth';
+import { fetchGetUsersMeOauth, fetchPostUsersMeOauthLink, fetchUsersLogOut } from '@/apis/auth';
 import GoogleIcon from '@/assets/icon/google-icon.svg';
 import KakaoIcon from '@/assets/icon/kakao-icon.svg';
 import { Square, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
-import { FloatingMenu } from '@/components/features';
+import { ConfirmModal, FloatingMenu } from '@/components/features';
 import { MYPAGE_MENU } from '@/constants';
+import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 import { SContainer, SFlexColumn } from '@/styles/components';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+
 function MyAccount() {
   const [userMeOauth, setUserMeOauth] = useState<GetUsersMeOauthResponse[] | null>(null);
   const [isKakaoConnected, setIsKakaoConnected] = useState(false);
@@ -21,43 +25,90 @@ function MyAccount() {
   const [kakaoEmail, setKakaoEmail] = useState('');
   const [googleEmail, setGoogleEmail] = useState('');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isExisted = searchParams.get('error') === 'existed';
+  const { openModal, closeModal } = useModalContext();
+  const { logout } = useAuthStore(state => ({
+    logout: state.logout,
+  }));
 
   useEffect(() => {
-    // Fetch user OAuth data
+    if (isExisted) {
+      openModal({
+        children: (
+          <ConfirmModal
+            modalTitle="계정 중복"
+            modalContents={
+              <>
+                해당 계정은 이미 가입되어 있어요.
+                <br />
+                다른 계정을 연동해 주세요.
+              </>
+            }
+            submitBtnTxt="확인"
+          />
+        ),
+        onCancel: () => {
+          closeModal();
+        },
+        onSubmit: () => {
+          router.replace('/my/account');
+          closeModal();
+        },
+      });
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     (async () => {
       try {
         const res = await fetchGetUsersMeOauth();
         setUserMeOauth(res);
 
-        // Set connection states
         res?.forEach(item => {
           if (item.provider === 'kakao') {
             setIsKakaoConnected(true);
-            setKakaoEmail(item.email || ''); // Set Kakao email
+            setKakaoEmail(item.email || '');
           }
           if (item.provider === 'google') {
             setIsGoogleConnected(true);
-            setGoogleEmail(item.email || ''); // Set Google email
+            setGoogleEmail(item.email || '');
           }
         });
       } catch (err) {
         console.error('fetchGetUsersMeOauth error:', err);
       }
     })();
+
+    (async () => {
+      try {
+        await fetchPostUsersMeOauthLink();
+      } catch (err) {
+        console.error('err > ', err);
+      }
+    })();
   }, []);
 
   const handleClickConnect = async (provider: 'kakao' | 'google') => {
-    if (provider === 'kakao') {
-      // const res = await fetchGetUsersKakaoLink();
+    try {
+      const baseUrl = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
-      const kakaoAuthUrl = isDev
-        ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/users/kakao/login`
-        : `${process.env.NEXT_PUBLIC_API_HOST}/users/kakao/login`;
-      router.push(kakaoAuthUrl);
-    } else {
+      const authUrl = `${baseUrl}/users/${provider}/link`;
+
+      await router.push(authUrl);
+    } catch (err) {
+      console.error(`handleClickConnect error for ${provider} > `, err);
     }
   };
 
+  const handleLogOut = async () => {
+    await fetchUsersLogOut();
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
+    deleteCookie('linkToken');
+    router.push('/');
+    logout();
+  };
   return (
     <SContainer>
       <FloatingMenu menu={MYPAGE_MENU()} />
@@ -133,7 +184,7 @@ function MyAccount() {
           </Square>
         </SquareWrapper>
         <ButtonWrapper>
-          <TxtButton fontSize={16} fontWeight="semibold" onClick={() => alert('로그아웃')}>
+          <TxtButton fontSize={16} fontWeight="semibold" onClick={handleLogOut}>
             로그아웃
           </TxtButton>
           <TxtButton
