@@ -12,6 +12,7 @@ import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRigh
 import type { PartiesResponse } from '@/apis/home';
 import { fetchParties } from '@/apis/home';
 import { Chip, Square, Txt } from '@/components/_atoms';
+
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
@@ -45,7 +46,6 @@ function HomePartyCardList() {
     sliderRef.current?.slickPrev(); // 이전 슬라이드로 이동
   };
   const sliderSettings = {
-    infinite: true,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -101,7 +101,10 @@ function HomePartyCardList() {
                   backgroundColor="white"
                   radiusKey="base"
                   borderColor="grey200"
-                  onClick={() => handleClickPartyCard(party.id)}
+                  onClick={e => {
+                    e.preventDefault();
+                    handleClickPartyCard(party.id);
+                  }}
                 >
                   <CardContentsWrapper>
                     <Image
