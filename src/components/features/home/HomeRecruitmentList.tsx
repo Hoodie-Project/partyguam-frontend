@@ -229,11 +229,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                 >
                   <CardContentsWrapper>
                     <Image
-                      src={
-                        recruitment.party.image
-                          ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`
-                          : '/images/guam.png'
-                      }
+                      src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
                       width={160}
                       height={120}
                       alt={recruitment.party.title}
@@ -286,15 +282,15 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                 </StyledSquare>
               </Fragment>
             ))}
-            {recruitmentList?.total == 0 && (
-              <EmptyState>
-                <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
-                <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
-                  모집공고가 없어요.
-                </Txt>
-              </EmptyState>
-            )}
           </CardListWrapper>
+        )}
+        {recruitmentList?.total == 0 && (
+          <EmptyState>
+            <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+            <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+              모집공고가 없어요.
+            </Txt>
+          </EmptyState>
         )}
       </ReCruitmentCardWrapper>
     </>
