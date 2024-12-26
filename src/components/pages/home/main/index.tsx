@@ -122,32 +122,34 @@ function Main() {
     <SContainer>
       <SHomeContainer>
         <MainPageContentsWrapper>
-          <MainBannerSliderWrapper>
-            <ControlButtons>
-              <Button onClick={handlePrev}>
-                <KeyboardArrowLeftRoundedIcon />
-              </Button>
-              <Number>{page}</Number>
-              <span>|</span>
-              <Number>{banner?.total}</Number>
-              <Button onClick={handleNext}>
-                <KeyboardArrowRightRoundedIcon />
-              </Button>
-            </ControlButtons>
-            <Slider ref={sliderRef} {...settings}>
-              {banner?.banner.map(item => (
-                <StyledImageWrapper key={item.id}>
-                  <Image
-                    src={item.image ? `${BASE_URL}/${item.image}` : '/images/guam.png'}
-                    width={1240}
-                    height={370}
-                    alt={item.title}
-                    style={{ borderRadius: '16px', border: '1px solid #F1F1F5' }}
-                  />
-                </StyledImageWrapper>
-              ))}
-            </Slider>
-          </MainBannerSliderWrapper>
+          {banner && banner.total !== 0 && (
+            <MainBannerSliderWrapper>
+              <ControlButtons>
+                <Button onClick={handlePrev}>
+                  <KeyboardArrowLeftRoundedIcon />
+                </Button>
+                <Number>{page}</Number>
+                <span>|</span>
+                <Number>{banner?.total}</Number>
+                <Button onClick={handleNext}>
+                  <KeyboardArrowRightRoundedIcon />
+                </Button>
+              </ControlButtons>
+              <Slider ref={sliderRef} {...settings}>
+                {banner?.banner.map(item => (
+                  <StyledImageWrapper key={item.id}>
+                    <Image
+                      src={item.image ? `${BASE_URL}/${item.image}` : '/images/guam.png'}
+                      width={1240}
+                      height={370}
+                      alt={item.title}
+                      style={{ borderRadius: '16px', border: '1px solid #F1F1F5' }}
+                    />
+                  </StyledImageWrapper>
+                ))}
+              </Slider>
+            </MainBannerSliderWrapper>
+          )}
           <MainSearchWrapper>
             <div style={{ width: 'auto', minWidth: '67px' }}>
               <Select
