@@ -14,7 +14,7 @@ import type { PartyRecruitmentListResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 
 import PartyRecruitmentsCard from './PartyRecruitmentsCard';
-import { UserAuthorityResponse } from '@/apis/auth';
+import type { UserAuthorityResponse } from '@/apis/auth';
 
 // 직군 필터링 함수
 const filterMainCategories = (data: Position[]): { id: number; label: string }[] => {

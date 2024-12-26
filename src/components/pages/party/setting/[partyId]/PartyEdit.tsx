@@ -23,7 +23,7 @@ import { PARTY_SETTING_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { Position } from '@/types/user';
-import { PartyHomeResponse } from '@/types/party';
+import type { PartyHomeResponse } from '@/types/party';
 
 type StateType = any;
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
