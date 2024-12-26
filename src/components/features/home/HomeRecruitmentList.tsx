@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 
@@ -285,6 +286,14 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                 </StyledSquare>
               </Fragment>
             ))}
+            {recruitmentList?.total == 0 && (
+              <EmptyState>
+                <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+                <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+                  모집공고가 없어요.
+                </Txt>
+              </EmptyState>
+            )}
           </CardListWrapper>
         )}
       </ReCruitmentCardWrapper>
