@@ -43,7 +43,6 @@ function ProfileImage({
     const file = event.target.files?.[0];
     if (file) {
       const objectUrl = URL.createObjectURL(file); // 파일의 임시 URL 생성
-      console.log('objectUrl > ', objectUrl);
       setPreviewImage(objectUrl); // 미리 보기 이미지 업데이트
       if (setImage) {
         setImage(file); // 부모 상태 업데이트

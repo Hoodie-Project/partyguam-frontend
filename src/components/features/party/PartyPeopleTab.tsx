@@ -11,6 +11,7 @@ import type { PartyUserResponse } from '@/types/party';
 
 import LoginModal from '../loginModal';
 
+import { partyUserMockData } from './mockData';
 import PartyPeopleCard from './PartyPeopleCard';
 
 type Props = {
@@ -22,6 +23,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
   const [partyUserData, setPartyUserData] = useState<PartyUserResponse | null>();
   const { openModal } = useModalContext();
   const { isLoggedIn } = useAuthStore();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,6 +37,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
         setPartyUserData(response);
       } catch (error) {
         console.error('Error fetching party user data : ', error);
+        setPartyUserData(partyUserMockData);
       }
     };
     fetchData();
@@ -55,7 +58,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
           </Txt>
         </Txt>
         <SMargin margin="20px 0px 0px 0px" />
-        <PeopleListContainer>
+        <PeopleListContainer isBlurred={!isLoggedIn}>
           {/* 관리자 유저 */}
           {partyUserData?.partyAdmin.map(item => (
             <PartyPeopleCard
@@ -104,11 +107,13 @@ const PartyPeopleTabContainer = styled.section`
   height: 100%;
 `;
 
-const PeopleListContainer = styled.div`
+const PeopleListContainer = styled.div<{ isBlurred: boolean }>`
   display: flex;
   flex-wrap: wrap;
   margin-top: 20px;
   margin-right: -10px;
+  filter: ${({ isBlurred }) => (isBlurred ? 'blur(5px)' : 'none')};
+  pointer-events: ${({ isBlurred }) => (isBlurred ? 'none' : 'auto')};
 
   & > div {
     width: calc(50% - 15px);
