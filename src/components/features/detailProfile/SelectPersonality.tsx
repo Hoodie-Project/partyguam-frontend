@@ -221,8 +221,6 @@ export default function SelectPersonality({ editType }: Props) {
     }
   };
 
-  console.log('editType > ', editType == null);
-
   return (
     <Container>
       <SectionTitle noMarginTop={editType == 'others'}>

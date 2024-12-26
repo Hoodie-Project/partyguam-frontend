@@ -25,6 +25,9 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { Divider, SContainer, SFlexRow } from '@/styles/components';
 import { formatRelativeTime } from '@/utils/date';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 function MyApply() {
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
@@ -327,7 +330,7 @@ function MyApply() {
                             <Image
                               src={
                                 item.partyRecruitment.party.image
-                                  ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${item.partyRecruitment.party.image}`
+                                  ? `${BASE_URL}/${item.partyRecruitment.party.image}`
                                   : '/images/guam.png'
                               }
                               width={120}

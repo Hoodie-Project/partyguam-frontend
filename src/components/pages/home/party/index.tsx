@@ -19,6 +19,9 @@ import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
   return data?.map(position => ({
     id: position.id,
@@ -302,7 +305,7 @@ function HomeParty() {
               >
                 <CardContentsWrapper>
                   <Image
-                    src={party.image ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.image}` : '/images/guam.png'}
+                    src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
                     width={255}
                     height={180}
                     alt={party.title}

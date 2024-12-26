@@ -19,6 +19,9 @@ type OwnProps = {
 
 export type Props = OwnProps & React.HTMLAttributes<HTMLDivElement>;
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 function ProfileImage({
   imageUrl,
   size,
@@ -54,7 +57,7 @@ function ProfileImage({
     <ImageWrapper size={size} {...divAttributes}>
       {Boolean(imageUrl) ? (
         <Image
-          src={Boolean(previewImage) ? `${previewImage}` : `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${imageUrl}`}
+          src={Boolean(previewImage) ? `${previewImage}` : `${BASE_URL}/${imageUrl}`}
           width={size}
           height={size}
           alt="파티원 프로필 이미지"

@@ -13,7 +13,8 @@ import LoginModal from '../loginModal';
 
 import { partyUserMockData } from './mockData';
 import PartyPeopleCard from './PartyPeopleCard';
-
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
+import { useRouter } from 'next/navigation';
 type Props = {
   partyId: string;
   userAuthority: UserAuthorityResponse | null;
@@ -23,6 +24,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
   const [partyUserData, setPartyUserData] = useState<PartyUserResponse | null>();
   const { openModal } = useModalContext();
   const { isLoggedIn } = useAuthStore();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,21 +45,37 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
     fetchData();
   }, [partyId]);
 
-  console.log('partyUserData > ', partyUserData);
-
   return (
     <PartyPeopleTabContainer>
       <SMargin margin="35px 0px 0px 0px" />
       <SFlexColumnFull>
-        <Txt fontSize={20} fontWeight="bold">
-          파티원
-          <Txt fontColor="greenDark100" fontSize={20} fontWeight="bold" style={{ marginLeft: '4px' }}>
-            {partyUserData?.partyUser.length != null || partyUserData?.partyAdmin.length != null
-              ? partyUserData?.partyUser.length + partyUserData?.partyAdmin.length
-              : 0}
-          </Txt>
-        </Txt>
-        <SMargin margin="20px 0px 0px 0px" />
+        <HeaderArea>
+          <HeaderLeft>
+            <Txt fontSize={20} fontWeight="bold">
+              파티원
+              <Txt fontColor="greenDark100" fontSize={20} fontWeight="bold" style={{ marginLeft: '4px' }}>
+                {partyUserData?.partyUser.length != null || partyUserData?.partyAdmin.length != null
+                  ? partyUserData?.partyUser.length + partyUserData?.partyAdmin.length
+                  : 0}
+              </Txt>
+            </Txt>
+          </HeaderLeft>
+          {userAuthority?.authority === 'master' && (
+            <HeaderRight>
+              <Txt
+                fontColor="grey500"
+                fontSize={14}
+                fontWeight="normal"
+                textDecoration="underline"
+                onClick={() => router.push(`/party/setting/partyUsers/${partyId}`)}
+                style={{ cursor: 'pointer', textDecorationColor: '#767676' }}
+              >
+                파티원 관리
+              </Txt>
+              <ArrowForwardIosRoundedIcon style={{ width: '12px', margin: '2px', color: '#999999' }} />
+            </HeaderRight>
+          )}
+        </HeaderArea>
         <PeopleListContainer isBlurred={!isLoggedIn}>
           {/* 관리자 유저 */}
           {partyUserData?.partyAdmin.map(item => (
@@ -130,4 +148,24 @@ const FloatingButton = styled.div`
   position: fixed;
   bottom: 50px;
   width: 820px;
+`;
+
+const HeaderArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: space-between;
+`;
+
+const HeaderLeft = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const HeaderRight = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;

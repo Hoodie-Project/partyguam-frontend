@@ -49,8 +49,6 @@ function PartyRecruitEdit() {
     return 'default';
   }, [editPartyRecruitForm.content]);
 
-  console.log('pageType >> ', pageType);
-
   useEffect(() => {
     (async () => {
       const response = await fetchGetPositions();

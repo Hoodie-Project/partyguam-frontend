@@ -2,8 +2,7 @@ import type { PartyApplicationData, PartyUserListByAdminResponse, PartyUserRespo
 
 import { fileUploadApi, privateApi, publicApi } from '.';
 
-// 파티 생성하기 페이지
-
+// 파티 타입
 export const fetchGetPartyTypes = async () => {
   try {
     const response = await publicApi.get('/parties/types');
@@ -14,6 +13,15 @@ export const fetchGetPartyTypes = async () => {
   }
 };
 
+// 파티 삭제
+export const fetchDeleteParty = async (partyId: number) => {
+  try {
+    const response = await privateApi.delete(`/parties/${partyId}/admin`);
+  } catch (error) {
+    console.error('fetchDeleteParty error : ', error);
+    return error;
+  }
+};
 /**
  * [GET] 포지션 항목 조회 api, main string없으면 전체 리스트 반환
  * (main: 기획자, 디자이너, 개발자, 마케터/광고)
@@ -42,13 +50,31 @@ export interface CreatePartyResponse {
   updatedAt: string;
   id: number;
 }
-
+// 파티 생성
 export const fetchPostCreateParty = async (data: FormData): Promise<CreatePartyResponse | null> => {
   try {
     const response = await fileUploadApi.post<CreatePartyResponse>('/parties', data);
     return response.data;
   } catch (error) {
     console.error('fetchPostCreateParty error:', error);
+    // 에러를 호출하는 쪽에서 처리하게 하려면 아래와 같이 `throw` 처리 가능
+    throw error;
+  }
+};
+
+// 파티 수정
+export const fetchPatchParty = async ({
+  partyId,
+  data,
+}: {
+  partyId: number;
+  data: FormData;
+}): Promise<CreatePartyResponse | null> => {
+  try {
+    const response = await fileUploadApi.patch<CreatePartyResponse>(`/parties/${partyId}/admin`, data);
+    return response.data;
+  } catch (error) {
+    console.error('fetchPatchParty error:', error);
     // 에러를 호출하는 쪽에서 처리하게 하려면 아래와 같이 `throw` 처리 가능
     throw error;
   }

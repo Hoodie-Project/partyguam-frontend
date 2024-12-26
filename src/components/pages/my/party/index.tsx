@@ -16,6 +16,9 @@ import { FloatingMenu } from '@/components/features';
 import { MYPAGE_MENU } from '@/constants';
 import { Divider, SContainer, SFlexRow } from '@/styles/components';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 function MyParty() {
   const [status, setStatus] = useState<'all' | 'active' | 'archived'>('all');
   const [order, setOrder] = useState<'ASC' | 'DESC'>('DESC');
@@ -75,7 +78,7 @@ function MyParty() {
     <SContainer>
       <FloatingMenu menu={MYPAGE_MENU()} />
       <PageHeader title="내 파티" />
-      <MyPartyContainer>
+      <MyPartyContainer style={{ height: '100vh' }}>
         <SFlexRow style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {[
@@ -122,11 +125,7 @@ function MyParty() {
               >
                 <CardContentsWrapper>
                   <Image
-                    src={
-                      party.party.image
-                        ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.party.image}`
-                        : '/images/guam.png'
-                    }
+                    src={party.party.image ? `${BASE_URL}/${party.party.image}` : '/images/guam.png'}
                     width={255}
                     height={180}
                     alt={party.party.title}

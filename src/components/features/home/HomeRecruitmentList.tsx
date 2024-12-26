@@ -19,6 +19,9 @@ type Props = {
   personalized?: boolean;
 };
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 function HomeRecruitmentList({ personalized = false }: Props) {
   const [page, setPage] = useState<number>(1);
   const [recruitmentList, setRecruitmentList] = useState<PartyRecruitmentsResponse | null>(null);
@@ -153,11 +156,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   >
                     <CardContentsWrapper>
                       <Image
-                        src={
-                          recruitment.party.image
-                            ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${recruitment.party.image}`
-                            : '/images/guam.png'
-                        }
+                        src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
                         width={202.56}
                         height={169.5}
                         alt={recruitment.party.title}

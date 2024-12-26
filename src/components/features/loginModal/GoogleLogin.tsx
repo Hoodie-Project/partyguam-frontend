@@ -4,6 +4,9 @@ import { useRouter } from 'next/navigation';
 import GoogleIcon from '@/assets/icon/google-icon.svg';
 import { Button, Txt } from '@/components/_atoms';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 export default function GoogleLogin() {
   const { push } = useRouter();
 

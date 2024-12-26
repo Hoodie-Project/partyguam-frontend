@@ -17,6 +17,10 @@ import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyRecruitDetailResponse } from '@/types/party';
 import { formatDate } from '@/utils/date';
+import { fetchUserAuthority, UserAuthorityResponse } from '@/apis/auth';
+
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
 type PageParams = {
   recruitId: string;
@@ -48,6 +52,7 @@ const renderPartyState = (stateTag: string) => {
 function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecruitProps) {
   const [partyRecruitDetailData, setPartyRecruitDetailData] = useState<PartyRecruitDetailResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
+  const [userAuthorityInfo, setUserAuthorityInfo] = useState<UserAuthorityResponse | null>(null);
 
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -68,9 +73,11 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
   }, [partyRecruitDetailData?.createdAt]);
 
   // 일반 사용자일 경우 혹은 isReadonly가 아닐 경우 편집하기 버튼 안보이게
-  const isVisible편집하기 = useMemo(() => !Boolean(isReadOnly), [isReadOnly]);
+  const isVisible편집하기 = useMemo(
+    () => !Boolean(isReadOnly) && userAuthorityInfo?.authority === 'master' && isLoggedIn,
+    [isReadOnly, userAuthorityInfo, isLoggedIn],
+  );
   const isDisable지원하기 = useMemo(() => Boolean(isReadOnly), [isReadOnly]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -81,8 +88,17 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
         console.error('Error fetching party home data:', error);
       }
     };
+    const fetchUserAuthorityInfo = async (partyId: number) => {
+      try {
+        const response = await fetchUserAuthority(partyId);
+        setUserAuthorityInfo(response);
+      } catch (err) {
+        console.log('Error fetching fetchUserAuthority');
+      }
+    };
 
     fetchData();
+    fetchUserAuthorityInfo(Number(partyId));
   }, [recruitId]);
 
   const handleClickApplyBtn = () => {
@@ -109,7 +125,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
               alt="파티 홈 이미지"
               src={
                 partyRecruitDetailData?.party.image
-                  ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyRecruitDetailData?.party.image}`
+                  ? `${BASE_URL}/${partyRecruitDetailData?.party.image}`
                   : '/images/guam.png'
               }
               width={400}
@@ -185,6 +201,11 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                 <Button
                   backgroudColor="white"
                   borderColor="grey200"
+                  onClick={() =>
+                    router.push(
+                      `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${recruitId}&main=${partyRecruitDetailData?.position.main}&sub=${partyRecruitDetailData?.position.sub}`,
+                    )
+                  }
                   style={{
                     display: 'flex',
                     justifyContent: 'center',

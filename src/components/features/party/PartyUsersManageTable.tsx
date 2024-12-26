@@ -78,7 +78,6 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
       sub: string;
     },
   ) => {
-    console.log('user > ', user);
     openModal({
       children: <PartyUserEditModal partyId={partyId} user={user} authority={authority} position={position} />,
     });

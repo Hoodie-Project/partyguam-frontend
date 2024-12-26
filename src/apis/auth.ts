@@ -114,11 +114,10 @@ const fetchUserAuthority = async (partyId: number): Promise<UserAuthorityRespons
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.status === 404) {
-      console.error('파티에 속한 유저를 찾을 수 없습니다.');
+      throw new Error('파티에 속한 유저를 찾을 수 없습니다.');
     } else {
-      console.error('fetchUserAuthority error:', error);
+      throw new Error('fetchUserAuthority error:', error);
     }
-    return null;
   }
 };
 

@@ -12,6 +12,8 @@ import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRigh
 import type { PartiesResponse } from '@/apis/home';
 import { fetchParties } from '@/apis/home';
 import { Chip, Square, Txt } from '@/components/_atoms';
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
 function HomePartyCardList() {
   const [page, setPage] = useState<number>(1);
@@ -103,7 +105,7 @@ function HomePartyCardList() {
                 >
                   <CardContentsWrapper>
                     <Image
-                      src={party.image ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.image}` : '/images/guam.png'}
+                      src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
                       width={255}
                       height={180}
                       alt={party.title}

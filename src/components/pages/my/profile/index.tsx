@@ -166,7 +166,7 @@ function MyProfile() {
     });
   };
   return (
-    <SContainer>
+    <SContainer style={{ height: '100vh' }}>
       <FloatingMenu menu={MYPAGE_MENU()} />
 
       <PageHeader title="프로필 편집" />

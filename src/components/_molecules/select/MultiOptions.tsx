@@ -72,10 +72,6 @@ export default function MultiOptions({
     setIsOpen?.(false);
   };
 
-  useEffect(() => {
-    console.log('chipData >> ', chipData);
-  }, [chipData]);
-
   return (
     <SelectMultiOptions top={height} optionRadius={optionRadius} style={optionStyle}>
       <OptionGroupWrapper>

@@ -6,6 +6,7 @@ import { fetchGetPartyRecruitmentsList } from '@/apis/party';
 import { Txt } from '@/components/_atoms';
 import { SChildContainer } from '@/styles/components';
 import type { PartyRecruitmentListResponse } from '@/types/party';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import PartyRecruitmentsCard from './PartyRecruitmentsCard';
 
@@ -60,6 +61,14 @@ function Party모집공고관리({ partyId }: { partyId: string }) {
             }
           />
         ))}
+        {partyRecruitList.length === 0 && (
+          <EmptyState>
+            <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+            <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+              지원 모집 공고가 없어요.
+            </Txt>
+          </EmptyState>
+        )}
       </RecruitmentList>
     </SChildContainer>
   );
@@ -72,4 +81,14 @@ const RecruitmentList = styled.div`
   flex-wrap: wrap;
   gap: 16px;
   margin-top: 20px;
+`;
+
+const EmptyState = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #767676;
+  margin-top: 60px;
 `;

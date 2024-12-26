@@ -14,6 +14,7 @@ import type { PartyRecruitmentListResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 
 import PartyRecruitmentsCard from './PartyRecruitmentsCard';
+import { UserAuthorityResponse } from '@/apis/auth';
 
 // 직군 필터링 함수
 const filterMainCategories = (data: Position[]): { id: number; label: string }[] => {
@@ -29,9 +30,10 @@ const filterMainCategories = (data: Position[]): { id: number; label: string }[]
 
 type Props = {
   partyId: string;
+  userAuthority: UserAuthorityResponse | null;
 };
 
-function PartyRecruitmentsTab({ partyId }: Props) {
+function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
   const [partyRecruitList, setPartyRecruitList] = useState<PartyRecruitmentListResponse>([]);
   const [primaryPosition, setPrimaryPosition] = useState({ id: 0, 직군: '전체', 직무: '', 경력: '' });
   const [mainFiltered, setMainFiltered] = useState<{ id: number; label: string }[]>([]);
@@ -122,27 +124,31 @@ function PartyRecruitmentsTab({ partyId }: Props) {
               {partyRecruitList.reduce((acc, curr) => acc + Number(curr.applicationCount), 0)}
             </Txt>
           </HeaderLeft>
-          <HeaderRight>
-            <Txt
-              fontColor="grey500"
-              fontSize={14}
-              fontWeight="normal"
-              textDecoration="underline"
-              style={{ cursor: 'pointer', textDecorationColor: '#767676' }}
-            >
-              지원자 관리
-            </Txt>
-            <Divider height="10px" margin="0px 10px" />
-            <Txt
-              fontColor="grey500"
-              fontSize={14}
-              fontWeight="normal"
-              textDecoration="underline"
-              style={{ cursor: 'pointer', textDecorationColor: '#767676' }}
-            >
-              모집 편집
-            </Txt>
-          </HeaderRight>
+          {userAuthority?.authority === 'master' && (
+            <HeaderRight>
+              <Txt
+                fontColor="grey500"
+                fontSize={14}
+                fontWeight="normal"
+                textDecoration="underline"
+                onClick={() => router.push(`/party/setting/applicant/${partyId}`)}
+                style={{ cursor: 'pointer', textDecorationColor: '#767676' }}
+              >
+                지원자 관리
+              </Txt>
+              <Divider height="10px" margin="0px 10px" />
+              <Txt
+                fontColor="grey500"
+                fontSize={14}
+                fontWeight="normal"
+                textDecoration="underline"
+                onClick={() => router.push(`/party/setting/recruit/${partyId}`)}
+                style={{ cursor: 'pointer', textDecorationColor: '#767676' }}
+              >
+                모집 편집
+              </Txt>
+            </HeaderRight>
+          )}{' '}
         </HeaderArea>
 
         {/* Select와 등록순 필터가 같은 선상에 배치 */}

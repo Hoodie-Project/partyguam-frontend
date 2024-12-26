@@ -15,6 +15,9 @@ import { useAuthStore } from '@/stores/auth';
 import { Divider, SFlexColumn, SFlexColumnCenter, SFlexRow } from '@/styles/components';
 import { calculateAge } from '@/utils/date';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 export default function MyPagePreviewModal() {
   const [visibleItemsCount, setVisibleItemsCount] = useState(3); // 초기 표시할 아이템 개수
 
@@ -337,11 +340,7 @@ export default function MyPagePreviewModal() {
                 >
                   <CardContentsWrapper>
                     <Image
-                      src={
-                        party.party.image
-                          ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${party.party.image}`
-                          : '/images/guam.png'
-                      }
+                      src={party.party.image ? `${BASE_URL}/${party.party.image}` : '/images/guam.png'}
                       width={165}
                       height={150}
                       alt={party.party.title}

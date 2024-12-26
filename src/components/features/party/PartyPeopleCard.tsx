@@ -36,8 +36,6 @@ const PARTY_AUTHORITY_MAP = (authority?: 'master' | 'deputy' | 'member') => {
 function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
   const { openModal, closeModal } = useModalContext();
 
-  console.log('user id > ', user?.id);
-
   const handleClickEmergency = () => {
     openModal({
       children: <ReportModal reportType="party" reportTypeId={user?.id as number} />,

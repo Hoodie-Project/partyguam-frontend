@@ -24,7 +24,7 @@ function PartyApplicantManage({ partyId }: PageParams) {
   }, [mainPoisition, subPoisition]);
 
   return (
-    <SContainer>
+    <SContainer style={{ height: '100vh' }}>
       <FloatingMenu menu={PARTY_SETTING_MENU(partyId)} />
       <PageHeader title="지원자 관리" />
       {pageType === '모집공고' && <Party모집공고관리 partyId={partyId} />}

@@ -17,6 +17,9 @@ import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SHomeContainer } from '@/styles/components';
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 function Main() {
   const [banner, setBanner] = useState<HomeBanner | null>(null);
   const [page, setPage] = useState<number>(1);
@@ -138,7 +141,7 @@ function Main() {
               {banner?.banner.map(item => (
                 <StyledImageWrapper key={item.id}>
                   <Image
-                    src={item.image ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${item.image}` : '/images/guam.png'}
+                    src={item.image ? `${BASE_URL}/${item.image}` : '/images/guam.png'}
                     width={1240}
                     height={370}
                     alt={item.title}

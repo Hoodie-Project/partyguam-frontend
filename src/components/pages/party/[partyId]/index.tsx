@@ -18,6 +18,9 @@ type PageParams = {
   partyId: string;
 };
 
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+
 // 파티 상태 칩
 const renderPartyState = (stateTag: string) => {
   return {
@@ -65,17 +68,28 @@ function PartyHome({ partyId }: PageParams) {
     fetchUserAuthorityInfo(Number(partyId));
   }, [partyId]);
 
+  const handleShareClick = () => {
+    const currentUrl = window.location.href; // 현재 URL 가져오기
+    navigator.clipboard
+      .writeText(currentUrl) // URL 복사
+      .then(() => {
+        setIsShowCopyBalloon(true);
+        setTimeout(() => {
+          setIsShowCopyBalloon(false); // 3초 후 메시지 숨기기
+        }, 3000);
+      })
+      .catch(err => {
+        console.error('URL 복사 실패:', err);
+      });
+  };
+
   return (
     <SContainer>
       <PartyHomeContainer>
         <Square width="400px" height="300px" radiusKey="base" backgroundColor="grey300" shadowKey="none">
           <Image
             alt="파티 홈 이미지"
-            src={
-              partyHomeData?.image
-                ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/${partyHomeData?.image}`
-                : '/images/guam.png'
-            }
+            src={partyHomeData?.image ? `${BASE_URL}/${partyHomeData?.image}` : '/images/guam.png'}
             width={400}
             height={300}
             style={{ borderRadius: '16px', border: '1px solid #E5E5EC' }}
@@ -128,15 +142,7 @@ function PartyHome({ partyId }: PageParams) {
                 </Tabs.Tab>
               </Tabs.TabList>
               <PartyTabsButtonWrapper>
-                <ShareOutlinedIcon
-                  onClick={() => {
-                    setIsShowCopyBalloon(true);
-                    setTimeout(() => {
-                      setIsShowCopyBalloon(false);
-                    }, 3000); // 3초 후 자동으로 닫힘
-                  }}
-                  style={{ position: 'relative', cursor: 'pointer' }}
-                />
+                <ShareOutlinedIcon onClick={handleShareClick} style={{ position: 'relative', cursor: 'pointer' }} />
                 {isShowCopyBalloon && (
                   <Balloon
                     width="163px"
@@ -157,10 +163,12 @@ function PartyHome({ partyId }: PageParams) {
                     </Txt>
                   </Balloon>
                 )}
-                <SettingsOutlinedIcon
-                  onClick={() => router.push(`/party/setting/${partyId}?type=MODIFY`)}
-                  style={{ cursor: 'pointer' }}
-                />
+                {userAuthorityInfo?.authority === 'master' && (
+                  <SettingsOutlinedIcon
+                    onClick={() => router.push(`/party/setting/${partyId}?type=MODIFY`)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                )}
               </PartyTabsButtonWrapper>
             </PartyTabsWrapper>
 
@@ -172,7 +180,7 @@ function PartyHome({ partyId }: PageParams) {
                 <PartyPeopleTab partyId={partyId} userAuthority={userAuthorityInfo} />
               </Tabs.TabPanel>
               <Tabs.TabPanel index={2}>
-                <PartyRecruitmentsTab partyId={partyId} />
+                <PartyRecruitmentsTab partyId={partyId} userAuthority={userAuthorityInfo} />
               </Tabs.TabPanel>
             </Tabs.TabPanels>
           </Tabs>

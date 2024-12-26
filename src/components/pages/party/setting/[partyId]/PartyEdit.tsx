@@ -6,7 +6,15 @@ import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
 import type { CreatePartyResponse } from '@/apis/party';
-import { fetchGetPartyTypes, fetchGetPositions, fetchPostCreateParty } from '@/apis/party';
+import {
+  fetchDeleteParty,
+  fetchGetPartyHome,
+  fetchGetPartyRecruitmentsList,
+  fetchGetPartyTypes,
+  fetchGetPositions,
+  fetchPatchParty,
+  fetchPostCreateParty,
+} from '@/apis/party';
 import ImageAddIcon from '@/assets/icon/image_add.svg';
 import { Balloon, Button, Input, Square, Txt } from '@/components/_atoms';
 import { PageHeader, Select, TipBox } from '@/components/_molecules';
@@ -15,8 +23,11 @@ import { PARTY_SETTING_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { Position } from '@/types/user';
+import { PartyHomeResponse } from '@/types/party';
 
 type StateType = any;
+const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
 // TODO. 데이터 정제 로직 걷어내고 query로 api 보내도록 변경 필요
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
@@ -64,6 +75,7 @@ export default function PartyEdit({ partyId }: PageParams) {
   const [내포지션, set내포지션] = useState({ id: 0, 직군: '', 직무: '' });
   const [파티상태, set파티상태] = useState<string>('');
   const [isVisibleBalloon, setIsVisibleBalloon] = useState(true);
+  const [partyHomeData, setPartyHomeData] = useState<PartyHomeResponse | null>(null);
 
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [imgPath, setImgPath] = useState('');
@@ -76,16 +88,22 @@ export default function PartyEdit({ partyId }: PageParams) {
       if (pageType === 'CREATE') {
         const response = await fetchGetPositions();
         setPositionData(response);
+      } else if (pageType === 'MODIFY') {
+        const response = await fetchGetPartyHome({ partyId: Number(partyId?.toString()) });
+        setPartyHomeData(response);
       }
+      const 파티유형 = await fetchGetPartyTypes();
+      set파티유형List(transformPartyTypes(파티유형));
     })();
   }, []);
 
   useEffect(() => {
-    (async () => {
-      const response = await fetchGetPartyTypes();
-      set파티유형List(transformPartyTypes(response));
-    })();
-  }, []);
+    if (partyHomeData == null) return;
+    set파티명value(partyHomeData?.title);
+    set파티유형value({ id: partyHomeData?.partyType.id, label: partyHomeData?.partyType.type });
+    set파티소개글value(partyHomeData.content);
+    set파티상태(partyHomeData.status);
+  }, [partyHomeData]);
 
   const 내포지션Filtered = useMemo(() => {
     if (내포지션.직군) {
@@ -167,14 +185,24 @@ export default function PartyEdit({ partyId }: PageParams) {
     formData.append('title', 파티명value);
     formData.append('content', 파티소개글value);
     formData.append('partyTypeId', String(파티유형value.id));
-    formData.append('positionId', String(내포지션.id));
 
-    try {
-      const res = await fetchPostCreateParty(formData);
-      setPostResponse(res);
-      onClickApply(res?.id);
-    } catch (err) {
-      console.error('Error creating party:', err);
+    if (pageType === 'CREATE') {
+      formData.append('positionId', String(내포지션.id));
+      try {
+        const res = await fetchPostCreateParty(formData);
+        setPostResponse(res);
+        onClickApply(res?.id);
+      } catch (err) {
+        console.error('Error creating party:', err);
+      }
+    } else if (pageType === 'MODIFY') {
+      formData.append('status', 파티상태);
+      try {
+        const res = await fetchPatchParty({ partyId: Number(partyId), data: formData });
+        router.refresh();
+      } catch (err) {
+        console.error('Error creating party:', err);
+      }
     }
   };
 
@@ -253,7 +281,8 @@ export default function PartyEdit({ partyId }: PageParams) {
       onCancel: () => {
         closeModal();
       },
-      onSubmit: () => {
+      onSubmit: async () => {
+        await fetchDeleteParty(Number(partyId));
         router.push('/');
         closeModal();
       },
@@ -277,8 +306,14 @@ export default function PartyEdit({ partyId }: PageParams) {
             }
           }}
         >
-          {imgPath ? (
-            <Image alt="파티생성 이미지" src={imgPath} width={390} height={293} style={{ borderRadius: '16px' }} />
+          {partyHomeData?.image || imgPath ? (
+            <Image
+              alt="파티생성 이미지"
+              src={imgPath ? `${imgPath}` : `${BASE_URL}/${partyHomeData?.image}`}
+              width={390}
+              height={293}
+              style={{ borderRadius: '16px' }}
+            />
           ) : (
             <ImageAddIcon />
           )}
@@ -442,12 +477,40 @@ export default function PartyEdit({ partyId }: PageParams) {
                 파티의 진행 상태를 선택해 주세요.
               </Txt>
               <SFlexRowFull style={{ justifyContent: 'space-between' }}>
-                {['진행중', '파티종료'].map((item, index) => (
+                {['active', 'archived'].map((item, index) => (
                   <Button
                     key={index}
-                    onClick={e => {
-                      e.preventDefault();
-                      set파티상태(item);
+                    onClick={async e => {
+                      const 모집공고 = await fetchGetPartyRecruitmentsList({
+                        partyId: Number(partyId),
+                        sort: 'createdAt',
+                        order: 'DESC',
+                      });
+                      if (모집공고.length != 0 && item === 'archived') {
+                        openModal({
+                          children: (
+                            <ConfirmModal
+                              modalTitle="파티 종료 불가"
+                              modalContents={
+                                <>
+                                  파티 모집글이 있으면 파티를 종료할 수 없어요.
+                                  <br />
+                                  모집글을 먼저 삭제해주세요.
+                                </>
+                              }
+                              submitBtnTxt="확인"
+                            />
+                          ),
+                          onCancel: () => {
+                            closeModal();
+                          },
+                          onSubmit: async () => {
+                            closeModal();
+                          },
+                        });
+                      } else {
+                        set파티상태(item);
+                      }
                     }}
                     height="base"
                     backgroudColor={파티상태 === item ? 'greenLight200' : 'white'}
@@ -455,7 +518,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                     radius="base"
                     shadow="shadow1"
                   >
-                    <Txt fontColor="grey500">{item}</Txt>
+                    {item === 'active' ? '진행중' : '파티종료'}
                   </Button>
                 ))}
               </SFlexRowFull>
