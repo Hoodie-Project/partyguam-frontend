@@ -46,6 +46,7 @@ function HomePartyCardList() {
     sliderRef.current?.slickPrev(); // 이전 슬라이드로 이동
   };
   const sliderSettings = {
+    infinite: false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
