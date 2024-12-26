@@ -55,18 +55,15 @@ function Main() {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
-    if (token) {
-      // 새 토큰 저장
-      (async () => {
-        await setAccessToken();
-        // 홈으로 리다이렉트
+    (async () => {
+      await setAccessToken();
+      // 홈으로 리다이렉트
 
-        const userResponse = await fetchGetUsers();
-        login();
-        setAuth(userResponse);
-        router.push('/home');
-      })();
-    } else return;
+      const userResponse = await fetchGetUsers();
+      login();
+      setAuth(userResponse);
+      router.push('/home');
+    })();
   }, [router]);
 
   const settings = {
