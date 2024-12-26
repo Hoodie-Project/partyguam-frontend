@@ -210,7 +210,7 @@ export const fetchPostReports = async ({
   }
 };
 
-// 파티 모집 리스트 조회
+// 파티 모집 목록 조회
 export const fetchGetPartyRecruitmentsList = async ({
   partyId,
   sort = 'createdAt',

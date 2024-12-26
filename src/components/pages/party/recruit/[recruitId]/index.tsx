@@ -7,6 +7,8 @@ import styled from '@emotion/styled';
 import CreateIcon from '@mui/icons-material/Create';
 import ShareIcon from '@mui/icons-material/Share';
 
+import type { UserAuthorityResponse } from '@/apis/auth';
+import { fetchUserAuthority } from '@/apis/auth';
 import { fetchGetPartyRecruitments } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import Button from '@/components/_atoms/button';
@@ -17,7 +19,6 @@ import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyRecruitDetailResponse } from '@/types/party';
 import { formatDate } from '@/utils/date';
-import { fetchUserAuthority, UserAuthorityResponse } from '@/apis/auth';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
