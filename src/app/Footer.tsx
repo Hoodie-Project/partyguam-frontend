@@ -1,15 +1,17 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 
 export default function Footer() {
+  const router = useRouter();
   return (
     <FooterWrapper>
       <FooterLinks>
-        <FooterLink>서비스소개</FooterLink>
-        <FooterLink>고객문의</FooterLink>
-        <FooterLink>이용약관</FooterLink>
-        <FooterLink>개인정보 처리방침</FooterLink>
+        <FooterLink onClick={() => router.push('/policy/introduction')}>서비스소개</FooterLink>
+        <FooterLink onClick={() => router.push('/policy/inquiry')}>고객문의</FooterLink>
+        <FooterLink onClick={() => router.push('/policy/service')}>이용약관</FooterLink>
+        <FooterLink onClick={() => router.push('/policy/privacy')}>개인정보 처리방침</FooterLink>
       </FooterLinks>
       <FooterCopyright>© 2024 GUAM. All rights reserved.</FooterCopyright>
     </FooterWrapper>
