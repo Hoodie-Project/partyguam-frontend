@@ -35,6 +35,10 @@ button {
   cursor: pointer;
 }
 
+br {
+  line-height: 1;
+}
+
 ::placeholder {
   font-weight: normal;
   font-color: #99999;

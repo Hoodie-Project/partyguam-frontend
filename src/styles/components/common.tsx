@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 
+import { Txt } from '@/components/_atoms';
+
 /**
  * /home 랜딩 페이지 컨테이너
  */
@@ -59,4 +61,25 @@ const Divider = styled.div`
   margin: 0px 6px 0px 6px;
 `;
 
-export { Divider, SChildContainer, SContainer, SForm, SHomeContainer, SMargin };
+/** policy 페이지 컴포넌트 **/
+const PolicyLayout = styled.section`
+  width: 1200px;
+  height: auto;
+  margin-top: 120px;
+`;
+
+const SemiTItle = styled(Txt)`
+  line-height: 160%;
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  font-size: 16px;
+`;
+
+const Text = styled(Txt)`
+  line-height: 160%;
+  letter-spacing: -0.025em;
+  font-weight: normal;
+  font-size: 14px;
+`;
+
+export { Divider, PolicyLayout, SChildContainer, SContainer, SemiTItle, SForm, SHomeContainer, SMargin, Text };
