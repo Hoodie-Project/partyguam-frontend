@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
@@ -13,6 +14,7 @@ import KaKaoLogin from './KaKaoLogin';
 export default function LoginModal() {
   const { modalData, closeModal } = useModalContext();
   const { onCancel } = modalData;
+  const router = useRouter();
 
   const onCancelInternal = () => {
     onCancel?.();
@@ -30,10 +32,10 @@ export default function LoginModal() {
           margin: '21px',
         }}
       />
-      <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 35, textAlign: 'center' }}>
+      <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 40, textAlign: 'center', lineHeight: '140%' }}>
         로그인
       </Txt>
-      <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 60 }}>
+      <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 72, lineHeight: '140%' }}>
         파티괌과 함께 <br /> 파티에 참여할 준비가 되었나요?
       </Txt>
       <Txt fontWeight="normal" fontSize={16}>
@@ -44,33 +46,51 @@ export default function LoginModal() {
         <GoogleLogin />
       </LoginButtonContainer>
       <BottomText>
-        <Txt fontSize={12} style={{ whiteSpace: 'nowrap' }}>
-          소셜 로그인 가입 시
-        </Txt>
-        &nbsp;
-        <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
-          이용약관
-        </Txt>
-        &nbsp;
-        <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
-          개인정보처리방침
-        </Txt>
-        &nbsp;
-        <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
-          전자금융거래약관
-        </Txt>
-        &nbsp;
-        <Txt fontSize={12} style={{ whiteSpace: 'nowrap', textDecoration: 'underline' }}>
-          결제/환불약관
-        </Txt>
-        <Txt fontSize={12} style={{ whiteSpace: 'nowrap' }}>
-          에 동의한 것으로 간주합니다.
+        <Txt
+          fontSize={12}
+          style={{
+            lineHeight: '140%',
+          }}
+        >
+          소셜 로그인 가입 시&nbsp;
+          <Txt
+            fontSize={12}
+            style={{ textDecoration: 'underline', cursor: 'pointer' }}
+            onClick={() => {
+              onCancelInternal();
+              router.push('/policy/service');
+            }}
+          >
+            이용약관
+          </Txt>
+          &nbsp;
+          <Txt
+            fontSize={12}
+            style={{ textDecoration: 'underline', cursor: 'pointer' }}
+            onClick={() => {
+              onCancelInternal();
+              router.push('/policy/privacy');
+            }}
+          >
+            개인정보처리방침
+          </Txt>
+          &nbsp; 에 동의한 것으로 간주합니다.
         </Txt>
       </BottomText>
       <Txt
         fontSize={12}
         fontColor="grey500"
-        style={{ marginBottom: '41px', textAlign: 'center', textDecoration: 'underline' }}
+        style={{
+          marginBottom: '65px',
+          textAlign: 'center',
+          textDecoration: 'underline',
+          lineHeight: '140%',
+          cursor: 'pointer',
+        }}
+        onClick={() => {
+          onCancelInternal();
+          router.push('/policy/inquiry');
+        }}
       >
         문의하기
       </Txt>
@@ -105,4 +125,5 @@ const BottomText = styled.div`
   align-items: center;
   flex-direction: row;
   line-height: 120%;
+  margin-bottom: 40px;
 `;
