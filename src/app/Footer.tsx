@@ -29,6 +29,10 @@ const FooterWrapper = styled.footer`
   justify-content: center;
   gap: 39px;
   margin-top: 100px;
+
+  @media (max-width: 673px) {
+    display: none;
+  }
 `;
 
 const FooterLinks = styled.div`
