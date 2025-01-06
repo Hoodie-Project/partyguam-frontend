@@ -123,13 +123,17 @@ export default function Join() {
             </Txt>
             <FlexRow>
               <Input
-                onBlur={handleBlur}
-                onFocus={() => {
+                onBlur={e => {
+                  e.target.placeholder = '최대 15자(영문/한글/숫자)';
+                  handleBlur();
+                }}
+                onFocus={e => {
+                  e.target.placeholder = '';
                   setIsNicknameConfirmed(true);
                 }}
                 name="nickname"
                 shadow="shadow1"
-                placeholder="15자 이내로 입력해 주세요. (영문/한글/숫자)"
+                placeholder="최대 15자(영문/한글/숫자)"
                 onChange={e => {
                   const { value, name } = e.target;
                   setJoinInput({ ...joinInput, [name]: value });

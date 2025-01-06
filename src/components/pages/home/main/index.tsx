@@ -224,7 +224,7 @@ function Main() {
           {/* 신규 파티 */}
           <div style={{ marginTop: '134px' }}>
             <HomePartyCardList />
-            <CircleButtonWrapper>
+            <CircleButtonWrapper style={{ marginTop: '31px' }}>
               <CircleButton onClick={() => router.push('/home/party')}>
                 <Txt fontSize={14} fontColor="grey500">
                   파티 더보기
