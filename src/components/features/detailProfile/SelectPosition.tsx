@@ -339,7 +339,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
               fontSize={18}
               fontWeight="bold"
             >
-              확인
+              적용하기
             </Txt>
           </Button>
         </ButtonsRowContainer>

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -29,6 +29,8 @@ function SearchBar({
   searchInputStyle,
   iconSize,
 }: SearchBarProps) {
+  const [isInputClicked, setIsInputClicked] = useState<boolean>(false);
+
   return (
     <SearchContainer type={type} style={searchBarStyle}>
       <SearchIconWrapper>
@@ -36,7 +38,9 @@ function SearchBar({
       </SearchIconWrapper>
       <SearchInput
         type="text"
-        placeholder={placeholder}
+        onFocus={() => setIsInputClicked(true)}
+        onBlur={() => setIsInputClicked(false)}
+        placeholder={isInputClicked ? '' : placeholder || undefined}
         value={value}
         onChange={onChange}
         onKeyDown={onKeyDown}

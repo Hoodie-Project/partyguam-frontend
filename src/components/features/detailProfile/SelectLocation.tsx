@@ -134,7 +134,7 @@ export default function SelectLocation({ editMode = false, handleResetEdit, hand
             disabled={isDisabledSubmitEditLocation}
           >
             <Txt fontColor={isDisabledSubmitEditLocation ? 'grey400' : 'black'} fontSize={18} fontWeight="bold">
-              확인
+              적용하기
             </Txt>
           </Button>
         </ButtonsRowContainer>

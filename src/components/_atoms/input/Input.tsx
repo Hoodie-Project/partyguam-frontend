@@ -1,7 +1,7 @@
 'use client';
 
 import type { InputHTMLAttributes } from 'react';
-import { forwardRef, memo } from 'react';
+import { forwardRef, memo, useState } from 'react';
 import styled from '@emotion/styled';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 
@@ -45,6 +45,8 @@ const Input = forwardRef<HTMLInputElement, Props>(
     },
     ref,
   ) => {
+    const [isInputClicked, setIsInputClicked] = useState<boolean>(false);
+
     return (
       <InputWrapper>
         <InputContainer
@@ -56,7 +58,15 @@ const Input = forwardRef<HTMLInputElement, Props>(
           inputState={inputState}
           disabled={disabled}
         >
-          <TextInput ref={ref} value={value} placeholder={placeholder} disabled={disabled} {...inputAttributes} />
+          <TextInput
+            ref={ref}
+            onFocus={() => setIsInputClicked(true)}
+            onBlur={() => setIsInputClicked(false)}
+            value={value}
+            placeholder={isInputClicked ? '' : placeholder || undefined}
+            disabled={disabled}
+            {...inputAttributes}
+          />
           {value && maxCount && (
             <Txt
               fontWeight="normal"
@@ -93,6 +103,7 @@ const inputState = {
 };
 
 const InputWrapper = styled.div`
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -122,6 +133,8 @@ const TextInput = styled.input<Props>`
 `;
 
 const Message = styled.div<Props>`
+  position: absolute;
+  top: 48px;
   color: ${props => inputState[props.inputState || 'success']};
   margin: ${props => (props.inputState ? '8px 0 0 20px' : '0 0 0 20px')};
   font-size: 14px;

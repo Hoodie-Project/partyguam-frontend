@@ -3,7 +3,7 @@
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { format, isValid, parse } from 'date-fns';
 
@@ -23,6 +23,7 @@ type OwnProps = {
 type DateInputProps = OwnProps & InputProps;
 
 export default function DateInput({ minDate, maxDate, selectDate, setSelectDate, onClear, ...props }: DateInputProps) {
+  const [isInputClick, setIsInputClick] = useState<boolean>(false);
   const dateValidate: { inputState?: 'default' | 'warn' | 'success'; bottomMessage?: string } = useMemo(() => {
     if (!selectDate) {
       return { inputState: 'default' };
@@ -55,7 +56,9 @@ export default function DateInput({ minDate, maxDate, selectDate, setSelectDate,
       maxDate={maxDate}
       minDate={minDate}
       dateFormat="yyyy-MM-dd"
-      placeholderText="ex. 2000-01-01"
+      placeholderText={isInputClick ? '' : 'ex. 2000-01-01'}
+      onInputClick={() => setIsInputClick(true)}
+      onClickOutside={() => setIsInputClick(false)}
       onChange={date => setSelectDate(date)}
       dayClassName={date => (date.getDate() === selectDate?.getDate() ? 'selectedDay' : 'unselectedDay')}
       customInput={

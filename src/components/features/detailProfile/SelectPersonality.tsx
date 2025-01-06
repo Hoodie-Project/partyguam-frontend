@@ -309,7 +309,7 @@ export default function SelectPersonality({ editType }: Props) {
               fontSize={18}
               fontWeight="bold"
             >
-              확인
+              적용하기
             </Txt>
           </Button>
         </ButtonsRowContainer>
@@ -359,7 +359,7 @@ export default function SelectPersonality({ editType }: Props) {
               fontSize={18}
               fontWeight="bold"
             >
-              확인
+              적용하기
             </Txt>
           </Button>
         </ButtonsRowContainer>
