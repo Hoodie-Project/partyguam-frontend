@@ -131,7 +131,8 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
               }
               width={400}
               height={300}
-              style={{ borderRadius: '16px' }}
+              onClick={() => router.push(`/party/${partyId}`)}
+              style={{ borderRadius: '16px', cursor: 'pointer' }}
             />
           </Square>
           <PartyInfoContainer>
@@ -164,7 +165,12 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                 shadow="shadow1"
               />
             </ChipWrapper>
-            <Txt fontSize={24} fontWeight="bold">
+            <Txt
+              fontSize={24}
+              fontWeight="bold"
+              style={{ cursor: 'pointer' }}
+              onClick={() => router.push(`/party/${partyId}`)}
+            >
               {partyRecruitDetailData?.party.title}
             </Txt>
             <PartyInfoWrapper>
