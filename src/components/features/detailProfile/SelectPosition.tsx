@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import { fetchDeletePositions, fetchGetPositions, fetchPostPositions } from '@/apis/detailProfile';
 import { Button, Txt } from '@/components/_atoms';
 import { Select } from '@/components/_molecules';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import type { Career } from '@/stores/detailProfile';
 import { useSelectPositionStore } from '@/stores/detailProfile';
@@ -45,6 +46,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
   // edit
   const user = useAuthStore();
   const { setUserCareers } = useAuthStore();
+  const { closeModal } = useModalContext();
 
   const [primaryPosition, setPrimaryPosition] = useState(
     editMode
@@ -241,6 +243,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
 
     await fetchDeletePositions();
     await fetchPostPositions(validPositions);
+    closeModal();
   };
 
   return (

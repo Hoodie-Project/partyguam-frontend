@@ -9,9 +9,10 @@ import { fetchGetUsers } from '@/apis/auth';
 import { fetchDeletePersonality, fetchGetPersonality, fetchPostPersonality } from '@/apis/detailProfile';
 import { Button, Txt } from '@/components/_atoms';
 import { CheckItem, Toast } from '@/components/_molecules';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useSelectPersonalityStore } from '@/stores/detailProfile';
-import type { PersonalityQuestion, SelectedPersonality, UsersMeResponse } from '@/types/user';
+import type { PersonalityQuestion, SelectedPersonality } from '@/types/user';
 
 type Props = {
   editType?: 'time' | 'others';
@@ -25,7 +26,7 @@ export default function SelectPersonality({ editType }: Props) {
   const [personalityData, setPersonalityData] = useState<PersonalityQuestion[]>([]);
   const [detailNum, setDetailNum] = useState(searchParams.get('num') || 1);
   const [isToast, setIsToast] = useState(false);
-
+  const { closeModal } = useModalContext();
   const [selected, setSelected] = useState<
     {
       id: number;
@@ -33,6 +34,7 @@ export default function SelectPersonality({ editType }: Props) {
       content: string;
     }[]
   >([]);
+  const { setAuth } = useAuthStore();
 
   const {
     setSelectedQ1,
@@ -80,21 +82,8 @@ export default function SelectPersonality({ editType }: Props) {
       ]);
     };
 
-    switch (Number(detailNum) - 2) {
-      case 1:
-        updateSelectedState(1, setSelectedQ1);
-        break;
-      case 2:
-        updateSelectedState(2, setSelectedQ2);
-        break;
-      case 3:
-        updateSelectedState(3, setSelectedQ3);
-        break;
-      case 4:
-        updateSelectedState(4, setSelectedQ4);
-        break;
-      default:
-        break;
+    if (Number(detailNum) - 2 === 1) {
+      updateSelectedState(1, setSelectedQ1);
     }
   }, [user, detailNum, setSelectedQ1, setSelectedQ2, setSelectedQ3, setSelectedQ4]);
 
@@ -174,50 +163,41 @@ export default function SelectPersonality({ editType }: Props) {
 
     const selectedPersonality = convertToSelectedPersonality(selected);
 
-    switch (Number(detailNum) - 2) {
-      case 1:
-        setSelectedQ1(selectedPersonality);
-        break;
-      case 2:
-        setSelectedQ2(selectedPersonality);
-        break;
-      case 3:
-        setSelectedQ3(selectedPersonality);
-        break;
-      case 4:
-        setSelectedQ4(selectedPersonality);
-        break;
-      default:
-        break;
+    if (Number(detailNum) - 2 === 1) {
+      setSelectedQ1(selectedPersonality);
     }
 
-    try {
-      let res = await fetchPostPersonality(selectedPersonality);
+    const res = await fetchPostPersonality(selectedPersonality);
 
-      if (res && res.status === 409) {
-        // 409 Conflict 에러 처리
-        await fetchDeletePersonality(Number(detailNum) - 2);
-        res = await fetchPostPersonality(selectedPersonality);
-      }
+    if (res && res.status === 409) {
+      // 409 Conflict 에러 처리
+      await fetchDeletePersonality(Number(detailNum) - 2);
+      await fetchPostPersonality(selectedPersonality);
+    }
 
-      if (res.ok) {
-        setPersonalityCompletion(Number(detailNum) - 2);
-        const userResponse = await fetchGetUsers();
-        setAuth(userResponse);
+    // 다음 단계로 넘어가기
+    setPersonalityCompletion(Number(detailNum) - 2);
+    const userResponse = await fetchGetUsers();
+
+    if (!userResponse) {
+      console.error('Failed to fetch user data');
+      return;
+    }
+
+    setAuth(userResponse);
+
+    if (editType == null) {
+      if (Number(detailNum) === 6) {
+        router.push('/join/detail/success');
       } else {
-        console.error('Post request failed:', res.statusText);
+        router.push(`/join/detail?num=${Number(detailNum) + 1}`);
       }
-    } catch (error) {
-      console.error('Error in handleClickNextBtn:', error);
-    } finally {
-      // 다음 단계로 넘어가기
-      if (editType == null) {
-        if (Number(detailNum) === 6) {
-          router.push('/join/detail/success');
-        } else {
-          router.push(`/join/detail?num=${Number(detailNum) + 1}`);
-        }
-      }
+    } else {
+      setTimeout(() => {
+        closeModal();
+        router.replace('/my/profile');
+        router.refresh();
+      }, 0);
     }
   };
 
@@ -254,66 +234,9 @@ export default function SelectPersonality({ editType }: Props) {
         visible={isToast}
         onClose={() => setIsToast(false)}
         label={`최대 ${currentStep.questionCnt}개까지 선택할 수 있어요.`}
-        position={
-          editType != null
-            ? 120
-            : (() => {
-                if (Number(detailNum) == 3) return 180;
-                return 120;
-              })()
-        }
+        position={editType == 'time' ? 75 : 120}
         icon={<ErrorIcon fontSize="small" />}
       />
-      {editType == 'others' && (
-        <ButtonsRowContainer>
-          <Button
-            shadow="shadow2"
-            backgroudColor="disableWhite"
-            height="l"
-            style={{ width: '110px' }}
-            borderColor={selected.length === 0 ? 'grey200' : 'primaryGreen'}
-            onClick={() => setSelected([])}
-            disabled={selected.length == 0}
-          >
-            <Txt fontColor={selected.length == 0 ? 'grey400' : 'black'} fontSize={18} fontWeight="bold">
-              초기화
-            </Txt>
-          </Button>
-          <Button
-            shadow="shadow2"
-            height="l"
-            style={{ width: '280px' }}
-            onClick={handleClickNextBtn}
-            disabled={
-              selected.flatMap(item => item.id).length == 0 ||
-              isEqual(
-                user.userPersonalities
-                  .filter(item => item.personalityOption.personalityQuestion.id === Number(detailNum) - 2)
-                  .map(item => item.personalityOption.id),
-                selected.flatMap(item => item.id),
-              )
-            }
-          >
-            <Txt
-              fontColor={
-                selected.flatMap(item => item.id).length == 0 ||
-                isEqual(
-                  user.userPersonalities
-                    .filter(item => item.personalityOption.personalityQuestion.id === Number(detailNum) - 2)
-                    .map(item => item.personalityOption.id),
-                  selected.flatMap(item => item.id),
-                )
-                  ? 'grey400'
-                  : 'black'
-              }
-              fontSize={18}
-              fontWeight="bold"
-            >
-              적용하기
-            </Txt>
-          </Button>
-        </ButtonsRowContainer>
-      )}
       {editType == 'time' && (
         <ButtonsRowContainer>
           <Button
@@ -430,6 +353,3 @@ const ButtonsRowContainer = styled.div`
   justify-content: space-between;
   gap: 10px;
 `;
-function setAuth(userResponse: UsersMeResponse) {
-  throw new Error('Function not implemented.');
-}

@@ -87,6 +87,8 @@ export default function Location({ editMode }: { editMode?: boolean }) {
     setAlreadySelectedCities(user.userLocations.flatMap(item => item.location));
   }, [user.userLocations]);
 
+  console.log('selectedCities > ', selectedCities);
+
   return (
     <Container>
       <LocationContainer>

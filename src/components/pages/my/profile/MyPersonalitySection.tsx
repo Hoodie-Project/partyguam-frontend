@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 
 import { Txt } from '@/components/_atoms';
-import { Tabs } from '@/components/_molecules';
-import { SelectPersonality } from '@/components/features/detailProfile';
 import MyPageEditModal from '@/components/features/my/MyPageEditModal';
+import MySelectPersonality from '@/components/features/my/MySelectPersonality';
 import { useModalContext } from '@/contexts/ModalContext';
+import type { UserPersonality } from '@/types/user';
 
 type Props = {
-  userPersonalities?: string[];
+  userPersonalities?: UserPersonality[];
 };
 
 export default function MyPersonalitySection({ userPersonalities }: Props) {
   const { openModal, closeModal } = useModalContext();
   const router = useRouter();
+
+  const timeExcluded = useMemo(
+    () =>
+      userPersonalities
+        ?.filter(personality => personality.personalityOption.personalityQuestion.id !== 1)
+        .flatMap(personality => personality.personalityOption.content),
+    [userPersonalities],
+  );
 
   const handleClickOpenPersonalityModal = () => {
     router.replace('/my/profile?num=4');
@@ -23,26 +31,7 @@ export default function MyPersonalitySection({ userPersonalities }: Props) {
     openModal({
       children: (
         <MyPageEditModal width="l">
-          <Tabs defaultIndex={0} style={{ marginTop: '30px' }}>
-            <Tabs.TabList borderNone>
-              <Tabs.Tab index={0} width="60px" handleClick={() => router.replace('/my/profile?num=4')}>
-                <Txt fontSize={16} fontWeight="bold">
-                  1/3 단계
-                </Txt>
-              </Tabs.Tab>
-              <Tabs.Tab index={1} width="60px" handleClick={() => router.replace('/my/profile?num=5')}>
-                <Txt fontSize={16} fontWeight="bold">
-                  2/3 단계
-                </Txt>
-              </Tabs.Tab>
-              <Tabs.Tab index={2} width="60px" handleClick={() => router.replace('/my/profile?num=6')}>
-                <Txt fontSize={16} fontWeight="bold">
-                  3/3 단계
-                </Txt>
-              </Tabs.Tab>
-            </Tabs.TabList>
-          </Tabs>
-          <SelectPersonality editType="others" />
+          <MySelectPersonality />
         </MyPageEditModal>
       ),
       onCancel: () => {
@@ -65,7 +54,7 @@ export default function MyPersonalitySection({ userPersonalities }: Props) {
         />
       </DetailProfilTitleWrapper>
       <Personality>
-        <ul>{userPersonalities?.map((item, i) => <li key={i}>{item}</li>)}</ul>
+        <ul>{timeExcluded?.map((item, i) => <li key={i}>{item}</li>)}</ul>
       </Personality>
     </div>
   );

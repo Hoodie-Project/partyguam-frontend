@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import React, { createContext, useContext, useState } from 'react';
 import styled from '@emotion/styled';
 
@@ -19,8 +19,14 @@ type TabProps = {
   children: ReactNode;
   index: number;
   width?: string;
+  padding?: {
+    top?: string;
+    right?: string;
+    bottom?: string;
+    left?: string;
+  };
   handleClick?: () => void;
-};
+} & HTMLAttributes<HTMLButtonElement>;
 
 type TabPanelsProps = {
   children: ReactNode;
@@ -52,7 +58,7 @@ function TabList({ children, borderNone }: TabListProps) {
   return <TabListContainer borderNone={borderNone}>{children}</TabListContainer>;
 }
 
-function Tab({ children, index, width, handleClick }: TabProps) {
+function Tab({ children, index, width, padding, handleClick, ...tabsAttributes }: TabProps) {
   const context = useContext(TabsContext);
   if (!context) {
     throw new Error('Tab must be used within a Tabs component');
@@ -65,6 +71,7 @@ function Tab({ children, index, width, handleClick }: TabProps) {
     <TabButton
       isActive={isActive}
       width={width}
+      padding={padding}
       onClick={() => {
         if (handleClick) {
           handleClick();
@@ -73,6 +80,7 @@ function Tab({ children, index, width, handleClick }: TabProps) {
       }}
       role="tab"
       aria-selected={isActive}
+      {...tabsAttributes}
     >
       {children}
     </TabButton>
@@ -106,16 +114,29 @@ const TabListContainer = styled.div<{ borderNone?: boolean }>`
   border-bottom: ${({ borderNone }) => (borderNone ? 'none' : '1px solid #e5e5ec')};
 `;
 
-const TabButton = styled.button<{ isActive: boolean; width?: string }>`
+const TabButton = styled.button<{
+  isActive: boolean;
+  width?: string;
+  padding?: {
+    top?: string;
+    right?: string;
+    bottom?: string;
+    left?: string;
+  };
+}>`
   width: ${({ width }) => (width ? `${width}` : '85px')};
   cursor: pointer;
   background: none;
   border: none;
-  padding: 20px 0px;
   font-size: 20px;
   font-weight: ${({ isActive }) => (isActive ? 600 : 500)};
-  color: ${({ isActive }) => (isActive ? '#000' : '#666')};
+  color: ${({ isActive }) => (isActive ? '#000' : '#999999')};
   border-bottom: ${({ isActive }) => (isActive ? '3px solid #21ECC7' : '3px solid transparent')};
+
+  padding: ${({ padding }) =>
+    padding
+      ? `${padding.top || '20px'} ${padding.right || '0px'} ${padding.bottom || '20px'} ${padding.left || '0px'}`
+      : '20px 0px'};
 
   &:hover {
     color: #000;
