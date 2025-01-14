@@ -245,7 +245,16 @@ export default function MySelectPersonality() {
         ))}
       </TabListContainer>
       {progress.map((step, index) => (
-        <Section ref={el => (sectionRefs.current[index] = el!)} key={index}>
+        <Section
+          ref={el => {
+            if (el) {
+              sectionRefs.current[index] = el;
+            } else {
+              sectionRefs.current[index] = null;
+            }
+          }}
+          key={index}
+        >
           {activeTab === index && (
             <Toast
               visible={isToast}
