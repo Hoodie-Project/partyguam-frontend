@@ -61,7 +61,9 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             ? user.userCareers.filter(item => item.careerType === 'primary')[0].position.sub
             : '',
           경력: user.userCareers.filter(item => item.careerType === 'primary')[0]
-            ? `${user.userCareers.filter(item => item.careerType === 'primary')[0].years}년`
+            ? user.userCareers.filter(item => item.careerType === 'primary')[0].years === 0
+              ? '신입'
+              : `${user.userCareers.filter(item => item.careerType === 'primary')[0].years}년`
             : '',
         }
       : { id: 0, 직군: '', 직무: '', 경력: '' },
@@ -79,7 +81,9 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             ? user.userCareers.filter(item => item.careerType === 'secondary')[0].position.sub
             : '',
           경력: user.userCareers.filter(item => item.careerType === 'secondary')[0]
-            ? `${user.userCareers.filter(item => item.careerType === 'secondary')[0].years}년`
+            ? user.userCareers.filter(item => item.careerType === 'secondary')[0].years === 0
+              ? '신입'
+              : `${user.userCareers.filter(item => item.careerType === 'secondary')[0].years}년`
             : '',
         }
       : { id: 0, 직군: '', 직무: '', 경력: '' },
