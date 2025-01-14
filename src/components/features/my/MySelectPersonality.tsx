@@ -20,7 +20,7 @@ export default function MySelectPersonality() {
   const searchParams = useSearchParams();
   const [personalityData, setPersonalityData] = useState<PersonalityQuestion[]>([]);
   const [detailNum, setDetailNum] = useState(searchParams.get('num') || 1);
-  const sectionRefs = useRef<HTMLDivElement[]>([]); // 각 섹션을 참조하는 ref 배열
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activeTab, setActiveTab] = useState<number>(0);
