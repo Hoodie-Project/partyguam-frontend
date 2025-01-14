@@ -5,7 +5,7 @@ const isProduction = process.env.NEXT_PUBLIC_ENV === 'production';
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['partyguam.net'],
+    domains: ['partyguham.com'],
   },
   webpack: config => {
     config.optimization = {
@@ -40,7 +40,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*', // '/api/'로 시작하는 경로만 리다이렉트
-        destination: 'https://partyguam.net/dev/api/:path*',
+        destination: 'https://partyguham.com/dev/api/:path*',
       },
     ];
   },
