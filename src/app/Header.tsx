@@ -133,6 +133,10 @@ const HeaderContainer = styled.header`
   border-color: ${palette.grey200};
   z-index: ${zIndex.navIndex};
   background-color: ${palette.white};
+
+  @media (max-width: 673px) {
+    display: none;
+  }
 `;
 
 const HeaderWrapper = styled.div`

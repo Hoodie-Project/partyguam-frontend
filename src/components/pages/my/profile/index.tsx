@@ -33,11 +33,15 @@ function MyProfile() {
   });
   const [참여중파티수, set참여중파티수] = useState<number | undefined>(0);
 
-  const [시간포함Options, set시간포함Options] = useState<string[]>();
-  const [시간미포함Options, set시간미포함Options] = useState<string[]>();
-
   const router = useRouter();
   const { openModal, closeModal } = useModalContext();
+
+  useEffect(() => {
+    (async () => {
+      const userResponse = await fetchGetUsers();
+      setAuth(userResponse);
+    })();
+  }, [router]);
 
   const portfolioInputValid = useMemo(() => {
     const { portfolio: portfolioLink, portfolioTitle } = portfolio;
@@ -106,25 +110,10 @@ function MyProfile() {
         portfolio: userResponse.portfolio,
         portfolioTitle: userResponse.portfolioTitle,
       });
-
-      // '시간'이 포함된 객체와 포함되지 않은 객체를 분리
-      const timeIncluded = userResponse.userPersonalities.filter(
-        personality => personality.personalityOption.personalityQuestion.id === 1,
-      );
-      const timeExcluded = userResponse.userPersonalities.filter(
-        personality => personality.personalityOption.personalityQuestion.id !== 1,
-      );
-
-      // options만 추출
-      const 시간포함Options = timeIncluded.flatMap(personality => personality.personalityOption.content);
-      const 시간미포함Options = timeExcluded.flatMap(personality => personality.personalityOption.content);
-
-      set시간포함Options(시간포함Options);
-      set시간미포함Options(시간미포함Options);
       const 참여중파티 = await fetchGetUsersMeParties({ page: 1, limit: 5, sort: 'createdAt', order: 'ASC' });
       set참여중파티수(참여중파티?.total);
     })();
-  }, []);
+  }, [login, setAuth, router]);
 
   const handleGenderToggle = () => {
     setIsVisible(prev => {
@@ -166,7 +155,7 @@ function MyProfile() {
     });
   };
   return (
-    <SContainer style={{ height: '100vh' }}>
+    <SContainer>
       <FloatingMenu menu={MYPAGE_MENU()} />
 
       <PageHeader title="프로필 편집" />
@@ -207,10 +196,10 @@ function MyProfile() {
           <MyLocationSection userLocations={user.userLocations} />
 
           {/* 세부 프로필 - 희망 시간*/}
-          <MyTimeSection userTime={시간포함Options} />
+          <MyTimeSection userTime={user.userPersonalities} />
 
           {/* 세부 프로필 - 성향*/}
-          <MyPersonalitySection userPersonalities={시간미포함Options} />
+          <MyPersonalitySection userPersonalities={user.userPersonalities} />
 
           {/* 세부 프로필 - 이력서 및 포트폴리오 링크*/}
           <div>
@@ -344,7 +333,7 @@ export default MyProfile;
 
 const MyProfileContainer = styled.div`
   width: 400px;
-  height: auto;
+  height: 100%;
   margin-top: 112px;
   margin-bottom: 58px;
 `;

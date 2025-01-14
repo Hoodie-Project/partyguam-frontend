@@ -17,7 +17,7 @@ type Props = {
 function Toast({ visible, onClose, label, icon, position }: Props) {
   useEffect(() => {
     if (visible) {
-      const timer = setTimeout(() => onClose(), 3000);
+      const timer = setTimeout(() => onClose(), 1000);
       return () => clearTimeout(timer);
     }
   }, [visible, onClose]);

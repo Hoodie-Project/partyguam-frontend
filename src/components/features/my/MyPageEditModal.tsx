@@ -27,6 +27,7 @@ export default function MyPageEditModal({ children, width }: Props) {
           position: 'absolute',
           right: 0,
           margin: '20px',
+          zIndex: 10,
         }}
       />
       {children}

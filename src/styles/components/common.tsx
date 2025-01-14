@@ -63,9 +63,16 @@ const Divider = styled.div`
 
 /** policy 페이지 컴포넌트 **/
 const PolicyLayout = styled.section`
-  width: 1200px;
   height: auto;
   margin-top: 120px;
+  @media (min-width: 673px) {
+    width: 1200px;
+    margin-top: 120px;
+  }
+  @media (max-width: 674px) {
+    width: 90%;
+    margin: 20px;
+  }
 `;
 
 const SemiTItle = styled(Txt)`

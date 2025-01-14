@@ -176,6 +176,7 @@ const StyledSlider = styled(Slider)`
   position: relative;
   .slick-track {
     display: flex !important;
+    padding-bottom: 5px;
   }
 
   .slick-slide {

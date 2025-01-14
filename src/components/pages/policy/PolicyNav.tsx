@@ -27,23 +27,22 @@ const Nav = styled.nav`
   display: flex;
   border: 1px solid #e5e5ec;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   margin-bottom: 60px;
+
+  /* @media (min-width: 674px) {
+    max-width: 1200px;
+  } */
+  @media (max-width: 673px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const Tab = styled.div<{ isActive: boolean }>`
   flex: 1;
   text-align: center;
-  font-size: 20px;
   cursor: pointer;
-  border-right: 1px solid #e5e5ec;
-  padding: 16px 0px;
-
-  &:last-of-type {
-    border-right: none;
-  }
-
   &:hover {
     background-color: #f1f1f5;
   }
@@ -58,4 +57,27 @@ const Tab = styled.div<{ isActive: boolean }>`
         background-color: #21ecc7;
       }
     `}
+  @media (min-width: 674px) {
+    font-size: 20px;
+    cursor: pointer;
+    border-right: 1px solid #e5e5ec;
+    padding: 16px 0px;
+
+    &:last-of-type {
+      border-right: none;
+    }
+  }
+
+  @media (max-width: 673px) {
+    font-size: 14px;
+    border-right: 1px solid #e5e5ec;
+    padding: 14px 0px;
+    border-bottom: 1px solid #e5e5ec;
+    &:nth-last-of-type(2) {
+      border-bottom: none;
+    }
+    &:last-of-type {
+      border-bottom: none;
+    }
+  }
 `;

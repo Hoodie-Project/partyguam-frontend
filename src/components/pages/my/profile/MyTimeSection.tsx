@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
@@ -8,14 +8,24 @@ import { SelectPersonality } from '@/components/features/detailProfile';
 import MyPageEditModal from '@/components/features/my/MyPageEditModal';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SFlexRow } from '@/styles/components';
+import type { UserPersonality } from '@/types/user';
 
 type Props = {
-  userTime?: string[];
+  userTime?: UserPersonality[];
 };
 
 export function MyTimeSection({ userTime }: Props) {
   const { openModal, closeModal } = useModalContext();
   const router = useRouter();
+
+  const timeIncluded = useMemo(
+    () =>
+      userTime
+        ?.filter(personality => personality.personalityOption.personalityQuestion.id === 1)
+        .flatMap(personality => personality.personalityOption.content),
+    [userTime],
+  );
+
   const handleClickOpenTimeModal = () => {
     router.replace('/my/profile?num=3');
     openModal({
@@ -43,7 +53,7 @@ export function MyTimeSection({ userTime }: Props) {
         />
       </DetailProfilTitleWrapper>
       <SFlexRow style={{ gap: '8px', marginTop: '20px' }}>
-        {userTime?.map((item, i) => (
+        {timeIncluded?.map((item, i) => (
           <Chip
             key={i}
             chipType="filled"

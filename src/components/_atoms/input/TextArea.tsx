@@ -1,7 +1,7 @@
 'use client';
 
 import type { TextareaHTMLAttributes } from 'react';
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import styled from '@emotion/styled';
 
 import { padding, palette, radius, shadow } from '@/styles';
@@ -45,6 +45,8 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
     },
     ref,
   ) => {
+    const [isInputClicked, setIsInputClicked] = useState<boolean>(false);
+
     return (
       <InputWrapper>
         <InputContainer
@@ -59,7 +61,9 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
           <STextArea
             ref={ref}
             value={value}
-            placeholder={placeholder || ''}
+            onFocus={() => setIsInputClicked(true)}
+            onBlur={() => setIsInputClicked(false)}
+            placeholder={isInputClicked ? '' : placeholder || undefined}
             disabled={disabled}
             {...textareaAttributes}
           />

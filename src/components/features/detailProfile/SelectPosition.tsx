@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import { fetchDeletePositions, fetchGetPositions, fetchPostPositions } from '@/apis/detailProfile';
 import { Button, Txt } from '@/components/_atoms';
 import { Select } from '@/components/_molecules';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import type { Career } from '@/stores/detailProfile';
 import { useSelectPositionStore } from '@/stores/detailProfile';
@@ -45,6 +46,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
   // edit
   const user = useAuthStore();
   const { setUserCareers } = useAuthStore();
+  const { closeModal } = useModalContext();
 
   const [primaryPosition, setPrimaryPosition] = useState(
     editMode
@@ -59,7 +61,9 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             ? user.userCareers.filter(item => item.careerType === 'primary')[0].position.sub
             : '',
           경력: user.userCareers.filter(item => item.careerType === 'primary')[0]
-            ? `${user.userCareers.filter(item => item.careerType === 'primary')[0].years}년`
+            ? user.userCareers.filter(item => item.careerType === 'primary')[0].years === 0
+              ? '신입'
+              : `${user.userCareers.filter(item => item.careerType === 'primary')[0].years}년`
             : '',
         }
       : { id: 0, 직군: '', 직무: '', 경력: '' },
@@ -77,7 +81,9 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             ? user.userCareers.filter(item => item.careerType === 'secondary')[0].position.sub
             : '',
           경력: user.userCareers.filter(item => item.careerType === 'secondary')[0]
-            ? `${user.userCareers.filter(item => item.careerType === 'secondary')[0].years}년`
+            ? user.userCareers.filter(item => item.careerType === 'secondary')[0].years === 0
+              ? '신입'
+              : `${user.userCareers.filter(item => item.careerType === 'secondary')[0].years}년`
             : '',
         }
       : { id: 0, 직군: '', 직무: '', 경력: '' },
@@ -241,6 +247,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
 
     await fetchDeletePositions();
     await fetchPostPositions(validPositions);
+    closeModal();
   };
 
   return (
@@ -339,7 +346,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
               fontSize={18}
               fontWeight="bold"
             >
-              확인
+              적용하기
             </Txt>
           </Button>
         </ButtonsRowContainer>

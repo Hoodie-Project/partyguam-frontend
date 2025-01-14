@@ -5,13 +5,14 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ErrorIcon from '@mui/icons-material/Error';
-import { difference } from 'lodash';
+import { isEqual, sortBy } from 'lodash';
 
 import { fetchGetUsers } from '@/apis/auth';
 import { fetchDeleteLocations, fetchPostLocations } from '@/apis/detailProfile';
 import { Button, Chip, Txt } from '@/components/_atoms';
 import { Toast } from '@/components/_molecules';
 import { Location } from '@/components/features';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useSelectLocationStore } from '@/stores/detailProfile';
 
@@ -21,20 +22,26 @@ type Props = {
   handlesubmitEdit?: () => void;
 };
 
+const isArrayEqualIgnoreOrder = (arr1: any, arr2: any) => {
+  return isEqual(sortBy(arr1), sortBy(arr2));
+};
+
 export default function SelectLocation({ editMode = false, handleResetEdit, handlesubmitEdit }: Props) {
   const [isToast, setIsToast] = useState(false);
   const { selectedCities, selectedCitiesById, removeSelectedCity, setLocationCompletion, removeAllSelectedCities } =
     useSelectLocationStore();
-  const { setAuth, setUserLocations } = useAuthStore();
+  const { setAuth } = useAuthStore();
+  const { closeModal } = useModalContext();
+
   const user = useAuthStore();
 
   const isDisabledSubmitEditLocation = useMemo(() => {
     return (
       selectedCities.length === 0 ||
-      difference(
+      isArrayEqualIgnoreOrder(
         user.userLocations.flatMap(item => item.location),
         selectedCities,
-      ).length === 0
+      )
     );
   }, [selectedCities, user.userLocations]);
 
@@ -68,6 +75,8 @@ export default function SelectLocation({ editMode = false, handleResetEdit, hand
     setAuth(userResponse);
     if (!editMode) {
       router.push('/join/detail?num=2');
+    } else {
+      closeModal();
     }
   };
 
@@ -134,7 +143,7 @@ export default function SelectLocation({ editMode = false, handleResetEdit, hand
             disabled={isDisabledSubmitEditLocation}
           >
             <Txt fontColor={isDisabledSubmitEditLocation ? 'grey400' : 'black'} fontSize={18} fontWeight="bold">
-              확인
+              적용하기
             </Txt>
           </Button>
         </ButtonsRowContainer>
