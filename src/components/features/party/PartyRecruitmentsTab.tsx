@@ -5,6 +5,7 @@ import ArrowDropDownRoundedIcon from '@mui/icons-material/ArrowDropDownRounded';
 import ArrowDropUpRoundedIcon from '@mui/icons-material/ArrowDropUpRounded';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
+import type { UserAuthorityResponse } from '@/apis/auth';
 import { fetchGetPositions } from '@/apis/detailProfile';
 import { fetchGetPartyRecruitmentsList } from '@/apis/party';
 import { Txt } from '@/components/_atoms';
@@ -14,7 +15,6 @@ import type { PartyRecruitmentListResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 
 import PartyRecruitmentsCard from './PartyRecruitmentsCard';
-import type { UserAuthorityResponse } from '@/apis/auth';
 
 // 직군 필터링 함수
 const filterMainCategories = (data: Position[]): { id: number; label: string }[] => {
@@ -48,11 +48,13 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
         partyId: number;
         sort: string;
         order: 'ASC' | 'DESC';
+        status: string;
         main?: string;
       } = {
         partyId: Number(partyId),
         sort: 'createdAt',
         order: order,
+        status: 'active',
       };
 
       // 직군이 '전체'가 아닐 경우에만 main 파라미터 추가
