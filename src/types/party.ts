@@ -65,7 +65,7 @@ export interface PartyRecruitDetailResponse {
   party: {
     title: string;
     image: string;
-    status: string;
+    status: string; // 파티 상태 : 진행중
     partyType: {
       type: string;
     };
@@ -74,6 +74,7 @@ export interface PartyRecruitDetailResponse {
     main: string;
     sub: string;
   };
+  status: string; // 모집 상태, 모집중: active, 모집 마감 : completed
   content: string;
   recruitingCount: number;
   recruitedCount: number;
@@ -84,6 +85,7 @@ export interface PartyRecruitDetailResponse {
 // [GET] 파티 공고 리스트 전체 조회
 export interface PartyRecruitment {
   id: number; // 모집 ID
+  status: string; // 모집중: active, 모집마감: completed
   position: {
     main: string; // 직군 (예: "기획", "디자이너" 등)
     sub: string; // 직무 (예: "UI/UX 기획자")

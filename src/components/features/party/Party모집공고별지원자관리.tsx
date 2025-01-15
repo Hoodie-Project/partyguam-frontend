@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -28,13 +28,15 @@ import { formatRelativeTime } from '@/utils/date';
 function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
-  const [status, setStatus] = useState<'processing' | 'approved' | 'pending' | 'rejected' | undefined>(undefined);
+  const [status, setStatus] = useState<'all' | 'processing' | 'approved' | 'pending' | 'rejected'>('all');
   const [expand지원서, setExpand지원서] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const partyRecruitmentId = searchParams.get('partyRecruitmentId');
   const mainPosition = searchParams.get('main');
   const subPosition = searchParams.get('sub');
+  const recruitStatus = searchParams.get('recruitStatus');
   const { openModal, closeModal } = useModalContext();
+  const router = useRouter();
 
   // [GET] 포지션 모집 공고별 지원자 조회
   const {
@@ -45,6 +47,8 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   } = useInfiniteQuery({
     queryKey: [partyId, order, status, partyRecruitmentId, mainPosition, subPosition],
     queryFn: async ({ pageParam }) => {
+      const refinedStatus = status === 'all' ? undefined : status;
+
       const res = await fetchPartyRecruitmentApplications({
         partyId: Number(partyId),
         partyRecruitmentId: Number(partyRecruitmentId),
@@ -52,7 +56,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         limit: 10,
         sort: 'createdAt',
         order,
-        status,
+        status: refinedStatus,
       });
 
       return res;
@@ -87,6 +91,8 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
     }
     return [];
   }, [partyRecruitmentApplications, isFetched]);
+
+  console.log('partyRecruitmentApplicationsWithId > ', partyRecruitmentApplicationsWithId);
 
   const getIcon = () => {
     if (order === 'DESC') {
@@ -129,9 +135,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
       ),
       onCancel: () => {
         closeModal();
+        router.refresh();
       },
       onSubmit: () => {
         closeModal();
+        router.refresh();
       },
     });
   };
@@ -149,8 +157,9 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
             {(isFetched && partyRecruitmentApplications?.pages[0]?.total) ?? 0}
           </Txt>
         </div>
-        <div style={{ display: 'flex', flexDirection: 'row', gap: '7px', marginTop: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', gap: '7px', marginTop: '12px' }}>
           {[
+            { label: ' 전체 ', value: 'all' },
             { label: '검토중', value: 'pending' },
             { label: ' 수락 ', value: 'approved' },
             { label: '응답대기', value: 'processing' },
@@ -176,7 +185,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         data={{ nodes: partyRecruitmentApplicationsWithId ?? [] }}
         theme={theme}
         layout={{ custom: true }}
-        style={{ width: '100%', zIndex: 0, marginBottom: '20px' }}
+        style={{ width: '100%', zIndex: 0, marginTop: '32px', marginBottom: '20px' }}
       >
         {(tableList: PartyApplicationUser[]) => (
           <>
@@ -335,7 +344,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                     <Row item={item}>
                       <Styled지원서Cell gridColumnStart={1} gridColumnEnd={5}>
                         <Styled지원서TxtBox>{item.message}</Styled지원서TxtBox>
-                        {item.status === 'pending' && (
+                        {item.status === 'pending' && recruitStatus === 'active' && (
                           <div
                             style={{
                               display: 'flex',

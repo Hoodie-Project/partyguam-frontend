@@ -175,14 +175,28 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
             </Txt>
             <PartyInfoWrapper>
               <PartyInfo>
-                <Txt fontColor="grey500" fontSize={16}>
-                  모집중
-                </Txt>
-                <Txt fontColor="red" fontSize={16}>
-                  {Boolean(pageModalType) && `0 / ${editPartyRecruitForm?.recruiting_count}`}
-                  {!Boolean(pageModalType) &&
-                    `${partyRecruitDetailData?.recruitedCount} / ${partyRecruitDetailData?.recruitingCount}`}
-                </Txt>
+                {partyRecruitDetailData?.status === 'active' && (
+                  <>
+                    <Txt fontColor="grey500" fontSize={16}>
+                      모집중
+                    </Txt>
+                    <Txt fontColor="failRed" fontSize={16}>
+                      {Boolean(pageModalType) && `0 / ${editPartyRecruitForm?.recruiting_count}`}
+                      {!Boolean(pageModalType) &&
+                        `${partyRecruitDetailData?.recruitedCount} / ${partyRecruitDetailData?.recruitingCount}`}
+                    </Txt>
+                  </>
+                )}
+                {partyRecruitDetailData?.status === 'completed' && (
+                  <>
+                    <Txt fontColor="grey500" fontSize={16} style={{ marginRight: '12px' }}>
+                      모집
+                    </Txt>
+                    <Txt fontColor="failRed" fontSize={16}>
+                      마감
+                    </Txt>
+                  </>
+                )}
               </PartyInfo>
               <PartyInfo>
                 <Txt fontColor="grey500" fontSize={16}>
@@ -338,19 +352,35 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
         </SFlexColumnFull>
       </PartyRecruitDetailContainer>
       <FloatingButton>
-        <Button
-          style={{ width: '100%' }}
-          height="l"
-          backgroudColor="primaryGreen"
-          radius="base"
-          shadow="shadow1"
-          onClick={handleClickApplyBtn}
-          disabled={isDisable지원하기}
-        >
-          <Txt fontWeight="bold" fontColor="black">
-            지원하기
-          </Txt>
-        </Button>
+        {partyRecruitDetailData?.status === 'active' && (
+          <Button
+            style={{ width: '100%' }}
+            height="l"
+            backgroudColor="primaryGreen"
+            radius="base"
+            shadow="shadow1"
+            onClick={handleClickApplyBtn}
+            disabled={isDisable지원하기}
+          >
+            <Txt fontWeight="bold" fontColor="black">
+              지원하기
+            </Txt>
+          </Button>
+        )}
+        {partyRecruitDetailData?.status === 'completed' && (
+          <Button
+            style={{ width: '100%' }}
+            height="l"
+            backgroudColor="grey300"
+            radius="base"
+            shadow="shadow1"
+            disabled={true}
+          >
+            <Txt fontWeight="bold" fontColor="black">
+              모집 마감
+            </Txt>
+          </Button>
+        )}
       </FloatingButton>
     </SContainer>
   );

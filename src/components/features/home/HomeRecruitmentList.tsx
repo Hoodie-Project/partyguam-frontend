@@ -194,7 +194,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
                         <RecruitsCount>
                           <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                            {recruitment.party.status === 'active' ? '모집중' : '파티종료'}
+                            {recruitment.status === 'active' ? '모집중' : '파티종료'}
                           </Txt>
 
                           <Txt
@@ -202,7 +202,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                             color="failRed"
                             style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
                           >
-                            {recruitment.recruitingCount} / {recruitment.recruitedCount}
+                            {recruitment.recruitedCount} / {recruitment.recruitingCount}
                           </Txt>
                         </RecruitsCount>
                       </CardRightWrapper>
@@ -266,7 +266,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
                       <RecruitsCount>
                         <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                          {recruitment.party.status === 'active' ? '모집중' : '파티종료'}
+                          {recruitment.status === 'active' ? '모집중' : '파티종료'}
                         </Txt>
 
                         <Txt
@@ -274,7 +274,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                           color="failRed"
                           style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
                         >
-                          {recruitment.recruitingCount} / {recruitment.recruitedCount}
+                          {recruitment.recruitedCount} / {recruitment.recruitingCount}
                         </Txt>
                       </RecruitsCount>
                     </CardRightWrapper>

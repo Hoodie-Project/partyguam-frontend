@@ -8,9 +8,9 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import type { UserAuthorityResponse } from '@/apis/auth';
 import { fetchGetPositions } from '@/apis/detailProfile';
 import { fetchGetPartyRecruitmentsList } from '@/apis/party';
-import { Txt } from '@/components/_atoms';
+import { Chip, Txt } from '@/components/_atoms';
 import { Select } from '@/components/_molecules';
-import { SFlexColumnFull, SMargin } from '@/styles/components';
+import { SFlexColumnFull, SFlexRow, SMargin } from '@/styles/components';
 import type { PartyRecruitmentListResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 
@@ -38,6 +38,8 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
   const [primaryPosition, setPrimaryPosition] = useState({ id: 0, 직군: '전체', 직무: '', 경력: '' });
   const [mainFiltered, setMainFiltered] = useState<{ id: number; label: string }[]>([]);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // ASC (오름차순) / DESC (내림차순)
+  const [recruitStatus, setRecruitStatus] = useState<string>('active');
+
   const [isArrowUp, setIsArrowUp] = useState(false);
   const router = useRouter();
 
@@ -54,7 +56,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
         partyId: Number(partyId),
         sort: 'createdAt',
         order: order,
-        status: 'active',
+        status: recruitStatus,
       };
 
       // 직군이 '전체'가 아닐 경우에만 main 파라미터 추가
@@ -72,7 +74,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
   // 첫 번째 렌더 시 API 호출
   useEffect(() => {
     fetchRecruitments();
-  }, [primaryPosition, order]);
+  }, [primaryPosition, order, recruitStatus]);
 
   // 직군 데이터 가져오기
   useEffect(() => {
@@ -169,14 +171,41 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
               optionStyle={{ width: '170px', left: '0', border: '1px solid #11C9A7' }}
             />
           </SelectWrapper>
-          <IconContainer onClick={toggleArrow}>
-            <Txt fontSize={14}>등록순</Txt>
-            {isArrowUp ? (
-              <ArrowDropUpRoundedIcon style={{ color: '#00b894' }} />
-            ) : (
-              <ArrowDropDownRoundedIcon style={{ color: '#00b894' }} />
-            )}
-          </IconContainer>
+          <SFlexRow style={{ gap: '20px' }}>
+            <SFlexRow
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                gap: '7px',
+              }}
+            >
+              {[
+                { label: '모집 중', value: 'active' },
+                { label: '마감', value: 'completed' },
+              ].map((item, i) => (
+                <Chip
+                  key={i}
+                  chipType="outlined"
+                  label={item.label}
+                  size="small"
+                  chipColor={recruitStatus === item.value ? '#11C9A7' : '#E5E5EC'}
+                  fontColor={recruitStatus === item.value ? 'black' : '#767676'}
+                  fontWeight={recruitStatus === item.value ? 'semibold' : 'normal'}
+                  onClick={() => {
+                    setRecruitStatus(item.value);
+                  }}
+                />
+              ))}
+            </SFlexRow>
+            <IconContainer onClick={toggleArrow}>
+              <Txt fontSize={14}>등록순</Txt>
+              {isArrowUp ? (
+                <ArrowDropUpRoundedIcon style={{ color: '#00b894' }} />
+              ) : (
+                <ArrowDropDownRoundedIcon style={{ color: '#00b894' }} />
+              )}
+            </IconContainer>
+          </SFlexRow>
         </FilterContainer>
 
         {/* 모집 공고가 없는 경우 */}
@@ -193,6 +222,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
               <PartyRecruitmentsCard
                 key={item.id}
                 createdAt={item.createdAt}
+                status={item.status}
                 main={item.position.main}
                 sub={item.position.sub}
                 recruitedCount={item.recruitedCount}

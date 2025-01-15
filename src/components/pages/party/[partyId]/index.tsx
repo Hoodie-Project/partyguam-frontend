@@ -98,7 +98,7 @@ function PartyHome({ partyId }: PageParams) {
         <PartyContentsWrapper>
           <PartyTitleWrapper>
             <PartyTitle>
-              <Txt fontSize={32} fontWeight="bold">
+              <Txt fontSize={32} fontWeight="bold" style={{ lineHeight: '160%' }}>
                 {partyHomeData?.title}
               </Txt>
             </PartyTitle>
