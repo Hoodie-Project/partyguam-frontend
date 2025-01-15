@@ -41,6 +41,7 @@ function PartyRecruitSettingTable({
           partyId,
           sort: 'createdAt',
           order,
+          status: 'active',
         };
 
         const data = await fetchGetPartyRecruitmentsList(requestParams);
