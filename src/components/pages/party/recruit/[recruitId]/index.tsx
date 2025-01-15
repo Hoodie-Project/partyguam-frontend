@@ -110,6 +110,18 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
     }
   };
 
+  const handleShareClick = () => {
+    const currentUrl = window.location.href; // 현재 URL 가져오기
+    navigator.clipboard
+      .writeText(currentUrl) // URL 복사
+      .then(() => {
+        setIsShowCopyBalloon(true);
+      })
+      .catch(err => {
+        console.error('URL 복사 실패:', err);
+      });
+  };
+
   return (
     <SContainer style={{ padding: isReadOnly ? '0' : 'default-padding-value' }}>
       <PartyRecruitDetailContainer isReadOnly={isReadOnly}>
@@ -242,30 +254,26 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                   <CreateIcon style={{ color: '#999999' }} />
                 </Button>
               )}
-              <Button
-                backgroudColor="white"
-                borderColor="grey200"
-                style={{
-                  position: 'relative',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  gap: '4px',
-                  width: '194px',
-                  borderRadius: '12px',
-                }}
-                onClick={() => {
-                  setIsShowCopyBalloon(true);
-                  setTimeout(() => {
-                    setIsShowCopyBalloon(false);
-                  }, 3000); // 3초 후 자동으로 닫힘
-                }}
-                disabled={Boolean(isReadOnly)}
-              >
-                <Txt fontColor="grey500" fontSize={16}>
-                  공유하기
-                </Txt>
-                <ShareIcon style={{ color: '#999999' }} />
+              <div style={{ position: 'relative' }}>
+                <Button
+                  backgroudColor="white"
+                  borderColor="grey200"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '4px',
+                    width: '194px',
+                    borderRadius: '12px',
+                  }}
+                  onClick={handleShareClick}
+                  disabled={Boolean(isReadOnly)}
+                >
+                  <Txt fontColor="grey500" fontSize={16}>
+                    공유하기
+                  </Txt>
+                  <ShareIcon style={{ width: '20px', height: '20px', color: '#999999' }} />
+                </Button>
                 {isShowCopyBalloon && (
                   <Balloon
                     width="163px"
@@ -286,7 +294,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                     </Txt>
                   </Balloon>
                 )}
-              </Button>
+              </div>
             </SFlexRowFull>
           </PartyInfoContainer>
         </SFlexRowFull>
@@ -408,6 +416,7 @@ const ChipWrapper = styled.div`
 const PartyInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   width: 100%;
 `;
 

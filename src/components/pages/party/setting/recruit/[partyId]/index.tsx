@@ -85,10 +85,6 @@ function PartyRecruitSetting({ partyId }: PageParams) {
                 setIsShowBalloon(false);
               }}
               style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignContent: 'flex-start',
-                justifyContent: 'flex-start',
                 position: 'absolute',
                 top: '20px',
                 padding: '20px',
@@ -97,25 +93,34 @@ function PartyRecruitSetting({ partyId }: PageParams) {
                 zIndex: 999,
               }}
             >
-              <span>
-                <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
-                  모집 최대 인원
-                </Txt>
-                <Txt fontSize={16} fontColor="white" fontWeight="semibold">
-                  에 대해 알려드릴게요
-                </Txt>
-              </span>
-              <span>
-                <Txt fontSize={14} fontColor="white">
-                  파티원을 포함해
-                </Txt>
-                <Txt fontSize={14} fontColor="primaryGreen">
-                  16명
-                </Txt>
-                <Txt fontSize={14} fontColor="white">
-                  의 파티원을 모집할 수 있어요
-                </Txt>
-              </span>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignContent: 'flex-start',
+                  justifyContent: 'flex-start',
+                }}
+              >
+                <span>
+                  <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
+                    모집 최대 인원
+                  </Txt>
+                  <Txt fontSize={16} fontColor="white" fontWeight="semibold">
+                    에 대해 알려드릴게요
+                  </Txt>
+                </span>
+                <span>
+                  <Txt fontSize={14} fontColor="white">
+                    파티원을 포함해
+                  </Txt>
+                  <Txt fontSize={14} fontColor="primaryGreen">
+                    16명
+                  </Txt>
+                  <Txt fontSize={14} fontColor="white">
+                    의 파티원을 모집할 수 있어요
+                  </Txt>
+                </span>
+              </div>
             </Balloon>
           ) : (
             <></>

@@ -266,7 +266,7 @@ export default function MySelectPersonality() {
           )}
           <SectionTitle>
             <SFlexColumn style={{ gap: '7px' }}>
-              <Txt fontWeight="bold" fontSize={24} fontColor="black">
+              <Txt fontWeight="bold" fontSize={24} fontColor="black" style={{ lineHeight: '160%' }}>
                 {step?.question}
               </Txt>
 
@@ -286,7 +286,7 @@ export default function MySelectPersonality() {
               <Txt fontSize={14} fontColor="greenDark100" style={{ textWrap: 'nowrap' }}>
                 초기화
               </Txt>
-              <AutorenewRoundedIcon style={{ color: '#11C9A7', width: '16px', height: '16px', marginTop: '7.4px' }} />
+              <AutorenewRoundedIcon style={{ color: '#11C9A7', width: '16px', height: '16px' }} />
             </ResetButton>
           </SectionTitle>
           <OptionListWrapper>
@@ -422,7 +422,9 @@ const TabButton = styled.button<{
   }
 `;
 
-const ResetButton = styled.button`
+const ResetButton = styled.div<{ disabled: boolean }>`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;

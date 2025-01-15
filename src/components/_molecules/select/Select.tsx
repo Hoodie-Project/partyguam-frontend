@@ -37,6 +37,8 @@ interface Props {
 
   selectStyle?: React.CSSProperties;
   optionStyle?: React.CSSProperties;
+  eachOptionStyle?: React.CSSProperties;
+
   children?: React.ReactNode;
   // MultiOptions 전용 props
   parentOptions?: { id: number; label: string }[] | null;
@@ -68,6 +70,7 @@ function Select({
   optionRadius = 'base',
   selectStyle,
   optionStyle,
+  eachOptionStyle,
   parentOptions,
   selectedParentOptions = [],
   selectedOptions = [],
@@ -119,7 +122,13 @@ function Select({
             {value}
           </Txt>
         )}
-        {isOpen ? <KeyboardArrowUpRoundedIcon fontSize="medium" /> : <KeyboardArrowDownRoundedIcon fontSize="medium" />}
+        <IconWrapper>
+          {isOpen ? (
+            <KeyboardArrowUpRoundedIcon fontSize="medium" />
+          ) : (
+            <KeyboardArrowDownRoundedIcon fontSize="medium" />
+          )}
+        </IconWrapper>
       </PickerDropDown>
       {isOpen && optionsType === 'basic' && (
         <Options
@@ -129,6 +138,7 @@ function Select({
           height={height}
           optionRadius={optionRadius}
           optionStyle={optionStyle}
+          eachOptionStyle={eachOptionStyle}
         />
       )}
       {isOpen && optionsType === 'multi' && (
@@ -180,4 +190,11 @@ const PickerDropDown = styled.div<{
   border-radius: ${({ selectRadius: radiusProp }) => radius[radiusProp!] || radius.base};
   border: ${({ isValid }) => `1px solid ${isValid ? palette.greenDark100 : palette.grey200}`};
   box-shadow: ${shadow.shadow1};
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* 아이콘의 이벤트를 부모로 전달 */
 `;

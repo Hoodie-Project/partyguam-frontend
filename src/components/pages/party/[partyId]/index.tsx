@@ -74,9 +74,9 @@ function PartyHome({ partyId }: PageParams) {
       .writeText(currentUrl) // URL 복사
       .then(() => {
         setIsShowCopyBalloon(true);
-        setTimeout(() => {
-          setIsShowCopyBalloon(false); // 3초 후 메시지 숨기기
-        }, 3000);
+        // setTimeout(() => {
+        //   setIsShowCopyBalloon(false); // 3초 후 메시지 숨기기
+        // }, 3000);
       })
       .catch(err => {
         console.error('URL 복사 실패:', err);
