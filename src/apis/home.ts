@@ -11,12 +11,13 @@ export interface HomeBanner {
     id: number;
     title: string;
     image: string;
+    link: string;
   }[];
 }
 // [GET] 배너 전체 조회
 export const fetchGetBanner = async (): Promise<HomeBanner | null> => {
   try {
-    const response = await privateApi.get('/banner');
+    const response = await privateApi.get('/banner/web');
     return response.data;
   } catch (error) {
     console.error('fetchGetBanner error:', error);

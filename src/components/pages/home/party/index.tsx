@@ -83,27 +83,33 @@ function HomeParty() {
       set파티status(selectedStatus);
     }
   };
+
   const handle파티유형OptionToggle = (option: OptionType) => {
     if (option.label === '전체') {
       setSelected파티유형Options([option]);
       add파티유형FilterChip({ id: option.id, label: option.label });
-    } else {
-      if (selected파티유형Options?.some(selected => selected.id === option.id)) {
-        setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== option.id));
-        remove파티유형FilterChip(option.id);
-      } else {
-        if (selected파티유형Options?.length && selected파티유형Options?.length >= 5) {
-          // TODO. 선택 갯수 기획
-          alert('5개까지만 선택이 가능합니다.');
-        } else {
-          setSelected파티유형Options([
-            ...(selected파티유형Options?.filter(selected => selected.label !== '전체') || []),
-            option,
-          ]);
-          add파티유형FilterChip({ id: option.id, label: option.label });
-        }
-      }
+      return;
     }
+
+    // 이미 선택된 항목인 경우 제거
+    if (selected파티유형Options?.some(selected => selected.id === option.id)) {
+      setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== option.id));
+      remove파티유형FilterChip(option.id);
+      return;
+    }
+
+    // 6개 이상 선택 시 제한 (현재 선택된 개수가 5개 이상일 때)
+    if (selected파티유형Options && selected파티유형Options?.length >= 5) {
+      alert('최대 5개까지 선택 가능합니다!');
+      return;
+    }
+
+    // 5개 이하일 때만 추가
+    setSelected파티유형Options([
+      ...(selected파티유형Options?.filter(selected => selected.label !== '전체') || []),
+      option,
+    ]);
+    add파티유형FilterChip({ id: option.id, label: option.label });
   };
 
   const handleRemove파티유형FilterChip = (id: number) => {

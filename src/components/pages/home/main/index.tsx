@@ -216,7 +216,7 @@ function Main() {
                 <Txt fontSize={14} fontColor="grey500">
                   모집공고 더보기
                 </Txt>
-                <KeyboardArrowRightRoundedIcon />
+                <KeyboardArrowRightRoundedIcon style={{ width: '20px', height: '20px', lineHeight: 0 }} />
               </CircleButton>
             </CircleButtonWrapper>
           </div>
@@ -229,7 +229,7 @@ function Main() {
                 <Txt fontSize={14} fontColor="grey500">
                   파티 더보기
                 </Txt>
-                <KeyboardArrowRightRoundedIcon />
+                <KeyboardArrowRightRoundedIcon style={{ width: '20px', height: '20px', lineHeight: 0 }} />
               </CircleButton>
             </CircleButtonWrapper>
           </div>
@@ -262,11 +262,13 @@ const MainSearchWrapper = styled.div`
 const CircleButtonWrapper = styled.div`
   width: 100%;
   display: flex;
+  align-items: center;
   justify-content: center;
   margin-top: 36px;
 `;
+
 const CircleButton = styled.button`
-  margin: auto 0;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -275,7 +277,7 @@ const CircleButton = styled.button`
   border-radius: 999px;
   padding: 8px 16px;
   color: #999999;
-  box-shadow: 0px 2px 10px -1px rgba(17, 17, 17, 0.16);
+  box-shadow: 0px 2px 6px -1px rgba(17, 17, 17, 0.08);
 `;
 
 const StyledImageWrapper = styled.div`

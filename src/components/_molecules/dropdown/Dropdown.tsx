@@ -39,7 +39,6 @@ export default function Dropdown() {
     };
   }, []);
 
-  // 메뉴 클릭 시 닫기
   const handleMenuClick = (path: string) => {
     router.push(path);
     setIsOpen(false);
@@ -58,7 +57,13 @@ export default function Dropdown() {
     <Container ref={dropdownRef}>
       <DropdownTrigger onClick={toggleDropdown}>
         <ProfileImage imageUrl={image || ''} size={32} />
-        {isOpen ? <KeyboardArrowUpRoundedIcon fontSize="medium" /> : <KeyboardArrowDownRoundedIcon fontSize="medium" />}
+        <IconWrapper>
+          {isOpen ? (
+            <KeyboardArrowUpRoundedIcon fontSize="medium" />
+          ) : (
+            <KeyboardArrowDownRoundedIcon fontSize="medium" />
+          )}
+        </IconWrapper>
       </DropdownTrigger>
       {isOpen && (
         <DropdownMenu>
@@ -92,6 +97,14 @@ const DropdownTrigger = styled.div`
   align-items: center;
   gap: 5px;
   cursor: pointer;
+  user-select: none;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* 아이콘의 이벤트를 부모로 전달 */
 `;
 
 const DropdownMenu = styled.div`
@@ -113,11 +126,9 @@ const MenuGroup = styled.div`
 `;
 
 const MenuItem = styled.div`
-  padding: 9px 15px;
+  padding: 9px 20px;
   color: #111111;
   cursor: pointer;
-  text-align: center;
-
   font-weight: 400;
   font-size: 16px;
   line-height: 1.4;

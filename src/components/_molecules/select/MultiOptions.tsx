@@ -1,5 +1,5 @@
 'use client';
-import React, { Fragment, useEffect, useRef } from 'react';
+import React, { Fragment, useRef } from 'react';
 import styled from '@emotion/styled';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
@@ -56,12 +56,6 @@ export default function MultiOptions({
   handleClickSubmit,
 }: Props) {
   const pickerRef = useRef<HTMLDivElement>(null);
-  // TODO. filter chip 선택 갯수 기획 정해지면 바꿔야함
-  useEffect(() => {
-    if (chipData.length >= 5) {
-      alert('5개까지만 선택 가능합니다');
-    }
-  }, [chipData]);
 
   const handleReset = () => {
     handleClickReset?.();

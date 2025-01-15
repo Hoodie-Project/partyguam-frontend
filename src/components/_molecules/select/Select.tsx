@@ -119,7 +119,13 @@ function Select({
             {value}
           </Txt>
         )}
-        {isOpen ? <KeyboardArrowUpRoundedIcon fontSize="medium" /> : <KeyboardArrowDownRoundedIcon fontSize="medium" />}
+        <IconWrapper>
+          {isOpen ? (
+            <KeyboardArrowUpRoundedIcon fontSize="medium" />
+          ) : (
+            <KeyboardArrowDownRoundedIcon fontSize="medium" />
+          )}
+        </IconWrapper>{' '}
       </PickerDropDown>
       {isOpen && optionsType === 'basic' && (
         <Options
@@ -180,4 +186,11 @@ const PickerDropDown = styled.div<{
   border-radius: ${({ selectRadius: radiusProp }) => radius[radiusProp!] || radius.base};
   border: ${({ isValid }) => `1px solid ${isValid ? palette.greenDark100 : palette.grey200}`};
   box-shadow: ${shadow.shadow1};
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* 아이콘의 이벤트를 부모로 전달 */
 `;

@@ -80,12 +80,12 @@ function HomePartyCardList() {
           </Txt>
         </div>
         <ControlButtons>
-          <Button onClick={handlePrev} isLeft={true}>
+          <ArrowButton onClick={handlePrev} isLeft={true} disabled={page === 1}>
             <KeyboardArrowLeftRoundedIcon />
-          </Button>
-          <Button onClick={handleNext}>
+          </ArrowButton>
+          <ArrowButton onClick={handleNext} disabled={page === 3}>
             <KeyboardArrowRightRoundedIcon />
-          </Button>
+          </ArrowButton>
         </ControlButtons>
       </div>
 
@@ -140,7 +140,13 @@ function HomePartyCardList() {
                     </EllipsisTitleText>
                     <Txt
                       fontSize={12}
-                      style={{ lineHeight: '140%', color: '#24CE85', justifyItems: 'flex-end', marginTop: '16px' }}
+                      style={{
+                        lineHeight: '140%',
+                        color: '#24CE85',
+                        justifySelf: 'flex-end',
+                        marginTop: 'auto',
+                        marginLeft: '2px',
+                      }}
                     >
                       {party.status === 'active' &&
                         party.recruitmentCount > 0 &&
@@ -212,7 +218,6 @@ const CardContentsWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
 const EllipsisTitleText = styled(Txt)`
@@ -227,7 +232,7 @@ const EllipsisTitleText = styled(Txt)`
 
 const ChipWrapper = styled.div`
   display: flex;
-  margin-top: 14px;
+  margin-top: 16px;
   gap: 4px;
 `;
 
@@ -250,9 +255,9 @@ const ControlButtons = styled.div`
   justify-self: flex-end;
 `;
 
-const Button = styled.button<{ isLeft?: boolean; isFirst?: boolean; isLast?: boolean }>`
+const ArrowButton = styled.button<{ isLeft?: boolean }>`
   background-color: #ffffff;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #e5e5ec;
   ${({ isLeft }) =>
     isLeft &&
     css`
@@ -268,6 +273,10 @@ const Button = styled.button<{ isLeft?: boolean; isFirst?: boolean; isLast?: boo
   cursor: pointer;
   box-shadow: 0px 2px 6px -1px rgba(17, 17, 17, 0.08);
   color: #999999;
+
+  &:disabled {
+    color: #e5e5ec;
+  }
 
   &:hover {
     background-color: #eee;

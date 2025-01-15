@@ -39,7 +39,6 @@ function HomeRecruitmentList({ personalized = false }: Props) {
     sliderRef.current?.slickPrev();
   };
   const sliderSettings = {
-    infinite: true,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -88,44 +87,46 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
   return (
     <>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '30px',
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
-          <Txt fontSize={24} fontWeight="bold">
-            {personalized ? '맞춤 모집공고' : '신규 모집공고'}
-          </Txt>
+      {!세부프로필미입력 && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '30px',
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
+            <Txt fontSize={24} fontWeight="bold">
+              {personalized ? '맞춤 모집공고' : '신규 모집공고'}
+            </Txt>
 
-          <Txt fontSize={16} fontWeight="normal">
-            {personalized
-              ? `${nickname}님에게 딱 맞는 포지션을 추천해드려요.`
-              : '새로운 여정을 시작할 타이밍, 신규 모집공고를 확인해 보세요!'}
-          </Txt>
+            <Txt fontSize={16} fontWeight="normal">
+              {personalized
+                ? `${nickname}님에게 딱 맞는 포지션을 추천해드려요.`
+                : '새로운 여정을 시작할 타이밍, 신규 모집공고를 확인해 보세요!'}
+            </Txt>
+          </div>
+          {personalized && (
+            <ControlButtons>
+              <ArrowButton onClick={handlePrev} isLeft={true} disabled={page === 1}>
+                <KeyboardArrowLeftRoundedIcon />
+              </ArrowButton>
+              <ArrowButton onClick={handleNext} disabled={page === 3}>
+                <KeyboardArrowRightRoundedIcon />
+              </ArrowButton>
+            </ControlButtons>
+          )}
         </div>
-        {personalized && (
-          <ControlButtons>
-            <Button onClick={handlePrev} isLeft={true}>
-              <KeyboardArrowLeftRoundedIcon />
-            </Button>
-            <Button onClick={handleNext}>
-              <KeyboardArrowRightRoundedIcon />
-            </Button>
-          </ControlButtons>
-        )}
-      </div>
+      )}
       <ReCruitmentCardWrapper>
         {personalized ? (
           세부프로필미입력 ? (
             <GoToDetailProfile>
               <NoteCheckIcon />
               <SFlexColumnCenter>
-                <Txt fontSize={20} fontWeight="semibold">
+                <Txt fontSize={20} fontWeight="semibold" style={{ lineHeight: '160%' }}>
                   세부프로필을 완료하고
                 </Txt>
                 <Txt fontSize={20} fontWeight="semibold">
@@ -133,10 +134,10 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                 </Txt>
               </SFlexColumnCenter>
               <CircleButton onClick={() => router.push('/my/profile')}>
-                <Txt fontSize={14} fontColor="black" fontWeight="semibold">
+                <Txt fontSize={16} fontColor="black" fontWeight="semibold">
                   세부프로필 설정하기
                 </Txt>
-                <KeyboardArrowRightRoundedIcon />
+                <KeyboardArrowRightRoundedIcon style={{ width: '20px', height: '20px' }} />
               </CircleButton>
             </GoToDetailProfile>
           ) : (
@@ -330,6 +331,7 @@ const StyledSlider = styled(Slider)`
 
 const CircleButton = styled.button`
   margin: auto 0;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -385,7 +387,7 @@ const CardRightWrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin-left: 14px;
+  margin-left: 12px;
   justify-content: space-between;
 `;
 
@@ -435,9 +437,9 @@ const ControlButtons = styled.div`
   justify-self: flex-end;
 `;
 
-const Button = styled.button<{ isLeft?: boolean; isFirst?: boolean; isLast?: boolean }>`
+const ArrowButton = styled.button<{ isLeft?: boolean }>`
   background-color: #ffffff;
-  border: 1px solid #d4d4d4;
+  border: 1px solid #e5e5ec;
   ${({ isLeft }) =>
     isLeft &&
     css`
@@ -453,6 +455,10 @@ const Button = styled.button<{ isLeft?: boolean; isFirst?: boolean; isLast?: boo
   cursor: pointer;
   box-shadow: 0px 2px 6px -1px rgba(17, 17, 17, 0.08);
   color: #999999;
+
+  &:disabled {
+    color: #d4d4d4;
+  }
 
   &:hover {
     background-color: #eee;
