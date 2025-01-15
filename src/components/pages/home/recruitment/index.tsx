@@ -478,6 +478,7 @@ const RightFilter = styled.div`
 `;
 
 const ReCruitmentCardWrapper = styled.section`
+  width: calc(100% + 12px);
   display: flex;
   flex-wrap: wrap;
   gap: 12px;

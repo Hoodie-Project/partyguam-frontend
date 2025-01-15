@@ -124,6 +124,10 @@ export default function PartyEdit({ partyId }: PageParams) {
     return 'default';
   }, [파티소개글value]);
 
+  useEffect(() => {
+    console.log('isVisible', isVisibleBalloon);
+  }, [isVisibleBalloon]);
+
   const buttonDisabled = useMemo(() => {
     const commonConditions =
       파티명InputState == 'success' && 파티소개글InputState == 'success' && 파티유형value.id != 0;
@@ -300,7 +304,9 @@ export default function PartyEdit({ partyId }: PageParams) {
           radiusKey="base"
           backgroundColor="grey300"
           shadowKey="none"
-          onClick={() => {
+          style={{ position: 'relative' }}
+          onClick={e => {
+            e.preventDefault();
             if (fileInputRef.current) {
               fileInputRef.current.click();
             }
@@ -324,27 +330,26 @@ export default function PartyEdit({ partyId }: PageParams) {
             style={{ display: 'none' }}
             onChange={handleFileChange}
           />
-        </Square>
-        {isVisibleBalloon && (
-          <Balloon
-            width="163px"
-            height="30px"
-            onClose={() => {
-              setIsVisibleBalloon(false);
-            }}
-            style={{
-              marginTop: '20px',
-            }}
-          >
-            <Txt fontSize={14} fontColor="white">
-              <Txt fontSize={14} fontColor="primaryGreen">
-                4:3 비율
+          {isVisibleBalloon && (
+            <Balloon
+              width="163px"
+              height="30px"
+              onClose={() => {
+                setIsVisibleBalloon(false);
+              }}
+              style={{ position: 'absolute', bottom: '-58px' }}
+            >
+              <Txt fontSize={14} fontColor="white">
+                <Txt fontSize={14} fontColor="primaryGreen">
+                  4:3 비율
+                </Txt>
+                이 가장 예뻐요
               </Txt>
-              이 가장 예뻐요
-            </Txt>
-          </Balloon>
-        )}
-        <SFlexRowFull style={{ gap: 20, marginTop: 54 }}>
+            </Balloon>
+          )}
+        </Square>
+
+        <SFlexRowFull style={{ gap: 20, marginTop: 108 }}>
           <SFlexColumnFull>
             <Txt fontSize={20} fontWeight="bold" style={{ marginBottom: 4 }}>
               파티명
@@ -374,6 +379,7 @@ export default function PartyEdit({ partyId }: PageParams) {
             <Select
               placeholder="파티 유형 선택"
               height="m"
+              eachOptionStyle={{ padding: '20px' }}
               options={파티유형List}
               value={파티유형value.label}
               onClick={(e: React.MouseEvent<HTMLLIElement>) => {
@@ -421,7 +427,7 @@ export default function PartyEdit({ partyId }: PageParams) {
               </TipBox.Txt>
             }
           />
-          <SMargin margin="10px" />
+          <SMargin margin="20px" />
           <Input.TextArea
             height="320px"
             maxCount={250}
@@ -430,6 +436,7 @@ export default function PartyEdit({ partyId }: PageParams) {
             onClear={() => {
               set파티소개글value('');
             }}
+            shadow="shadow1"
             value={파티소개글value}
             placeholder="새로운 프로젝트를 위해 모여 함께 아이디어를 나누고 계획을 세우는 파티를 개최합니다!
             &#13;&#10;창의적인 아이디어와 열정이 가득한 분들과 함께하는 시간을 가지려고 합니다.

@@ -72,7 +72,11 @@ const Input = forwardRef<HTMLInputElement, Props>(
               fontWeight="normal"
               fontColor="grey400"
               fontSize={14}
-              style={{ display: 'inline-block', width: '60px', marginLeft: '16px' }}
+              style={{
+                display: 'inline-block',
+                width: '50px',
+                marginLeft: '10px',
+              }}
             >
               {value?.length} / {maxCount}
             </Txt>
@@ -81,7 +85,10 @@ const Input = forwardRef<HTMLInputElement, Props>(
             <CancelOutlinedIcon
               onClick={onClear}
               sx={{
+                display: 'flex',
+                alignContent: 'center',
                 width: `${svgSizeMap['s'].size}`,
+                height: `${svgSizeMap['s'].size}`,
                 strokeWidth: `${svgSizeMap['s'].strokeWidth}`,
                 cursor: 'pointer',
               }}
@@ -126,6 +133,9 @@ const InputContainer = styled.div<Props>`
 `;
 
 const TextInput = styled.input<Props>`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
   font-size: 16px;
   font-weight: normal;

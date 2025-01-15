@@ -13,6 +13,7 @@ import { fetchParties } from '@/apis/home';
 import { fetchGetPartyTypes } from '@/apis/party';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
+import { LoginModal } from '@/components/features';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
@@ -67,7 +68,10 @@ function HomeParty() {
     handleSubmit파티유형,
   } = useApplicantFilterStore();
 
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+  }));
+
   const { openModal } = useModalContext();
 
   useEffect(() => {
@@ -293,7 +297,17 @@ function HomeParty() {
             </Txt>
             {getIcon()}
 
-            <CircleButton onClick={() => router.push('/party/create')}>파티 생성하기 +</CircleButton>
+            <CircleButton
+              onClick={() => {
+                if (isLoggedIn) {
+                  router.push('/party/create');
+                } else {
+                  openModal({ children: <LoginModal /> });
+                }
+              }}
+            >
+              파티 생성하기 +
+            </CircleButton>
           </RightFilter>
         </HeaderWrapper>
         <PartyCardList>
@@ -393,6 +407,7 @@ const RightFilter = styled.div`
 `;
 
 const PartyCardList = styled.section`
+  width: calc(100% + 20px);
   display: flex;
   flex-wrap: wrap;
   gap: 20px;

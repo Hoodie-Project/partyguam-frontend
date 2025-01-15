@@ -72,7 +72,7 @@ const TextArea = forwardRef<HTMLTextAreaElement, Props>(
               fontWeight="normal"
               fontColor="grey400"
               fontSize={14}
-              style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '5px' }}
+              style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '10px' }}
             >
               {value?.length} / {maxCount}
             </Txt>

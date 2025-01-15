@@ -16,10 +16,19 @@ type Props = {
 
   optionRadius?: keyof typeof radius;
   optionStyle?: React.CSSProperties;
+  eachOptionStyle?: React.CSSProperties;
 };
 
 // 기본 option ->
-export default function Options({ options, onClick, setIsOpen, height, optionRadius = 'base', optionStyle }: Props) {
+export default function Options({
+  options,
+  onClick,
+  setIsOpen,
+  height,
+  optionRadius = 'base',
+  eachOptionStyle,
+  optionStyle,
+}: Props) {
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>, option: OptionType) => {
     onClick(e, option.id);
     setIsOpen(false);
@@ -29,7 +38,7 @@ export default function Options({ options, onClick, setIsOpen, height, optionRad
     <SelectOptions top={height} optionRadius={optionRadius} style={optionStyle}>
       {options &&
         options.map(option => (
-          <SelectOption key={option.id} onClick={e => handleOptionClick(e, option)}>
+          <SelectOption key={option.id} onClick={e => handleOptionClick(e, option)} style={eachOptionStyle}>
             {option.label}
           </SelectOption>
         ))}

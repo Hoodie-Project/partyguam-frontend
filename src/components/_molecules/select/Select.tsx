@@ -37,6 +37,8 @@ interface Props {
 
   selectStyle?: React.CSSProperties;
   optionStyle?: React.CSSProperties;
+  eachOptionStyle?: React.CSSProperties;
+
   children?: React.ReactNode;
   // MultiOptions 전용 props
   parentOptions?: { id: number; label: string }[] | null;
@@ -68,6 +70,7 @@ function Select({
   optionRadius = 'base',
   selectStyle,
   optionStyle,
+  eachOptionStyle,
   parentOptions,
   selectedParentOptions = [],
   selectedOptions = [],
@@ -125,7 +128,7 @@ function Select({
           ) : (
             <KeyboardArrowDownRoundedIcon fontSize="medium" />
           )}
-        </IconWrapper>{' '}
+        </IconWrapper>
       </PickerDropDown>
       {isOpen && optionsType === 'basic' && (
         <Options
@@ -135,6 +138,7 @@ function Select({
           height={height}
           optionRadius={optionRadius}
           optionStyle={optionStyle}
+          eachOptionStyle={eachOptionStyle}
         />
       )}
       {isOpen && optionsType === 'multi' && (

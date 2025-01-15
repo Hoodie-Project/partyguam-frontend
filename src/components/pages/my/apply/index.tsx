@@ -253,9 +253,6 @@ function MyApply() {
                               setIsShowBalloon(false);
                             }}
                             style={{
-                              display: 'flex',
-                              justifyContent: 'flex-start',
-                              flexDirection: 'column',
                               position: 'absolute',
                               top: '40px',
                               padding: '20px',
@@ -266,37 +263,39 @@ function MyApply() {
                               textAlign: 'start',
                             }}
                           >
-                            <div style={{ width: '100%', textAlign: 'start', marginBottom: '12px' }}>
-                              <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
-                                상태
+                            <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column' }}>
+                              <div style={{ width: '100%', textAlign: 'start', marginBottom: '12px' }}>
+                                <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
+                                  상태
+                                </Txt>
+                                <Txt fontSize={16} fontColor="white" fontWeight="semibold">
+                                  에 대해 알려드릴게요
+                                </Txt>
+                              </div>
+                              <Txt fontSize={14} fontColor="white" style={{ lineHeight: '140%' }}>
+                                검토중 : 파티장이 지원서 확인 전이에요.
+                                <br />
+                                응답대기 : 파티장 수락 후, 지원자의 수락을 기다려요.
+                                <br />
+                                수락 : 파티장과 지원자 모두 수락했어요.
+                                <br />
+                                거절 : 파티장 또는 지원자가 거절했어요.
                               </Txt>
-                              <Txt fontSize={16} fontColor="white" fontWeight="semibold">
-                                에 대해 알려드릴게요
+                              <Txt
+                                fontSize={14}
+                                fontColor="greenLight100"
+                                style={{ width: '100%', textAlign: 'start', marginTop: '15px' }}
+                              >
+                                일주일 이내 수락하지 않으면 거절됩니다
+                              </Txt>
+                              <Txt
+                                fontSize={14}
+                                fontColor="white"
+                                style={{ width: '100%', textAlign: 'start', marginTop: '15px' }}
+                              >
+                                지원목록은 지원일 기준 30일까지 보관됩니다.
                               </Txt>
                             </div>
-                            <Txt fontSize={14} fontColor="white" style={{ lineHeight: '140%' }}>
-                              검토중 : 파티장이 지원서 확인 전이에요.
-                              <br />
-                              응답대기 : 파티장 수락 후, 지원자의 수락을 기다려요.
-                              <br />
-                              수락 : 파티장과 지원자 모두 수락했어요.
-                              <br />
-                              거절 : 파티장 또는 지원자가 거절했어요.
-                            </Txt>
-                            <Txt
-                              fontSize={14}
-                              fontColor="greenLight100"
-                              style={{ width: '100%', textAlign: 'start', marginTop: '15px' }}
-                            >
-                              일주일 이내 수락하지 않으면 거절됩니다
-                            </Txt>
-                            <Txt
-                              fontSize={14}
-                              fontColor="white"
-                              style={{ width: '100%', textAlign: 'start', marginTop: '15px' }}
-                            >
-                              지원목록은 지원일 기준 30일까지 보관됩니다.
-                            </Txt>
                           </Balloon>
                         ) : (
                           <></>
