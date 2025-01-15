@@ -47,7 +47,11 @@ export default function MyCareerSection({ userCareers }: Props) {
               <Chip
                 chipType="filled"
                 chipColor="greenLight400"
-                label={`${userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`}
+                label={
+                  userCareers.filter(item => item.careerType === 'primary')[0]?.years === 0
+                    ? '신입'
+                    : `${userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`
+                }
                 chipStyle={{
                   fontSize: '16px',
                   width: 'auto',
@@ -100,7 +104,11 @@ export default function MyCareerSection({ userCareers }: Props) {
                 <Chip
                   chipType="filled"
                   chipColor="grey100"
-                  label={`${userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`}
+                  label={
+                    userCareers.filter(item => item.careerType !== 'primary')[0]?.years === 0
+                      ? '신입'
+                      : `${userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`
+                  }
                   chipStyle={{
                     fontSize: '16px',
                     width: 'auto',

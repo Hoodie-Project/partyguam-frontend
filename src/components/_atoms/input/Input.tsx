@@ -130,6 +130,7 @@ const TextInput = styled.input<Props>`
   font-size: 16px;
   font-weight: normal;
   background-color: ${props => props.disabled && palette.grey100};
+  color: ${props => props.disabled && palette.grey500};
 `;
 
 const Message = styled.div<Props>`

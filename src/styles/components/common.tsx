@@ -38,7 +38,7 @@ const SChildContainer = styled.div`
 
 const SForm = styled.form`
   display: flex;
-  padding-top: 5rem;
+  padding-top: 100px;
   flex-direction: column;
   justify-content: center;
   align-items: center;

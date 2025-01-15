@@ -78,7 +78,7 @@ function MyParty() {
     <SContainer>
       <FloatingMenu menu={MYPAGE_MENU()} />
       <PageHeader title="내 파티" />
-      <MyPartyContainer style={{ height: '100vh' }}>
+      <MyPartyContainer>
         <SFlexRow style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {[
@@ -189,7 +189,7 @@ export default MyParty;
 
 const MyPartyContainer = styled.div`
   width: 925px;
-  height: auto;
+  height: 100%;
   margin-top: 110px;
 `;
 

@@ -211,13 +211,18 @@ export const fetchPostReports = async ({
 };
 
 // 파티 모집 목록 조회
+/**
+ * @Params partyId(파티 아이디; number), sort('createdAt'), order('ASC', 'DESC'), status('active', 'completed'), main('기획자', '디자이너', '개발자', '마케터/광고')
+ */
 export const fetchGetPartyRecruitmentsList = async ({
   partyId,
   sort = 'createdAt',
   order = 'ASC',
+  status = 'active',
   main,
 }: {
   partyId: number;
+  status: string;
   sort?: string;
   order?: string;
   main?: string;
@@ -227,6 +232,7 @@ export const fetchGetPartyRecruitmentsList = async ({
       params: {
         sort,
         order,
+        status,
         ...(main && { main }), // main 값이 있을 때만 쿼리 파라미터에 포함
       },
     });

@@ -75,7 +75,7 @@ export default function Join() {
     <>
       <SContainer>
         <PageHeader
-          title="가입하기"
+          title="회원가입"
           hrefLabel="뒤로 가기"
           onClickHref={() =>
             openModal({
@@ -111,7 +111,7 @@ export default function Join() {
             <Txt fontSize={16} style={{ marginBottom: 20 }}>
               이메일은 변경할 수 없어요.
             </Txt>
-            <Input placeholder={signupData.email} shadow="shadow2" disabled />
+            <Input value={signupData.email} shadow="shadow1" disabled />
           </JoinField>
 
           <JoinField>
@@ -124,7 +124,7 @@ export default function Join() {
             <FlexRow>
               <Input
                 onBlur={e => {
-                  e.target.placeholder = '최대 15자(영문/한글/숫자)';
+                  e.target.placeholder = '15자 이내(영문/한글/숫자)';
                   handleBlur();
                 }}
                 onFocus={e => {
@@ -133,7 +133,7 @@ export default function Join() {
                 }}
                 name="nickname"
                 shadow="shadow1"
-                placeholder="최대 15자(영문/한글/숫자)"
+                placeholder="15자 이내(영문/한글/숫자)"
                 onChange={e => {
                   const { value, name } = e.target;
                   setJoinInput({ ...joinInput, [name]: value });
@@ -149,7 +149,7 @@ export default function Join() {
                 maxCount={15}
               />
               <Button
-                backgroudColor="white"
+                backgroudColor={isNicknameDuplicated === false ? 'primaryGreen' : 'white'}
                 width="s"
                 height="base"
                 radius="base"
@@ -161,7 +161,9 @@ export default function Join() {
                 }}
                 disabled={isNicknameDuplicated === false}
               >
-                <Txt fontColor="grey500">중복 확인</Txt>
+                <Txt fontColor="grey500" fontSize={16}>
+                  중복 확인
+                </Txt>
               </Button>
             </FlexRow>
           </JoinField>
@@ -204,12 +206,12 @@ export default function Join() {
                   setJoinInput({ ...joinInput, gender: 'M' });
                 }}
                 height="base"
-                backgroudColor={joinInput.gender === 'M' ? 'greenLight200' : 'white'}
-                borderColor={joinInput.gender === 'M' ? 'transparent' : 'grey200'}
+                backgroudColor={joinInput.gender === 'M' ? 'greenLight400' : 'white'}
+                borderColor={joinInput.gender === 'M' ? 'greenDark100' : 'grey200'}
                 radius="base"
-                shadow="shadow1"
+                shadow={joinInput.gender === 'M' ? 'shadow2' : 'shadow1'}
               >
-                <Txt fontColor="grey500">남자</Txt>
+                <Txt fontWeight={joinInput.gender === 'M' ? 'semibold' : 'normal'}>남자</Txt>
               </Button>
               <Button
                 width="m"
@@ -218,12 +220,12 @@ export default function Join() {
                   setJoinInput({ ...joinInput, gender: 'F' });
                 }}
                 height="base"
-                backgroudColor={joinInput.gender === 'F' ? 'greenLight200' : 'white'}
-                borderColor={joinInput.gender === 'F' ? 'transparent' : 'grey200'}
+                backgroudColor={joinInput.gender === 'F' ? 'greenLight400' : 'white'}
+                borderColor={joinInput.gender === 'F' ? 'greenDark100' : 'grey200'}
                 radius="base"
-                shadow="shadow1"
+                shadow={joinInput.gender === 'F' ? 'shadow2' : 'shadow1'}
               >
-                <Txt fontColor="grey500">여자</Txt>
+                <Txt fontWeight={joinInput.gender === 'F' ? 'semibold' : 'normal'}>여자</Txt>
               </Button>
             </FlexRow>
           </JoinField>
@@ -231,7 +233,7 @@ export default function Join() {
           <Button
             style={{ marginBottom: 60 }}
             disabled={joinBtnDisabled}
-            height="base"
+            height="l"
             width="base"
             backgroudColor="primaryGreen"
             radius="base"
