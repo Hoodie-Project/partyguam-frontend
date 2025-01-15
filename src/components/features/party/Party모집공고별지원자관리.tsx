@@ -18,7 +18,9 @@ import {
 } from '@/apis/party';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { BreadCrumb, ProfileImage } from '@/components/_molecules';
+import { ConfirmModal } from '@/components/features';
 import { PARTY_APPLICANTS_STATUS } from '@/constants';
+import { useModalContext } from '@/contexts/ModalContext';
 import { SChildContainer } from '@/styles/components';
 import type { PartyApplicationUser } from '@/types/party';
 import { formatRelativeTime } from '@/utils/date';
@@ -32,6 +34,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const partyRecruitmentId = searchParams.get('partyRecruitmentId');
   const mainPosition = searchParams.get('main');
   const subPosition = searchParams.get('sub');
+  const { openModal, closeModal } = useModalContext();
 
   // [GET] 포지션 모집 공고별 지원자 조회
   const {
@@ -77,7 +80,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         page?.partyApplicationUser
           ? page.partyApplicationUser.map(item => ({
               ...item,
-              id: item.user.id,
+              id: item.id,
             }))
           : [],
       );
@@ -101,6 +104,37 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
       --data-table-library_grid-template-columns: 35% repeat(3, minmax(0, 1fr));
     `,
   });
+
+  const handleClickAcceptBtn = (type: '거절' | '수락') => {
+    openModal({
+      children: (
+        <>
+          {type == '거절' && (
+            <ConfirmModal
+              style={{ width: '400px' }}
+              modalTitle="지원서를 거절했어요."
+              modalContents={<>이 지원자는 프로젝트에 참여할 수 없어요.</>}
+              submitBtnTxt="닫기"
+            />
+          )}
+          {type == '수락' && (
+            <ConfirmModal
+              style={{ width: '400px' }}
+              modalTitle="지원자를 수락했어요."
+              modalContents={<>지원자가 합류를 결정하면 파티 활동을 시작할 수 있어요.</>}
+              submitBtnTxt="닫기"
+            />
+          )}
+        </>
+      ),
+      onCancel: () => {
+        closeModal();
+      },
+      onSubmit: () => {
+        closeModal();
+      },
+    });
+  };
 
   return (
     <SChildContainer>
@@ -239,7 +273,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
 
             <Body>
               {tableList.map((item: PartyApplicationUser) => (
-                <Fragment key={item.id}>
+                <Fragment key={`${item.id}_${item.user.id}`}>
                   <Row item={item}>
                     <StyledCell isExpend={expand지원서 === item.id}>
                       <div
@@ -320,7 +354,8 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                                     partyId: Number(partyId),
                                     partyApplicationId: item.id,
                                   });
-                                  return res;
+
+                                  handleClickAcceptBtn('거절');
                                 } catch (err) {
                                   console.error(err);
                                 }
@@ -336,7 +371,8 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                                     partyId: Number(partyId),
                                     partyApplicationId: item.id,
                                   });
-                                  return res;
+
+                                  handleClickAcceptBtn('수락');
                                 } catch (err) {
                                   console.error(err);
                                 }

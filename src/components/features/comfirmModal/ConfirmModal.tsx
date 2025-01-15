@@ -1,4 +1,5 @@
 'use client';
+import type { HTMLAttributes } from 'react';
 import React from 'react';
 import styled from '@emotion/styled';
 
@@ -6,7 +7,7 @@ import { Txt } from '@/components/_atoms';
 import { useModalContext } from '@/contexts/ModalContext';
 import { palette } from '@/styles';
 
-type Props = {
+type OwnProps = {
   modalTitle: string;
   modalContents: React.ReactNode | string;
   cancelBtnTxt?: string;
@@ -14,6 +15,8 @@ type Props = {
   handleCancel?: () => void;
   handleSubmit?: () => void;
 };
+
+export type Props = Partial<OwnProps> & Omit<HTMLAttributes<HTMLDivElement>, 'type'>;
 
 export default function ConfirmModal({
   modalTitle,

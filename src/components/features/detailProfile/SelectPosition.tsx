@@ -117,14 +117,14 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
       id: primaryCareer?.id || 0,
       직군: primaryCareer?.position.main || '',
       직무: primaryCareer?.position.sub || '',
-      경력: primaryCareer ? `${primaryCareer.years}년` : '',
+      경력: primaryCareer ? (primaryCareer.years === 0 ? '신입' : `${primaryCareer.years}년`) : '',
     });
 
     setSecondaryPosition({
       id: secondaryCareer?.id || 0,
       직군: secondaryCareer?.position.main || '',
       직무: secondaryCareer?.position.sub || '',
-      경력: secondaryCareer ? `${secondaryCareer.years}년` : '',
+      경력: secondaryCareer ? (secondaryCareer.years === 0 ? '신입' : `${secondaryCareer.years}년`) : '',
     });
   }, [user.userCareers]);
 

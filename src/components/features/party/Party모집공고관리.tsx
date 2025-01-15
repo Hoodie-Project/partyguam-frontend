@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { fetchGetPartyRecruitmentsList } from '@/apis/party';
 import { Txt } from '@/components/_atoms';
 import { SChildContainer } from '@/styles/components';
 import type { PartyRecruitmentListResponse } from '@/types/party';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import PartyRecruitmentsCard from './PartyRecruitmentsCard';
 
@@ -20,10 +20,12 @@ function Party모집공고관리({ partyId }: { partyId: string }) {
         partyId: number;
         sort: string;
         order: 'ASC' | 'DESC';
+        status: string;
         main?: string;
       } = {
         partyId: Number(partyId),
         sort: 'createdAt',
+        status: 'active',
         order: 'ASC',
       };
 
@@ -56,7 +58,7 @@ function Party모집공고관리({ partyId }: { partyId: string }) {
             applicationCount={item.applicationCount}
             handleClick={() =>
               router.push(
-                `/party/setting/applicant/8?partyRecruitmentId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
+                `/party/setting/applicant/${partyId}?partyRecruitmentId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
               )
             }
           />

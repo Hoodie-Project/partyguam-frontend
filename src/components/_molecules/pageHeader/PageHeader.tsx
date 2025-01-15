@@ -31,7 +31,7 @@ export default function PageHeader({
     <PageHeaderContainer>
       <GoBackBtn onClick={onClickHref}>
         {hrefLabel && <ArrowBackIosNewRoundedIcon />}
-        <Txt fontColor="grey500" fontWeight="bold" style={{ marginTop: '2px', marginLeft: '10px' }}>
+        <Txt fontColor="grey500" fontWeight="bold" style={{ marginLeft: '10px' }}>
           {hrefLabel}
         </Txt>
       </GoBackBtn>
@@ -55,7 +55,7 @@ const PageHeaderContainer = styled.section`
   display: grid;
   position: fixed;
   background-color: white;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 1fr auto 1fr; /* 가운데 정렬을 위한 설정 */
   place-items: center;
   width: 100%;
   max-width: 77.75rem;
@@ -67,6 +67,7 @@ const PageHeaderContainer = styled.section`
 
 const PageTitleContainer = styled.div`
   position: relative;
+  margin: auto; /* 항상 가운데 위치 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,7 +78,7 @@ const GoBackBtn = styled.button`
   display: flex;
   justify-items: center;
   align-items: center;
-  gap: 10;
+  gap: 10px; /* 수정: 단위 추가 */
   background-color: transparent;
   font-weight: bold;
   font-size: 18px;
