@@ -86,7 +86,14 @@ function PartyHome({ partyId }: PageParams) {
   return (
     <SContainer>
       <PartyHomeContainer>
-        <Square width="400px" height="300px" radiusKey="base" backgroundColor="grey300" shadowKey="none">
+        <Square
+          width="400px"
+          height="300px"
+          radiusKey="base"
+          backgroundColor="grey300"
+          shadowKey="none"
+          style={{ marginBottom: '24px' }}
+        >
           <Image
             alt="파티 홈 이미지"
             src={partyHomeData?.image ? `${BASE_URL}/${partyHomeData?.image}` : '/images/guam.png'}
@@ -98,7 +105,7 @@ function PartyHome({ partyId }: PageParams) {
         <PartyContentsWrapper>
           <PartyTitleWrapper>
             <PartyTitle>
-              <Txt fontSize={32} fontWeight="bold" style={{ lineHeight: '160%' }}>
+              <Txt fontSize={32} fontWeight="bold" style={{ marginLeft: '8px', lineHeight: '160%' }}>
                 {partyHomeData?.title}
               </Txt>
             </PartyTitle>
@@ -214,7 +221,6 @@ const PartyTitleWrapper = styled.div`
   position: -webkit-sticky;
   position: sticky;
   top: 82px;
-  border: 10px solid white;
   z-index: 10;
   flex-direction: row;
   justify-content: space-between;

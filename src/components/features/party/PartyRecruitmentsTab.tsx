@@ -107,7 +107,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
 
   return (
     <PartyRecruitmentsTabContainer>
-      <SMargin margin="35px 0px 0px 0px" />
+      <SMargin margin="40px 0px 0px 0px" />
       <SFlexColumnFull>
         <HeaderArea>
           <HeaderLeft>

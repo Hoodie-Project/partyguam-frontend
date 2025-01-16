@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
+import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 
 import type { UserAuthorityResponse } from '@/apis/auth';
 import { fetchGetPartyUsers } from '@/apis/party';
@@ -13,8 +15,7 @@ import LoginModal from '../loginModal';
 
 import { partyUserMockData } from './mockData';
 import PartyPeopleCard from './PartyPeopleCard';
-import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-import { useRouter } from 'next/navigation';
+
 type Props = {
   partyId: string;
   userAuthority: UserAuthorityResponse | null;
@@ -47,7 +48,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
 
   return (
     <PartyPeopleTabContainer>
-      <SMargin margin="35px 0px 0px 0px" />
+      <SMargin margin="40px 0px 0px 0px" />
       <SFlexColumnFull>
         <HeaderArea>
           <HeaderLeft>

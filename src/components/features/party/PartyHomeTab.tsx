@@ -11,7 +11,7 @@ type Props = {
 function PartyHomeTab({ partyIntro }: Props) {
   return (
     <PartyHomeTabContainer>
-      <SMargin margin="35px 0px 0px 0px" />
+      <SMargin margin="40px 0px 0px 0px" />
       <SFlexColumnFull>
         <Txt fontSize={20} fontWeight="bold">
           파티 소개
