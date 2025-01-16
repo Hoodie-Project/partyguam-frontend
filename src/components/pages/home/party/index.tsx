@@ -155,13 +155,13 @@ function HomeParty() {
   // 등록일순
   const getIcon = () => {
     if (order === 'DESC') {
-      return <ArrowDownwardRoundedIcon fontSize="small" />;
+      return <ArrowDownwardRoundedIcon style={{ width: '16px', height: '16px', marginLeft: '2px' }} />;
     }
 
     if (order === 'ASC') {
-      return <ArrowUpwardRoundedIcon fontSize="small" />;
+      return <ArrowUpwardRoundedIcon style={{ width: '16px', height: '16px', marginLeft: '2px' }} />;
     }
-    return <ArrowUpwardRoundedIcon fontSize="small" />;
+    return <ArrowUpwardRoundedIcon style={{ width: '16px', height: '16px', marginLeft: '2px' }} />;
   };
 
   // [GET] 파티 목록 조회
@@ -289,13 +289,11 @@ function HomeParty() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                marginTop: '2px',
-                marginRight: '3px',
               }}
             >
               등록일순
+              {getIcon()}
             </Txt>
-            {getIcon()}
 
             <CircleButton
               onClick={() => {
