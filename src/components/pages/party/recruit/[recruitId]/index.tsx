@@ -358,6 +358,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
             </Txt>
           </Square>
         </SFlexColumnFull>
+        {isReadOnly && <SMargin margin="240px 0px 0px 0px" />}
       </PartyRecruitDetailContainer>
       <FloatingButton>
         {partyRecruitDetailData?.status === 'active' && (

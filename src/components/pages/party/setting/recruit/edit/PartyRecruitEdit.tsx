@@ -100,9 +100,10 @@ function PartyRecruitEdit() {
       editPartyRecruitForm.직군 &&
       editPartyRecruitForm.직무 &&
       editPartyRecruitForm.recruiting_count &&
-      editPartyRecruitForm.content
+      editPartyRecruitForm.content &&
+      모집소개글InputState === 'success'
     );
-  }, [editPartyRecruitForm]);
+  }, [editPartyRecruitForm, 모집소개글InputState]);
 
   const onClickCancel = () => {
     openModal({
@@ -372,4 +373,5 @@ const PreviewModalContainer = styled.div`
   height: 800px;
   padding: 32px 90px;
   overflow-y: auto;
+  overflow-x: hidden;
 `;
