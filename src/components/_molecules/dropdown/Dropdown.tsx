@@ -110,13 +110,13 @@ const IconWrapper = styled.div`
 const DropdownMenu = styled.div`
   position: absolute;
   top: 130%;
-  left: -30%;
+  left: -50%;
   background-color: white;
   border: 1px solid #11c9a7;
   border-radius: 12px;
   padding: 8px 0;
   z-index: 1000;
-  width: 99px;
+  width: 105px;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.04);
 `;
 
