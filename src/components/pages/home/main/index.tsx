@@ -28,9 +28,9 @@ function Main() {
     { id: 1, label: '모집공고', value: 'recruitment' },
   ];
   const [searchOptionStatus, setSearchOptionStatus] = useState<{ id: number; label: string; value: string }>({
-    id: 0,
-    label: '파티',
-    value: 'party',
+    id: 1,
+    label: '모집공고',
+    value: 'recruitment',
   });
   const [searchValue, setSearchValue] = useState<string>('');
   const sliderRef = useRef<Slider | null>(null);
@@ -176,7 +176,9 @@ function Main() {
                   width: '141px',
                   height: 'auto',
                   fontSize: '20px',
+                  borderRadius: '24px',
                 }}
+                eachOptionStyle={{ padding: '14px 0px 14px 20px' }}
                 value={searchOptionStatus.label}
                 onClick={handleSearchOptionStatusChange}
               />

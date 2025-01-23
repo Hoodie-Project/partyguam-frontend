@@ -60,7 +60,7 @@ const SelectOptions = styled.ul<{ top?: keyof typeof size.height; optionRadius?:
   border-radius: ${({ optionRadius: radiusProp }) => radius[radiusProp!] || radius.base};
 
   z-index: 10;
-  border: 1px solid ${palette.primaryGreen};
+  border: 1px solid ${palette.greenDark100};
 
   ::-webkit-scrollbar {
     display: none;

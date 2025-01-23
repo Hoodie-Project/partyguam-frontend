@@ -303,7 +303,7 @@ function HomeRecruitment() {
                   padding: '8px 12px',
                   whiteSpace: 'nowrap',
                 }}
-                optionStyle={{ width: '400px', height: 'auto' }}
+                optionStyle={{ width: '400px', height: 'auto', borderRadius: '24px' }}
               />
             </div>
             <div style={{ width: 'auto', minWidth: '67px' }}>
@@ -331,7 +331,7 @@ function HomeRecruitment() {
                   minWidth: '93px',
                   whiteSpace: 'nowrap',
                 }}
-                optionStyle={{ width: '320px', height: 'auto' }}
+                optionStyle={{ width: '320px', height: 'auto', borderRadius: '24px' }}
               />
             </div>
             <div style={{ width: '400px', height: '36px' }}>

@@ -78,6 +78,7 @@ function HomeParty() {
 
   useEffect(() => {
     (async () => {
+      setIsSubmitted파티유형(false);
       const response = await fetchGetPartyTypes();
       set파티유형List(transformPartyTypes(response));
     })();
@@ -235,7 +236,14 @@ function HomeParty() {
                   padding: '8px 12px',
                   whiteSpace: 'nowrap',
                 }}
-                optionStyle={{ position: 'absolute', top: '41px', left: 0, width: '320px', height: 'auto' }}
+                optionStyle={{
+                  position: 'absolute',
+                  top: '41px',
+                  left: 0,
+                  width: '183px',
+                  height: 'auto',
+                  borderRadius: '24px',
+                }}
                 value={파티status.label}
                 onClick={handle파티StatusChange}
               />
@@ -269,7 +277,7 @@ function HomeParty() {
                   minWidth: '93px',
                   whiteSpace: 'nowrap',
                 }}
-                optionStyle={{ width: '320px', height: 'auto' }}
+                optionStyle={{ width: '320px', height: 'auto', borderRadius: '24px' }}
               />
             </div>
             <div style={{ width: '400px', height: '36px' }}>
