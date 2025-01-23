@@ -18,19 +18,19 @@ interface Props {
 export default function ProgressBar({ currentStep, prevStep, completed, label, stepNum, isFinal }: Props) {
   return (
     <ProgressWrapper>
-      <ProgressEdge isValid={currentStep || prevStep || completed}>
+      <ProgressEdge isValid={currentStep || (prevStep && completed)}>
         {completed ? (
           <CheckRoundedIcon style={{ width: '1.25rem', height: '1.25rem' }} />
         ) : (
-          <Txt fontWeight="bold" fontSize={16} fontColor={currentStep || prevStep || completed ? 'black' : 'grey400'}>
+          <Txt fontWeight="bold" fontSize={16} fontColor={currentStep || (prevStep && completed) ? 'black' : 'grey400'}>
             {stepNum}
           </Txt>
         )}
       </ProgressEdge>
-      <Txt fontWeight="bold" fontSize={14} fontColor={currentStep || prevStep || completed ? 'black' : 'grey400'}>
+      <Txt fontWeight="bold" fontSize={14} fontColor={currentStep || (prevStep && completed) ? 'black' : 'grey400'}>
         {label}
       </Txt>
-      {!isFinal && <ProgressLine isValid={prevStep || completed} />}
+      {!isFinal && <ProgressLine isValid={prevStep && completed} />}
     </ProgressWrapper>
   );
 }

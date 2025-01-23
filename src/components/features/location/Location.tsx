@@ -20,7 +20,12 @@ interface LocationData {
   city: string;
 }
 
-export default function Location({ editMode }: { editMode?: boolean }) {
+type Props = {
+  editMode?: boolean;
+  setIsToast: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function Location({ editMode, setIsToast }: Props) {
   const [locationData, setLocationData] = useState<LocationData[]>([]);
   const {
     selectedProvince,
@@ -75,6 +80,9 @@ export default function Location({ editMode }: { editMode?: boolean }) {
       removeSelectedCity(item.id);
     } else if (selectedCities.length < 3) {
       setSelectedCities({ id: item.id, city: item.city, province: selectedProvince });
+    }
+    if (selectedCities.length === 3) {
+      setIsToast(true);
     }
   };
 

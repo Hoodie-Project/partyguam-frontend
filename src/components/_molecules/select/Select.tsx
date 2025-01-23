@@ -54,6 +54,7 @@ interface Props {
   handleRemoveChip?: (id: number) => void; // remove chip
   handleClickReset?: () => void;
   handleClickSubmit?: () => void;
+  isSubmitted?: boolean; // 적용하기 버튼 눌러서 닫힌 것인지 flag
 }
 
 function Select({
@@ -80,24 +81,28 @@ function Select({
   handleRemoveChip,
   handleClickReset,
   handleClickSubmit,
+  isSubmitted,
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pickerRef = useRef<HTMLDivElement>(null);
   const isValid: boolean = value !== undefined && value.length > 0;
 
   const handleClickOutside = (e: MouseEvent) => {
-    if (optionsType !== 'multi' && pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+    if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
       setIsOpen(false);
+      // if (optionsType === 'multi' && !isSubmitted) {
+      //   handleClickReset?.(); // 값 초기화
+      // }
     }
   };
 
   useEffect(() => {
-    if (optionsType === 'multi') return;
+    // if (optionsType === 'multi') return;
     window.addEventListener('click', handleClickOutside);
     return () => {
       window.removeEventListener('click', handleClickOutside);
     };
-  }, [optionsType]);
+  }, []);
 
   const handleOptionClick = (e: React.MouseEvent<HTMLLIElement>, id: number) => {
     onClick?.(e, id); // 옵션 선택시 `onClick` 호출

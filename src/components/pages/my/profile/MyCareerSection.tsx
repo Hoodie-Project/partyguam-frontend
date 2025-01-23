@@ -37,7 +37,7 @@ export default function MyCareerSection({ userCareers }: Props) {
         />
       </DetailProfilTitleWrapper>
       {userCareers.length != 0 && (
-        <SFlexColumn style={{ marginTop: '20px' }}>
+        <SFlexColumn style={{ marginTop: '20px', gap: '12px' }}>
           <SFlexRow style={{ alignItems: 'center' }}>
             <Txt fontWeight="semibold" fontSize={16} style={{ marginRight: '24px' }}>
               주포지션
