@@ -201,6 +201,15 @@ export default function SelectPersonality({ editType }: Props) {
     }
   };
 
+  const toastPosition = useMemo(() => {
+    if (!Boolean(editType)) {
+      if (detailNum === 3) return 170;
+    }
+    if (editType === 'time') {
+      return 75;
+    } else return 120;
+  }, [detailNum, editType]);
+
   return (
     <Container>
       <SectionTitle noMarginTop={editType == 'others'}>
@@ -234,7 +243,7 @@ export default function SelectPersonality({ editType }: Props) {
         visible={isToast}
         onClose={() => setIsToast(false)}
         label={`최대 ${currentStep.questionCnt}개까지 선택할 수 있어요.`}
-        position={editType == 'time' ? 75 : 120}
+        position={toastPosition}
         icon={<ErrorIcon fontSize="small" />}
       />
       {editType == 'time' && (

@@ -54,12 +54,6 @@ export default function SelectLocation({ editMode = false, handleResetEdit, hand
     })();
   }, []);
 
-  useEffect(() => {
-    if (selectedCities.length === 3) {
-      setIsToast(true);
-    }
-  }, [selectedCities]);
-
   const handleClickNextBtn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     await fetchDeleteLocations();
@@ -91,14 +85,14 @@ export default function SelectLocation({ editMode = false, handleResetEdit, hand
           거주 지역이나 자주 찾는 지역을 선택해 주세요. (최대 3곳)
         </Txt>
       </SectionTitle>
-      <Location editMode={editMode} />
+      <Location editMode={editMode} setIsToast={setIsToast} />
       <Toast
         visible={isToast}
         onClose={() => {
           setIsToast(false);
         }}
         label="최대 3개까지 선택할 수 있어요."
-        position={editMode ? 180 : 585}
+        position={editMode ? 180 : 130}
         icon={<ErrorIcon fontSize="small" />}
       />
       <ChipWrapper>
