@@ -361,7 +361,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
         {isReadOnly && <SMargin margin="240px 0px 0px 0px" />}
       </PartyRecruitDetailContainer>
       <FloatingButton>
-        {partyRecruitDetailData?.status === 'active' && (
+        {userAuthorityInfo?.authority === 'member' && partyRecruitDetailData?.status === 'active' && (
           <Button
             style={{ width: '100%' }}
             height="l"

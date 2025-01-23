@@ -59,6 +59,10 @@ export default function Join() {
     gender: '',
   });
 
+  const isCheckButtonDisabled = useMemo(() => {
+    return joinInput.nickname.length < 2 || isNicknameDuplicated === false;
+  }, [joinInput.nickname, isNicknameDuplicated]);
+
   const joinBtnDisabled = useMemo(() => {
     const fields = [
       joinInput.nickname,
@@ -137,6 +141,8 @@ export default function Join() {
                 onChange={e => {
                   const { value, name } = e.target;
                   setJoinInput({ ...joinInput, [name]: value });
+                  setIsNicknameDuplicated(undefined);
+                  setIsNicknameConfirmed(false);
                 }}
                 value={joinInput.nickname}
                 onClear={() => {
@@ -149,7 +155,7 @@ export default function Join() {
                 maxCount={15}
               />
               <Button
-                backgroudColor={isNicknameDuplicated === false ? 'primaryGreen' : 'white'}
+                backgroudColor={isCheckButtonDisabled ? 'primaryGreen' : 'white'}
                 width="s"
                 height="base"
                 radius="base"
@@ -159,7 +165,7 @@ export default function Join() {
                   e.preventDefault();
                   checkNickname();
                 }}
-                disabled={isNicknameDuplicated === false}
+                disabled={isCheckButtonDisabled}
               >
                 <Txt fontColor="grey500" fontSize={16}>
                   중복 확인
