@@ -38,6 +38,12 @@ interface SelectionStore {
 
   handleSubmit직무: () => void;
   handleSubmit파티유형: () => void;
+
+  // 적용하기 버튼 누른 것인지 확인하기 위함
+  isSubmitted직무: boolean;
+  setIsSubmitted직무: (submitted: boolean) => void;
+  isSubmitted파티유형: boolean;
+  setIsSubmitted파티유형: (submitted: boolean) => void;
 }
 
 export const useApplicantFilterStore = create<SelectionStore>(set => ({
@@ -50,6 +56,8 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
   submit직무Main: [],
   submit직무Position: [],
   submit파티유형Filter: [],
+  isSubmitted직무: false,
+  isSubmitted파티유형: false,
 
   // 직무 필터 상태 관리
   setSelected직무ParentOptions: options => set({ selected직무ParentOptions: options }),
@@ -131,4 +139,7 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
         submit파티유형Filter,
       };
     }),
+
+  setIsSubmitted직무: submitted => set({ isSubmitted직무: submitted }),
+  setIsSubmitted파티유형: submitted => set({ isSubmitted직무: submitted }),
 }));

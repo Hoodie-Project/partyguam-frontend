@@ -66,6 +66,8 @@ function HomeParty() {
     remove파티유형FilterChip,
     reset파티유형FilterChip,
     handleSubmit파티유형,
+    setIsSubmitted파티유형,
+    isSubmitted파티유형,
   } = useApplicantFilterStore();
 
   const { isLoggedIn } = useAuthStore(state => ({
@@ -233,7 +235,7 @@ function HomeParty() {
                   padding: '8px 12px',
                   whiteSpace: 'nowrap',
                 }}
-                optionStyle={{ position: 'absolute', top: '46px', left: 0, width: '320px', height: 'auto' }}
+                optionStyle={{ position: 'absolute', top: '41px', left: 0, width: '320px', height: 'auto' }}
                 value={파티status.label}
                 onClick={handle파티StatusChange}
               />
@@ -252,7 +254,11 @@ function HomeParty() {
                 handleClickReset={handle파티유형Reset}
                 handleOptionToggle={handle파티유형OptionToggle}
                 handleRemoveChip={handleRemove파티유형FilterChip}
-                handleClickSubmit={handleSubmit파티유형}
+                handleClickSubmit={() => {
+                  handleSubmit파티유형();
+                  setIsSubmitted파티유형(true);
+                }}
+                isSubmitted={isSubmitted파티유형}
                 height="xs"
                 placeholder="파티유형"
                 fontSize={14}
