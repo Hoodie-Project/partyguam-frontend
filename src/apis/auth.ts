@@ -192,6 +192,8 @@ export interface PartyApplication {
   status: 'pending' | 'processing' | 'approved' | 'rejected'; // 상태에 따라 Union 타입 정의
   createdAt: string;
   partyRecruitment: {
+    id: number;
+    status: string; // 'active' | 'completed'
     position: {
       main: string;
       sub: string;

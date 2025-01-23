@@ -189,7 +189,7 @@ export default MyParty;
 
 const MyPartyContainer = styled.div`
   width: 925px;
-  height: 100vh;
+  height: 100%;
   margin-top: 110px;
 `;
 
