@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ErrorRoundedIcon from '@mui/icons-material/ErrorRounded';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import ExpandMoreRoundedIcon from '@mui/icons-material/ExpandMoreRounded';
 import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
@@ -87,6 +88,7 @@ function MyApply() {
     }
     return [];
   }, [myPartyApplications, isFetched]);
+  console.log('myPartyApplicationsById > ', myPartyApplicationsById);
 
   const getIcon = () => {
     if (order === 'DESC') {
@@ -101,7 +103,7 @@ function MyApply() {
 
   const theme = useTheme({
     Table: `
-      --data-table-library_grid-template-columns: 42.5% repeat(3, minmax(0, 1fr));
+      --data-table-library_grid-template-columns: 50% repeat(3, minmax(0, 1fr));
     `,
   });
 
@@ -326,33 +328,56 @@ function MyApply() {
                               gap: '12px',
                             }}
                           >
-                            <Image
-                              src={
-                                item.partyRecruitment.party.image
-                                  ? `${BASE_URL}/${item.partyRecruitment.party.image}`
-                                  : '/images/guam.png'
-                              }
-                              width={120}
-                              height={90}
-                              alt={item.partyRecruitment.party.title}
-                              style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                            />
+                            <ImageWrapper>
+                              {item.partyRecruitment.status === 'completed' && (
+                                <CompletedImageWrapper>
+                                  <ErrorRoundedIcon
+                                    style={{ width: '16px', height: '16px', color: '#767676', marginBottom: '4px' }}
+                                  />
+                                  <Txt fontWeight="semibold" fontColor="grey600" fontSize={12}>
+                                    모집마감된 공고예요.
+                                  </Txt>
+                                </CompletedImageWrapper>
+                              )}
+                              <Image
+                                src={
+                                  item.partyRecruitment.party.image
+                                    ? `${BASE_URL}/${item.partyRecruitment.party.image}`
+                                    : '/images/guam.png'
+                                }
+                                width={120}
+                                height={90}
+                                layout="fixed"
+                                alt={item.partyRecruitment.party.title}
+                                style={{
+                                  width: '120px',
+                                  borderRadius: '8px',
+                                  border: item.partyRecruitment.status === 'completed' ? 'none' : '1px solid #F1F1F5',
+                                  objectFit: 'contain',
+                                }}
+                              />
+                            </ImageWrapper>
                             <CardRightWrapper>
                               <div style={{ textAlign: 'start' }}>
                                 <Chip
                                   chipType="filled"
                                   label={item.partyRecruitment.party.partyType.type}
                                   size="xsmall"
-                                  chipColor="#F6F6F6"
-                                  fontColor="grey700"
+                                  chipColor={item.partyRecruitment.status === 'completed' ? '#fcfcfc' : '#F6F6F6'}
+                                  fontColor={item.partyRecruitment.status === 'completed' ? '#c7c7c7' : 'grey700'}
                                   fontWeight="semibold"
                                 />
-                                <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                                <EllipsisTitleText
+                                  fontColor={item.partyRecruitment.status === 'completed' ? 'grey500' : 'black'}
+                                  fontSize={16}
+                                  fontWeight="semibold"
+                                  style={{ lineHeight: '140%' }}
+                                >
                                   {item.partyRecruitment.party.title} {/* 파티 제목 */}
                                 </EllipsisTitleText>
                                 <Txt
                                   fontSize={14}
-                                  color="grey600"
+                                  fontColor={item.partyRecruitment.status === 'completed' ? 'grey500' : 'black'}
                                   style={{
                                     marginLeft: '2px',
                                     display: 'flex',
@@ -402,7 +427,7 @@ function MyApply() {
                         <Row item={item}>
                           <Styled지원서Cell gridColumnStart={1} gridColumnEnd={5}>
                             <Styled지원서TxtBox>{item.message}</Styled지원서TxtBox>
-                            {item.status === 'pending' && (
+                            {item.partyRecruitment.status === 'active' && item.status === 'pending' && (
                               <div
                                 style={{
                                   display: 'flex',
@@ -424,7 +449,7 @@ function MyApply() {
                                 </SquareButton>
                               </div>
                             )}
-                            {item.status === 'processing' && (
+                            {item.partyRecruitment.status === 'active' && item.status === 'processing' && (
                               <div
                                 style={{
                                   display: 'flex',
@@ -586,4 +611,23 @@ const EllipsisTitleText = styled(Txt)`
   text-overflow: ellipsis;
   white-space: normal;
   margin: 4px 0px 4px 2px;
+`;
+
+const ImageWrapper = styled.div`
+  width: 120px;
+  border-radius: 8px;
+`;
+
+const CompletedImageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 120px;
+  height: 90px;
+  border-radius: 8px;
+  object-fit: contain;
+  border: 1px solid #f1f1f5;
+  background-color: rgba(255, 255, 255, 0.9);
 `;
