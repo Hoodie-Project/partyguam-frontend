@@ -155,12 +155,12 @@ export default function Join() {
                 maxCount={15}
               />
               <Button
-                backgroudColor={isCheckButtonDisabled ? 'primaryGreen' : 'white'}
+                backgroudColor={isCheckButtonDisabled ? 'white' : 'primaryGreen'}
                 width="s"
                 height="base"
                 radius="base"
                 shadow="shadow1"
-                borderColor="grey200"
+                borderColor={isCheckButtonDisabled ? 'grey200' : 'primaryGreen'}
                 onClick={e => {
                   e.preventDefault();
                   checkNickname();
