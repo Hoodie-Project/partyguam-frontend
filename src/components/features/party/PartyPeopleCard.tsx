@@ -141,7 +141,6 @@ const UserPositionWrapper = styled.div`
   align-items: center;
   justify-content: flex-start;
   gap: 6px;
-  margin-bottom: -8px;
 `;
 
 const UserNameWrapper = styled.div`
@@ -152,6 +151,7 @@ const UserNameWrapper = styled.div`
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin-top: 4px;
 `;
 
 const MeTag = styled.div`

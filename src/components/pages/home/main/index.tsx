@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
@@ -9,8 +10,7 @@ import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRigh
 import { setCookie } from 'cookies-next';
 
 import { fetchGetUsers, fetchPostAccessToken } from '@/apis/auth';
-import type { HomeBanner } from '@/apis/home';
-import { fetchGetBanner } from '@/apis/home';
+import { fetchGetBanner, type HomeBanner } from '@/apis/home';
 import { Txt } from '@/components/_atoms';
 import { SearchBar, Select } from '@/components/_molecules';
 import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';
@@ -21,7 +21,20 @@ const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
 function Main() {
-  const [banner, setBanner] = useState<HomeBanner | null>(null);
+  const [banner, setBanner] = useState<HomeBanner | null>({
+    total: 1,
+    banner: [
+      {
+        status: '',
+        createdAt: '',
+        updatedAt: '',
+        id: 0,
+        title: '배너 예시',
+        image: '/images/banner_example.png',
+        link: 'https://docs.google.com/forms/d/e/1FAIpQLSf3zEd7SLxEwx2VJRfp0txmY_N-xm-aA6-9nx37eAuqioM0wA/viewform?usp=header',
+      },
+    ],
+  });
   const [page, setPage] = useState<number>(1);
   const searchOptions = [
     { id: 0, label: '파티', value: 'party' },
@@ -71,7 +84,6 @@ function Main() {
 
   const settings = {
     dots: false,
-    infinite: true,
     autoplay: true,
     autoplaySpeed: 5000,
     speed: 500,
@@ -79,6 +91,8 @@ function Main() {
     slidesToScroll: 1,
     cssEase: 'linear',
     arrows: false,
+    infinite: false,
+    centerMode: false,
     afterChange: (index: number) => setPage(index + 1),
   };
 
@@ -131,9 +145,12 @@ function Main() {
                 <Button onClick={handlePrev}>
                   <KeyboardArrowLeftRoundedIcon />
                 </Button>
-                <Number>{page}</Number>
-                <span>|</span>
-                <Number>{banner?.total}</Number>
+                <Txt fontWeight="bold" fontSize={14} style={{ marginTop: '3px' }}>
+                  {page}{' '}
+                  <Txt fontWeight="bold" fontSize={14} fontColor="grey500">
+                    /{banner?.total}
+                  </Txt>
+                </Txt>
                 <Button onClick={handleNext}>
                   <KeyboardArrowRightRoundedIcon />
                 </Button>
@@ -141,13 +158,15 @@ function Main() {
               <Slider ref={sliderRef} {...settings}>
                 {banner?.banner.map(item => (
                   <StyledImageWrapper key={item.id}>
-                    <Image
-                      src={item.image ? `${BASE_URL}/${item.image}` : '/images/guam.png'}
-                      width={1240}
-                      height={370}
-                      alt={item.title}
-                      style={{ borderRadius: '16px', border: '1px solid #F1F1F5' }}
-                    />
+                    <Link href={item.link}>
+                      <Image
+                        src={item.image ? `${BASE_URL}/${item.image}` : '/images/banner_example.png'}
+                        width={1240}
+                        height={370}
+                        alt={item.title}
+                        style={{ borderRadius: '16px', border: '1px solid #F1F1F5' }}
+                      />
+                    </Link>
                   </StyledImageWrapper>
                 ))}
               </Slider>
@@ -293,7 +312,7 @@ const ControlButtons = styled.div`
   position: absolute;
   bottom: 30px;
   right: 22px;
-  width: 139px;
+  width: 85px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -304,7 +323,7 @@ const ControlButtons = styled.div`
   font-size: 14px;
   font-weight: bold;
   background-color: rgba(255, 255, 255, 0.85);
-  padding: 0 12px;
+  padding: 0 10px;
 `;
 
 const Button = styled.button`
@@ -312,17 +331,12 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   cursor: pointer;
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
-`;
-
-const Number = styled.div`
-  margin: 0px 10px;
-  font-weight: bold;
 `;

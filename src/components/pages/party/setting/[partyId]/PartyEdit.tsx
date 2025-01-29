@@ -564,15 +564,13 @@ export default function PartyEdit({ partyId }: PageParams) {
               style={{ marginBottom: 60 }}
               height="l"
               width="base"
-              backgroudColor="grey100"
+              backgroudColor="white"
+              borderColor="primaryGreen"
               radius="base"
               shadow="shadow1"
-              borderColor="grey200"
               onClick={onClickCancel}
             >
-              <Txt fontWeight="bold" fontColor="grey400">
-                취소
-              </Txt>
+              <Txt fontWeight="bold">취소</Txt>
             </Button>
             <Button
               style={{ marginBottom: 60 }}

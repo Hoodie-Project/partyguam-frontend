@@ -189,19 +189,19 @@ const StyledSlider = styled(Slider)`
     margin-right: 20px;
   }
 
-  .slick-list {
-    /* 오른쪽 뿌연 효과 추가 */
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 200px;
-      height: 100%;
-      background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
-      pointer-events: none; /* 클릭 이벤트 방지 */
-    }
-  }
+  //  .slick-list {
+  //    /* 오른쪽 뿌연 효과 추가 */
+  //   &::after {
+  //      content: '';
+  //      position: absolute;
+  //      top: 0;
+  //      right: 0;
+  //      width: 200px;
+  //      height: 100%;
+  //      background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  //      pointer-events: none; /* 클릭 이벤트 방지 */
+  //    }
+  //  }
 `;
 
 const StyledSquare = styled(Square)`
