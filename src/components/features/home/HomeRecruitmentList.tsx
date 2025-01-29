@@ -146,8 +146,8 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                 {recruitmentList?.partyRecruitments?.map(recruitment => (
                   <StyledSquare
                     key={recruitment.id}
-                    width="514px"
-                    height="226px"
+                    width="405px"
+                    height="190px"
                     shadowKey="shadow1"
                     backgroundColor="white"
                     radiusKey="base"
@@ -159,8 +159,8 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                     <CardContentsWrapper>
                       <Image
                         src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
-                        width={202.56}
-                        height={169.5}
+                        width={200}
+                        height={150}
                         alt={recruitment.party.title}
                         style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
                       />
@@ -314,19 +314,19 @@ const StyledSlider = styled(Slider)`
     margin-right: 12px;
   }
 
-  .slick-list {
-    /* 오른쪽 뿌연 효과 추가 */
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 200px;
-      height: 100%;
-      background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
-      pointer-events: none; /* 클릭 이벤트 방지 */
-    }
-  }
+  //  .slick-list {
+  //    /* 오른쪽 뿌연 효과 추가 */
+  //    &::after {
+  //      content: '';
+  //      position: absolute;
+  //      top: 0;
+  //      right: 0;
+  //      width: 200px;
+  //      height: 100%;
+  //      background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  //      pointer-events: none; /* 클릭 이벤트 방지 */
+  //    }
+  //  }
 `;
 
 const CircleButton = styled.button`
@@ -358,7 +358,7 @@ const StyledSquare = styled(Square)<{ personalized?: boolean }>`
     css`
       flex: 1 1 calc(33.333% - 12px);
     `}
-  padding: ${({ personalized }) => (personalized ? '28.25px' : '20px')};
+  padding: ${({ personalized }) => (personalized ? '20px' : '20px')};
   display: flex;
   justify-content: flex-start;
   box-sizing: border-box;

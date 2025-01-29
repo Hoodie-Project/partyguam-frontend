@@ -205,12 +205,13 @@ const PartyHomeContainer = styled.section`
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: 100vh;
+  height: 100%;
   padding-top: 52px;
 `;
 
 const PartyContentsWrapper = styled.header`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   z-index: 10;

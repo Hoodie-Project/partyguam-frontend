@@ -230,6 +230,47 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
               </PartyInfo>
             </PartyInfoWrapper>
             <SFlexRowFull style={{ gap: '12px', marginTop: '30px' }}>
+              <div style={{ position: 'relative' }}>
+                <Button
+                  backgroudColor="white"
+                  borderColor="grey200"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '4px',
+                    width: isVisible편집하기 ? '194px' : '400px',
+                    borderRadius: '12px',
+                  }}
+                  onClick={handleShareClick}
+                  disabled={Boolean(isReadOnly)}
+                >
+                  <Txt fontColor="grey500" fontSize={16}>
+                    공유하기
+                  </Txt>
+                  <ShareIcon style={{ width: '20px', height: '20px', color: '#999999' }} />
+                </Button>
+                {isShowCopyBalloon && (
+                  <Balloon
+                    width="163px"
+                    height="30px"
+                    onClose={() => {
+                      setIsShowCopyBalloon(false);
+                    }}
+                    style={{
+                      position: 'absolute',
+                      top: 45,
+                      left: isVisible편집하기 ? 15 : 120,
+                      marginTop: '20px',
+                      zIndex: 1,
+                    }}
+                  >
+                    <Txt fontSize={14} fontColor="white">
+                      URL이 복사되었어요
+                    </Txt>
+                  </Balloon>
+                )}
+              </div>
               {isVisible편집하기 && (
                 <Button
                   backgroudColor="white"
@@ -254,47 +295,6 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                   <CreateIcon style={{ color: '#999999' }} />
                 </Button>
               )}
-              <div style={{ position: 'relative' }}>
-                <Button
-                  backgroudColor="white"
-                  borderColor="grey200"
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '4px',
-                    width: '194px',
-                    borderRadius: '12px',
-                  }}
-                  onClick={handleShareClick}
-                  disabled={Boolean(isReadOnly)}
-                >
-                  <Txt fontColor="grey500" fontSize={16}>
-                    공유하기
-                  </Txt>
-                  <ShareIcon style={{ width: '20px', height: '20px', color: '#999999' }} />
-                </Button>
-                {isShowCopyBalloon && (
-                  <Balloon
-                    width="163px"
-                    height="30px"
-                    onClose={() => {
-                      setIsShowCopyBalloon(false);
-                    }}
-                    style={{
-                      position: 'absolute',
-                      top: 45,
-                      left: 15,
-                      marginTop: '20px',
-                      zIndex: 1,
-                    }}
-                  >
-                    <Txt fontSize={14} fontColor="white">
-                      URL이 복사되었어요
-                    </Txt>
-                  </Balloon>
-                )}
-              </div>
             </SFlexRowFull>
           </PartyInfoContainer>
         </SFlexRowFull>
@@ -361,7 +361,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
         {isReadOnly && <SMargin margin="240px 0px 0px 0px" />}
       </PartyRecruitDetailContainer>
       <FloatingButton>
-        {userAuthorityInfo?.authority === 'member' && partyRecruitDetailData?.status === 'active' && (
+        {userAuthorityInfo?.authority == null && partyRecruitDetailData?.status === 'active' && (
           <Button
             style={{ width: '100%' }}
             height="l"
