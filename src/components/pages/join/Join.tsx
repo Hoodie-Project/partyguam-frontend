@@ -162,12 +162,13 @@ export default function Join() {
                 shadow="shadow1"
                 borderColor={isCheckButtonDisabled ? 'grey200' : 'primaryGreen'}
                 onClick={e => {
+                  if (isCheckButtonDisabled) return;
                   e.preventDefault();
                   checkNickname();
                 }}
-                disabled={isCheckButtonDisabled}
+                style={{ cursor: isCheckButtonDisabled ? 'not-allowed' : 'pointer' }}
               >
-                <Txt fontColor="grey500" fontSize={16}>
+                <Txt fontColor={isCheckButtonDisabled ? 'grey500' : 'black'} fontSize={16}>
                   중복 확인
                 </Txt>
               </Button>
