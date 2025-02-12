@@ -96,7 +96,25 @@ export default function PartyApply() {
           closeModal();
         },
       });
-    } catch (err) {
+    } catch (error) {
+      const err = error as { status?: number };
+
+      if (err.status === 409) {
+        openModal({
+          children: (
+            <ConfirmModal
+              modalTitle="중복 지원"
+              modalContents={<>이미 지원했던 공고예요!</>}
+              submitBtnTxt="홈으로 가기"
+            />
+          ),
+          onSubmit: () => {
+            // 확인 어디로 이동하는지 기획 나와야함
+            router.push('/');
+            closeModal();
+          },
+        });
+      }
       console.error('Error Apply party:', err);
     }
   };
