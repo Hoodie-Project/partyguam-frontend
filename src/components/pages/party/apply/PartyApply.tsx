@@ -87,8 +87,7 @@ export default function PartyApply() {
           />
         ),
         onCancel: () => {
-          // 지원 목록 어디로 이동하는지 기획 나와야함
-          router.push('/');
+          router.push('/my/apply');
           closeModal();
         },
         onSubmit: () => {
