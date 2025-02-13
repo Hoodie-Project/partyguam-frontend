@@ -10,6 +10,7 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import type { Career } from '@/stores/detailProfile';
 import { useSelectPositionStore } from '@/stores/detailProfile';
+import { SFlexRow } from '@/styles/components';
 import type { Position, UserCareer } from '@/types/user';
 
 // TODO. 데이터 정제 로직 걷어내고 query로 api 보내도록 변경 필요
@@ -261,9 +262,14 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
         </Txt>
       </SectionTitle>
       <GridTitle>
-        <Txt fontWeight="bold" fontSize={20} fontColor="black">
-          주포지션
-        </Txt>
+        <SFlexRow style={{ gap: '4px' }}>
+          <Txt fontWeight="bold" fontSize={20} fontColor="black">
+            주포지션
+          </Txt>
+          <Txt fontSize={20} fontColor="failRed" style={{ marginTop: '4px' }}>
+            *
+          </Txt>
+        </SFlexRow>
         <Txt fontWeight="bold" fontSize={20} fontColor="black">
           부포지션
         </Txt>
