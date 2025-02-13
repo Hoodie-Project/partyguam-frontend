@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import styled from '@emotion/styled';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -47,15 +47,20 @@ function ProfileImage({
     if (file) {
       const objectUrl = URL.createObjectURL(file); // 파일의 임시 URL 생성
       setPreviewImage(objectUrl); // 미리 보기 이미지 업데이트
+
       if (setImage) {
         setImage(file); // 부모 상태 업데이트
       }
     }
   };
 
+  useEffect(() => {
+    console.log('previewImg > ', previewImage);
+  }, [previewImage]);
+
   return (
     <ImageWrapper size={size} {...divAttributes}>
-      {Boolean(imageUrl) ? (
+      {Boolean(imageUrl) || Boolean(previewImage) ? (
         <Image
           src={Boolean(previewImage) ? `${previewImage}` : `${BASE_URL}/${imageUrl}`}
           width={size}
