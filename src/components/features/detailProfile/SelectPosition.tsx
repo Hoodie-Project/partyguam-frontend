@@ -320,16 +320,39 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             height="l"
             style={{ width: '85px' }}
             borderColor={
-              !primaryPosition.직군 || !primaryPosition.직무 || !primaryPosition.경력 ? 'grey200' : 'primaryGreen'
+              !primaryPosition.직군 &&
+              !primaryPosition.직무 &&
+              !primaryPosition.경력 &&
+              !secondaryPosition.직군 &&
+              !secondaryPosition.직무 &&
+              !secondaryPosition.경력
+                ? 'grey200'
+                : 'primaryGreen'
             }
             onClick={() => {
               setPrimaryPosition({ id: 0, 직군: '', 직무: '', 경력: '' });
               setSecondaryPosition({ id: 0, 직군: '', 직무: '', 경력: '' });
             }}
-            disabled={!primaryPosition.직군 || !primaryPosition.직무 || !primaryPosition.경력}
+            disabled={
+              !primaryPosition.직군 &&
+              !primaryPosition.직무 &&
+              !primaryPosition.경력 &&
+              !secondaryPosition.직군 &&
+              !secondaryPosition.직무 &&
+              !secondaryPosition.경력
+            }
           >
             <Txt
-              fontColor={!primaryPosition.직군 || !primaryPosition.직무 || !primaryPosition.경력 ? 'grey400' : 'black'}
+              fontColor={
+                !primaryPosition.직군 &&
+                !primaryPosition.직무 &&
+                !primaryPosition.경력 &&
+                !secondaryPosition.직군 &&
+                !secondaryPosition.직무 &&
+                !secondaryPosition.경력
+                  ? 'grey400'
+                  : 'black'
+              }
               fontSize={18}
               fontWeight="bold"
             >
