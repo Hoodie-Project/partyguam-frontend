@@ -1,5 +1,5 @@
 'use client';
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
@@ -37,6 +37,9 @@ type Props = {
   // 초기화, 적용하기 button handler
   handleClickReset?: () => void;
   handleClickSubmit?: () => void;
+
+  // 열릴 떄 값 초기화
+  handleOpenReset?: () => void;
 };
 
 export default function MultiOptions({
@@ -54,6 +57,7 @@ export default function MultiOptions({
   handleRemoveChip,
   handleClickReset,
   handleClickSubmit,
+  handleOpenReset,
 }: Props) {
   const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +69,10 @@ export default function MultiOptions({
     handleClickSubmit?.();
     setIsOpen?.(false);
   };
+
+  useEffect(() => {
+    handleOpenReset?.();
+  }, []);
 
   return (
     <SelectMultiOptions top={height} optionRadius={optionRadius} style={optionStyle}>

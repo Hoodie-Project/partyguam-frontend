@@ -15,6 +15,7 @@ interface SelectionStore {
   selected직무ParentOptions: OptionType[] | null;
   selected직무Options: OptionType[] | null;
   selected파티유형Options: OptionType[] | null;
+
   직무FilterChips: ChipType[];
   파티유형FilterChips: ChipType[];
 
@@ -22,6 +23,11 @@ interface SelectionStore {
   submit직무Main: string[]; // 직무 main 필터
   submit직무Position: number[]; // 직무 position 필터
   submit파티유형Filter: number[]; // 파티 유형 필터
+
+  // // 적용하기 누르기 전 최종 상태
+  // final직무Main: string[]; // 직무 main 필터
+  // final직무Position: number[]; // 직무 position 필터
+  // final파티유형Filter: number[]; // 파티 유형 필터
 
   // 직무 filter 상태 관리
   setSelected직무ParentOptions: (options: OptionType[] | null) => void;
@@ -38,6 +44,9 @@ interface SelectionStore {
 
   handleSubmit직무: () => void;
   handleSubmit파티유형: () => void;
+
+  set직무Filter: (chips: ChipType[]) => void;
+  set파티유형Filter: (chips: ChipType[]) => void;
 
   // 적용하기 버튼 누른 것인지 확인하기 위함
   isSubmitted직무: boolean;
@@ -56,12 +65,18 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
   submit직무Main: [],
   submit직무Position: [],
   submit파티유형Filter: [],
+  // final직무Main: [],
+  // final직무Position: [],
+  // final파티유형Filter: [],
   isSubmitted직무: false,
   isSubmitted파티유형: false,
 
   // 직무 필터 상태 관리
   setSelected직무ParentOptions: options => set({ selected직무ParentOptions: options }),
   setSelected직무Options: options => set({ selected직무Options: options }),
+
+  set직무Filter: 직무FilterChips => set({ 직무FilterChips: 직무FilterChips }),
+  set파티유형Filter: 파티유형FilterChips => set({ 파티유형FilterChips: 파티유형FilterChips }),
 
   add직무FilterChip: chip =>
     set(state => {
@@ -139,6 +154,9 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
         submit파티유형Filter,
       };
     }),
+
+  // handleFinal직무Main: submit직무Main => set({ final직무Main: submit직무Main }),
+  // handleFinal직무Position: submit직무Position => set({ final직무Position: submit직무Position }),
 
   setIsSubmitted직무: submitted => set({ isSubmitted직무: submitted }),
   setIsSubmitted파티유형: submitted => set({ isSubmitted직무: submitted }),
