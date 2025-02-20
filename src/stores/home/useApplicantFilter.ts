@@ -24,11 +24,6 @@ interface SelectionStore {
   submit직무Position: number[]; // 직무 position 필터
   submit파티유형Filter: number[]; // 파티 유형 필터
 
-  // // 적용하기 누르기 전 최종 상태
-  // final직무Main: string[]; // 직무 main 필터
-  // final직무Position: number[]; // 직무 position 필터
-  // final파티유형Filter: number[]; // 파티 유형 필터
-
   // 직무 filter 상태 관리
   setSelected직무ParentOptions: (options: OptionType[] | null) => void;
   setSelected직무Options: (options: OptionType[] | null) => void;
@@ -42,8 +37,8 @@ interface SelectionStore {
   remove파티유형FilterChip: (id: number) => void;
   reset파티유형FilterChip: () => void;
 
-  handleSubmit직무: () => void;
-  handleSubmit파티유형: () => void;
+  handleSubmit직무: (chips: ChipType[]) => void;
+  handleSubmit파티유형: (chips: ChipType[]) => void;
 
   set직무Filter: (chips: ChipType[]) => void;
   set파티유형Filter: (chips: ChipType[]) => void;
@@ -65,9 +60,7 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
   submit직무Main: [],
   submit직무Position: [],
   submit파티유형Filter: [],
-  // final직무Main: [],
-  // final직무Position: [],
-  // final파티유형Filter: [],
+
   isSubmitted직무: false,
   isSubmitted파티유형: false,
 
@@ -133,30 +126,27 @@ export const useApplicantFilterStore = create<SelectionStore>(set => ({
 
   // 필터 상태 제출
 
-  handleSubmit직무: () =>
+  handleSubmit직무: (직무FilterChips: ChipType[]) =>
     set(state => {
-      const submit직무Main = state.직무FilterChips
+      const submit직무Main = 직무FilterChips
         .filter(chip => chip.parentLabel) // parentLabel이 있는 chip만 필터링
         .map(chip => chip.parentLabel as string); // parentLabel만 추출하여 배열 생성
 
-      const submit직무Position = state.직무FilterChips.map(chip => chip.id); // id만 추출하여 배열 생성
+      const submit직무Position = 직무FilterChips.map(chip => chip.id); // id만 추출하여 배열 생성
       return {
         submit직무Main,
         submit직무Position,
       };
     }),
 
-  handleSubmit파티유형: () =>
+  handleSubmit파티유형: (파티유형FilterChips: ChipType[]) =>
     set(state => {
-      const submit파티유형Filter = state.파티유형FilterChips.map(chip => chip.id); // label만 추출하여 배열 생성
+      const submit파티유형Filter = 파티유형FilterChips.map(chip => chip.id); // label만 추출하여 배열 생성
 
       return {
         submit파티유형Filter,
       };
     }),
-
-  // handleFinal직무Main: submit직무Main => set({ final직무Main: submit직무Main }),
-  // handleFinal직무Position: submit직무Position => set({ final직무Position: submit직무Position }),
 
   setIsSubmitted직무: submitted => set({ isSubmitted직무: submitted }),
   setIsSubmitted파티유형: submitted => set({ isSubmitted직무: submitted }),

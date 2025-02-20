@@ -38,20 +38,30 @@ export default function HomeRecruitmentSelect() {
     selected직무ParentOptions,
     selected직무Options,
     selected파티유형Options,
-    직무FilterChips,
-    파티유형FilterChips,
+
     setSelected직무ParentOptions,
     setSelected직무Options,
     setSelected파티유형Options,
 
     set직무Filter,
     set파티유형Filter,
+    reset직무FilterChip,
+    reset파티유형FilterChip,
+    직무FilterChips,
+    파티유형FilterChips,
+
+    handleSubmit직무,
+    handleSubmit파티유형,
   } = useApplicantFilterStore();
 
-  // ✅ "적용하기" 버튼을 누르기 전 임시 상태 저장
-  const [tempSelected직무ParentOptions, setTempSelected직무ParentOptions] = useState<OptionType[] | null>(null);
-  const [tempSelected직무Options, setTempSelected직무Options] = useState<OptionType[] | null>(null);
-  const [tempSelected파티유형Options, setTempSelected파티유형Options] = useState<OptionType[] | null>(null);
+  // "적용하기" 버튼을 누르기 전 임시 상태 저장
+  const [tempSelected직무ParentOptions, setTempSelected직무ParentOptions] = useState<OptionType[] | null>(
+    selected직무ParentOptions,
+  );
+  const [tempSelected직무Options, setTempSelected직무Options] = useState<OptionType[] | null>(selected직무Options);
+  const [tempSelected파티유형Options, setTempSelected파티유형Options] = useState<OptionType[] | null>(
+    selected파티유형Options,
+  );
 
   const [temp직무FilterChips, setTemp직무FilterChips] = useState<ChipType[]>([]);
   const [temp파티유형FilterChips, setTemp파티유형FilterChips] = useState<ChipType[]>([]);
@@ -183,20 +193,27 @@ export default function HomeRecruitmentSelect() {
   const handle직무Reset = () => {
     setTempSelected직무Options(null);
     setTemp직무FilterChips([]);
+    reset직무FilterChip();
     setTempSelected직무ParentOptions([{ id: 0, label: '기획자' }]);
   };
 
   const handle파티유형Reset = () => {
     setTempSelected파티유형Options(null);
     setTemp파티유형FilterChips([]);
+    reset파티유형FilterChip();
   };
 
-  const handleSubmit직무 = () => {
+  const handleSubmit직무Select = () => {
     set직무Filter(temp직무FilterChips);
+    setSelected직무ParentOptions(tempSelected직무ParentOptions);
+    setSelected직무Options(tempSelected직무Options);
+    handleSubmit직무(temp직무FilterChips);
   };
 
-  const handleSubmit파티유형 = () => {
+  const handleSubmit파티유형Select = () => {
     set파티유형Filter(temp파티유형FilterChips);
+    setSelected파티유형Options(tempSelected파티유형Options);
+    handleSubmit파티유형(temp파티유형FilterChips);
   };
 
   return (
@@ -205,10 +222,10 @@ export default function HomeRecruitmentSelect() {
         <Select
           optionsType="multi"
           value={
-            temp직무FilterChips && temp직무FilterChips.length > 0
-              ? temp직무FilterChips.length > 1 && temp직무FilterChips[0].parentLabel != null
-                ? `${temp직무FilterChips[0].parentLabel} ${temp직무FilterChips[0].label} 외 ${temp직무FilterChips.length - 1}`
-                : `${temp직무FilterChips[0].parentLabel || ''} ${temp직무FilterChips[0].label}`
+            직무FilterChips && 직무FilterChips.length > 0
+              ? 직무FilterChips.length > 1 && 직무FilterChips[0].parentLabel != null
+                ? `${직무FilterChips[0].parentLabel} ${직무FilterChips[0].label} 외 ${직무FilterChips.length - 1}`
+                : `${직무FilterChips[0].parentLabel || ''} ${직무FilterChips[0].label}`
               : undefined
           }
           parentOptions={[
@@ -224,7 +241,7 @@ export default function HomeRecruitmentSelect() {
           chipData={temp직무FilterChips}
           handleClickReset={handle직무Reset}
           handleOptionToggle={handle직무OptionToggle}
-          handleClickSubmit={handleSubmit직무}
+          handleClickSubmit={handleSubmit직무Select}
           handleRemoveChip={handleRemove직무FilterChip}
           height="xs"
           placeholder="직무"
@@ -236,9 +253,9 @@ export default function HomeRecruitmentSelect() {
           }}
           optionStyle={{ width: '400px', height: 'auto', borderRadius: '24px' }}
           handleOpenReset={() => {
-            setSelected직무ParentOptions(tempSelected직무ParentOptions);
-            setSelected직무Options(tempSelected직무Options);
-            set직무Filter(temp직무FilterChips);
+            setTempSelected직무ParentOptions(selected직무ParentOptions);
+            setTempSelected직무Options(selected직무Options);
+            setTemp직무FilterChips(직무FilterChips);
           }}
         />
       </div>
@@ -246,9 +263,9 @@ export default function HomeRecruitmentSelect() {
         <Select
           optionsType="multi"
           value={
-            temp파티유형FilterChips && temp파티유형FilterChips.length > 1
-              ? `${temp파티유형FilterChips[0].label} 외 ${temp파티유형FilterChips.length - 1}`
-              : temp파티유형FilterChips[0]?.label || undefined
+            파티유형FilterChips && 파티유형FilterChips.length > 1
+              ? `${파티유형FilterChips[0].label} 외 ${파티유형FilterChips.length - 1}`
+              : 파티유형FilterChips[0]?.label || undefined
           }
           options={파티유형List}
           selectedOptions={tempSelected파티유형Options}
@@ -256,7 +273,7 @@ export default function HomeRecruitmentSelect() {
           handleClickReset={handle파티유형Reset}
           handleOptionToggle={handle파티유형OptionToggle}
           handleRemoveChip={handleRemove파티유형FilterChip}
-          handleClickSubmit={handleSubmit파티유형}
+          handleClickSubmit={handleSubmit파티유형Select}
           height="xs"
           placeholder="파티유형"
           fontSize={14}
@@ -269,8 +286,8 @@ export default function HomeRecruitmentSelect() {
           }}
           optionStyle={{ width: '320px', height: 'auto', borderRadius: '24px' }}
           handleOpenReset={() => {
-            setSelected파티유형Options(tempSelected파티유형Options);
-            set파티유형Filter(temp파티유형FilterChips);
+            setTempSelected파티유형Options(selected파티유형Options);
+            setTemp파티유형FilterChips(파티유형FilterChips);
           }}
         />
       </div>
