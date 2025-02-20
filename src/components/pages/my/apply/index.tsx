@@ -523,7 +523,6 @@ export default MyApply;
 
 const MyApplyContainer = styled.div`
   width: 820px;
-  height: 100vh;
   margin-top: 110px;
 `;
 

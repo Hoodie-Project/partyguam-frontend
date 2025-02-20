@@ -205,7 +205,6 @@ export default MyAccount;
 
 const MyAccountContainer = styled.div`
   width: 550px;
-  height: 100vh;
   margin-top: 112px;
 `;
 

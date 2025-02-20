@@ -54,6 +54,8 @@ interface Props {
   handleRemoveChip?: (id: number) => void; // remove chip
   handleClickReset?: () => void;
   handleClickSubmit?: () => void;
+  // 열릴 떄 값 초기화
+  handleOpenReset?: () => void;
   isSubmitted?: boolean; // 적용하기 버튼 눌러서 닫힌 것인지 flag
 }
 
@@ -81,6 +83,7 @@ function Select({
   handleRemoveChip,
   handleClickReset,
   handleClickSubmit,
+  handleOpenReset,
   isSubmitted,
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -162,6 +165,7 @@ function Select({
           handleClickReset={handleClickReset}
           handleClickSubmit={handleClickSubmit}
           handleRemoveChip={handleRemoveChip}
+          handleOpenReset={handleOpenReset}
         />
       )}
     </PickerWrapper>

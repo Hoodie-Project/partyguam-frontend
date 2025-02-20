@@ -8,7 +8,7 @@ import PolicyNav from './PolicyNav';
 function PolicyIntroduction() {
   return (
     <SContainer>
-      <PolicyLayout style={{ height: '100vh' }}>
+      <PolicyLayout>
         <PolicyNav />
         <SemiTItle>&ldquo;파티구함&ldquo;은 프로젝트 구성원을 쉽고 효율적으로 모집할 수 있는 플랫폼입니다.</SemiTItle>
         <SMargin margin="20px 0px 0px 0px" />

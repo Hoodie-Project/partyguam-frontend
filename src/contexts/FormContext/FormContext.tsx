@@ -1,3 +1,4 @@
+'use client';
 import { createContext, useContext } from 'react';
 
 export type FormType = '' | '필수회원가입' | '세부프로필작성';

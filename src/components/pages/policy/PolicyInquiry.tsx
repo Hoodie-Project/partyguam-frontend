@@ -8,7 +8,7 @@ import PolicyNav from './PolicyNav';
 function PolicyInquiry() {
   return (
     <SContainer>
-      <PolicyLayout style={{ height: '100vh' }}>
+      <PolicyLayout>
         <PolicyNav />
         <SemiTItle>궁금하신 부분이나, 건의하실 내용은 언제든 아래로 문의해 주세요.</SemiTItle>
         <SMargin margin="20px 0px 0px 0px" />

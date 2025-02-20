@@ -10,173 +10,27 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { fetchPartyRecruitments } from '@/apis/home';
-import { fetchGetPartyTypes, fetchGetPositions } from '@/apis/party';
 import { Chip, Square, Txt } from '@/components/_atoms';
-import { ScrollToTop, SearchBar, Select } from '@/components/_molecules';
+import { ScrollToTop, SearchBar } from '@/components/_molecules';
+import HomeRecruitmentSelect from '@/components/features/home/HomeRecruitmentSelect';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
 import { SContainer, SHomeContainer } from '@/styles/components';
-import type { Position } from '@/types/user';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
-export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
-  return data.map(position => ({
-    id: position.id,
-    label: position.sub,
-  }));
-};
-
-const transformPartyTypes = (data: { id: number; type: string }[]): { id: number; label: string }[] => {
-  return data?.map(item => ({
-    id: item.id,
-    label: item.type,
-  }));
-};
-
-type OptionType = {
-  id: number;
-  label: string;
-};
-
 function HomeRecruitment() {
   const searchParams = useSearchParams();
-  const [파티유형List, set파티유형List] = useState<OptionType[]>([]);
-  const [positionList, setPositionList] = useState<OptionType[]>([]);
   const [search모집공고Value, setSearch모집공고Value] = useState<string>(searchParams.get('search') || '');
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // 등록일순
-  const {
-    selected직무ParentOptions,
-    selected직무Options,
-    selected파티유형Options,
-    직무FilterChips,
-    파티유형FilterChips,
-    submit직무Main,
-    submit직무Position,
-    submit파티유형Filter,
-    setSelected직무ParentOptions,
-    setSelected직무Options,
-    setSelected파티유형Options,
-    add직무FilterChip,
-    remove직무FilterChip,
-    reset직무FilterChip,
-    add파티유형FilterChip,
-    remove파티유형FilterChip,
-    reset파티유형FilterChip,
-    handleSubmit직무,
-    handleSubmit파티유형,
-  } = useApplicantFilterStore();
+
   const { isLoggedIn } = useAuthStore();
   const { openModal } = useModalContext();
   const router = useRouter();
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetchGetPartyTypes();
-      set파티유형List(transformPartyTypes(response));
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const response = await fetchGetPositions(selected직무ParentOptions?.[0]?.label || '');
-      setPositionList([
-        { id: Math.floor(Math.random() * 100) + 35, label: '전체' },
-        ...transformPositionData(response),
-      ]);
-    })();
-  }, [selected직무ParentOptions]);
-
-  const handleParentOptionSelect = (parentOption: OptionType) => {
-    if (selected직무ParentOptions?.[0]?.id === parentOption.id) {
-      setSelected직무ParentOptions(null); // 같은 옵션 클릭 시 선택 해제
-    } else {
-      setSelected직무ParentOptions([parentOption]); // 다른 옵션 선택 시 해당 옵션으로 교체
-    }
-  };
-
-  const handle직무OptionToggle = (option: OptionType) => {
-    if (selected직무ParentOptions && selected직무ParentOptions.length > 0) {
-      const parentLabel = selected직무ParentOptions[0].label;
-
-      if (option.label === '전체') {
-        setSelected직무Options([option]);
-        add직무FilterChip({ id: option.id, parentLabel, label: option.label });
-        return;
-      }
-
-      // 이미 선택된 항목인 경우 제거
-      if (selected직무Options?.some(selected => selected.id === option.id)) {
-        setSelected직무Options(selected직무Options.filter(selected => selected.id !== option.id));
-        remove직무FilterChip(option.id);
-        return;
-      }
-      // 6개 이상 선택 시 제한 (현재 선택된 개수가 5개 이상일 때)
-      if (selected직무Options && selected직무Options?.length >= 5) {
-        alert('최대 5개까지 선택 가능합니다!');
-        return;
-      }
-
-      // 5개 이하일 때만 추가
-      setSelected직무Options([...(selected직무Options?.filter(selected => selected.label !== '전체') || []), option]);
-      add직무FilterChip({ id: option.id, parentLabel, label: option.label });
-    }
-  };
-
-  const handle파티유형OptionToggle = (option: OptionType) => {
-    if (option.label === '전체') {
-      setSelected파티유형Options([option]);
-      add파티유형FilterChip({ id: option.id, label: option.label });
-      return;
-    }
-
-    // 이미 선택된 항목인 경우 제거
-    if (selected파티유형Options?.some(selected => selected.id === option.id)) {
-      setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== option.id));
-      remove파티유형FilterChip(option.id);
-      return;
-    }
-
-    // 6개 이상 선택 시 제한 (현재 선택된 개수가 5개 이상일 때)
-    if (selected파티유형Options && selected파티유형Options?.length >= 5) {
-      alert('최대 5개까지 선택 가능합니다!');
-      return;
-    }
-
-    // 5개 이하일 때만 추가
-    setSelected파티유형Options([
-      ...(selected파티유형Options?.filter(selected => selected.label !== '전체') || []),
-      option,
-    ]);
-    add파티유형FilterChip({ id: option.id, label: option.label });
-  };
-
-  const handleRemove직무FilterChip = (id: number) => {
-    if (selected직무Options?.some(selected => selected.id === id)) {
-      setSelected직무Options(selected직무Options.filter(selected => selected.id !== id));
-      remove직무FilterChip(id);
-    }
-  };
-
-  const handleRemove파티유형FilterChip = (id: number) => {
-    if (selected파티유형Options?.some(selected => selected.id === id)) {
-      setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== id));
-      remove파티유형FilterChip(id);
-    }
-  };
-
-  const handle직무Reset = () => {
-    setSelected직무Options(null);
-    reset직무FilterChip();
-    setSelected직무ParentOptions([{ id: 0, label: '기획자' }]);
-  };
-
-  const handle파티유형Reset = () => {
-    setSelected파티유형Options(null);
-    reset파티유형FilterChip();
-  };
+  const { submit직무Main, submit직무Position, submit파티유형Filter } = useApplicantFilterStore();
 
   // 닉네임 검색
   const handleChange모집공고Search = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -270,70 +124,7 @@ function HomeRecruitment() {
         </Txt>
         <HeaderWrapper>
           <LeftFilter>
-            <div style={{ width: 'auto', minWidth: '67px' }}>
-              <Select
-                optionsType="multi"
-                value={
-                  직무FilterChips && 직무FilterChips.length > 0
-                    ? 직무FilterChips.length > 1 && 직무FilterChips[0].parentLabel != null
-                      ? `${직무FilterChips[0].parentLabel} ${직무FilterChips[0].label} 외 ${직무FilterChips.length - 1}`
-                      : `${직무FilterChips[0].parentLabel || ''} ${직무FilterChips[0].label}`
-                    : undefined
-                }
-                parentOptions={[
-                  { id: 0, label: '기획자' },
-                  { id: 1, label: '디자이너' },
-                  { id: 2, label: '개발자' },
-                  { id: 3, label: '마케터/광고' },
-                ]}
-                options={positionList}
-                selectedParentOptions={selected직무ParentOptions}
-                handleParentOptionSelect={handleParentOptionSelect}
-                selectedOptions={selected직무Options}
-                chipData={직무FilterChips}
-                handleClickReset={handle직무Reset}
-                handleOptionToggle={handle직무OptionToggle}
-                handleClickSubmit={handleSubmit직무}
-                handleRemoveChip={handleRemove직무FilterChip}
-                height="xs"
-                placeholder="직무"
-                fontSize={14}
-                selectStyle={{
-                  borderRadius: '999px',
-                  padding: '8px 12px',
-                  whiteSpace: 'nowrap',
-                }}
-                optionStyle={{ width: '400px', height: 'auto', borderRadius: '24px' }}
-              />
-            </div>
-            <div style={{ width: 'auto', minWidth: '67px' }}>
-              <Select
-                optionsType="multi"
-                value={
-                  파티유형FilterChips && 파티유형FilterChips.length > 1
-                    ? `${파티유형FilterChips[0].label} 외 ${파티유형FilterChips.length - 1}`
-                    : 파티유형FilterChips[0]?.label || undefined
-                }
-                options={파티유형List}
-                selectedOptions={selected파티유형Options}
-                chipData={파티유형FilterChips}
-                handleClickReset={handle파티유형Reset}
-                handleOptionToggle={handle파티유형OptionToggle}
-                handleRemoveChip={handleRemove파티유형FilterChip}
-                handleClickSubmit={handleSubmit파티유형}
-                height="xs"
-                placeholder="파티유형"
-                fontSize={14}
-                selectStyle={{
-                  borderRadius: '999px',
-                  padding: '8px 12px',
-                  width: 'auto',
-                  minWidth: '93px',
-                  whiteSpace: 'nowrap',
-                }}
-                optionStyle={{ width: '320px', height: 'auto', borderRadius: '24px' }}
-              />
-            </div>
+            <HomeRecruitmentSelect />
             <div style={{ width: '400px', height: '36px' }}>
               <SearchBar
                 type="round"
@@ -364,85 +155,87 @@ function HomeRecruitment() {
             </Txt>
           </RightFilter>
         </HeaderWrapper>
-        <ReCruitmentCardWrapper>
-          {partyRecruitmentList?.pages.flatMap(page =>
-            page?.partyRecruitments.map((recruitment, i) => (
-              <StyledSquare
-                key={`${recruitment.id}_${i}`}
-                width="100%"
-                height="160px"
-                shadowKey="shadow1"
-                backgroundColor="white"
-                radiusKey="base"
-                borderColor="grey200"
-                onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
-              >
-                <CardContentsWrapper>
-                  <Image
-                    src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
-                    width={160}
-                    height={120}
-                    alt={recruitment.party.title}
-                    style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                  />
-                  <CardRightWrapper>
-                    <div>
-                      <Chip
-                        chipType="filled"
-                        label={recruitment.party.partyType.type}
-                        size="xsmall"
-                        chipColor="#F6F6F6"
-                        fontColor="grey700"
-                        fontWeight="semibold"
-                      />
-                      <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
-                        {recruitment.party.title} {/* 파티 제목 */}
-                      </EllipsisTitleText>
-                      <Txt
-                        fontSize={14}
-                        color="grey600"
-                        style={{
-                          marginLeft: '2px',
-                          display: 'flex',
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          lineHeight: '140%',
-                        }}
-                      >
-                        {recruitment.position.main} <Divider />
-                        {recruitment.position.sub} {/* 포지션 정보 */}
-                      </Txt>
-                    </div>
+        <div style={{ height: '100%' }}>
+          <ReCruitmentCardWrapper>
+            {partyRecruitmentList?.pages.flatMap(page =>
+              page?.partyRecruitments.map((recruitment, i) => (
+                <StyledSquare
+                  key={`${recruitment.id}_${i}`}
+                  width="100%"
+                  height="160px"
+                  shadowKey="shadow1"
+                  backgroundColor="white"
+                  radiusKey="base"
+                  borderColor="grey200"
+                  onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
+                >
+                  <CardContentsWrapper>
+                    <Image
+                      src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
+                      width={160}
+                      height={120}
+                      alt={recruitment.party.title}
+                      style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                    />
+                    <CardRightWrapper>
+                      <div>
+                        <Chip
+                          chipType="filled"
+                          label={recruitment.party.partyType.type}
+                          size="xsmall"
+                          chipColor="#F6F6F6"
+                          fontColor="grey700"
+                          fontWeight="semibold"
+                        />
+                        <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                          {recruitment.party.title} {/* 파티 제목 */}
+                        </EllipsisTitleText>
+                        <Txt
+                          fontSize={14}
+                          color="grey600"
+                          style={{
+                            marginLeft: '2px',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            lineHeight: '140%',
+                          }}
+                        >
+                          {recruitment.position.main} <Divider />
+                          {recruitment.position.sub} {/* 포지션 정보 */}
+                        </Txt>
+                      </div>
 
-                    <RecruitsCount>
-                      <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                        {recruitment.status === 'active' ? '모집중' : '파티종료'}
-                      </Txt>
+                      <RecruitsCount>
+                        <Txt fontSize={12} style={{ lineHeight: '140%' }}>
+                          {recruitment.status === 'active' ? '모집중' : '파티종료'}
+                        </Txt>
 
-                      <Txt
-                        fontSize={12}
-                        color="failRed"
-                        style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
-                      >
-                        {recruitment.recruitedCount} / {recruitment.recruitingCount}
-                      </Txt>
-                    </RecruitsCount>
-                  </CardRightWrapper>
-                </CardContentsWrapper>
-              </StyledSquare>
-            )),
-          )}
-          {partyRecruitmentList?.pages[0]?.total === 0 && (
-            <EmptyState>
-              <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
-              <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
-                모집공고가 없습니다.
-              </Txt>
-            </EmptyState>
-          )}
-        </ReCruitmentCardWrapper>
+                        <Txt
+                          fontSize={12}
+                          color="failRed"
+                          style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
+                        >
+                          {recruitment.recruitedCount} / {recruitment.recruitingCount}
+                        </Txt>
+                      </RecruitsCount>
+                    </CardRightWrapper>
+                  </CardContentsWrapper>
+                </StyledSquare>
+              )),
+            )}
+            {partyRecruitmentList?.pages[0]?.total === 0 && (
+              <EmptyState>
+                <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+                <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+                  모집공고가 없습니다.
+                </Txt>
+              </EmptyState>
+            )}
+          </ReCruitmentCardWrapper>
 
-        <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
+          <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
+        </div>
       </SHomeContainer>
       <ScrollToTop />
     </SContainer>
