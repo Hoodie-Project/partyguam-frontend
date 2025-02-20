@@ -403,7 +403,6 @@ const PartyRecruitDetailContainer = styled.section<{ isReadOnly?: boolean }>`
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: 100vh;
   padding-top: ${({ isReadOnly }) => (isReadOnly ? '0px' : '52px')};
 `;
 

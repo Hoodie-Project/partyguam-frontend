@@ -361,7 +361,6 @@ const PartyRecruitContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: 100vh;
   margin-top: 50px;
 `;
 

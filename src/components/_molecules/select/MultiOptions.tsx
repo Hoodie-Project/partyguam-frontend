@@ -234,8 +234,8 @@ const ActionButtons = styled.div`
 
 const CircleButton = styled.button<{ buttonType: '초기화' | '적용하기'; isDisable?: boolean }>`
   background-color: ${({ buttonType, isDisable }) =>
-    buttonType === '초기화' ? 'white' : isDisable ? '#DDFCF6' : '#11c9a7'};
-  border: ${({ isDisable }) => (isDisable ? '1px solid #AEF8EB' : '1px solid #11c9a7')};
+    buttonType === '초기화' ? 'white' : isDisable ? '#DDFCF6' : '#21ecc7'};
+  border: ${({ isDisable }) => (isDisable ? '1px solid #AEF8EB' : '1px solid #21ecc7')};
   border-radius: 999px;
   padding: 9.5px 12px;
   color: ${({ isDisable }) => (isDisable ? '#999999' : 'black')};

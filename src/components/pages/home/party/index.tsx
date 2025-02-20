@@ -23,6 +23,12 @@ import type { Position } from '@/types/user';
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
+type ChipType = {
+  id: number;
+  parentLabel?: string;
+  label: string;
+};
+
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
   return data?.map(position => ({
     id: position.id,
@@ -62,13 +68,15 @@ function HomeParty() {
     파티유형FilterChips,
     submit파티유형Filter,
     setSelected파티유형Options,
-    add파티유형FilterChip,
-    remove파티유형FilterChip,
     reset파티유형FilterChip,
+    set파티유형Filter,
     handleSubmit파티유형,
-    setIsSubmitted파티유형,
-    isSubmitted파티유형,
   } = useApplicantFilterStore();
+
+  const [tempSelected파티유형Options, setTempSelected파티유형Options] = useState<OptionType[] | null>(
+    selected파티유형Options,
+  );
+  const [temp파티유형FilterChips, setTemp파티유형FilterChips] = useState<ChipType[]>([]);
 
   const { isLoggedIn } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -78,7 +86,6 @@ function HomeParty() {
 
   useEffect(() => {
     (async () => {
-      setIsSubmitted파티유형(false);
       const response = await fetchGetPartyTypes();
       set파티유형List(transformPartyTypes(response));
     })();
@@ -91,44 +98,64 @@ function HomeParty() {
     }
   };
 
+  const add파티유형FilterChip = (chip: ChipType) => {
+    setTemp파티유형FilterChips(prev => {
+      if (chip.label === '전체') {
+        return [...prev.filter(c => c.parentLabel !== chip.parentLabel), chip];
+      }
+      return [...prev.filter(c => !(c.parentLabel === chip.parentLabel && c.label === '전체')), chip];
+    });
+  };
+
+  const remove파티유형FilterChip = (id: number) => {
+    setTemp파티유형FilterChips(prev => prev.filter(chip => chip.id !== id));
+  };
+
   const handle파티유형OptionToggle = (option: OptionType) => {
     if (option.label === '전체') {
-      setSelected파티유형Options([option]);
+      setTempSelected파티유형Options([option]);
       add파티유형FilterChip({ id: option.id, label: option.label });
       return;
     }
 
     // 이미 선택된 항목인 경우 제거
-    if (selected파티유형Options?.some(selected => selected.id === option.id)) {
-      setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== option.id));
+    if (tempSelected파티유형Options?.some(selected => selected.id === option.id)) {
+      setTempSelected파티유형Options(tempSelected파티유형Options.filter(selected => selected.id !== option.id));
       remove파티유형FilterChip(option.id);
       return;
     }
 
     // 6개 이상 선택 시 제한 (현재 선택된 개수가 5개 이상일 때)
-    if (selected파티유형Options && selected파티유형Options?.length >= 5) {
+    if (tempSelected파티유형Options && tempSelected파티유형Options?.length >= 5) {
       alert('최대 5개까지 선택 가능합니다!');
       return;
     }
 
     // 5개 이하일 때만 추가
-    setSelected파티유형Options([
-      ...(selected파티유형Options?.filter(selected => selected.label !== '전체') || []),
+    setTempSelected파티유형Options([
+      ...(tempSelected파티유형Options?.filter(selected => selected.label !== '전체') || []),
       option,
     ]);
     add파티유형FilterChip({ id: option.id, label: option.label });
   };
 
+  const handle파티유형Reset = () => {
+    setTempSelected파티유형Options(null);
+    setTemp파티유형FilterChips([]);
+    reset파티유형FilterChip();
+  };
+
   const handleRemove파티유형FilterChip = (id: number) => {
-    if (selected파티유형Options?.some(selected => selected.id === id)) {
-      setSelected파티유형Options(selected파티유형Options.filter(selected => selected.id !== id));
+    if (tempSelected파티유형Options?.some(selected => selected.id === id)) {
+      setTempSelected파티유형Options(tempSelected파티유형Options.filter(selected => selected.id !== id));
       remove파티유형FilterChip(id);
     }
   };
 
-  const handle파티유형Reset = () => {
-    setSelected파티유형Options(null);
-    reset파티유형FilterChip();
+  const handleSubmit파티유형Select = () => {
+    set파티유형Filter(temp파티유형FilterChips);
+    setSelected파티유형Options(tempSelected파티유형Options);
+    handleSubmit파티유형(temp파티유형FilterChips);
   };
 
   // 닉네임 검색
@@ -257,16 +284,12 @@ function HomeParty() {
                     : 파티유형FilterChips[0]?.label || undefined
                 }
                 options={파티유형List}
-                selectedOptions={selected파티유형Options}
-                chipData={파티유형FilterChips}
+                selectedOptions={tempSelected파티유형Options}
+                chipData={temp파티유형FilterChips}
                 handleClickReset={handle파티유형Reset}
                 handleOptionToggle={handle파티유형OptionToggle}
                 handleRemoveChip={handleRemove파티유형FilterChip}
-                handleClickSubmit={() => {
-                  handleSubmit파티유형();
-                  setIsSubmitted파티유형(true);
-                }}
-                isSubmitted={isSubmitted파티유형}
+                handleClickSubmit={handleSubmit파티유형Select}
                 height="xs"
                 placeholder="파티유형"
                 fontSize={14}
@@ -278,6 +301,10 @@ function HomeParty() {
                   whiteSpace: 'nowrap',
                 }}
                 optionStyle={{ width: '320px', height: 'auto', borderRadius: '24px' }}
+                handleOpenReset={() => {
+                  setTempSelected파티유형Options(selected파티유형Options);
+                  setTemp파티유형FilterChips(파티유형FilterChips);
+                }}
               />
             </div>
             <div style={{ width: '400px', height: '36px' }}>
@@ -322,6 +349,7 @@ function HomeParty() {
             </CircleButton>
           </RightFilter>
         </HeaderWrapper>
+
         <PartyCardList>
           {partyList?.pages.flatMap(page =>
             page?.parties.map((party, i) => (
