@@ -163,7 +163,7 @@ function PartyUsersManage({ partyId }: PageParams) {
     <SContainer>
       <FloatingMenu menu={PARTY_SETTING_MENU(partyId)} />
       <PageHeader title="파티원 관리" />
-      <SChildContainer style={{ height: '100vh' }}>
+      <SChildContainer>
         <TitleContainer>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: 'auto' }}>
             <Txt fontSize={20} fontWeight="bold">

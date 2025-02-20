@@ -1,5 +1,5 @@
 'use client';
-import React, { Fragment, useRef } from 'react';
+import React, { Fragment, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
@@ -37,6 +37,9 @@ type Props = {
   // 초기화, 적용하기 button handler
   handleClickReset?: () => void;
   handleClickSubmit?: () => void;
+
+  // 열릴 떄 값 초기화
+  handleOpenReset?: () => void;
 };
 
 export default function MultiOptions({
@@ -54,6 +57,7 @@ export default function MultiOptions({
   handleRemoveChip,
   handleClickReset,
   handleClickSubmit,
+  handleOpenReset,
 }: Props) {
   const pickerRef = useRef<HTMLDivElement>(null);
 
@@ -65,6 +69,10 @@ export default function MultiOptions({
     handleClickSubmit?.();
     setIsOpen?.(false);
   };
+
+  useEffect(() => {
+    handleOpenReset?.();
+  }, []);
 
   return (
     <SelectMultiOptions top={height} optionRadius={optionRadius} style={optionStyle}>
@@ -226,8 +234,8 @@ const ActionButtons = styled.div`
 
 const CircleButton = styled.button<{ buttonType: '초기화' | '적용하기'; isDisable?: boolean }>`
   background-color: ${({ buttonType, isDisable }) =>
-    buttonType === '초기화' ? 'white' : isDisable ? '#DDFCF6' : '#11c9a7'};
-  border: ${({ isDisable }) => (isDisable ? '1px solid #AEF8EB' : '1px solid #11c9a7')};
+    buttonType === '초기화' ? 'white' : isDisable ? '#DDFCF6' : '#21ecc7'};
+  border: ${({ isDisable }) => (isDisable ? '1px solid #AEF8EB' : '1px solid #21ecc7')};
   border-radius: 999px;
   padding: 9.5px 12px;
   color: ${({ isDisable }) => (isDisable ? '#999999' : 'black')};

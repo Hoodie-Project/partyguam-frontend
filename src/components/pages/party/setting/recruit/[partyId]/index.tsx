@@ -127,7 +127,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
           )
         }
       />
-      <SChildContainer style={{ height: '100vh' }}>
+      <SChildContainer>
         <TitleContainer>
           <div>
             <Txt fontSize={20} fontWeight="bold" style={{ marginTop: '50px' }}>
