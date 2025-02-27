@@ -24,7 +24,7 @@ const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT
 function HomeRecruitment() {
   const searchParams = useSearchParams();
   const [search모집공고Value, setSearch모집공고Value] = useState<string>(searchParams.get('search') || '');
-  const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // 등록일순
+  const [order, setOrder] = useState<'ASC' | 'DESC'>('DESC'); // 등록일순
 
   const { isLoggedIn } = useAuthStore();
   const { openModal } = useModalContext();
