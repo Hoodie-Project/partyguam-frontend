@@ -138,7 +138,7 @@ function PartyRecruitEdit() {
       ),
       onCancel: closeModal,
       onSubmit: () => {
-        router.back();
+        router.replace(`/party/${partyId}`);
         closeModal();
       },
     });

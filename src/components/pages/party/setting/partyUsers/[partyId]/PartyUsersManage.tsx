@@ -150,9 +150,9 @@ function PartyUsersManage({ partyId }: PageParams) {
             partyUserIds: selectedRows,
           });
           console.log('파티원 다수 내보내기 완료');
+          closeModal();
         } catch (error) {
           console.error('파티원 다수 내보내기 에러:', error);
-        } finally {
           closeModal();
         }
       },
