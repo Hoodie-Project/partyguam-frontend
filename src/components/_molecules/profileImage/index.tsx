@@ -62,7 +62,7 @@ function ProfileImage({
     if (previewImage) return previewImage; // 미리보기 이미지가 존재하면 사용
     if (!imageUrl) return '/default-profile.png'; // 기본 이미지 처리 (선택 사항)
     if (imageUrl.startsWith('http')) return imageUrl; // 절대 URL이면 그대로 사용
-    return new URL(imageUrl, BASE_URL).href; // 상대 경로일 경우 BASE_URL과 결합
+    return `${BASE_URL}/${imageUrl}`; // 상대 경로일 경우 BASE_URL과 결합
   };
 
   return (
