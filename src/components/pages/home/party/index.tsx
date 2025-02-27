@@ -62,7 +62,7 @@ function HomeParty() {
   });
   const [파티유형List, set파티유형List] = useState<OptionType[]>([]);
   const [search파티Value, setSearch파티Value] = useState<string>(searchParams.get('search') || '');
-  const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // 등록일순
+  const [order, setOrder] = useState<'ASC' | 'DESC'>('DESC'); // 등록일순
   const {
     selected파티유형Options,
     파티유형FilterChips,

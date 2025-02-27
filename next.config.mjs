@@ -5,7 +5,7 @@ const isProduction = process.env.NEXT_PUBLIC_ENV === 'production';
 const nextConfig = {
   reactStrictMode: false,
   images: {
-    domains: ['partyguham.com'],
+    domains: ['partyguham.com', 'lh3.googleusercontent.com'],
   },
   webpack: config => {
     config.optimization = {

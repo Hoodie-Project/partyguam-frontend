@@ -304,9 +304,8 @@ export default function PartyEdit({ partyId }: PageParams) {
           radiusKey="base"
           backgroundColor="grey300"
           shadowKey="none"
-          style={{ position: 'relative' }}
-          onClick={e => {
-            e.preventDefault();
+          style={{ position: 'relative', cursor: 'pointer' }}
+          onClick={() => {
             if (fileInputRef.current) {
               fileInputRef.current.click();
             }
