@@ -30,7 +30,7 @@ function Main() {
         updatedAt: '',
         id: 0,
         title: '배너 예시',
-        image: '/images/banner_example.png',
+        image: '',
         link: 'https://docs.google.com/forms/d/e/1FAIpQLSf3zEd7SLxEwx2VJRfp0txmY_N-xm-aA6-9nx37eAuqioM0wA/viewform?usp=header',
       },
     ],
@@ -155,7 +155,13 @@ function Main() {
               <Slider ref={sliderRef} {...settings}>
                 {banner?.banner.map(item => (
                   <StyledImageWrapper key={item.id}>
-                    <Link href={item.link}>
+                    <Link
+                      href={
+                        item.link
+                          ? `${BASE_URL}/${item.link}`
+                          : 'https://docs.google.com/forms/d/e/1FAIpQLSf3zEd7SLxEwx2VJRfp0txmY_N-xm-aA6-9nx37eAuqioM0wA/viewform?usp=header'
+                      }
+                    >
                       <Image
                         src={item.image ? `${BASE_URL}/${item.image}` : '/images/banner_example.png'}
                         width={1240}
