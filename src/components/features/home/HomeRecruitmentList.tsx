@@ -39,6 +39,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
     sliderRef.current?.slickPrev();
   };
   const sliderSettings = {
+    infinite: false,
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
