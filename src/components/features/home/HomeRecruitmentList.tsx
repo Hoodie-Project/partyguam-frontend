@@ -309,6 +309,8 @@ const StyledSlider = styled(Slider)`
 
   .slick-slide {
     width: 514px !important; /* 기본 slick-slide 너비 무시 */
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 
   .slick-slide {
