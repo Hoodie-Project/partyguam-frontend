@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use client';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -189,7 +190,7 @@ export default function MySelectPersonality() {
     setTimeout(() => {
       closeModal();
       router.replace('/my/profile');
-      router.refresh();
+      window.location.reload();
     }, 0);
   };
 
@@ -330,12 +331,12 @@ export default function MySelectPersonality() {
           <Txt
             fontColor={
               selected.flatMap(item => item.id).length == 0 ||
-              isEqual(
-                user.userPersonalities
-                  .filter(item => item.personalityOption.personalityQuestion.id === Number(detailNum) - 2)
-                  .map(item => item.personalityOption.id),
-                selected.flatMap(item => item.id),
-              )
+                isEqual(
+                  user.userPersonalities
+                    .filter(item => item.personalityOption.personalityQuestion.id === Number(detailNum) - 2)
+                    .map(item => item.personalityOption.id),
+                  selected.flatMap(item => item.id),
+                )
                 ? 'grey400'
                 : 'black'
             }

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { Fragment, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -83,9 +84,9 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
       return partyRecruitmentApplications.pages.flatMap(page =>
         page?.partyApplicationUser
           ? page.partyApplicationUser.map(item => ({
-              ...item,
-              id: item.id,
-            }))
+            ...item,
+            id: item.id,
+          }))
           : [],
       );
     }
@@ -135,11 +136,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
       ),
       onCancel: () => {
         closeModal();
-        router.refresh();
+        window.location.reload();
       },
       onSubmit: () => {
         closeModal();
-        router.refresh();
+        window.location.reload();
       },
     });
   };
@@ -424,7 +425,7 @@ const StyledHeaderCell = styled(HeaderCell)`
   text-align: center;
 `;
 
-const StyledCell = styled(Cell)<{ isExpend: boolean }>`
+const StyledCell = styled(Cell) <{ isExpend: boolean }>`
   padding: 10px;
   border-bottom: ${({ isExpend }) => (isExpend ? 'none' : '1px solid #f1f1f5')};
   text-align: center;

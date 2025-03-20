@@ -5,7 +5,12 @@ import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import { fetchGetPositions } from '@/apis/detailProfile';
-import { fetchPartyRecruitmentDetails, fetchPostRecruitmentParty, fetchUpdatePartyRecruitment } from '@/apis/party';
+import {
+  fetchCompletePartyRecruitment,
+  fetchPartyRecruitmentDetails,
+  fetchPostRecruitmentParty,
+  fetchUpdatePartyRecruitment,
+} from '@/apis/party';
 import { Button, Input, Txt } from '@/components/_atoms';
 import { BreadCrumb, PageHeader, Select, TipBox } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';
@@ -105,7 +110,39 @@ function PartyRecruitEdit() {
     );
   }, [editPartyRecruitForm, 모집소개글InputState]);
 
-  const onClickCancel = () => {
+  const onClickCompleted = () => {
+    openModal({
+      children: (
+        <ConfirmModal
+          modalTitle="모집공고 마감"
+          modalContents={
+            <>
+              지원자에게 알림이 전송돼요.
+              <br />
+              마감 후에는 수정할 수 없어요.
+              <br />
+              정말로 모집공고를 마감하시나요?
+            </>
+          }
+          cancelBtnTxt="닫기"
+          submitBtnTxt="마감하기"
+        />
+      ),
+      onCancel: () => {
+        closeModal();
+      },
+      onSubmit: async () => {
+        await fetchCompletePartyRecruitment({
+          partyId: Number(partyId),
+          partyRecruitmentId: Number(recruitId),
+        });
+        closeModal();
+        router.replace(`/party/setting/recruit/${partyId}`);
+      },
+    });
+  };
+
+  const onClickQuit = () => {
     openModal({
       children: (
         <ConfirmModal
@@ -125,7 +162,7 @@ function PartyRecruitEdit() {
       ),
       onCancel: closeModal,
       onSubmit: () => {
-        router.push('/');
+        router.back();
         closeModal();
       },
     });
@@ -149,7 +186,7 @@ function PartyRecruitEdit() {
       children: (
         <PreviewModalContainer>
           <CloseRoundedIcon
-            style={{ position: 'absolute', top: '32px', right: '32px' }}
+            style={{ position: 'fixed', top: '32px', right: '32px' }}
             onClick={() => {
               closeModal();
             }}
@@ -310,37 +347,53 @@ function PartyRecruitEdit() {
         </SFlexColumnFull>
         <SMargin margin="146px 0px 0px 0px" />
         <SFlexRowFull style={{ justifyContent: 'space-between' }}>
+          {pageType === 'ADD' && (
+            <Button
+              style={{ marginBottom: 60 }}
+              height="l"
+              width="m"
+              backgroudColor="white"
+              radius="base"
+              shadow="shadow1"
+              borderColor="primaryGreen"
+              onClick={onClickQuit}
+            >
+              <Txt fontWeight="bold">취소</Txt>
+            </Button>
+          )}
           <Button
             style={{ marginBottom: 60 }}
             height="l"
             width="m"
             backgroudColor="white"
             radius="base"
-            shadow="shadow1"
-            borderColor="primaryGreen"
-            onClick={onClickCancel}
-          >
-            <Txt fontWeight="bold">취소</Txt>
-          </Button>
-          <Button
-            style={{ marginBottom: 60 }}
-            height="l"
-            width="m"
-            backgroudColor="white"
-            radius="base"
-            shadow="shadow1"
+            shadow="shadow2"
             borderColor="primaryGreen"
             onClick={() => onClick미리보기Button(Number(partyId))}
           >
             <Txt fontWeight="bold">미리보기</Txt>
           </Button>
+          {pageType === 'MODIFY' && (
+            <Button
+              style={{ marginBottom: 60 }}
+              height="l"
+              width="m"
+              backgroudColor="white"
+              radius="base"
+              shadow="shadow2"
+              borderColor="failRed"
+              onClick={onClickCompleted}
+            >
+              <Txt fontWeight="bold">마감하기</Txt>
+            </Button>
+          )}
           <Button
             style={{ marginBottom: 60 }}
             height="l"
             width="base"
             backgroudColor="primaryGreen"
             radius="base"
-            shadow="shadow1"
+            shadow="shadow2"
             disabled={!isAllFieldsFilled}
             onClick={handleSubmitRecruitButton}
           >
@@ -369,8 +422,21 @@ const PreviewModalContainer = styled.div`
   background-color: white;
   border-radius: 32px;
   width: 1000px;
+  padding: 84px 90px;
   height: 800px;
-  padding: 32px 90px;
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
+  /* 스크롤바 스타일 */
+  &::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50px;
+  }
 `;

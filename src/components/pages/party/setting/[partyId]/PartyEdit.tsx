@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use client';
 // 파티 수정 및 생성 페이지
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -154,15 +155,15 @@ export default function PartyEdit({ partyId }: PageParams) {
       field: string,
       options?: { id: number; label: string }[],
     ) =>
-    (e: React.MouseEvent<HTMLLIElement>) => {
-      const selectedOption = options?.find(option => option.label === e.currentTarget.textContent);
+      (e: React.MouseEvent<HTMLLIElement>) => {
+        const selectedOption = options?.find(option => option.label === e.currentTarget.textContent);
 
-      setter((prev: any) => ({
-        ...prev,
-        id: selectedOption?.id || 0,
-        [field]: e.currentTarget.textContent || '',
-      }));
-    };
+        setter((prev: any) => ({
+          ...prev,
+          id: selectedOption?.id || 0,
+          [field]: e.currentTarget.textContent || '',
+        }));
+      };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -203,7 +204,7 @@ export default function PartyEdit({ partyId }: PageParams) {
       formData.append('status', 파티상태);
       try {
         const res = await fetchPatchParty({ partyId: Number(partyId), data: formData });
-        router.refresh();
+        window.location.reload();
       } catch (err) {
         console.error('Error creating party:', err);
       }

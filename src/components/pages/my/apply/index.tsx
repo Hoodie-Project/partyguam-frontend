@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use client';
 import React, { Fragment, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
@@ -80,9 +81,9 @@ function MyApply() {
       return myPartyApplications.pages.flatMap(page =>
         page?.partyApplications
           ? page.partyApplications.map(item => ({
-              ...item,
-              id: item.id,
-            }))
+            ...item,
+            id: item.id,
+          }))
           : [],
       );
     }
@@ -164,7 +165,7 @@ function MyApply() {
 
         closeModal();
         setExpand지원서(null);
-        router.refresh();
+        window.location.reload();
         myPartyApplicationsRefetch();
       },
     });
@@ -537,7 +538,7 @@ const StyledHeaderCell = styled(HeaderCell)`
   text-align: center;
 `;
 
-const StyledCell = styled(Cell)<{ isExpend: boolean }>`
+const StyledCell = styled(Cell) <{ isExpend: boolean }>`
   padding: 10px;
   border-bottom: ${({ isExpend }) => (isExpend ? 'none' : '1px solid #f1f1f5')};
   text-align: center;
