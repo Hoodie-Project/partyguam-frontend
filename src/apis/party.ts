@@ -262,12 +262,29 @@ export const fetchDeletePartyRecruitments = async ({
   recruitmentIds: number[];
 }) => {
   try {
-    const response = await privateApi.post(`/parties/${partyId}/recruitments/batch-delete`, {
+    const response = await privateApi.post(`/parties/${partyId}/admin/recruitments/batch-delete`, {
       partyRecruitmentIds: recruitmentIds,
     });
     return response.data;
   } catch (error) {
     console.error('fetchDeletePartyRecruitments error:', error);
+  }
+};
+
+// 하나의 특정 파티 모집 삭제
+export const fetchDeletePartyRecruitmentOnly = async ({
+  partyId,
+  partyRecruitmentId,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+}) => {
+  try {
+    const response = await privateApi.delete(`/parties/${partyId}/admin/recruitments/${partyRecruitmentId}`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchDeletePartyRecruitmentOnly error:', error);
+    throw error;
   }
 };
 
@@ -294,6 +311,45 @@ export const fetchUpdatePartyRecruitment = async ({
     return response.data;
   } catch (error) {
     console.error('fetchUpdatePartyRecruitment error:', error);
+  }
+};
+
+// 파티 모집 완료 처리
+export const fetchCompletePartyRecruitment = async ({
+  partyId,
+  partyRecruitmentId,
+}: {
+  partyId: number;
+  partyRecruitmentId: number;
+}) => {
+  try {
+    const response = await privateApi.patch(`/parties/${partyId}/admin/recruitment/${partyRecruitmentId}/completed`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchCompletePartyRecruitment error:', error);
+    throw error;
+  }
+};
+
+// 파티 모집 여러개 완료 처리
+export const fetchCompletePartyRecruitmentBatchUpdate = async ({
+  partyId,
+  partyRecruitmentIds,
+}: {
+  partyId: number;
+  partyRecruitmentIds: number[];
+}) => {
+  try {
+    const response = await privateApi.post(`/parties/${partyId}/admin/recruitment/batch-status`, {
+      partyRecruitmentIds,
+    });
+
+    if (response.status === 204) {
+      return { success: true };
+    }
+  } catch (error) {
+    console.error('fetchCompletePartyRecruitmentBatchUpdate error:', error);
+    return { success: false, error };
   }
 };
 

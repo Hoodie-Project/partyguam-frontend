@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -5,16 +6,27 @@ import styled from '@emotion/styled';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Body, Cell, Header, HeaderCell, HeaderRow, Row, Table } from '@table-library/react-table-library/table';
+import { useTheme } from '@table-library/react-table-library/theme';
 
-import { fetchGetPartyRecruitmentsList } from '@/apis/party';
+import {
+  fetchCompletePartyRecruitment,
+  fetchDeletePartyRecruitmentOnly,
+  fetchGetPartyRecruitmentsList,
+} from '@/apis/party';
+import KebabMenu from '@/assets/icon/kebab-menu.svg';
 import { Txt } from '@/components/_atoms';
+import { DropdownV2 } from '@/components/_molecules/dropdown';
 import PartyRecruitDetail from '@/components/pages/party/recruit/[recruitId]';
 import { useModalContext } from '@/contexts/ModalContext';
 import type { PartyRecruitment, PartyRecruitmentListResponse } from '@/types/party';
 import { formatDate } from '@/utils/date';
 
+import ConfirmModal from '../comfirmModal';
+
 type Props = {
+  status: 'active' | 'completed';
   partyId: number;
 
   selectedRows: number[];
@@ -24,6 +36,7 @@ type Props = {
 };
 
 function PartyRecruitSettingTable({
+  status,
   partyId,
   selectedRows,
   setSelectedRows,
@@ -32,6 +45,7 @@ function PartyRecruitSettingTable({
 }: Props) {
   const router = useRouter();
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
+  const [dropdownVisibleRow, setDropdownVisibleRow] = useState<number | null>(null);
   const { openModal, closeModal } = useModalContext();
 
   useEffect(() => {
@@ -41,7 +55,7 @@ function PartyRecruitSettingTable({
           partyId,
           sort: 'createdAt',
           order,
-          status: 'active',
+          status: status,
         };
 
         const data = await fetchGetPartyRecruitmentsList(requestParams);
@@ -52,7 +66,7 @@ function PartyRecruitSettingTable({
     };
 
     fetchRecruitments();
-  }, [partyId, order]);
+  }, [partyId, order, status, setPartyRecruitList]);
 
   interface TablePartyRecruitment extends PartyRecruitment {
     id: number;
@@ -95,7 +109,7 @@ function PartyRecruitSettingTable({
       children: (
         <PreviewModalContainer>
           <CloseRoundedIcon
-            style={{ position: 'absolute', top: '32px', right: '32px' }}
+            style={{ position: 'fixed', top: '32px', right: '32px' }}
             onClick={() => {
               closeModal();
             }}
@@ -112,9 +126,23 @@ function PartyRecruitSettingTable({
     });
   };
 
+  const theme = useTheme({
+    Table: `
+    padding-bottom: 40px;
+    z-index: 0;
+    scroll: scroll;
+    &::-webkit-scrollbar {
+      width: 0px;
+      height: 0px;
+    }
+
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE, Edge */    `,
+  });
+
   return (
     <>
-      <Table data={data} style={{ width: '100%', zIndex: 0, marginBottom: 'calc(3.125rem + 3.5rem)' }}>
+      <Table theme={theme} data={data} style={{ width: '100%', marginBottom: 'calc(3.125rem + 3.5rem)' }}>
         {(tableList: TablePartyRecruitment[]) => (
           <>
             <Header>
@@ -157,7 +185,7 @@ function PartyRecruitSettingTable({
                     fontSize={14}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                   >
-                    등록일 {getIcon()}
+                    모집일 {getIcon()}
                   </Txt>
                 </StyledHeaderCell>
                 <StyledHeaderCell>
@@ -165,17 +193,13 @@ function PartyRecruitSettingTable({
                     미리보기
                   </Txt>
                 </StyledHeaderCell>
-                <StyledHeaderCell style={{ borderRadius: '0px 20px 0px 0px' }}>
-                  <Txt fontWeight="normal" fontSize={14} fontColor="grey600">
-                    수정하기
-                  </Txt>
-                </StyledHeaderCell>
+                <StyledHeaderCell style={{ borderRadius: '0px 20px 0px 0px' }} />
               </HeaderRow>
             </Header>
 
             <Body>
               {tableList.map((item: TablePartyRecruitment) => (
-                <Row item={item} key={item.id}>
+                <Row item={item} key={item.id} style={{ cursor: 'pointer' }}>
                   <StyledCell>
                     <CenteredCheckbox>
                       <CustomCheckbox
@@ -185,27 +209,57 @@ function PartyRecruitSettingTable({
                       />
                     </CenteredCheckbox>
                   </StyledCell>
-                  <StyledCell>
+                  <StyledCell
+                    onClick={() => {
+                      router.push(
+                        `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
+                      );
+                    }}
+                  >
                     <Txt fontWeight="normal" fontSize={14}>
                       {item.position.main}
                     </Txt>
                   </StyledCell>
-                  <StyledCell>
+                  <StyledCell
+                    onClick={() => {
+                      router.push(
+                        `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
+                      );
+                    }}
+                  >
                     <Txt fontWeight="normal" fontSize={14}>
                       {item.position.sub}
                     </Txt>
                   </StyledCell>
-                  <StyledCell>
+                  <StyledCell
+                    onClick={() => {
+                      router.push(
+                        `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
+                      );
+                    }}
+                  >
                     <Txt fontWeight="normal" fontSize={14} fontColor="failRed">
                       {item.recruitedCount} / {item.recruitingCount}
                     </Txt>
                   </StyledCell>
-                  <StyledCell>
+                  <StyledCell
+                    onClick={() => {
+                      router.push(
+                        `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
+                      );
+                    }}
+                  >
                     <Txt fontWeight="normal" fontSize={14} fontColor="greenDark100">
                       {item.applicationCount}
                     </Txt>
                   </StyledCell>
-                  <StyledCell>
+                  <StyledCell
+                    onClick={() => {
+                      router.push(
+                        `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
+                      );
+                    }}
+                  >
                     <Txt fontWeight="normal" fontSize={14} fontColor="grey500">
                       {formatDate(item.createdAt)}
                     </Txt>
@@ -213,16 +267,96 @@ function PartyRecruitSettingTable({
                   <StyledCell>
                     <CircleButton onClick={() => onClick미리보기Button(item.id)}>미리보기</CircleButton>
                   </StyledCell>
-                  <StyledCell>
-                    <CircleButton
-                      onClick={() =>
-                        router.push(
-                          `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${item.id}&main=${item.position.main}&sub=${item.position.sub}`,
-                        )
-                      }
-                    >
-                      수정하기
-                    </CircleButton>
+                  <StyledCell
+                    onClick={e => {
+                      e.stopPropagation();
+                      setDropdownVisibleRow(prev => (prev === item.id ? null : item.id));
+                    }}
+                    style={{ position: 'relative' }}
+                  >
+                    <KebabMenu />
+                    {dropdownVisibleRow === item.id && (
+                      <DropdownV2
+                        isVisible={true}
+                        menuList={
+                          status === 'active'
+                            ? [
+                              {
+                                label: '마감하기',
+                                onClick: () => {
+                                  openModal({
+                                    children: (
+                                      <ConfirmModal
+                                        modalTitle="모집공고 마감"
+                                        modalContents={
+                                          <>
+                                            지원자에게 알림이 전송돼요.
+                                            <br />
+                                            마감 후에는 수정할 수 없어요.
+                                            <br />
+                                            정말로 모집공고를 마감하시나요?
+                                          </>
+                                        }
+                                        cancelBtnTxt="닫기"
+                                        submitBtnTxt="마감하기"
+                                      />
+                                    ),
+                                    onCancel: () => {
+                                      closeModal();
+                                    },
+                                    onSubmit: async () => {
+                                      await fetchCompletePartyRecruitment({
+                                        partyId: partyId,
+                                        partyRecruitmentId: item.id,
+                                      });
+                                      closeModal();
+                                      window.location.reload();
+                                    },
+                                  });
+                                },
+                              },
+                            ]
+                            : [
+                              {
+                                label: (
+                                  <Txt fontSize={14} fontColor="failRed">
+                                    삭제하기
+                                  </Txt>
+                                ),
+                                onClick: () => {
+                                  openModal({
+                                    children: (
+                                      <ConfirmModal
+                                        modalTitle="모집공고 삭제"
+                                        modalContents={
+                                          <>
+                                            지원자에게 모집 삭제 알림이 전송돼요. <br />
+                                            정말로 모집을 삭제하시나요?
+                                          </>
+                                        }
+                                        cancelBtnTxt="닫기"
+                                        submitBtnTxt="삭제하기"
+                                      />
+                                    ),
+                                    onCancel: () => {
+                                      closeModal();
+                                    },
+                                    onSubmit: async () => {
+                                      await fetchDeletePartyRecruitmentOnly({
+                                        partyId: partyId,
+                                        partyRecruitmentId: item.id,
+                                      });
+                                      closeModal();
+                                      window.location.reload();
+                                    },
+                                  });
+                                },
+                              },
+                            ]
+                        }
+                        positionStyle={{ position: 'absolute', top: '75px', right: '35px' }}
+                      />
+                    )}
                   </StyledCell>
                 </Row>
               ))}
@@ -231,13 +365,25 @@ function PartyRecruitSettingTable({
         )}
       </Table>
       {partyRecruitList.length === 0 && (
-        <Txt fontSize={16} fontColor="grey400" style={{ width: '100%', textAlign: 'center', marginTop: '138px' }}>
-          모집 공고가 없어요
-        </Txt>
+        <EmptyState>
+          <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+          <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+            모집 공고가 없어요.
+          </Txt>
+        </EmptyState>
       )}
     </>
   );
 }
+
+const EmptyState = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #767676; 
+`;
 
 const StyledHeaderCell = styled(HeaderCell)`
   display: flex;
@@ -272,6 +418,7 @@ const CustomCheckbox = styled.input`
   border-radius: 4px;
   cursor: pointer;
   position: relative;
+  background-color: white;
 
   &:checked {
     background-color: #11c9a7;
@@ -305,9 +452,23 @@ const PreviewModalContainer = styled.div`
   background-color: white;
   border-radius: 32px;
   width: 1000px;
+  padding: 84px 90px;
   height: 800px;
-  padding: 32px 90px;
-  overflow-y: auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  /* 스크롤바 스타일 */
+  &::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 50px;
+  }
 `;
 
 export default PartyRecruitSettingTable;
