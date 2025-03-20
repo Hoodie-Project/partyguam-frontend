@@ -143,7 +143,7 @@ function MyProfile() {
       formData.append('portfolio', portfolio.portfolio);
 
       await fetchPatchUsers(formData);
-      router.refresh();
+      window.location.reload();
     } catch (error) {
       console.error('handleSubmitPatchUser : ', error);
     }
