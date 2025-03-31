@@ -9,7 +9,7 @@ const fetchPostAccessToken = async () => {
     return response.data;
   } catch (error) {
     console.error('error : ', error);
-    throw new Error('Error fetching data');
+    // throw new Error('Error fetching data');
   }
 };
 
@@ -19,7 +19,7 @@ const fetchGetOauthInfo = async () => {
     return response.data;
   } catch (error) {
     console.error('error : ', error);
-    throw new Error('Error fetching data');
+    // throw new Error('Error fetching data');
   }
 };
 

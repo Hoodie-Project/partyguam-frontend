@@ -1,14 +1,18 @@
 'use client';
 import { useEffect } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { getCookie, setCookie } from 'cookies-next';
 
 import { fetchPostAccessToken } from '@/apis/auth';
 import { Dropdown, Menus } from '@/components/_molecules';
 import { ConfirmModal, LoginModal } from '@/components/features';
+import NotificationModal from '@/components/features/notificationModal';
 import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
+import { useNotificationModal } from '@/hooks/useNotificationModal';
 import { useAuthStore } from '@/stores/auth';
 import { palette, zIndex } from '@/styles';
 
@@ -17,6 +21,15 @@ export default function Header() {
 
   const { openModal, closeModal } = useModalContext();
   const { isFormDirty, formType } = useFormContext();
+  const {
+    isNotificationModalOpen,
+    handleOpenNotificationModal,
+    handleCloseNotificationModal,
+    notificationFilter,
+    setNotificationFilter,
+    notificationData,
+    fetchMoreRef,
+  } = useNotificationModal();
 
   const { isLoggedIn, login, logout } = useAuthStore(state => ({
     isLoggedIn: state.isLoggedIn,
@@ -101,12 +114,27 @@ export default function Header() {
     <HeaderContainer>
       <HeaderWrapper>
         <HeaderLeft>
-          <LogoButton onClick={handleClickLogo}>GUAM.</LogoButton>
+          <LogoButton onClick={handleClickLogo}>
+            <Image src="/images/logo_primary.png" alt="파티구함로고" width={134.48} height={50} />
+          </LogoButton>
           <Menus />
         </HeaderLeft>
 
         <HeaderRight>
           {isLoggedIn && <CircleButton onClick={() => router.push('/party/create')}>파티 생성하기 +</CircleButton>}
+          <NotificationsNoneIcon
+            onClick={handleOpenNotificationModal}
+            style={{ width: '28px', height: '28px', marginRight: '20px', cursor: 'pointer' }}
+          />
+          {isNotificationModalOpen && (
+            <NotificationModal
+              notificationData={notificationData}
+              onClose={handleCloseNotificationModal}
+              filter={notificationFilter}
+              setFilter={setNotificationFilter}
+              fetchMoreRef={fetchMoreRef}
+            />
+          )}
           {isLoggedIn ? (
             <Dropdown />
           ) : (
@@ -148,12 +176,7 @@ const HeaderWrapper = styled.div`
 `;
 
 const LogoButton = styled.button`
-  font-size: 40px;
-  font-weight: 900;
-  background: linear-gradient(45deg, #00ffc2, #00c2ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: normal;
+  background-color: transparent;
 `;
 
 /** NOTE
@@ -180,6 +203,7 @@ const HeaderLeft = styled.div`
 const HeaderRight = styled.div`
   display: flex;
   justify-self: right;
+  align-items: center;
 `;
 
 const CircleButton = styled.button`
