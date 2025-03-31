@@ -57,7 +57,7 @@ function Main() {
 
   const setAccessToken = async () => {
     const res = await fetchPostAccessToken();
-    setCookie('accessToken', res.accessToken, {
+    setCookie('accessToken', res?.accessToken, {
       httpOnly: false, // 클라이언트에서도 접근 가능
       secure: process.env.NEXT_PUBLIC_ENV === 'production',
       sameSite: 'strict',
