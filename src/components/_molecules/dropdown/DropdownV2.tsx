@@ -21,9 +21,18 @@ interface Props {
   menuList: MenuItemType[];
   onToggle?: (visible: boolean) => void;
   positionStyle?: PositionStyle;
+  menuItemstyle?: React.CSSProperties;
+  dropDownStyle?: React.CSSProperties;
 }
 
-export default function DropdownV2({ isVisible = false, menuList, onToggle, positionStyle = {} }: Props) {
+export default function DropdownV2({
+  isVisible = false,
+  menuList,
+  onToggle,
+  menuItemstyle,
+  dropDownStyle,
+  positionStyle = {},
+}: Props) {
   const [isInternalVisible, setIsInternalVisible] = useState(isVisible);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -51,10 +60,11 @@ export default function DropdownV2({ isVisible = false, menuList, onToggle, posi
   if (!isInternalVisible) return null;
 
   return (
-    <DropdownMenu ref={dropdownRef} style={positionStyle} onClick={e => e.stopPropagation()}>
+    <DropdownMenu ref={dropdownRef} style={{ ...dropDownStyle, ...positionStyle }} onClick={e => e.stopPropagation()}>
       <MenuGroup>
         {menuList.map((item, index) => (
           <MenuItem
+            style={menuItemstyle}
             key={index}
             onClick={e => {
               e.stopPropagation();

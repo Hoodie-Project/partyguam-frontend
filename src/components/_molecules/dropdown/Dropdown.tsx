@@ -16,13 +16,14 @@ export default function Dropdown() {
   const { image } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { logout } = useAuthStore(state => ({
     logout: state.logout,
   }));
 
   const toggleDropdown = (event: React.MouseEvent) => {
-    event.stopPropagation(); // 클릭 이벤트 전파 방지
+    event.stopPropagation();
     setIsOpen(prev => !prev);
   };
 
