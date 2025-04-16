@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
@@ -14,6 +14,8 @@ import { fetchGetBanner, type HomeBanner } from '@/apis/home';
 import { Txt } from '@/components/_atoms';
 import { SearchBar, Select } from '@/components/_molecules';
 import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';
+import { AccountRecoveryModal } from '@/components/features/accountRecoveryModal';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SHomeContainer } from '@/styles/components';
 
@@ -46,8 +48,11 @@ function Main() {
     value: 'recruitment',
   });
   const [searchValue, setSearchValue] = useState<string>('');
+
   const sliderRef = useRef<Slider | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { openModal, closeModal } = useModalContext();
 
   const { login, setAuth } = useAuthStore();
 
@@ -58,9 +63,9 @@ function Main() {
   const setAccessToken = async () => {
     const res = await fetchPostAccessToken();
     setCookie('accessToken', res?.accessToken, {
-      httpOnly: false, // 클라이언트에서도 접근 가능
+      httpOnly: false,
       secure: process.env.NEXT_PUBLIC_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: process.env.NEXT_PUBLIC_ENV === 'production' ? 'strict' : 'lax',
     });
   };
 
@@ -71,13 +76,19 @@ function Main() {
     (async () => {
       await setAccessToken();
       // 홈으로 리다이렉트
-
       const userResponse = await fetchGetUsers();
       login();
       setAuth(userResponse);
       router.push('/home');
     })();
   }, [router]);
+
+  useEffect(() => {
+    const error = searchParams.get('error');
+    if (error === 'USER_DELETED_30D') {
+      openModal({ children: <AccountRecoveryModal /> });
+    }
+  }, [searchParams]);
 
   const settings = {
     dots: false,

@@ -1,13 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Avatar from 'boring-avatars';
 
-import { fetchPatchReadNotification, type NotificationType } from '@/apis/notifications';
+import { fetchDeleteNotification, fetchPatchReadNotification, type NotificationType } from '@/apis/notifications';
 import KebabMenu from '@/assets/icon/kebab-menu.svg';
 import { Chip, Txt } from '@/components/_atoms';
+import { DropdownV2 } from '@/components/_molecules/dropdown';
+ 
 import { SFlexColumn, SFlexRow, SFlexRowCenter } from '@/styles/components';
 import { formatRelativeTime } from '@/utils/date';
 
@@ -25,6 +28,7 @@ const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT
 export default function NotificationModal({ notificationData, onClose, filter, setFilter, fetchMoreRef }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [kebabSettingOpenId, setKebabSettingOpenId] = useState<number | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -45,6 +49,10 @@ export default function NotificationModal({ notificationData, onClose, filter, s
     onClose();
   };
 
+  const handleClickKebab = (id: number) => {
+    setKebabSettingOpenId(id);
+  };
+  
   return (
     <Container ref={containerRef}>
       <ModalContainer>
@@ -121,7 +129,29 @@ export default function NotificationModal({ notificationData, onClose, filter, s
                         {!item.isRead && <Dot />}
                       </SFlexRow>
                     </SFlexColumn>
-                    <KebabMenu style={{ position: 'absolute', top: '20px', right: '20px' }} />
+                    <KebabMenu
+                      onClick={(e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+                        e.stopPropagation();
+                        handleClickKebab(item.id);
+                      }}
+                      style={{ position: 'absolute', top: '20px', right: '20px' }}
+                    />
+                    {item.id === kebabSettingOpenId && (
+                      <DropdownV2
+                        menuItemstyle={{ color: '#DC0000', textAlign: 'center' }}
+                        dropDownStyle={{ width: '99px' }}
+                        isVisible={true}
+                        menuList={[
+                          {
+                            label: '삭제',
+                            onClick: async () => {
+                              await fetchDeleteNotification(item.id);
+                            },
+                          },
+                        ]}
+                        positionStyle={{ position: 'absolute', top: '50px', right: '18px' }}
+                      />
+                    )}
                   </Header>
                   <SFlexColumn style={{ width: '100%' }}>
                     <Body>
