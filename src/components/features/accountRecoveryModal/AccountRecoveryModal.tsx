@@ -1,21 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { setCookie } from 'cookies-next';
 
+import { fetchPostUsersRecover } from '@/apis/auth';
 import { Button, Txt } from '@/components/_atoms';
 import { useModalContext } from '@/contexts/ModalContext';
 import { palette } from '@/styles';
 import { SFlexRow } from '@/styles/components';
+import { formatDate } from '@/utils/date';
 
 export default function AccountRecoveryModal() {
   const { modalData, closeModal } = useModalContext();
   const { onCancel } = modalData;
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   const onCancelInternal = () => {
     onCancel?.();
     closeModal();
+    router.replace('/');
   };
+
+  useEffect(() => {
+    const recoverAccessTokenData = searchParams.get('recoverAccessToken');
+    console.log('recoverAccessTokenData > ', recoverAccessTokenData);
+
+    if (recoverAccessTokenData) {
+      setCookie('recoverAccessToken', recoverAccessTokenData, {
+        httpOnly: false,
+        secure: process.env.NEXT_PUBLIC_ENV === 'production',
+        sameSite: 'strict',
+      });
+    }
+  }, []);
 
   return (
     <AccountRecoveryContainer>
@@ -46,13 +66,15 @@ export default function AccountRecoveryModal() {
           <Txt fontWeight="semibold" fontSize={16}>
             이메일
           </Txt>
-          <Txt></Txt>
+          <Txt>{searchParams.get('email') != null ? searchParams.get('email') : 'null'}</Txt>
         </SFlexRow>
         <SFlexRow style={{ gap: '8px' }}>
           <Txt fontWeight="semibold" fontSize={16}>
             탈퇴일
           </Txt>
-          <Txt></Txt>
+          <Txt>
+            {searchParams.get('deletedAt') != null ? formatDate(searchParams.get('deletedAt') as string) : 'null'}
+          </Txt>
         </SFlexRow>
       </InnerTxtBox>
       <SFlexRow>
@@ -64,8 +86,11 @@ export default function AccountRecoveryModal() {
         <Txt fontSize={16}>30일이 경과하면 계정이 영구 삭제되며, 이후에는 복구가 불가능합니다.</Txt>
       </SFlexRow>
       <Button
-        onClick={e => {
+        onClick={async e => {
           e.preventDefault();
+          await fetchPostUsersRecover();
+          onCancel?.();
+          closeModal();
         }}
         shadow="shadow2"
         style={{ width: '100%', height: '56px', marginTop: '100px', cursor: 'pointer' }}

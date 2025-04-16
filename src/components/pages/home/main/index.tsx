@@ -48,6 +48,7 @@ function Main() {
     value: 'recruitment',
   });
   const [searchValue, setSearchValue] = useState<string>('');
+
   const sliderRef = useRef<Slider | null>(null);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -75,7 +76,6 @@ function Main() {
     (async () => {
       await setAccessToken();
       // 홈으로 리다이렉트
-
       const userResponse = await fetchGetUsers();
       login();
       setAuth(userResponse);
