@@ -240,6 +240,15 @@ export const fetchGetUsersMePartiesApplications = async ({
   }
 };
 
+const fetchPostUsersRecover = async () => {
+  try {
+    const response = await privateApi.post('/users/recover/web');
+    return response.data;
+  } catch (error) {
+    console.error('error : ', error);
+  }
+};
+
 export {
   fetchGetOauthInfo,
   fetchGetUsers,
@@ -249,6 +258,7 @@ export {
   fetchNicknameDuplicated,
   fetchPostAccessToken,
   fetchPostUsersMeOauthLink,
+  fetchPostUsersRecover,
   fetchUserAuthority,
   fetchUsersLogOut,
   fetchUsersSignOut,

@@ -33,17 +33,20 @@ type AuthAction = {
 };
 
 export const useAuthStore = create(
-  persist<{ isLoggedIn: boolean } & Auth & AuthAction>(
+  persist<{ isLoggedIn: boolean; isAccountRecovery: boolean } & Auth & AuthAction>(
     set => ({
       isLoggedIn: false,
+      isAccountRecovery: false,
       ...initialAuthState,
 
-      login: () => set({ isLoggedIn: true }),
+      login: () => set({ isLoggedIn: true, isAccountRecovery: false }),
       logout: () =>
         set({
           isLoggedIn: false,
+          isAccountRecovery: false,
           ...initialAuthState,
         }),
+      setAccountRecovery: () => set({ isAccountRecovery: true }),
       setAuth: (newAuth: Partial<Auth>) => set(state => ({ ...state, ...newAuth })),
       setUserPersonalities: personalities => set(state => ({ ...state, userPersonalities: personalities })),
       setUserCareers: careers => set(state => ({ ...state, userCareers: careers })),

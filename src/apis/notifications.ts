@@ -59,3 +59,16 @@ export const fetchPatchReadNotification = async (notificationId: number): Promis
     throw error;
   }
 };
+
+/**
+ * 알림 하나 삭제
+ * @param notificationId 알림의 ID
+ */
+export const fetchDeleteNotification = async (notificationId: number): Promise<void> => {
+  try {
+    await privateApi.delete(`/notifications/${notificationId}`);
+  } catch (error) {
+    console.error('fetchDeleteNotification error:', error);
+    throw error;
+  }
+};
