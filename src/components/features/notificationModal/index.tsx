@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
@@ -10,7 +9,6 @@ import { fetchDeleteNotification, fetchPatchReadNotification, type NotificationT
 import KebabMenu from '@/assets/icon/kebab-menu.svg';
 import { Chip, Txt } from '@/components/_atoms';
 import { DropdownV2 } from '@/components/_molecules/dropdown';
- 
 import { SFlexColumn, SFlexRow, SFlexRowCenter } from '@/styles/components';
 import { formatRelativeTime } from '@/utils/date';
 
@@ -52,7 +50,7 @@ export default function NotificationModal({ notificationData, onClose, filter, s
   const handleClickKebab = (id: number) => {
     setKebabSettingOpenId(id);
   };
-  
+
   return (
     <Container ref={containerRef}>
       <ModalContainer>
