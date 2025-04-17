@@ -24,12 +24,11 @@ function MyAccountDelete() {
 
   const handleDelete = () => {
     if (isChecked) {
-      router.push('/');
       fetchUsersSignOut();
       logout();
       deleteCookie('accessToken');
       deleteCookie('refreshToken');
-      window.location.reload();
+      router.push('/');
     } else {
       alert('안내 사항을 확인하고 동의해 주세요.');
     }

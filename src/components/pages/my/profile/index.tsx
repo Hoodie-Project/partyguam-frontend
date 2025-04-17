@@ -182,7 +182,7 @@ function MyProfile() {
             </SFlexRowCenter>
             <SFlexRowCenter style={{ gap: isVisible.birth ? '25px' : '19px' }}>
               <Txt fontWeight="normal" fontSize={16}>
-                {calculateAge(user.birth)}살
+                {user.birth ? calculateAge(user.birth) : ''}살
               </Txt>
               <Toggle isOn={isVisible.birth} labelOn="공개" labelOff="비공개" onToggle={handleBirthToggle} />
             </SFlexRowCenter>

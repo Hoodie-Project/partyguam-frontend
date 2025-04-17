@@ -5,7 +5,6 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 import '@/styles/global.css';
-import GoogleAdSense from '@/components/features/googleAdsense';
 
 import BaseLayout from './BaseLayout';
 
@@ -24,12 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="kr">
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-8724037414945960" />
+      </head>
       <body suppressHydrationWarning={true}>
         <BaseLayout>
           <main>{children}</main>
         </BaseLayout>
       </body>
-      <GoogleAdSense />
     </html>
   );
 }

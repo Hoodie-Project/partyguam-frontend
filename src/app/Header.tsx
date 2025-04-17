@@ -48,15 +48,14 @@ export default function Header() {
 
   useEffect(() => {
     const accessToken = getCookie('accessToken');
+    const refreshToken = getCookie('refreshToken');
 
-    if (!accessToken) {
-      const refreshToken = getCookie('refreshToken');
-      if (refreshToken) {
-        setAccessToken();
-        login();
-      } else {
-        logout();
-      }
+    if (!accessToken && refreshToken) {
+      // TODO: 조건 추가 또는 context/state로 재로그인 제어
+      setAccessToken();
+      login();
+    } else if (!refreshToken) {
+      logout();
     } else {
       login();
     }

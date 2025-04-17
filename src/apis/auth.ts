@@ -1,3 +1,5 @@
+import { getCookie } from 'cookies-next';
+
 import type { UsersMeResponse } from '@/types/user';
 
 import { fileUploadApi, privateApi } from '.';
@@ -135,7 +137,13 @@ const fetchUsersLogOut = async () => {
 // 회원 탈퇴
 const fetchUsersSignOut = async () => {
   try {
-    const response = await privateApi.delete('/users/signout');
+    const accessToken = getCookie('accessToken');
+
+    const response = await privateApi.delete('/users/signout', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('fetchUsersSignOut error : ', error);
