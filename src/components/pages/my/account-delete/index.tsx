@@ -24,7 +24,6 @@ function MyAccountDelete() {
 
   const handleDelete = () => {
     if (isChecked) {
-      router.push('/');
       fetchUsersSignOut();
       logout();
       deleteCookie('accessToken');

@@ -59,7 +59,10 @@ class HttpClient {
       config.headers['Authorization'] = `Bearer ${recoverAccessToken}`;
     } else if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
+    } else if (recoverAccessToken != null) {
+      config.headers['Authorization'] = `Bearer ${recoverAccessToken}`;
     }
+
     return config;
   };
 

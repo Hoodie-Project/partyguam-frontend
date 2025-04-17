@@ -46,9 +46,10 @@ export default function Dropdown() {
   };
 
   const handleLogOut = async () => {
-    await fetchUsersLogOut();
+    fetchUsersLogOut();
     deleteCookie('accessToken');
     deleteCookie('refreshToken');
+    deleteCookie('recoverAccessToken');
     router.push('/');
     setIsOpen(false);
     logout();
