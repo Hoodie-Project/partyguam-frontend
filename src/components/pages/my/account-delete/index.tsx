@@ -29,6 +29,7 @@ function MyAccountDelete() {
       logout();
       deleteCookie('accessToken');
       deleteCookie('refreshToken');
+      window.location.reload();
     } else {
       alert('안내 사항을 확인하고 동의해 주세요.');
     }
