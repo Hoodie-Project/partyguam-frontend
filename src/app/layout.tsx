@@ -5,6 +5,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 
 import '@/styles/global.css';
+import GoogleAdSense from '@/components/features/googleAdsense';
 
 import BaseLayout from './BaseLayout';
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <main>{children}</main>
         </BaseLayout>
       </body>
+      <GoogleAdSense />
     </html>
   );
 }
