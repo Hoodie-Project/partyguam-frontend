@@ -55,7 +55,9 @@ class HttpClient {
     const searchParams = new URLSearchParams(window.location.search);
     const recoverAccessToken = searchParams.get('recoverAccessToken');
 
-    if (accessToken) {
+    if (recoverAccessToken != null) {
+      config.headers['Authorization'] = `Bearer ${recoverAccessToken}`;
+    } else if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     } else if (recoverAccessToken != null) {
       config.headers['Authorization'] = `Bearer ${recoverAccessToken}`;
