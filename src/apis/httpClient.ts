@@ -52,8 +52,12 @@ class HttpClient {
 
   private onRequestFulfilled = (config: InternalAxiosRequestConfig) => {
     const accessToken = getCookie('accessToken');
+    const searchParams = new URLSearchParams(window.location.search);
+    const recoverAccessToken = searchParams.get('recoverAccessToken');
 
-    if (accessToken) {
+    if (recoverAccessToken != null) {
+      config.headers['Authorization'] = `Bearer ${recoverAccessToken}`;
+    } else if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;

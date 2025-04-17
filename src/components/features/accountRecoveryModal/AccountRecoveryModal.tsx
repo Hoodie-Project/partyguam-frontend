@@ -26,7 +26,6 @@ export default function AccountRecoveryModal() {
 
   useEffect(() => {
     const recoverAccessTokenData = searchParams.get('recoverAccessToken');
-    console.log('recoverAccessTokenData > ', recoverAccessTokenData);
 
     if (recoverAccessTokenData) {
       setCookie('recoverAccessToken', recoverAccessTokenData, {
@@ -91,6 +90,7 @@ export default function AccountRecoveryModal() {
           await fetchPostUsersRecover();
           onCancel?.();
           closeModal();
+          router.replace('/');
         }}
         shadow="shadow2"
         style={{ width: '100%', height: '56px', marginTop: '100px', cursor: 'pointer' }}
