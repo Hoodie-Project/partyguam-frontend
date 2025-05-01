@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import KeyboardArrowUpRoundedIcon from '@mui/icons-material/KeyboardArrowUpRounded';
-import { deleteCookie } from 'cookies-next';
 
 import { fetchUsersLogOut } from '@/apis/auth';
 import { useAuthStore } from '@/stores/auth';
@@ -46,11 +45,9 @@ export default function Dropdown() {
   };
 
   const handleLogOut = async () => {
+    await fetchUsersLogOut();
     logout();
-    fetchUsersLogOut();
     window.localStorage.removeItem('accessToken');
-    deleteCookie('refreshToken');
-    deleteCookie('recoverAccessToken');
     router.push('/');
     setIsOpen(false);
   };

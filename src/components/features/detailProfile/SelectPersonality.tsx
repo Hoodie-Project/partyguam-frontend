@@ -7,7 +7,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import { isEqual } from 'lodash';
 
 import { fetchGetUsers } from '@/apis/auth';
-import { fetchDeletePersonality, fetchGetPersonality, fetchPostPersonality } from '@/apis/detailProfile';
+import { fetchDeletePersonality, fetchPostPersonality } from '@/apis/detailProfile';
 import { Button, Txt } from '@/components/_atoms';
 import { CheckItem, Toast } from '@/components/_molecules';
 import { useModalContext } from '@/contexts/ModalContext';
