@@ -352,7 +352,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
             position="flex-start"
             style={{ padding: '28px' }}
           >
-            <Txt fontSize={16}>
+            <Txt fontSize={16} style={{ whiteSpace: 'pre-wrap' }}>
               {!Boolean(pageModalType) && `${partyRecruitDetailData?.content}`}
               {Boolean(pageModalType) && `${editPartyRecruitForm.content}`}
             </Txt>
@@ -403,6 +403,7 @@ const PartyRecruitDetailContainer = styled.section<{ isReadOnly?: boolean }>`
   flex-direction: column;
   align-items: center;
   width: 820px;
+  height: 100vh;
   padding-top: ${({ isReadOnly }) => (isReadOnly ? '0px' : '52px')};
 `;
 

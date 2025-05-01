@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
@@ -8,7 +8,8 @@ import { SelectPersonality } from '@/components/features/detailProfile';
 import MyPageEditModal from '@/components/features/my/MyPageEditModal';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SFlexRow } from '@/styles/components';
-import type { UserPersonality } from '@/types/user';
+import type { PersonalityQuestion, UserPersonality } from '@/types/user';
+import { fetchGetPersonality } from '@/apis/detailProfile';
 
 type Props = {
   userTime?: UserPersonality[];
@@ -16,6 +17,8 @@ type Props = {
 
 export function MyTimeSection({ userTime }: Props) {
   const { openModal, closeModal } = useModalContext();
+  const [personalityData, setPersonalityData] = useState<PersonalityQuestion[]>([]);
+
   const router = useRouter();
 
   const timeIncluded = useMemo(
@@ -26,12 +29,19 @@ export function MyTimeSection({ userTime }: Props) {
     [userTime],
   );
 
+  useEffect(() => {
+    (async () => {
+      const response = await fetchGetPersonality();
+      setPersonalityData(response);
+    })();
+  }, []);
+
   const handleClickOpenTimeModal = () => {
     router.replace('/my/profile?num=3');
     openModal({
       children: (
         <MyPageEditModal width="l">
-          <SelectPersonality editType="time" />
+          <SelectPersonality editType="time" personalityData={personalityData} />
         </MyPageEditModal>
       ),
       onCancel: () => {

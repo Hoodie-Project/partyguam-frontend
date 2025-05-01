@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
@@ -146,7 +145,7 @@ function Main() {
                   <KeyboardArrowLeftRoundedIcon />
                 </Button>
                 <Txt fontWeight="bold" fontSize={14} style={{ marginTop: '3px' }}>
-                  {page}{' '}
+                  {page}
                   <Txt fontWeight="bold" fontSize={14} fontColor="grey500">
                     /{banner?.total}
                   </Txt>
@@ -158,13 +157,7 @@ function Main() {
               <Slider ref={sliderRef} {...settings}>
                 {banner?.banner.map(item => (
                   <StyledImageWrapper key={item.id}>
-                    <Link
-                      href={
-                        item.link
-                          ? `${BASE_URL}/${item.link}`
-                          : 'https://docs.google.com/forms/d/e/1FAIpQLSf3zEd7SLxEwx2VJRfp0txmY_N-xm-aA6-9nx37eAuqioM0wA/viewform?usp=header'
-                      }
-                    >
+                    <a href={item.link} target="_blank" rel="noopener noreferrer">
                       <Image
                         src={item.image ? `${BASE_URL}/${item.image}` : '/images/banner_example.png'}
                         width={1240}
@@ -172,7 +165,7 @@ function Main() {
                         alt={item.title}
                         style={{ borderRadius: '16px', border: '1px solid #F1F1F5' }}
                       />
-                    </Link>
+                    </a>
                   </StyledImageWrapper>
                 ))}
               </Slider>
