@@ -1,3 +1,5 @@
+import { getCookie } from 'cookies-next';
+
 import type { UsersMeResponse } from '@/types/user';
 
 import { fileUploadApi, privateApi } from '.';
