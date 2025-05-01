@@ -6,7 +6,7 @@ import axios, {
   type InternalAxiosRequestConfig,
   isAxiosError,
 } from 'axios';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
@@ -51,16 +51,13 @@ class HttpClient {
   }
 
   private onRequestFulfilled = (config: InternalAxiosRequestConfig) => {
-    const accessToken = getCookie('accessToken');
-    const searchParams = new URLSearchParams(window.location.search);
-    const recoverAccessToken = searchParams.get('recoverAccessToken');
+    const accessToken = window.localStorage.getItem('accessToken');
 
-    if (recoverAccessToken != null) {
-      config.headers['Authorization'] = `Bearer ${recoverAccessToken}`;
-    } else if (accessToken) {
+    if (accessToken && config.headers) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
-    } else if (recoverAccessToken != null) {
-      config.headers['Authorization'] = `Bearer ${recoverAccessToken}`;
+      console.log('Authorization 헤더 추가됨');
+    } else {
+      console.warn('accessToken 없음, Authorization 헤더 미포함');
     }
 
     return config;
@@ -113,7 +110,7 @@ class HttpClient {
           }
 
           // 새 토큰 저장
-          setCookie('accessToken', newAccessToken);
+          window.localStorage.setItem('accessToken', newAccessToken);
 
           // 대기 중인 요청 처리
           this.refreshSubscribers.forEach(callback => callback(newAccessToken));
@@ -143,7 +140,7 @@ class HttpClient {
   };
 
   private handleRefreshTokenError() {
-    deleteCookie('accessToken');
+    window.localStorage.removeItem('accessToken');
     window.location.href = '/';
   }
 }

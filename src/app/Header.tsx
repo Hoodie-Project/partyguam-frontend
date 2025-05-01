@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import { getCookie, setCookie } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 
 import { fetchPostAccessToken } from '@/apis/auth';
 import { Dropdown, Menus } from '@/components/_molecules';
@@ -39,27 +39,18 @@ export default function Header() {
 
   const setAccessToken = async () => {
     const res = await fetchPostAccessToken();
-    setCookie('accessToken', res.data, {
-      httpOnly: false,
-      secure: process.env.NEXT_PUBLIC_ENV === 'production',
-      sameSite: 'strict',
-    });
+    window.localStorage.setItem('accessToken', res.accessToken);
   };
 
   useEffect(() => {
-    const accessToken = getCookie('accessToken');
+    const accessToken = window.localStorage.getItem('accessToken');
     const refreshToken = getCookie('refreshToken');
 
-    if (!accessToken && refreshToken) {
-      // TODO: 조건 추가 또는 context/state로 재로그인 제어
+    if (!isLoggedIn && !accessToken && refreshToken) {
       setAccessToken();
       login();
-    } else if (!refreshToken) {
-      logout();
-    } else {
-      login();
     }
-  }, [login, logout]);
+  }, [login, isLoggedIn]);
 
   const handleClickLogo = () => {
     if (isFormDirty) {

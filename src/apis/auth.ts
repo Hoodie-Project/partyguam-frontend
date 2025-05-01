@@ -1,17 +1,15 @@
-import { getCookie } from 'cookies-next';
-
 import type { UsersMeResponse } from '@/types/user';
 
 import { fileUploadApi, privateApi } from '.';
 
 // [POST] accessToken 재발급
-const fetchPostAccessToken = async () => {
+const fetchPostAccessToken = async (): Promise<{ accessToken: string }> => {
   try {
-    const response = await privateApi.post('/auth/access-token');
+    const response = await privateApi.post<{ accessToken: string }>('/auth/access-token');
     return response.data;
   } catch (error) {
     console.error('error : ', error);
-    // throw new Error('Error fetching data');
+    throw error; // 혹은 필요한 처리
   }
 };
 
@@ -53,10 +51,10 @@ const fetchNicknameDuplicated = async (nickname: string) => {
 
 /**
  * 회원가입 폼 제출시
- * @param form data: { nickname: string; email: string; birth: string; gender: string }
+ * @param form data: { nickname: string; birth: string; gender: string }
  * @returns refreshToken - cookie
  */
-const fetchJoinFormSubmit = async (data: { nickname: string; birth: string; gender: string }) => {
+const fetchJoinFormSubmit = async (data: { birth: string; nickname: string; gender: string }) => {
   try {
     const response = await privateApi.post('/users', {
       nickname: data.nickname,
@@ -137,7 +135,7 @@ const fetchUsersLogOut = async () => {
 // 회원 탈퇴
 const fetchUsersSignOut = async () => {
   try {
-    const accessToken = getCookie('accessToken');
+    const accessToken = window.localStorage.getItem('accessToken');
 
     const response = await privateApi.delete('/users/signout', {
       headers: {

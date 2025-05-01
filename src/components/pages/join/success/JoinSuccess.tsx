@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-import { getCookie } from 'cookies-next';
 
 import { Button, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
@@ -18,7 +17,7 @@ export default function JoinSuccess() {
   }));
 
   useEffect(() => {
-    const accessToken = getCookie('accessToken');
+    const accessToken = window.localStorage.getItem('accessToken');
     if (accessToken) {
       login();
     } else {

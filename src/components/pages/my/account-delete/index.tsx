@@ -26,7 +26,7 @@ function MyAccountDelete() {
     if (isChecked) {
       fetchUsersSignOut();
       logout();
-      deleteCookie('accessToken');
+      window.localStorage.removeItem('accessToken');
       deleteCookie('refreshToken');
       window.location.reload();
     } else {

@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import { setCookie } from 'cookies-next';
 
 import { fetchGetUsers, fetchPostAccessToken } from '@/apis/auth';
 import { fetchGetBanner, type HomeBanner } from '@/apis/home';
@@ -62,17 +61,10 @@ function Main() {
 
   const setAccessToken = async () => {
     const res = await fetchPostAccessToken();
-    setCookie('accessToken', res?.accessToken, {
-      httpOnly: false,
-      secure: process.env.NEXT_PUBLIC_ENV === 'production',
-      sameSite: process.env.NEXT_PUBLIC_ENV === 'production' ? 'strict' : 'lax',
-    });
+    window.localStorage.setItem('accessToken', res.accessToken);
   };
 
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-
     (async () => {
       await setAccessToken();
       // 홈으로 리다이렉트

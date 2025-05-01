@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { setCookie } from 'cookies-next';
 
 import { fetchPostUsersRecover } from '@/apis/auth';
 import { Button, Txt } from '@/components/_atoms';
@@ -23,18 +22,6 @@ export default function AccountRecoveryModal() {
     closeModal();
     router.replace('/');
   };
-
-  useEffect(() => {
-    const recoverAccessTokenData = searchParams.get('recoverAccessToken');
-
-    if (recoverAccessTokenData) {
-      setCookie('recoverAccessToken', recoverAccessTokenData, {
-        httpOnly: false,
-        secure: process.env.NEXT_PUBLIC_ENV === 'production',
-        sameSite: 'strict',
-      });
-    }
-  }, []);
 
   return (
     <AccountRecoveryContainer>

@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-import { setCookie } from 'cookies-next';
 import { format, startOfDay } from 'date-fns';
 
 import { fetchGetUsers, fetchGetUsersMeOauthProfile, fetchJoinFormSubmit } from '@/apis/auth';
@@ -259,7 +258,7 @@ export default function Join() {
               };
 
               const response = await fetchJoinFormSubmit(data);
-              setCookie('accessToken', response.data.accessToken);
+              window.localStorage.setItem('accessToken', response.data.accessToken);
               if (response.status === 201) {
                 const userResponse = await fetchGetUsers();
                 setAuth(userResponse);

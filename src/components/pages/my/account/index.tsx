@@ -103,10 +103,11 @@ function MyAccount() {
 
   const handleLogOut = async () => {
     await fetchUsersLogOut();
-    deleteCookie('accessToken');
+    window.localStorage.removeItem('accessToken');
     deleteCookie('refreshToken');
     deleteCookie('linkToken');
     router.push('/');
+    window.localStorage.clear();
     logout();
   };
   return (
