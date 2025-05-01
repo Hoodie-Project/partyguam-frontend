@@ -1,9 +1,10 @@
 'use client';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
+import { fetchGetPersonality } from '@/apis/detailProfile';
 import { PageHeader, ProgressBar } from '@/components/_molecules';
 import ConfirmModal from '@/components/features/comfirmModal/ConfirmModal';
 import { SelectLocation, SelectPersonality, SelectPosition } from '@/components/features/detailProfile';
@@ -11,6 +12,7 @@ import { useFormContext } from '@/contexts/FormContext';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useSelectLocationStore, useSelectPositionStore } from '@/stores/detailProfile';
 import { SContainer, SFlexColumnCenter, SForm } from '@/styles/components';
+import type { PersonalityQuestion } from '@/types/user';
 
 export default function JoinDetail() {
   const searchParams = useSearchParams();
@@ -21,6 +23,7 @@ export default function JoinDetail() {
   const { positionCompletion } = useSelectPositionStore();
   const { openModal, closeModal } = useModalContext();
   const { setFormDirty, setFormType } = useFormContext();
+  const [personalityData, setPersonalityData] = useState<PersonalityQuestion[]>([]);
 
   useEffect(() => {
     setFormDirty(true);
@@ -30,6 +33,13 @@ export default function JoinDetail() {
       setFormType('');
     };
   }, [setFormDirty, setFormType]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await fetchGetPersonality();
+      setPersonalityData(response);
+    })();
+  }, []);
 
   /**
    * NOTE
@@ -59,7 +69,7 @@ export default function JoinDetail() {
         prevStep: Number(detailNum) > 3,
         completed: false,
         stepLabel: `성향선택(${Number(detailNum) - 2 < 0 ? 0 : Number(detailNum) - 2}/4)`,
-        component: <SelectPersonality />,
+        component: <SelectPersonality personalityData={personalityData} />,
       },
     ];
   }, [detailNum]);
@@ -119,7 +129,7 @@ export default function JoinDetail() {
             .map(item => (
               <SFlexColumnCenter key={item.stepNum}>{item.component}</SFlexColumnCenter>
             ))}
-          {Number(detailNum) > 3 && <SelectPersonality />}
+          {Number(detailNum) > 3 && <SelectPersonality personalityData={personalityData} />}
         </JoinDetailWrapper>
       </SForm>
     </SContainer>
