@@ -12,6 +12,7 @@ import { FloatingMenu } from '@/components/features';
 import MyPagePreviewModal from '@/components/features/my/MyPagePreviewModal';
 import { MYPAGE_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
+import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer, SFlexRow, SFlexRowCenter, SFlexRowFull, SFlexRowJustifyBetween } from '@/styles/components';
 import { calculateAge } from '@/utils/date';
@@ -93,6 +94,8 @@ function MyProfile() {
     user.portfolioTitle,
     userImage,
   ]);
+
+  useNavigationBlocker(!수정완료disabled);
 
   useEffect(() => {
     (async () => {
