@@ -3,13 +3,13 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 
+import { fetchGetPersonality } from '@/apis/detailProfile';
 import { Chip, Txt } from '@/components/_atoms';
 import { SelectPersonality } from '@/components/features/detailProfile';
 import MyPageEditModal from '@/components/features/my/MyPageEditModal';
 import { useModalContext } from '@/contexts/ModalContext';
 import { SFlexRow } from '@/styles/components';
 import type { PersonalityQuestion, UserPersonality } from '@/types/user';
-import { fetchGetPersonality } from '@/apis/detailProfile';
 
 type Props = {
   userTime?: UserPersonality[];
