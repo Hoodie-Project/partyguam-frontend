@@ -67,7 +67,6 @@ export default function MySelectPersonality() {
     setSelected([]);
   }, [searchParams]);
 
-  console.log('personalityData > ', personalityData);
 
   const progress = useMemo(
     () =>
@@ -115,11 +114,9 @@ export default function MySelectPersonality() {
     });
   };
 
-  const handleReset = () => {
+  const handleReset = (personalityQuestionId : number) => {
     setSelected(prevSelected => {
-      const currentQuestionId = progress[activeTab].stepNum;
-      // Keep selections from other sections, remove only current section's selections
-      return prevSelected.filter(item => item.personalityQuestionId !== currentQuestionId);
+      return prevSelected.filter(item => item.personalityQuestionId !== personalityQuestionId);
     });
   };
 
@@ -282,7 +279,7 @@ export default function MySelectPersonality() {
             </SFlexColumn>
             <ResetButton
               disabled={!selected.some(item => item.personalityQuestionId === progress[activeTab].stepNum)}
-              onClick={handleReset}
+              onClick={() => handleReset(step.stepNum)}
             >
               <Txt fontSize={14} fontColor="greenDark100" style={{ textWrap: 'nowrap' }}>
                 초기화
@@ -369,6 +366,8 @@ const Section = styled.div`
   width: 100%;
   margin-top: 20px; /* 섹션 간 여백 */
   scroll-margin-top: 118px;
+  min-height: 300px;
+  margin-bottom: 7.9375rem;
 `;
 const SectionTitle = styled.div<{ noMarginTop?: boolean }>`
   display: flex;
@@ -381,7 +380,6 @@ const OptionListWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 7.9375rem;
 `;
 
 const ButtonsRowContainer = styled.div`
