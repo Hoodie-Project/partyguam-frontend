@@ -19,12 +19,12 @@ type Props = {
   editType?: 'time' | 'others';
   handleResetTimeEdit?: () => void;
   handlesubmitTimeEdit?: () => void;
+  personalityData : PersonalityQuestion[]
 };
 
-export default function SelectPersonality({ editType }: Props) {
+export default function SelectPersonality({ editType, personalityData }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [personalityData, setPersonalityData] = useState<PersonalityQuestion[]>([]);
   const [detailNum, setDetailNum] = useState(searchParams.get('num') || 1);
   const [isToast, setIsToast] = useState(false);
   const { closeModal } = useModalContext();
@@ -50,12 +50,12 @@ export default function SelectPersonality({ editType }: Props) {
   } = useSelectPersonalityStore();
   const user = useAuthStore();
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetchGetPersonality();
-      setPersonalityData(response);
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const response = await fetchGetPersonality();
+  //     setPersonalityData(response);
+  //   })();
+  // }, []);
 
   useEffect(() => {
     const updatedSelected = user.userPersonalities
