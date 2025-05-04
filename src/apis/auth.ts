@@ -144,8 +144,9 @@ const fetchUsersSignOut = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error('fetchUsersSignOut error : ', error);
-    return error;
+    console.log('fetchUsersSignOut error : ', error);
+
+    throw error;
   }
 };
 
