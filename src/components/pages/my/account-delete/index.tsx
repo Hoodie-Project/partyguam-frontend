@@ -1,18 +1,19 @@
 'use client';
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import { deleteCookie } from 'cookies-next';
 
 import { fetchUsersSignOut } from '@/apis/auth';
 import { Button, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
+import { ConfirmModal } from '@/components/features';
+import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { SContainer } from '@/styles/components';
 
 function MyAccountDelete() {
   const [isChecked, setIsChecked] = useState(false);
-  const router = useRouter();
+  const { openModal, closeModal } = useModalContext();
 
   const { logout } = useAuthStore(state => ({
     logout: state.logout,
@@ -22,15 +23,39 @@ function MyAccountDelete() {
     setIsChecked(!isChecked);
   };
 
-  const handleDelete = () => {
-    if (isChecked) {
-      fetchUsersSignOut();
+  const handleDelete = async () => {
+    if (!isChecked) {
+      alert('안내 사항을 확인하고 동의해 주세요.');
+      return;
+    }
+
+    try {
+      await fetchUsersSignOut();
       logout();
-      window.localStorage.removeItem('accessToken');
+      localStorage.removeItem('accessToken');
       deleteCookie('refreshToken');
       window.location.reload();
-    } else {
-      alert('안내 사항을 확인하고 동의해 주세요.');
+    } catch (error) {
+      openModal({
+        children: (
+          <ConfirmModal
+            modalTitle="탈퇴 불가"
+            modalContents={
+              <>
+                현재 진행 중인 파티가 있습니다.
+                <br />
+                파티장을 다른 사람에게 위임하거나
+                <br />
+                파티를 종료하고 탈퇴해 주세요.
+              </>
+            }
+            submitBtnTxt="확인"
+          />
+        ),
+        onSubmit: () => {
+          closeModal();
+        },
+      });
     }
   };
 
