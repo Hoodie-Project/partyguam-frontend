@@ -28,7 +28,6 @@ const FooterWrapper = styled.footer`
   align-items: center;
   justify-content: center;
   gap: 39px;
-  margin-top: 100px;
 
   @media (max-width: 673px) {
     display: none;
