@@ -91,12 +91,12 @@ export default function Header() {
           closeModal();
         },
         onSubmit: () => {
-          router.push('/');
+          router.push('/landing');
           closeModal();
         },
       });
     } else {
-      router.push('/');
+      router.push('/landing');
     }
   };
 
