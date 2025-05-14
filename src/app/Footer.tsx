@@ -13,7 +13,7 @@ export default function Footer() {
         <FooterLink onClick={() => router.push('/policy/service')}>이용약관</FooterLink>
         <FooterLink onClick={() => router.push('/policy/privacy')}>개인정보 처리방침</FooterLink>
       </FooterLinks>
-      <FooterCopyright>© 2024 GUAM. All rights reserved.</FooterCopyright>
+      <FooterCopyright>© 2024 GUHAM. All rights reserved.</FooterCopyright>
     </FooterWrapper>
   );
 }

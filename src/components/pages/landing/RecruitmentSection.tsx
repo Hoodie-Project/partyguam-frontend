@@ -8,14 +8,14 @@ import { Txt } from '@/components/_atoms';
 export default function RecruitmentSection() {
   const sliderRef = useRef<Slider | null>(null);
 
-  const imageUrls = Array.from({ length: 12 }, (_, i) => `/images/landing/landing_recruit_${(i % 8) + 1}.png`);
+  const imageUrls = Array.from({ length: 24 }, (_, i) => `/images/landing/landing_recruit_${(i % 8) + 1}.png`);
   const sliderSettings = {
     infinite: true,
     speed: 5000,
     slidesToShow: 8,
     arrows: false,
     autoplay: true,
-    autoplaySpeed: 0,
+    autoplaySpeed: 10,
     cssEase: 'linear',
     pauseOnHover: false,
     swipe: false,
@@ -66,6 +66,11 @@ const StyledSlider = styled(Slider)`
   margin-top: 124px;
   margin-bottom: 159px;
   max-width: 100vw;
+
+  .slick-track {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+  }
 
   .slick-slide {
     width: 270px !important;
