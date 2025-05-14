@@ -9,17 +9,17 @@ export default function AlarmSection() {
     <SectionContainer>
       <Header>
         <Txt fontWeight="bold" fontSize={60} style={{ lineHeight: '140%' }}>
-          프로젝트의 시작은 Party Guham 과 함꼐!
+          프로젝트의 시작은 Party Guham 과 함께!
         </Txt>
         <Txt fontWeight="normal" fontSize={24} style={{ lineHeight: '140%', marginTop: '24px' }}>
-          파티구함 서비스 오픈 전에
+          파티구함 앱 서비스 오픈 전에
           <br />
           메일로 미리 알림을 받을 수 있어요!
         </Txt>
       </Header>
       <NotiButton>
-        <NotificationsNoneRoundedIcon style={{ width: '30px', height: '30px', marginRight: '8px' }} />
-        서비스 오픈 알림 받기
+        <NotificationsNoneRoundedIcon style={{ width: '30px', height: '30px', marginRight: '8px' }} />앱 서비스 오픈
+        알림 받기
       </NotiButton>
     </SectionContainer>
   );
