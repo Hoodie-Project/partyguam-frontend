@@ -105,7 +105,7 @@ export default function Header() {
       <HeaderWrapper>
         <HeaderLeft>
           <LogoButton onClick={handleClickLogo}>
-            <Image src="/images/logo_primary.png" alt="파티구함로고" width={134.48} height={50} />
+            <Image src="/images/logo/logo2_primary.png" alt="파티구함로고" width={134.48} height={50} />
           </LogoButton>
           <Menus />
         </HeaderLeft>

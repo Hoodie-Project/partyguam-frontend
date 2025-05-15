@@ -36,7 +36,7 @@ export default function LoginModal() {
         로그인
       </Txt>
       <Txt fontWeight="bold" fontSize={20} style={{ marginTop: 72, lineHeight: '140%' }}>
-        파티괌과 함께 <br /> 파티에 참여할 준비가 되었나요?
+        파티구함과 함께 <br /> 파티에 참여할 준비가 되었나요?
       </Txt>
       <Txt fontWeight="normal" fontSize={16}>
         소셜 로그인으로 편하게 이용해 보세요.

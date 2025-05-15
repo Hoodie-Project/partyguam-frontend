@@ -20,6 +20,7 @@ const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT
 
 export default function MyPagePreviewModal() {
   const [visibleItemsCount, setVisibleItemsCount] = useState(3); // 초기 표시할 아이템 개수
+  const [참여중파티, set참여중파티] = useState<number | undefined>(0);
 
   const { modalData, closeModal } = useModalContext();
   const { onCancel } = modalData;
@@ -60,6 +61,7 @@ export default function MyPagePreviewModal() {
         sort: 'createdAt',
         order: 'DESC',
       });
+      set참여중파티(res?.total);
 
       return res;
     },
@@ -179,55 +181,57 @@ export default function MyPagePreviewModal() {
                   />
                 </SFlexRow>
               </SFlexRow>
-              <SFlexRow style={{ alignItems: 'center' }}>
-                <SFlexRow style={{ gap: '8px' }}>
-                  {/* 년수 */}
-                  <Chip
-                    chipType="filled"
-                    chipColor="grey100"
-                    label={`${user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`}
-                    chipStyle={{
-                      fontSize: '16px',
-                      width: 'auto',
-                      height: '24px',
-                      padding: '4px 10px',
-                      boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                      cursor: 'initial',
-                    }}
-                  />
-                  {/* 주포지션 */}
-                  <Chip
-                    chipType="filled"
-                    chipColor="grey100"
-                    label={
-                      <>
-                        <Txt fontSize={16}>
-                          {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
-                        </Txt>
-                        <div
-                          style={{
-                            width: '2px',
-                            height: '12px',
-                            backgroundColor: '#999999',
-                            margin: '0px 6px 0px 6px',
-                            borderRadius: '12px',
-                          }}
-                        />
-                        <Txt fontSize={16}>
-                          {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
-                        </Txt>
-                      </>
-                    }
-                    chipStyle={{
-                      width: 'auto',
-                      height: '24px',
-                      padding: '4px 10px',
-                      boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
-                      cursor: 'initial',
-                    }}
-                  />
+              {user.userCareers.filter(item => item.careerType !== 'primary')[0] && (
+                <SFlexRow style={{ alignItems: 'center' }}>
+                  <SFlexRow style={{ gap: '8px' }}>
+                    {/* 년수 */}
+                    <Chip
+                      chipType="filled"
+                      chipColor="grey100"
+                      label={`${user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`}
+                      chipStyle={{
+                        fontSize: '16px',
+                        width: 'auto',
+                        height: '24px',
+                        padding: '4px 10px',
+                        boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
+                        cursor: 'initial',
+                      }}
+                    />
+                    {/* 주포지션 */}
+                    <Chip
+                      chipType="filled"
+                      chipColor="grey100"
+                      label={
+                        <>
+                          <Txt fontSize={16}>
+                            {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
+                          </Txt>
+                          <div
+                            style={{
+                              width: '2px',
+                              height: '12px',
+                              backgroundColor: '#999999',
+                              margin: '0px 6px 0px 6px',
+                              borderRadius: '12px',
+                            }}
+                          />
+                          <Txt fontSize={16}>
+                            {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
+                          </Txt>
+                        </>
+                      }
+                      chipStyle={{
+                        width: 'auto',
+                        height: '24px',
+                        padding: '4px 10px',
+                        boxShadow: '0px 1px 4px -1px rgba(17, 17, 17, 0.08)',
+                        cursor: 'initial',
+                      }}
+                    />
+                  </SFlexRow>
                 </SFlexRow>
-              </SFlexRow>
+              )}
             </SFlexColumn>
           )}
           {user.portfolio && (
@@ -319,7 +323,7 @@ export default function MyPagePreviewModal() {
               참여 파티 목록
             </Txt>
             <Txt fontWeight="semibold" fontSize={18} fontColor="greenDark100">
-              4
+              {참여중파티}
             </Txt>
             <Txt fontWeight="semibold" fontSize={18}>
               건
