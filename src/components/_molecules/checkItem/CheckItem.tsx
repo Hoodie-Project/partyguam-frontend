@@ -42,9 +42,14 @@ function CheckItem({
       {...divAttributes}
       style={pointer ? { cursor: 'pointer' } : { cursor: 'not-allowed' }}
     >
-      <LabelDiv isClick={isClick}>
+      <LabelDiv isClick={isClick} style={pointer ? { cursor: 'pointer' } : { cursor: 'not-allowed' }}>
         {isClick ? <CheckCircleRoundedIcon fontSize="medium" /> : <CheckCircleOutlineRoundedIcon fontSize="medium" />}
-        <Txt fontSize={16} fontWeight={isClick ? 'bold' : 'normal'} fontColor="black">
+        <Txt
+          fontSize={16}
+          fontWeight={isClick ? 'bold' : 'normal'}
+          fontColor="black"
+          style={pointer ? { cursor: 'pointer' } : { cursor: 'not-allowed' }}
+        >
           {label}
         </Txt>
       </LabelDiv>
