@@ -24,7 +24,7 @@ import MyPersonalitySection from './MyPersonalitySection';
 import { MyTimeSection } from './MyTimeSection';
 
 function MyProfile() {
-  const { login, setAuth, setBirthVisible, setGenderVisible } = useAuthStore();
+  const { login, setAuth, setBirthVisible, setGenderVisible, setUserImageUrl } = useAuthStore();
   const user = useAuthStore();
   const [userImage, setUserImage] = useState<File | null>(null);
   const [isVisible, setIsVisible] = useState({ gender: user.genderVisible, birth: user.birthVisible });
@@ -148,6 +148,8 @@ function MyProfile() {
       const res = await fetchPatchUsers(formData);
       setBirthVisible(res.birthVisible);
       setGenderVisible(res.genderVisible);
+      setUserImageUrl(res.image);
+      setUserImage(null);
     } catch (error) {
       console.error('handleSubmitPatchUser : ', error);
     }

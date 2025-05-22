@@ -138,7 +138,11 @@ export default function MyPagePreviewModal() {
                   <Chip
                     chipType="filled"
                     chipColor="greenLight400"
-                    label={`${user.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`}
+                    label={
+                      user.userCareers.filter(item => item.careerType === 'primary')[0]?.years === 0
+                        ? '신입'
+                        : `${user.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`
+                    }
                     chipStyle={{
                       fontSize: '16px',
                       width: 'auto',
@@ -188,7 +192,11 @@ export default function MyPagePreviewModal() {
                     <Chip
                       chipType="filled"
                       chipColor="grey100"
-                      label={`${user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`}
+                      label={
+                        user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years === 0
+                          ? '신입'
+                          : `${user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`
+                      }
                       chipStyle={{
                         fontSize: '16px',
                         width: 'auto',
@@ -198,7 +206,7 @@ export default function MyPagePreviewModal() {
                         cursor: 'initial',
                       }}
                     />
-                    {/* 주포지션 */}
+                    {/* 부포지션 */}
                     <Chip
                       chipType="filled"
                       chipColor="grey100"

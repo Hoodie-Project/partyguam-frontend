@@ -338,7 +338,7 @@ function PartyRecruitEdit() {
               onChange={handleInputChange('content')}
               onClear={() => setEditPartyRecruitForm({ ...editPartyRecruitForm, content: '' })}
               value={editPartyRecruitForm.content}
-              placeholder="안녕하세요👋 앱 개발자 팀원을 모집하고 있씁니다!
+              placeholder="안녕하세요👋 앱 개발자 팀원을 모집하고 있습니다!
             &#13;&#10;저희 팀의 앱 개발 담당 팀원이 회사 업무로 인해 프로젝트에 참여할 수 없게 되어, 새로운 팀원을 모집하게 되었습니다.
             &#13;&#10;현재 앱 개발은 Flutter를 사용하여 회원가입, 추가 회원 정보 기입, 로그인 기능까지 구현된 상태입니다.
             &#13;&#10;앱이 많이 진행된 상황이 아니기에 앱 프로젝트에 관심이 있으신 분들은 Flutter 경험이 없더라도, Android(Kotlin) 또는 iOS(Swift) 가능하시면, Android 또는 iOS 개발자로 지원하셔도 됩니다."

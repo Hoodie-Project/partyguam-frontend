@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Avatar from 'boring-avatars';
 
 import { fetchDeleteNotification, fetchPatchReadNotification, type NotificationType } from '@/apis/notifications';
 import KebabMenu from '@/assets/icon/kebab-menu.svg';
 import { Chip, Txt } from '@/components/_atoms';
 import { DropdownV2 } from '@/components/_molecules/dropdown';
-
 import { SFlexColumn, SFlexRow, SFlexRowCenter } from '@/styles/components';
 import { formatRelativeTime } from '@/utils/date';
 
@@ -100,6 +99,14 @@ export default function NotificationModal({ notificationData, onClose, filter, s
             <NotiText>최근 14일 동안의 알림만 확인 가능합니다.</NotiText>
           </ModalHeader>
           <NotificationWrapper>
+            {notificationData.length === 0 && (
+              <EmptyState>
+                <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+                <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+                  새로운 알림이 없어요.
+                </Txt>
+              </EmptyState>
+            )}
             {notificationData.map(item => {
               return (
                 <NotificationBox
@@ -314,4 +321,14 @@ const ImageWrapper = styled.div<{ isRead: boolean }>`
     position: relative;
     z-index: 0;
   }
+`;
+
+const EmptyState = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #767676;
+  margin-top: 76px;
 `;
