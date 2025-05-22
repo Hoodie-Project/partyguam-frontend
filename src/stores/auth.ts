@@ -28,6 +28,7 @@ type AuthAction = {
   logout: () => void;
   setAuth: (newAuth: Partial<Auth>) => void;
   setBirthVisible: (birthVisible: boolean) => void;
+  setUserImageUrl: (image: string) => void;
   setGenderVisible: (genderVisible: boolean) => void;
   setUserPersonalities: (personalities: Auth['userPersonalities']) => void;
   setUserCareers: (careers: Auth['userCareers']) => void;
@@ -50,6 +51,7 @@ export const useAuthStore = create(
         }),
       setAccountRecovery: () => set({ isAccountRecovery: true }),
       setAuth: (newAuth: Partial<Auth>) => set(state => ({ ...state, ...newAuth })),
+      setUserImageUrl: (image: string) => set(state => ({ ...state, image })),
       setBirthVisible: (birthVisible: boolean) => set(state => ({ ...state, birthVisible })),
       setGenderVisible: (genderVisible: boolean) => set(state => ({ ...state, genderVisible })),
       setUserPersonalities: personalities => set(state => ({ ...state, userPersonalities: personalities })),
