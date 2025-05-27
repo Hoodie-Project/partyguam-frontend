@@ -2,9 +2,73 @@ import React from 'react';
 import styled from '@emotion/styled';
 import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneRounded';
 
+import { fetchPostUsersAppOpen } from '@/apis/auth';
 import { Txt } from '@/components/_atoms';
+import { ConfirmModal, LoginModal } from '@/components/features';
+import { useModalContext } from '@/contexts/ModalContext';
+import { useAuthStore } from '@/stores/auth';
 
 export default function AlarmSection() {
+  const { openModal, closeModal } = useModalContext();
+  const { isLoggedIn } = useAuthStore(state => ({
+    isLoggedIn: state.isLoggedIn,
+  }));
+
+  const handleClick = async () => {
+    const result = await fetchPostUsersAppOpen();
+
+    if (!isLoggedIn) {
+      openModal({ children: <LoginModal /> });
+    }
+
+    switch (result?.status) {
+      case 201:
+        openModal({
+          children: (
+            <ConfirmModal
+              modalTitle="알림 신청 완료"
+              modalContents={
+                <>
+                  곧 파티 구함 앱 서비스
+                  <br />
+                  오픈 소식을 메일로 받아보실 수 있어요!
+                </>
+              }
+              submitBtnTxt="닫기"
+            />
+          ),
+          onSubmit: () => {
+            closeModal();
+          },
+        });
+        break;
+      case 409:
+        openModal({
+          children: (
+            <ConfirmModal
+              modalTitle="알림 중복 신청"
+              modalContents={
+                <>
+                  이미 파티 구함 앱 서비스
+                  <br />
+                  오픈 소식 알림을 신청했어요!
+                </>
+              }
+              submitBtnTxt="닫기"
+            />
+          ),
+          onSubmit: () => {
+            closeModal();
+          },
+        });
+        break;
+      case 401:
+        openModal({ children: <LoginModal /> });
+        break;
+      default:
+        <> </>;
+    }
+  };
   return (
     <SectionContainer>
       <Header>
@@ -17,7 +81,7 @@ export default function AlarmSection() {
           메일로 미리 알림을 받을 수 있어요!
         </Txt>
       </Header>
-      <NotiButton>
+      <NotiButton onClick={() => handleClick()}>
         <NotificationsNoneRoundedIcon style={{ width: '30px', height: '30px', marginRight: '8px' }} />앱 서비스 오픈
         알림 받기
       </NotiButton>
