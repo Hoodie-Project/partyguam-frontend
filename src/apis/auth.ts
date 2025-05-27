@@ -256,6 +256,18 @@ const fetchPostUsersRecover = async () => {
   }
 };
 
+const fetchPostUsersAppOpen = async (): Promise<{ status: number; data: any }> => {
+  try {
+    const response = await privateApi.post('/users/app-open');
+    return { status: response.status, data: response.data };
+  } catch (error: any) {
+    return {
+      status: error?.status ?? 500,
+      data: error?.data ?? null,
+    };
+  }
+};
+
 export {
   fetchGetOauthInfo,
   fetchGetUsers,
@@ -264,6 +276,7 @@ export {
   fetchJoinFormSubmit,
   fetchNicknameDuplicated,
   fetchPostAccessToken,
+  fetchPostUsersAppOpen,
   fetchPostUsersMeOauthLink,
   fetchPostUsersRecover,
   fetchUserAuthority,
