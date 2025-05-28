@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
-import { fetchGetNotifications } from '@/apis/notifications';
+import { fetchGetNotifications, fetchPatchNotificationsCheck } from '@/apis/notifications';
 
 export function useNotificationModal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,8 +33,9 @@ export function useNotificationModal() {
     }
   }, [inView, hasNextPage, fetchNextPage]);
 
-  const open = () => {
+  const open = async () => {
     setIsOpen(true);
+    await fetchPatchNotificationsCheck();
     refetch();
   };
 
