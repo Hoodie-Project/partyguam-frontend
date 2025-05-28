@@ -72,3 +72,33 @@ export const fetchDeleteNotification = async (notificationId: number): Promise<v
     throw error;
   }
 };
+
+export interface GetNotificationsCheckResponse {
+  hasUnchecked: boolean;
+}
+
+/**
+ * 알림 체크 상태 확인
+ */
+export const fetchGetNotificationsCheck = async (): Promise<GetNotificationsCheckResponse> => {
+  try {
+    const res = await privateApi.get(`/notifications/check`);
+    return res.data as GetNotificationsCheckResponse;
+  } catch (err) {
+    console.error('fetchGetNotificationsCheck error: ', err);
+    throw err;
+  }
+};
+
+/**
+ * 사용자 알림 전체 체크 처리
+ */
+export const fetchPatchNotificationsCheck = async () => {
+  try {
+    const res = await privateApi.patch(`/notifications/check`);
+    return res;
+  } catch (err) {
+    console.error('fetchGetNotificationsCheck error: ', err);
+    throw err;
+  }
+};

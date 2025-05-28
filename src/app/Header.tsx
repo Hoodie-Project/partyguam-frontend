@@ -1,12 +1,14 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import { getCookie } from 'cookies-next';
 
 import { fetchPostAccessToken } from '@/apis/auth';
+import { fetchGetNotificationsCheck } from '@/apis/notifications';
+import NotificationsNewIcon from '@/assets/icon/notification-new.svg';
+import NotificationsNoneIcon from '@/assets/icon/notification-none.svg';
 import { Dropdown, Menus } from '@/components/_molecules';
 import { ConfirmModal, LoginModal } from '@/components/features';
 import NotificationModal from '@/components/features/notificationModal';
@@ -18,6 +20,9 @@ import { palette, zIndex } from '@/styles';
 
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
+
+  const [hasNewNotification, setHasNewNotification] = useState(false);
 
   const { openModal, closeModal } = useModalContext();
   const { isFormDirty, formType } = useFormContext();
@@ -36,6 +41,21 @@ export default function Header() {
     login: state.login,
     logout: state.logout,
   }));
+
+  useEffect(() => {
+    const fetchNotificationStatus = async () => {
+      try {
+        const res = await fetchGetNotificationsCheck();
+        setHasNewNotification(res.hasUnchecked);
+      } catch (err) {
+        console.error('알림 상태 확인 실패', err);
+      }
+    };
+
+    if (isLoggedIn) {
+      fetchNotificationStatus();
+    }
+  }, [pathname, isLoggedIn]);
 
   const setAccessToken = async () => {
     const res = await fetchPostAccessToken();
@@ -112,10 +132,18 @@ export default function Header() {
 
         <HeaderRight>
           {isLoggedIn && <CircleButton onClick={() => router.push('/party/create')}>파티 생성하기 +</CircleButton>}
-          <NotificationsNoneIcon
-            onClick={handleOpenNotificationModal}
-            style={{ width: '28px', height: '28px', marginRight: '20px', cursor: 'pointer' }}
-          />
+          {isLoggedIn &&
+            (hasNewNotification ? (
+              <NotificationsNewIcon
+                onClick={handleOpenNotificationModal}
+                style={{ width: '28px', height: '28px', marginRight: '20px', cursor: 'pointer' }}
+              />
+            ) : (
+              <NotificationsNoneIcon
+                onClick={handleOpenNotificationModal}
+                style={{ width: '28px', height: '28px', marginRight: '20px', cursor: 'pointer' }}
+              />
+            ))}
           {isNotificationModalOpen && (
             <NotificationModal
               notificationData={notificationData}
