@@ -425,8 +425,8 @@ export const fetchBatchDeletePartyUsers = async ({
 // [POST] 파티장 위임
 export const fetchDelegateParty = async ({ partyId, delegateUserId }: { partyId: number; delegateUserId: number }) => {
   try {
-    const response = await privateApi.post(`/parties/${partyId}/admin/delegation`, {
-      delegateUserId,
+    const response = await privateApi.patch(`/parties/${partyId}/admin/delegation`, {
+      partyUserId: delegateUserId,
     });
     return response.data;
   } catch (error) {
