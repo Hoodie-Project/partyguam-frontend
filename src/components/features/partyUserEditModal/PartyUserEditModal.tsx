@@ -200,6 +200,7 @@ export default function PartyUserEditModal({ partyId, user, authority, position 
             ),
             onSubmit: () => {
               closeModal();
+              window.location.reload();
             },
           });
         }
