@@ -16,7 +16,7 @@ import { Divider, SFlexColumn, SFlexColumnCenter, SFlexRow } from '@/styles/comp
 import { calculateAge } from '@/utils/date';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
-const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
 
 export default function MyPagePreviewModal() {
   const [visibleItemsCount, setVisibleItemsCount] = useState(3); // 초기 표시할 아이템 개수

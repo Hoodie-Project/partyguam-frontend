@@ -28,7 +28,7 @@ import type { Position } from '@/types/user';
 
 type StateType = any;
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
-const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
 
 // TODO. 데이터 정제 로직 걷어내고 query로 api 보내도록 변경 필요
 export const transformPositionData = (data: Position[]): { id: number; label: string }[] => {
