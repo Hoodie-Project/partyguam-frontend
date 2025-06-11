@@ -28,7 +28,7 @@ import { Divider, SContainer, SFlexRow } from '@/styles/components';
 import { formatRelativeTime } from '@/utils/date';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
-const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
 
 function MyApply() {
   const [isShowBalloon, setIsShowBalloon] = useState(false);

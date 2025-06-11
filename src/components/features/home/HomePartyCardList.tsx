@@ -14,7 +14,7 @@ import { fetchParties } from '@/apis/home';
 import { Chip, Square, Txt } from '@/components/_atoms';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
-const BASE_URL = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
+const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
 
 function HomePartyCardList() {
   const [page, setPage] = useState<number>(1);
