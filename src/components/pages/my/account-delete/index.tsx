@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { deleteCookie } from 'cookies-next';
 
 import { fetchUsersSignOut } from '@/apis/auth';
 import { Button, Txt } from '@/components/_atoms';
@@ -33,8 +32,7 @@ function MyAccountDelete() {
       await fetchUsersSignOut();
       logout();
       localStorage.removeItem('accessToken');
-      deleteCookie('refreshToken');
-      window.location.reload();
+      window.location.replace('/');
     } catch (error) {
       openModal({
         children: (
