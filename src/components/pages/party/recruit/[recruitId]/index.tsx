@@ -243,7 +243,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                     borderRadius: '12px',
                   }}
                   onClick={handleShareClick}
-                  disabled={Boolean(isReadOnly)}
+                  disabled={Boolean(isReadOnly) || partyRecruitDetailData?.status === 'completed'}
                 >
                   <Txt fontColor="grey500" fontSize={16}>
                     공유하기
@@ -275,6 +275,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                 <Button
                   backgroudColor="white"
                   borderColor="grey200"
+                  disabled={partyRecruitDetailData?.status === 'completed'}
                   onClick={() =>
                     router.push(
                       `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${recruitId}&main=${partyRecruitDetailData?.position.main}&sub=${partyRecruitDetailData?.position.sub}`,
@@ -352,7 +353,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
             position="flex-start"
             style={{ padding: '28px' }}
           >
-            <Txt fontSize={16} style={{ whiteSpace: 'pre-wrap' }}>
+            <Txt fontSize={16} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
               {!Boolean(pageModalType) && `${partyRecruitDetailData?.content}`}
               {Boolean(pageModalType) && `${editPartyRecruitForm.content}`}
             </Txt>

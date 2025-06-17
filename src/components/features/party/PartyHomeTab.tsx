@@ -27,7 +27,15 @@ function PartyHomeTab({ partyIntro }: Props) {
           position="flex-start"
           style={{ padding: '28px' }}
         >
-          <Txt fontSize={16}>{partyIntro}</Txt>
+          <Txt
+            fontSize={16}
+            style={{
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+            }}
+          >
+            {partyIntro}
+          </Txt>
         </Square>
       </SFlexColumnFull>
     </PartyHomeTabContainer>
