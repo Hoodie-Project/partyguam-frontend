@@ -186,7 +186,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         data={{ nodes: partyRecruitmentApplicationsWithId ?? [] }}
         theme={theme}
         layout={{ custom: true }}
-        style={{ width: '100%', zIndex: 0, marginTop: '32px', marginBottom: '20px' }}
+        style={{ width: '100%', minHeight:'500px', height: 'auto', zIndex: 0, marginTop: '32px', marginBottom: '20px' }}
       >
         {(tableList: PartyApplicationUser[]) => (
           <>
@@ -229,10 +229,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                         onClose={() => {
                           setIsShowBalloon(false);
                         }}
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'flex-start',
-                          flexDirection: 'column',
+                        style={{ 
                           position: 'absolute',
                           top: '40px',
                           padding: '20px',
@@ -242,31 +239,44 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                           borderRadius: '12px',
                           textAlign: 'start',
                         }}
+                        iconStyle={{
+                          position: 'absolute',
+                          top: '10px',
+                          right: '10px',
+                          width: '12px',
+                          height: '12px',
+                          cursor: 'pointer',
+                          fill: 'white',
+                          marginLeft: '4px',
+                          zIndex: 10
+                        }}
                       >
-                        <div style={{ width: '100%', textAlign: 'start', marginBottom: '12px' }}>
-                          <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
-                            상태
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column'}} >
+                          <div style={{ width: '100%', textAlign: 'start', marginBottom: '12px' }}>
+                            <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
+                              상태
+                            </Txt>
+                            <Txt fontSize={16} fontColor="white" fontWeight="semibold">
+                              에 대해 알려드릴게요
+                            </Txt>
+                          </div>
+                          <Txt fontSize={14} fontColor="white" style={{ lineHeight: '140%' }}>
+                            검토중 : 지원서 확인 전이에요.
+                            <br />
+                            응답대기 : 파티장 수락 후, 지원자의 수락을 기다려요.
+                            <br />
+                            수락 : 파티장과 지원자 모두 수락했어요.
+                            <br />
+                            거절 : 파티장 또는 지원자가 거절했어요.
                           </Txt>
-                          <Txt fontSize={16} fontColor="white" fontWeight="semibold">
-                            에 대해 알려드릴게요
+                          <Txt
+                            fontSize={14}
+                            fontColor="greenLight100"
+                            style={{ width: '100%', textAlign: 'start', marginTop: '20px' }}
+                          >
+                            일주일 이내 상대방이 수락하지 않으면 거절됩니다
                           </Txt>
                         </div>
-                        <Txt fontSize={14} fontColor="white" style={{ lineHeight: '140%' }}>
-                          검토중 : 지원서 확인 전이에요.
-                          <br />
-                          응답대기 : 파티장 수락 후, 지원자의 수락을 기다려요.
-                          <br />
-                          수락 : 파티장과 지원자 모두 수락했어요.
-                          <br />
-                          거절 : 파티장 또는 지원자가 거절했어요.
-                        </Txt>
-                        <Txt
-                          fontSize={14}
-                          fontColor="greenLight100"
-                          style={{ width: '100%', textAlign: 'start', marginTop: '20px' }}
-                        >
-                          일주일 이내 상대방이 수락하지 않으면 거절됩니다
-                        </Txt>
                       </Balloon>
                     ) : (
                       <></>
