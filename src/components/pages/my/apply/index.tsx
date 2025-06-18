@@ -212,7 +212,7 @@ function MyApply() {
             data={{ nodes: myPartyApplicationsById ?? [] }}
             theme={theme}
             layout={{ custom: true }}
-            style={{ width: '100%', height: 'auto', zIndex: 0, marginBottom: '20px' }}
+            style={{ width: '100%', minHeight:'500px', height: 'auto', zIndex: 0, marginBottom: '20px' }}
           >
             {(tableList: PartyApplication[]) => (
               <>
@@ -264,6 +264,17 @@ function MyApply() {
                               zIndex: 999,
                               borderRadius: '12px',
                               textAlign: 'start',
+                            }}
+                            iconStyle={{
+                              position: 'absolute',
+                              top: '10px',
+                              right: '10px',
+                              width: '12px',
+                              height: '12px',
+                              cursor: 'pointer',
+                              fill: 'white',
+                              marginLeft: '4px',
+                              zIndex: 10,
                             }}
                           >
                             <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column' }}>
