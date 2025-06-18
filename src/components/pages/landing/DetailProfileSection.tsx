@@ -25,14 +25,13 @@ export default function DetailProfileSection() {
 }
 
 const Container = styled.div`
-  height: 1184px;
+  height: auto;
 `;
 
 const Header = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-  background-color: white;
   padding: 136px 0px 50px;
   text-align: center;
 `;

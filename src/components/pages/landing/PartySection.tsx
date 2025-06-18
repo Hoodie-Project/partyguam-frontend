@@ -27,8 +27,7 @@ const SectionContainer = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 1559px;
-  background-color: #ffffff;
+  height: auto;
 `;
 
 const Header = styled.div`
