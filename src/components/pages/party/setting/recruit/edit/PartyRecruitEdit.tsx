@@ -7,6 +7,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { fetchGetPositions } from '@/apis/detailProfile';
 import {
   fetchCompletePartyRecruitment,
+  fetchGetSingleParty,
   fetchPartyRecruitmentDetails,
   fetchPostRecruitmentParty,
   fetchUpdatePartyRecruitment,
@@ -17,6 +18,7 @@ import { ConfirmModal } from '@/components/features';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
+import type { SinglePartyResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 
 import PartyRecruitDetail from '../../../recruit/[recruitId]';
@@ -46,6 +48,8 @@ function PartyRecruitEdit() {
   const { editPartyRecruitForm, setEditPartyRecruitForm } = useEditPartyRecruitForm();
 
   const [positionData, setPositionData] = useState<Position[]>([]);
+  const [singlePartyData, setSinglePartyData] = useState<SinglePartyResponse | null>(null);
+
   const positionList = useMemo(() => transformPositionData(positionData), [positionData]);
 
   const 모집소개글InputState = useMemo(() => {
@@ -58,6 +62,12 @@ function PartyRecruitEdit() {
     (async () => {
       const response = await fetchGetPositions();
       setPositionData(response);
+    })();
+    (async () => {
+      if (partyId) {
+        const partyData = await fetchGetSingleParty(Number(partyId));
+        setSinglePartyData(partyData);
+      }
     })();
 
     if (pageType === 'MODIFY' && recruitId) {
@@ -79,7 +89,7 @@ function PartyRecruitEdit() {
         }
       })();
     }
-  }, [pageType, recruitId, setEditPartyRecruitForm]);
+  }, [pageType, partyId, recruitId, setEditPartyRecruitForm]);
 
   const handleSelectChange =
     (field: string, options?: { id: number; label: string }[]) => (e: React.MouseEvent<HTMLLIElement>) => {
@@ -195,6 +205,7 @@ function PartyRecruitEdit() {
             recruitId={recruitId.toString()}
             isReadOnly={true}
             pageModalType={pageType?.toString() as 'ADD' | 'MODIFY'}
+            singlePartyData={singlePartyData}
           />
         </PreviewModalContainer>
       ),
@@ -369,7 +380,7 @@ function PartyRecruitEdit() {
             radius="base"
             shadow="shadow2"
             borderColor="primaryGreen"
-            onClick={() => onClick미리보기Button(Number(partyId))}
+            onClick={() => onClick미리보기Button(Number(recruitId))}
           >
             <Txt fontWeight="bold">미리보기</Txt>
           </Button>

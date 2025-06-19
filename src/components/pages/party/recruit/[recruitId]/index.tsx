@@ -13,11 +13,12 @@ import { fetchGetPartyRecruitments } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import Button from '@/components/_atoms/button';
 import { LoginModal } from '@/components/features';
+import { RENDER_PARTY_STATE } from '@/constants/party';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
-import type { PartyRecruitDetailResponse } from '@/types/party';
+import type { PartyRecruitDetailResponse, SinglePartyResponse } from '@/types/party';
 import { formatDate } from '@/utils/date';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
@@ -30,27 +31,10 @@ type PageParams = {
 type PartyRecruitProps = {
   isReadOnly?: boolean;
   pageModalType?: 'ADD' | 'MODIFY';
+  singlePartyData?: SinglePartyResponse | null; // 모집공고 미리보기시 파티 정보 읽기 위함함
 } & PageParams;
 
-// 파티 상태 칩
-const renderPartyState = (stateTag: string) => {
-  return {
-    진행중: {
-      fontColor: '#016110',
-      backgroundColor: '#D5F0E3',
-    },
-    모집중: {
-      fontColor: '#ef6400',
-      backgroundColor: '#fff1dc',
-    },
-    파티종료: {
-      fontColor: '#ffffff',
-      backgroundColor: '#505050',
-    },
-  }[stateTag];
-};
-
-function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecruitProps) {
+function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyData }: PartyRecruitProps) {
   const [partyRecruitDetailData, setPartyRecruitDetailData] = useState<PartyRecruitDetailResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
   const [userAuthorityInfo, setUserAuthorityInfo] = useState<UserAuthorityResponse | null>(null);
@@ -152,24 +136,19 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
               {/* 파티 모집중 칩 */}
               <Chip
                 size="small"
-                label={
-                  !Boolean(pageModalType) && partyRecruitDetailData?.party.status === 'active' ? '진행중' : '파티종료'
-                }
+                label={singlePartyData?.status === 'active' ? '진행중' : '파티종료'}
                 chipType="filled"
                 chipColor={
-                  renderPartyState(partyRecruitDetailData?.party.status === 'active' ? '진행중' : '파티종료')
-                    ?.backgroundColor
+                  RENDER_PARTY_STATE(singlePartyData?.status === 'active' ? '진행중' : '파티종료')?.backgroundColor
                 }
-                fontColor={
-                  renderPartyState(partyRecruitDetailData?.party.status === 'active' ? '진행중' : '파티종료')?.fontColor
-                }
+                fontColor={RENDER_PARTY_STATE(singlePartyData?.status === 'active' ? '진행중' : '파티종료')?.fontColor}
                 fontWeight="semibold"
                 shadow="shadow1"
               />
               {/* 파티 타입 칩 */}
               <Chip
                 size="small"
-                label="포트폴리오"
+                label={singlePartyData?.partyType.type}
                 chipType="filled"
                 chipColor="#F6F6F6"
                 fontColor="grey700"
@@ -183,19 +162,20 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
               style={{ cursor: 'pointer' }}
               onClick={() => router.push(`/party/${partyId}`)}
             >
-              {partyRecruitDetailData?.party.title}
+              {Boolean(pageModalType) ? singlePartyData?.title : partyRecruitDetailData?.party.title}
             </Txt>
             <PartyInfoWrapper>
               <PartyInfo>
-                {partyRecruitDetailData?.status === 'active' && (
+                {singlePartyData?.status === 'active' && (
                   <>
                     <Txt fontColor="grey500" fontSize={16}>
                       모집중
                     </Txt>
                     <Txt fontColor="failRed" fontSize={16}>
-                      {Boolean(pageModalType) && `0 / ${editPartyRecruitForm?.recruiting_count}`}
+                      {Boolean(pageModalType) &&
+                        `0 / ${pageModalType === 'ADD' ? '0' : editPartyRecruitForm?.recruiting_count}`}
                       {!Boolean(pageModalType) &&
-                        `${partyRecruitDetailData?.recruitedCount} / ${partyRecruitDetailData?.recruitingCount}`}
+                        `${partyRecruitDetailData?.recruitedCount} / ${pageModalType === 'ADD' ? '0' : partyRecruitDetailData?.recruitingCount}`}
                     </Txt>
                   </>
                 )}
@@ -210,22 +190,23 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType }: PartyRecru
                   </>
                 )}
               </PartyInfo>
+
               <PartyInfo>
                 <Txt fontColor="grey500" fontSize={16}>
                   지원자
                 </Txt>
                 <Txt fontColor="greenDark100" fontSize={16}>
-                  {partyRecruitDetailData?.applicationCount}
-                  {Boolean(pageModalType) && 0}
+                  {pageModalType === 'ADD' ? '0' : partyRecruitDetailData?.applicationCount}
                 </Txt>
               </PartyInfo>
+
               <PartyInfo>
                 <Txt fontColor="grey500" fontSize={16}>
                   모집일
                 </Txt>
                 <Txt fontColor="black" fontSize={16}>
                   {!Boolean(pageModalType) && formattedDate}
-                  {Boolean(pageModalType) && formatDate(String(new Date()))}
+                  {Boolean(pageModalType) && formatDate(singlePartyData?.createdAt ?? String(new Date()))}
                 </Txt>
               </PartyInfo>
             </PartyInfoWrapper>

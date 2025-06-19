@@ -1,6 +1,22 @@
-import type { PartyApplicationData, PartyUserListByAdminResponse, PartyUserResponse } from '@/types/party';
+import type {
+  PartyApplicationData,
+  PartyUserListByAdminResponse,
+  PartyUserResponse,
+  SinglePartyResponse,
+} from '@/types/party';
 
 import { fileUploadApi, privateApi, publicApi } from '.';
+
+// 파티 단일 조회
+export const fetchGetSingleParty = async (partyId: number): Promise<SinglePartyResponse | null> => {
+  try {
+    const response = await publicApi.get<SinglePartyResponse>(`/parties/${partyId}`);
+    return response.data;
+  } catch (error) {
+    console.error('fetchGetSingleParty error : ', error);
+    throw error;
+  }
+};
 
 // 파티 타입
 export const fetchGetPartyTypes = async () => {
