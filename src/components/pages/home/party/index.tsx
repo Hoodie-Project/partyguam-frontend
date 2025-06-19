@@ -504,6 +504,8 @@ const CircleButton = styled.button`
   padding: 8px 12px;
   color: #000000;
   font-size: 14px;
-  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  font-weight: 400;
   margin-left: 12px;
 `;
