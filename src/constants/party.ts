@@ -53,3 +53,20 @@ export const TRANSFORM_PARTY_APPLICANTS_STATUS = (status: string) => {
     거절: 'rejected',
   }[status];
 };
+
+export const RENDER_PARTY_STATE = (stateTag: string) => {
+  return {
+    진행중: {
+      fontColor: '#016110',
+      backgroundColor: '#D5F0E3',
+    },
+    모집중: {
+      fontColor: '#ef6400',
+      backgroundColor: '#fff1dc',
+    },
+    파티종료: {
+      fontColor: '#ffffff',
+      backgroundColor: '#505050',
+    },
+  }[stateTag];
+};
