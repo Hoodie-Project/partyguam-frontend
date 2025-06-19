@@ -1,3 +1,14 @@
+export interface SinglePartyResponse {
+  id: number;
+  partyType: PartyType;
+  title: string;
+  content: string;
+  image: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 // [GET] 파티 홈 - 홈탭
 export interface PartyHomeResponse {
   id: number;
