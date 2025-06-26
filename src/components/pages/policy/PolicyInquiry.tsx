@@ -15,6 +15,14 @@ function PolicyInquiry() {
         <SemiTItle>이메일</SemiTItle>
         <SMargin margin="4px 0px 0px 0px" />
         <Text>hoodiev.team@gmail.com</Text>
+        <SMargin margin="20px 0px 0px 0px" />
+        <SemiTItle>오픈카톡</SemiTItle>
+        <SMargin margin="4px 0px 0px 0px" />
+        <Text fontColor="#1a73e8">
+          <a href="https://open.kakao.com/o/g3Rt8GCh" target="_blank" rel="noopener noreferrer">
+            오픈카톡방 바로가기
+          </a>
+        </Text>
       </PolicyLayout>
     </SContainer>
   );
