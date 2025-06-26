@@ -212,7 +212,7 @@ function MyApply() {
             data={{ nodes: myPartyApplicationsById ?? [] }}
             theme={theme}
             layout={{ custom: true }}
-            style={{ width: '100%', minHeight:'500px', height: 'auto', zIndex: 0, marginBottom: '20px' }}
+            style={{ width: '100%', minHeight:'116px', height: 'auto', zIndex: 0, marginBottom: '20px' }}
           >
             {(tableList: PartyApplication[]) => (
               <>
@@ -256,8 +256,8 @@ function MyApply() {
                               setIsShowBalloon(false);
                             }}
                             style={{
-                              position: 'absolute',
-                              top: '40px',
+                              position: 'fixed',
+                              top: '310px',
                               padding: '20px',
                               transform: 'translate(12px, 0px)',
                               marginTop: '20px',

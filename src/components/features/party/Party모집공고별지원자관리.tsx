@@ -186,7 +186,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         data={{ nodes: partyRecruitmentApplicationsWithId ?? [] }}
         theme={theme}
         layout={{ custom: true }}
-        style={{ width: '100%', minHeight:'500px', height: 'auto', zIndex: 0, marginTop: '32px', marginBottom: '20px' }}
+        style={{ width: '100%', minHeight:'116px', height: 'auto', zIndex: 0, marginTop: '32px', marginBottom: '20px' }}
       >
         {(tableList: PartyApplicationUser[]) => (
           <>
@@ -230,8 +230,8 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                           setIsShowBalloon(false);
                         }}
                         style={{ 
-                          position: 'absolute',
-                          top: '40px',
+                          position: 'fixed',
+                          top: '310px',
                           padding: '20px',
                           transform: 'translate(12px, 0px)',
                           marginTop: '20px',
