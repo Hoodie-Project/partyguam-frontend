@@ -110,7 +110,10 @@ export default function MultiOptions({
           {options?.map((option, index) => (
             <OptionItem
               key={option.id}
-              onClick={() => handleOptionToggle?.(option)}
+              onClick={e => {
+                e.stopPropagation();
+                handleOptionToggle?.(option);
+              }}
               style={{
                 borderRadius:
                   parentOptions && index === 0
@@ -157,8 +160,11 @@ export default function MultiOptions({
                   {item.label}
                 </Txt>
                 <CloseRoundedIcon
-                  onClick={() => handleRemoveChip?.(item.id)}
-                  style={{ width: '16px', color: '#767676' }}
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleRemoveChip?.(item.id);
+                  }}
+                  style={{ width: '16px', color: '#767676', cursor: 'pointer' }}
                 />
               </ChipComponent>
             ))}
