@@ -364,14 +364,15 @@ function HomeParty() {
                 onClick={() => handleClickPartyCard(party.id)}
               >
                 <CardContentsWrapper>
-                  <Image
-                    src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
-                    width={255}
-                    height={180}
-                    alt={party.title}
-                    style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                  />
-
+                  <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Image
+                      src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
+                      width={255}
+                      height={180}
+                      alt={party.title}
+                      style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                    />
+                  </div>
                   <ChipWrapper>
                     <Chip
                       chipType="filled"
