@@ -5,6 +5,8 @@ import Emergency from '@/assets/icon/emergency.svg';
 import { Square, Txt } from '@/components/_atoms';
 import { ProfileImage } from '@/components/_molecules';
 import { useModalContext } from '@/contexts/ModalContext';
+
+import MyPagePreviewModal from '@/components/features/my/MyPagePreviewModal';
 import { SFlexRow } from '@/styles/components';
 import type { UserCareer } from '@/types/party';
 
@@ -58,7 +60,18 @@ function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
       borderColor="grey200"
     >
       <CardWrapper>
-        <ProfileImage imageUrl={user?.image} size={72} authority={authority} />
+        <ProfileImage
+          imageUrl={user?.image}
+          size={72}
+          authority={authority}
+          onClick={() => {
+            openModal({
+              children: <MyPagePreviewModal otherNickname={user?.nickname} />,
+            });
+            console.log(user?.nickname);
+          }}
+          style={{ cursor: 'pointer' }}
+        />
         <UserInfoContainer>
           <UserPositionWrapper>
             {authority != 'member' && (
