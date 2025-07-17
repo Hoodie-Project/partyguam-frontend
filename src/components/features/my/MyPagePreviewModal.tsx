@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -7,55 +7,106 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import { fetchGetUserByNickname, fetchGetUsersNicknameParties } from '@/apis/auth';
 import { fetchGetUsersMeParties } from '@/apis/detailProfile';
 import { Chip, Square, Txt } from '@/components/_atoms';
 import { ProfileImage } from '@/components/_molecules';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { Divider, SFlexColumn, SFlexColumnCenter, SFlexRow } from '@/styles/components';
+import type { UsersMeResponse } from '@/types/user';
 import { calculateAge } from '@/utils/date';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
 
-export default function MyPagePreviewModal() {
+type Props = {
+  otherNickname?: string;
+};
+
+export default function MyPagePreviewModal({ otherNickname }: Props) {
   const [visibleItemsCount, setVisibleItemsCount] = useState(3); // 초기 표시할 아이템 개수
   const [참여중파티, set참여중파티] = useState<number | undefined>(0);
+  const [otherUser, setOtherUser] = useState<UsersMeResponse>();
 
   const { modalData, closeModal } = useModalContext();
   const { onCancel } = modalData;
   const user = useAuthStore();
 
+  useEffect(() => {
+    if (otherNickname != null) {
+      (async () => {
+        try {
+          const res = await fetchGetUserByNickname(otherNickname);
+          setOtherUser(res);
+        } catch (e) {
+          console.log(e);
+        }
+      })();
+    }
+  }, [otherNickname]);
+
+  const newUser = useMemo(() => {
+    if (otherNickname) return otherUser;
+    return user;
+  }, [otherNickname, otherUser, user]);
+
   const userTime = useMemo(() => {
     // '시간'이 포함된 객체와 포함되지 않은 객체를 분리
-    const timeIncluded = user.userPersonalities.filter(
+    const timeIncluded = newUser?.userPersonalities.filter(
       personality => personality.personalityOption.personalityQuestion.id === 1,
     );
-    return timeIncluded.flatMap(personality => personality.personalityOption.content);
-  }, [user]);
+    return timeIncluded?.flatMap(personality => personality.personalityOption.content);
+  }, [newUser]);
 
   const userPersonalities = useMemo(() => {
-    const timeExcluded = user.userPersonalities.filter(
+    const timeExcluded = newUser?.userPersonalities.filter(
       personality => personality.personalityOption.personalityQuestion.id !== 1,
     );
-    return timeExcluded.flatMap(personality => personality.personalityOption.content);
-  }, [user]);
+    return timeExcluded?.flatMap(personality => personality.personalityOption.content);
+  }, [newUser]);
 
   const onCancelInternal = () => {
     onCancel?.();
     closeModal();
   };
 
-  // [GET] 포지션 모집 공고별 지원자 조회
   const {
     data: myPartyList,
     hasNextPage,
     fetchNextPage,
-    isFetched,
   } = useInfiniteQuery({
-    queryKey: [],
+    queryKey: ['myPartyList'],
     queryFn: async ({ pageParam }) => {
       const res = await fetchGetUsersMeParties({
+        page: pageParam as number,
+        limit: 10,
+        sort: 'createdAt',
+        order: 'DESC',
+      });
+      set참여중파티(res?.total);
+
+      return res;
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      const totalFetchedItems = allPages.flatMap(page => page?.partyUsers).length;
+
+      if (lastPage != null && totalFetchedItems < lastPage.total) {
+        return allPages.length + 1;
+      } else return null;
+    },
+  });
+
+  const {
+    data: othersPartyList,
+    hasNextPage: othersHasNextPage,
+    fetchNextPage: fetchOthersNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['othersPartyList', otherNickname],
+    queryFn: async ({ pageParam }) => {
+      const res = await fetchGetUsersNicknameParties({
+        nickname: otherNickname as string,
         page: pageParam as number,
         limit: 10,
         sort: 'createdAt',
@@ -78,12 +129,18 @@ export default function MyPagePreviewModal() {
   // infiniteQuery refetch 트리거
   const { ref } = useInView({
     onChange: inView => {
-      inView && hasNextPage && fetchNextPage();
+      if (!inView) return;
+      if (otherNickname) {
+        othersHasNextPage && fetchOthersNextPage();
+      } else {
+        hasNextPage && fetchNextPage();
+      }
     },
   });
 
   const handleShowMore = () => {
-    setVisibleItemsCount(myPartyList?.pages[0]?.total as number); // 추가로 3개 더 보여줌
+    const total = otherNickname ? othersPartyList?.pages.at(-1)?.total : myPartyList?.pages.at(-1)?.total;
+    setVisibleItemsCount(total ?? 3);
   };
 
   return (
@@ -108,15 +165,15 @@ export default function MyPagePreviewModal() {
         backgroundColor="white"
         style={{ display: 'flex', flexDirection: 'row', justifySelf: 'flex-start', gap: '24px', padding: '32px' }}
       >
-        <ProfileImage imageUrl={user.image || ''} size={120} />
+        <ProfileImage imageUrl={newUser?.image || ''} size={120} />
         <SFlexColumn>
           <SFlexRow style={{ alignItems: 'center' }}>
             <Txt fontWeight="semibold" fontSize={20} style={{ marginRight: '8px' }}>
-              {user.nickname}
+              {newUser?.nickname}
             </Txt>
-            {user.genderVisible && (
+            {newUser?.genderVisible && (
               <>
-                <Txt fontSize={16}>{user.gender === 'F' ? '여자' : '남자'}</Txt>
+                <Txt fontSize={16}>{newUser?.gender === 'F' ? '여자' : '남자'}</Txt>
                 <div
                   style={{
                     width: '2px',
@@ -128,9 +185,9 @@ export default function MyPagePreviewModal() {
                 />
               </>
             )}
-            {user.birthVisible && <Txt fontSize={16}>{calculateAge(user.birth)}</Txt>}
+            {newUser?.birthVisible && <Txt fontSize={16}>{calculateAge(newUser?.birth)}</Txt>}
           </SFlexRow>
-          {user.userCareers.length != 0 && (
+          {newUser?.userCareers.length != 0 && (
             <SFlexColumn style={{ marginTop: '12px', gap: '12px' }}>
               <SFlexRow style={{ alignItems: 'center' }}>
                 <SFlexRow style={{ gap: '8px' }}>
@@ -139,9 +196,9 @@ export default function MyPagePreviewModal() {
                     chipType="filled"
                     chipColor="greenLight400"
                     label={
-                      user.userCareers.filter(item => item.careerType === 'primary')[0]?.years === 0
+                      newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.years === 0
                         ? '신입'
-                        : `${user.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`
+                        : `${newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`
                     }
                     chipStyle={{
                       fontSize: '16px',
@@ -159,7 +216,7 @@ export default function MyPagePreviewModal() {
                     label={
                       <>
                         <Txt fontSize={16}>
-                          {user.userCareers.filter(item => item.careerType === 'primary')[0]?.position.main}
+                          {newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.position.main}
                         </Txt>
                         <div
                           style={{
@@ -171,7 +228,7 @@ export default function MyPagePreviewModal() {
                           }}
                         />
                         <Txt fontSize={16}>
-                          {user.userCareers.filter(item => item.careerType === 'primary')[0]?.position.sub}
+                          {newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.position.sub}
                         </Txt>
                       </>
                     }
@@ -185,7 +242,7 @@ export default function MyPagePreviewModal() {
                   />
                 </SFlexRow>
               </SFlexRow>
-              {user.userCareers.filter(item => item.careerType !== 'primary')[0] && (
+              {newUser?.userCareers.filter(item => item.careerType !== 'primary')[0] && (
                 <SFlexRow style={{ alignItems: 'center' }}>
                   <SFlexRow style={{ gap: '8px' }}>
                     {/* 년수 */}
@@ -193,9 +250,9 @@ export default function MyPagePreviewModal() {
                       chipType="filled"
                       chipColor="grey100"
                       label={
-                        user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years === 0
+                        newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.years === 0
                           ? '신입'
-                          : `${user.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`
+                          : `${newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`
                       }
                       chipStyle={{
                         fontSize: '16px',
@@ -213,7 +270,7 @@ export default function MyPagePreviewModal() {
                       label={
                         <>
                           <Txt fontSize={16}>
-                            {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
+                            {newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
                           </Txt>
                           <div
                             style={{
@@ -225,7 +282,7 @@ export default function MyPagePreviewModal() {
                             }}
                           />
                           <Txt fontSize={16}>
-                            {user.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
+                            {newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
                           </Txt>
                         </>
                       }
@@ -242,14 +299,14 @@ export default function MyPagePreviewModal() {
               )}
             </SFlexColumn>
           )}
-          {user.portfolio && (
+          {newUser?.portfolio && (
             <Link
-              href={user.portfolio}
+              href={newUser?.portfolio}
               target="_blank"
               passHref
               style={{ marginTop: '12px', color: '#0033FF', textDecoration: 'underline' }}
             >
-              {user.portfolioTitle || user.portfolio}
+              {newUser?.portfolioTitle || newUser?.portfolio}
             </Link>
           )}
         </SFlexColumn>
@@ -262,7 +319,7 @@ export default function MyPagePreviewModal() {
               관심 지역
             </Txt>
             <SFlexRow style={{ gap: '8px', marginTop: '16px', flexWrap: 'wrap' }}>
-              {user.userLocations.map(item => (
+              {newUser?.userLocations.map(item => (
                 <Chip
                   key={item.id}
                   chipType="filled"
@@ -312,16 +369,10 @@ export default function MyPagePreviewModal() {
             <div className="personality-container">
               {/* 왼쪽 리스트 */}
               <ul className="left-column">
-                {userPersonalities.slice(0, 3).map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
+                {userPersonalities?.slice(0, 3).map((item, i) => <li key={i}>{item}</li>)}
               </ul>
               {/* 오른쪽 리스트 */}
-              <ul className="right-column">
-                {userPersonalities.slice(3).map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
+              <ul className="right-column">{userPersonalities?.slice(3).map((item, i) => <li key={i}>{item}</li>)}</ul>
             </div>
           </Personality>
         </SFlexColumn>
@@ -339,7 +390,7 @@ export default function MyPagePreviewModal() {
           </SFlexRow>
 
           <PartyCardList>
-            {myPartyList?.pages.flatMap(page =>
+            {(otherNickname ? othersPartyList : myPartyList)?.pages.flatMap(page =>
               page?.partyUsers.slice(0, visibleItemsCount).map(party => (
                 <StyledSquare
                   key={party.id}
@@ -400,7 +451,7 @@ export default function MyPagePreviewModal() {
             <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
           </PartyCardList>
           <SFlexColumnCenter>
-            {visibleItemsCount !== myPartyList?.pages[0]?.total && (
+            {visibleItemsCount !== (otherNickname ? othersPartyList : myPartyList)?.pages[0]?.total && (
               <CircleButton onClick={handleShowMore}>
                 <Txt fontSize={14} fontColor="grey500">
                   파티 더보기
