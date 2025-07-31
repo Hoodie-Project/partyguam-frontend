@@ -13,7 +13,7 @@ import {
   fetchGetPartyRecruitmentsList,
   fetchGetPartyTypes,
   fetchGetPositions,
-  fetchPatchParty,
+  fetchPatchPartyInfo,
   fetchPostCreateParty,
 } from '@/apis/party';
 import ImageAddIcon from '@/assets/icon/image_add.svg';
@@ -203,7 +203,7 @@ export default function PartyEdit({ partyId }: PageParams) {
     } else if (pageType === 'MODIFY') {
       formData.append('status', 파티상태);
       try {
-        const res = await fetchPatchParty({ partyId: Number(partyId), data: formData });
+        const res = await fetchPatchPartyInfo({ partyId: Number(partyId), data: formData });
         window.location.reload();
       } catch (err) {
         console.error('Error creating party:', err);
