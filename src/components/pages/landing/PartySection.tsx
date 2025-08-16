@@ -18,7 +18,7 @@ export default function PartySection() {
         </Txt>
       </Header>
       <VideoContainer>
-        <Image src="/video/landing2.gif" alt="랜딩 페이지 프리뷰" width={1920} height={1080} unoptimized />
+        <Image src="https://partyguham.s3.ap-northeast-2.amazonaws.com/assets/images/party-motion.gif" alt="랜딩 페이지 프리뷰" width={1920} height={1080} unoptimized />
       </VideoContainer>
     </SectionContainer>
   );
