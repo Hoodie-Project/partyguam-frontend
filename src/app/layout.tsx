@@ -9,12 +9,27 @@ import '@/styles/global.css';
 import BaseLayout from './BaseLayout';
 
 export const metadata: Metadata = {
-  title: 'PartyGuam',
-  description: '파티 구해? partyguam!',
-  icons: {
-    icon: '/images/favicon.png',
+  metadataBase: new URL('https://partyguham.com'),
+  title: '파티구함 | PartyGuham',
+  description: '신규 파티를 빠르게 찾고, 함께할 사람을 모집하세요. 파티 구해? 파티구함!',
+  openGraph: {
+    title: '파티구함 | PartyGuham',
+    description: '신규 파티를 빠르게 찾고, 함께할 사람을 모집하세요.',
+    url: 'https://partyguham.com/',
+    siteName: '파티구함',
+    images: [{ url: '/images/og.png', width: 1200, height: 630 }],
+    locale: 'ko_KR',
+    type: 'website',
+  },
+  icons: { icon: '/images/favicon.png' },
+  alternates: {
+    canonical: 'https://partyguham.com/',
+    languages: {
+      ko: 'https://partyguham.com/',
+    },
   },
 };
+
 
 export default function RootLayout({
   children,
@@ -22,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="kr">
+    <html lang="ko">
       <head>
         <meta name="google-adsense-account" content="ca-pub-8724037414945960" />
       </head>
