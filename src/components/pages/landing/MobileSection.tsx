@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import styled from '@emotion/styled';
-
+import LogoWhite from '@/assets/icon/logo2_white.svg';
 import GooglePlayIcon from '@/assets/icon/google-play.svg';
 import { Txt } from '@/components/_atoms';
 import { SFlexColumn } from '@/styles/components';
@@ -11,7 +11,8 @@ export default function MobileSection() {
     <SectionContainer>
       <SectionWrapper>
         <SFlexColumn style={{ marginTop: '236px' }}>
-          <Image src="/images/logo_white.png" alt="파티구함" width={444} height={165} />
+          {/* <Image src="/images/logo_white.png" alt="파티구함" width={444} height={165} /> */}
+          <LogoWhite viewBox="0 0 550 200" width={444} height={165} />
           <Txt fontColor="white" fontWeight="semibold" fontSize={36} style={{ lineHeight: '140%', marginTop: '15px' }}>
             사이드프로젝트
             <br />
