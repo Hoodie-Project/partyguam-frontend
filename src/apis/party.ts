@@ -79,8 +79,7 @@ export const fetchPostCreateParty = async (data: FormData): Promise<CreatePartyR
 };
 
 // 파티 상태 수정
-// 파티 상태 수정
-export const fetchPatchPartyStatus = async (partyId: string, data: { status: string }) => {
+export const fetchPatchPartyStatus = async (partyId: number, data: { status: string }) => {
   try {
     const response = await privateApi.patch<{ status: string }>(`/parties/${partyId}/admin/status`, data);
     return response.data;

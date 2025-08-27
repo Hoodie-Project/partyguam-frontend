@@ -110,7 +110,7 @@ function PartyHome({ partyId }: PageParams) {
         },
         onSubmit: async () => {
           try {
-            await fetchPatchPartyStatus(partyId, { status: 'active' }); // 상태를 active로 변경
+            await fetchPatchPartyStatus(Number(partyId), { status: 'active' }); // 상태를 active로 변경
             closeModal();
             window.location.reload();
           } catch (err) {
