@@ -12,7 +12,7 @@ export default function MobileSection() {
       <SectionWrapper>
         <SFlexColumn style={{ marginTop: '236px' }}>
           {/* <Image src="/images/logo_white.png" alt="파티구함" width={444} height={165} /> */}
-          <LogoWhite viewBox="0 0 550 165" width={444} height={165} />
+          <LogoWhite viewBox="0 0 550 200" width={444} height={165} />
           <Txt fontColor="white" fontWeight="semibold" fontSize={36} style={{ lineHeight: '140%', marginTop: '15px' }}>
             사이드프로젝트
             <br />
