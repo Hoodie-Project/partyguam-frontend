@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-
+import { fetchGetPartyUsers } from '@/apis/party';
 import type { CreatePartyResponse } from '@/apis/party';
 import {
   fetchDeleteParty,
@@ -26,6 +26,7 @@ import { useModalContext } from '@/contexts/ModalContext';
 import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
 import type { Position } from '@/types/user';
+import { usePartyEditModal } from '@/hooks/usePartyEditModal';
 
 type StateType = any;
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
@@ -66,7 +67,6 @@ export default function PartyEdit({ partyId }: PageParams) {
   }, [pathname]);
 
   const { openModal, closeModal } = useModalContext();
-
   const [positionData, setPositionData] = useState<Position[]>([]);
   const positionList = transformPositionData(positionData);
 
@@ -84,6 +84,13 @@ export default function PartyEdit({ partyId }: PageParams) {
 
   const [postResponse, setPostResponse] = useState<CreatePartyResponse | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const { openPartyEditModal } = usePartyEditModal({
+    onHardReload: true,              // 확인/제출 후 새로고침이 필요하면
+    partyId,
+    editRecruitPath: (id) => `/party/setting/recruit/${partyId}`, // 혹은 문자열 고정
+  });
+
 
   useEffect(() => {
     (async () => {
@@ -269,31 +276,20 @@ export default function PartyEdit({ partyId }: PageParams) {
     });
   };
 
-  const onClickDeleteParty = () => {
-    openModal({
-      children: (
-        <ConfirmModal
-          modalTitle="파티 삭제"
-          modalContents={
-            <>
-              정말로 이 파티를 삭제하시겠어요?
-              <br />
-              삭제할 시 데이터 복구가 불가해요.
-            </>
-          }
-          cancelBtnTxt="닫기"
-          submitBtnTxt="삭제하기"
-        />
-      ),
-      onCancel: () => {
-        closeModal();
-      },
-      onSubmit: async () => {
-        await fetchDeleteParty(Number(partyId));
-        router.push('/');
-        closeModal();
-      },
+  const onClickDeleteParty = async () => {
+    const response = await fetchGetPartyUsers({
+          partyId: Number(partyId?.toString()),
+          page: 1,
+          limit: 16,
+          sort: 'createdAt',
+          order: 'DESC',
     });
+
+    if(response?.partyUser?.length && response?.partyUser?.length > 0) {
+      openPartyEditModal('partyDeleteBlocked');
+    } else {
+       openPartyEditModal('partyDelete');
+    }
   };
 
   return (
@@ -497,29 +493,9 @@ export default function PartyEdit({ partyId }: PageParams) {
                         status: 'active',
                       });
                       if (모집공고.length != 0 && item === 'archived') {
-                        openModal({
-                          children: (
-                            <ConfirmModal
-                              modalTitle="파티 종료 불가"
-                              modalContents={
-                                <>
-                                  파티 모집글이 있으면 파티를 종료할 수 없어요.
-                                  <br />
-                                  모집글을 먼저 삭제해주세요.
-                                </>
-                              }
-                              submitBtnTxt="확인"
-                            />
-                          ),
-                          onCancel: () => {
-                            closeModal();
-                          },
-                          onSubmit: async () => {
-                            closeModal();
-                          },
-                        });
+                        openPartyEditModal('partyEndBlocked');
                       } else {
-                        set파티상태(item);
+                        openPartyEditModal('partyEnd');
                       }
                     }}
                     height="base"
