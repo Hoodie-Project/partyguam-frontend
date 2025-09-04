@@ -25,12 +25,13 @@ export default function ConfirmModal({
   submitBtnTxt,
   handleCancel,
   handleSubmit,
+  ...restProps
 }: Props) {
   const { modalData } = useModalContext();
   const { onCancel, onSubmit } = modalData;
 
   return (
-    <ConfirmModalContainer>
+    <ConfirmModalContainer {...restProps}>
       <ModalContentsWrapper>
         <Txt fontColor="black" fontWeight="bold" fontSize={20}>
           {modalTitle}
