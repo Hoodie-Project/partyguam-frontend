@@ -132,7 +132,7 @@ function Select({
         )}
         <IconWrapper>
           {isOpen ? (
-            <KeyboardArrowUpRoundedIcon fontSize="medium" />
+            <KeyboardArrowUpRoundedIcon fontSize="medium" style={{color: '#11C9A7'}}/>
           ) : (
             <KeyboardArrowDownRoundedIcon fontSize="medium" />
           )}
