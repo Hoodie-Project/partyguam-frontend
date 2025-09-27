@@ -57,7 +57,7 @@ export function usePartyEditModal(options?: GetPartyEditModalOptions) {
     if (typeof editRecruitPath === 'string') {
       return editRecruitPath;
     }
-    
+
     return partyIdStr
       ? `/party/setting/recruit/${partyIdStr}`
       : undefined;
@@ -68,6 +68,7 @@ const makeHandlers = useMemo(
     submit: (next?: () => void, opts?: { skipHardReload?: boolean }) => {
       closeModal();
       next?.();  
+
       if (onHardReload && !opts?.skipHardReload) window.location.reload(); // ← 이동 있는 경우 건너뛸 수 있게
       onAfterSubmit?.();
     },
