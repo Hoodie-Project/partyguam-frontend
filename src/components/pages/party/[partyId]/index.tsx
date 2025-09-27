@@ -240,7 +240,7 @@ const PartyHomeContainer = styled.section`
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: 100%;
+  height: 110vh;
   padding-top: 52px;
 `;
 

@@ -17,7 +17,7 @@ const SHomeContainer = styled.section`
  */
 const SContainer = styled.section`
   width: 100%;
-  height: 100%;
+  height: 110vh;
   padding-top: 5.25rem;
   display: flex;
   flex-direction: column;

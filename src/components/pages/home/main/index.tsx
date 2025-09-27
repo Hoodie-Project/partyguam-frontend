@@ -15,7 +15,7 @@ import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';
 import { AccountRecoveryModal } from '@/components/features/accountRecoveryModal';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
-import { SContainer, SHomeContainer } from '@/styles/components';
+import { SHomeContainer } from '@/styles/components';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
@@ -260,6 +260,14 @@ function Main() {
 }
 
 export default Main;
+
+const SContainer = styled.section`
+  width: 100%;
+  padding-top: 5.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const MainPageContentsWrapper = styled.div`
   width: 100%;

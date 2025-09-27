@@ -9,7 +9,8 @@ type ModalType =
   | 'partyDelete'
   | 'partyDeleteBlocked'
   | 'partyEnd'
-  | 'partyEndBlocked';
+  | 'partyEndBlocked'
+  | 'exitPartyEdit';
 
 type GetPartyEditModalOptions = {
   onHardReload?: boolean;
@@ -48,7 +49,6 @@ export function usePartyEditModal(options?: GetPartyEditModalOptions) {
     [partyId]
   );
 
-  // 경로 결정을 한 곳에서
   const resolvedRecruitPath = useMemo(() => {
     if (typeof editRecruitPath === 'function') {
       if (!partyIdStr) return undefined;
@@ -57,7 +57,7 @@ export function usePartyEditModal(options?: GetPartyEditModalOptions) {
     if (typeof editRecruitPath === 'string') {
       return editRecruitPath;
     }
-    // 디폴트 정책(프로젝트 규칙에 맞게 한 곳으로 통일)
+
     return partyIdStr
       ? `/party/setting/recruit/${partyIdStr}`
       : undefined;
@@ -67,7 +67,8 @@ const makeHandlers = useMemo(
   () => ({
     submit: (next?: () => void, opts?: { skipHardReload?: boolean }) => {
       closeModal();
-      next?.(); // 라우팅/부수효과
+      next?.();  
+
       if (onHardReload && !opts?.skipHardReload) window.location.reload(); // ← 이동 있는 경우 건너뛸 수 있게
       onAfterSubmit?.();
     },
@@ -136,9 +137,23 @@ const makeHandlers = useMemo(
         ),
         cancelBtnTxt: '닫기',
         submitBtnTxt: '모집편집',
-submitAction: () => makeHandlers.submit(makeHandlers.goEditRecruit, { skipHardReload: true }),
+        submitAction: () => makeHandlers.submit(makeHandlers.goEditRecruit, { skipHardReload: true }),
         cancelAction: () => makeHandlers.cancel(),
       },
+      exitPartyEdit: {
+        modalTitle: '나가기',
+        modalContents: (
+          <>
+            입력한 내용들이 모두 초기화됩니다.<br />
+            나가시겠습니까?
+          </>
+        ),
+        cancelBtnTxt: '취소',
+        submitBtnTxt: '나가기',
+        submitAction: () => router.back(),
+        cancelAction: () => makeHandlers.cancel(),
+      
+      }
     }),
     [makeHandlers]
   );

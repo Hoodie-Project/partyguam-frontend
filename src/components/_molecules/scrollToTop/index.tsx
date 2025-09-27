@@ -28,7 +28,7 @@ export default function ScrollToTop() {
 
   return (
     <StyledButton onClick={scrollToTop} style={{ display: isVisible ? 'block' : 'none' }}>
-      <ArrowUpwardRoundedIcon fontSize="large" />
+      <ArrowUpwardRoundedIcon style={{width:'48px', height:'48px', marginTop: '12px'}} />
     </StyledButton>
   );
 }
