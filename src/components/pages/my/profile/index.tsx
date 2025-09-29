@@ -14,7 +14,7 @@ import { MYPAGE_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 import { useAuthStore } from '@/stores/auth';
-import { SContainer, SFlexRow, SFlexRowCenter, SFlexRowFull, SFlexRowJustifyBetween } from '@/styles/components';
+import { SFlexRow, SFlexRowCenter, SFlexRowFull, SFlexRowJustifyBetween } from '@/styles/components';
 import { calculateAge } from '@/utils/date';
 import { svgSizeMap } from '@/utils/svg';
 
@@ -336,6 +336,14 @@ function MyProfile() {
 }
 
 export default MyProfile;
+
+const SContainer = styled.section`
+  width: 100%;
+  padding-top: 5.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const MyProfileContainer = styled.div`
   width: 400px;

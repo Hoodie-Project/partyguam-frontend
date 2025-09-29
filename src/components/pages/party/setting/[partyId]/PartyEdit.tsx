@@ -7,6 +7,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import { fetchGetPartyUsers } from '@/apis/party';
 import type { CreatePartyResponse } from '@/apis/party';
+import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
+
 import {
   fetchDeleteParty,
   fetchGetPartyHome,
@@ -23,7 +25,7 @@ import { PageHeader, Select, TipBox } from '@/components/_molecules';
 import { ConfirmModal, FloatingMenu } from '@/components/features';
 import { PARTY_SETTING_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
-import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
+import { SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 import { usePartyEditModal } from '@/hooks/usePartyEditModal';
@@ -57,6 +59,7 @@ type PageParams = {
   partyId?: string;
 };
 
+
 // pathname -> 'CREATE': 파티 생성, 'MODIFY': 파티 수정
 export default function PartyEdit({ partyId }: PageParams) {
   const router = useRouter();
@@ -83,12 +86,51 @@ export default function PartyEdit({ partyId }: PageParams) {
   const [imgPath, setImgPath] = useState('');
 
   const [postResponse, setPostResponse] = useState<CreatePartyResponse | null>(null);
+
+  // 최초 값들을 저장해둘 state
+  const [initialValues, setInitialValues] = useState({
+    title: '',
+    partyTypeId: 0,
+    content: '',
+  });
+
+  // 변경 여부 플래그
+  const [isDifferentAsIsValue, setIsDifferentAsIsValue] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    if (partyHomeData == null) return;
+    set파티명value(partyHomeData.title);
+    set파티유형value({ id: partyHomeData.partyType.id, label: partyHomeData.partyType.type });
+    set파티소개글value(partyHomeData.content);
+    set파티상태(partyHomeData.status);
+
+    // 최초 값 저장
+    setInitialValues({
+      title: partyHomeData.title,
+      partyTypeId: partyHomeData.partyType.id,
+      content: partyHomeData.content,
+    });
+  }, [partyHomeData]);
+
+  useEffect(() => {
+    const isChanged =
+      initialValues.title !== '' && (
+        initialValues.title !== 파티명value ||
+        initialValues.partyTypeId !== 파티유형value.id ||
+        initialValues.content !== 파티소개글value
+      );
+
+    setIsDifferentAsIsValue(isChanged);
+  }, [파티명value, 파티유형value, 파티소개글value, initialValues]);
+ 
+  useNavigationBlocker(isDifferentAsIsValue, partyId);
+
     const { openPartyEditModal } = usePartyEditModal({
-    onHardReload: true,              // 확인/제출 후 새로고침이 필요하면
+    onHardReload: true,              
     partyId,
-    editRecruitPath: (id) => `/party/setting/recruit/${partyId}`, // 혹은 문자열 고정
+    editRecruitPath: (id) => `/party/setting/recruit/${partyId}`,
   });
 
 
@@ -295,7 +337,7 @@ export default function PartyEdit({ partyId }: PageParams) {
   return (
     <SContainer>
       <PageHeader title={pageType === 'CREATE' ? '파티 생성' : '파티 수정'} />
-      {pageType === 'MODIFY' && <FloatingMenu menu={PARTY_SETTING_MENU(partyId?.toString())} />}
+      {pageType === 'MODIFY' && <FloatingMenu isDirty={isDifferentAsIsValue} menu={PARTY_SETTING_MENU(partyId?.toString())} />}
       <PartyCreateContainer>
         <Square
           width="390px"
@@ -570,6 +612,14 @@ export default function PartyEdit({ partyId }: PageParams) {
     </SContainer>
   );
 }
+
+const SContainer = styled.section`
+  width: 100%;
+  padding-top: 5.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const PartyCreateContainer = styled.div`
   display: flex;
