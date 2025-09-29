@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { ConfirmModal } from '@/components/features';
 import { useModalContext } from '@/contexts/ModalContext';
 
-export function useNavigationBlocker(shouldBlock: boolean) {
+export function useNavigationBlocker(shouldBlock: boolean, partyId?: string) {
   const { openModal, closeModal } = useModalContext();
   const isBlockedRef = useRef(false);
 
@@ -43,12 +43,16 @@ export function useNavigationBlocker(shouldBlock: boolean) {
         onSubmit: () => {
           isBlockedRef.current = false;
           closeModal();
-          window.location.href = '/';
+          if (partyId) {
+            window.location.href = `/party/${partyId}`;
+          } else {
+            window.location.href = '/';
+          }
         },
       });
 
       // 현재 상태로 다시 push해서 뒤로가기를 막음
-      history.pushState(null, '', window.location.href);
+      // history.pushState(null, '', window.location.href);
     };
 
     if (shouldBlock) {
