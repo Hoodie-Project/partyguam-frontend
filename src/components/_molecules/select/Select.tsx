@@ -58,6 +58,7 @@ interface Props {
   // 열릴 떄 값 초기화
   handleOpenReset?: () => void;
   isSubmitted?: boolean; // 적용하기 버튼 눌러서 닫힌 것인지 flag
+  disabled?: boolean; 
 }
 
 function Select({
@@ -87,6 +88,7 @@ function Select({
   handleClickSubmit,
   handleOpenReset,
   isSubmitted,
+  disabled = false
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -115,7 +117,7 @@ function Select({
   };
 
   return (
-    <PickerWrapper ref={pickerRef}>
+    <PickerWrapper ref={pickerRef} disabled={disabled}>
       <PickerDropDown
         height={height}
         selectRadius={selectRadius}
@@ -176,13 +178,15 @@ function Select({
 
 export const SelectComponent = memo(Select);
 
-const PickerWrapper = styled.div`
+const PickerWrapper = styled.div<{ disabled?: boolean }>`
   position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 `;
 
 const PickerDropDown = styled.div<{
