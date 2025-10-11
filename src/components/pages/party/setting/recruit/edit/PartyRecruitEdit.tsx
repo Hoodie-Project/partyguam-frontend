@@ -272,6 +272,7 @@ function PartyRecruitEdit() {
                 height="l"
                 options={positionList}
                 value={editPartyRecruitForm.직군}
+                isSelectedIcon={editPartyRecruitForm.직군 != null}
                 onClick={handleSelectChange('직군', positionList)}
               />
               <Select
@@ -279,6 +280,7 @@ function PartyRecruitEdit() {
                 height="l"
                 options={filterPositions(positionData, editPartyRecruitForm.직군)}
                 value={editPartyRecruitForm.직무}
+                isSelectedIcon={editPartyRecruitForm.직무 != null}
                 onClick={handleSelectChange('직무', filterPositions(positionData, editPartyRecruitForm.직군))}
               />
             </SFlexRowFull>
@@ -300,6 +302,7 @@ function PartyRecruitEdit() {
                 height="l"
                 options={Array.from({ length: 10 }, (_, i) => ({ id: i + 1, label: (i + 1).toString() }))}
                 value={editPartyRecruitForm.recruiting_count}
+                isSelectedIcon={editPartyRecruitForm.recruiting_count != null}
                 onClick={handleSelectChange('recruiting_count')}
               />
             </div>

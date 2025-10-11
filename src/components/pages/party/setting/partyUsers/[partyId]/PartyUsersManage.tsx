@@ -185,6 +185,7 @@ function PartyUsersManage({ partyId }: PageParams) {
               fontSize={14}
               options={mainFiltered}
               value={mainPositionSearch.label}
+              isSelectedIcon={mainPositionSearch.label != null}
               onClick={handleSelectChange(setMainPositionSearch, 'label')}
               selectStyle={{
                 minWidth: '67px',

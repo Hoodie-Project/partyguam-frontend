@@ -279,36 +279,42 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
           placeholder="경력"
           options={경력Options}
           value={primaryPosition.경력}
+          isSelectedIcon={primaryPosition.경력 != null}
           onClick={handleSelectChange(setPrimaryPosition, '경력')}
         />
         <Select
           placeholder="경력"
           options={경력Options}
           value={secondaryPosition.경력}
+          isSelectedIcon={secondaryPosition.경력 != null}
           onClick={handleSelectChange(setSecondaryPosition, '경력')}
         />
         <Select
           placeholder="직군"
           options={positionList}
           value={primaryPosition.직군}
+          isSelectedIcon={primaryPosition.직군 != null}
           onClick={handleSelectChange(setPrimaryPosition, '직군')}
         />
         <Select
           placeholder="직군"
           options={positionList}
           value={secondaryPosition.직군}
+          isSelectedIcon={secondaryPosition.직군 != null}
           onClick={handleSelectChange(setSecondaryPosition, '직군', positionList)}
         />
         <Select
           placeholder="직무"
           options={mainFiltered}
           value={primaryPosition.직무}
+          isSelectedIcon={primaryPosition.직무 != null}
           onClick={handleSelectChange(setPrimaryPosition, '직무', mainFiltered)}
         />
         <Select
           placeholder="직무"
           options={subFiltered}
           value={secondaryPosition.직무}
+          isSelectedIcon={secondaryPosition.직무 != null}
           onClick={handleSelectChange(setSecondaryPosition, '직무', subFiltered)}
         />
       </GridContainer>

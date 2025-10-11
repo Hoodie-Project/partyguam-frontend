@@ -265,12 +265,14 @@ export default function PartyUserEditModal({ partyId, user, authority, position 
           placeholder="직군"
           options={positionList}
           value={changedPosition.main}
+          isSelectedIcon={changedPosition.main != null}
           onClick={handleSelectChange(setChangedPosition, 'main')}
         />
         <Select
           placeholder="직무"
           options={mainFiltered}
           value={changedPosition.sub}
+          isSelectedIcon={changedPosition.sub != null}
           onClick={handleSelectChange(setChangedPosition, 'sub', mainFiltered)}
         />
       </FlexWrapper>

@@ -3,17 +3,22 @@ export const formatDate = (dateString: string): string => {
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 };
 
-export function formatRelativeTime(dateString: string): string {
+export interface IReturnFormatRelativeTime {
+  label: string;
+  color: string;
+}
+
+export function formatRelativeTime(dateString: string): IReturnFormatRelativeTime {
   const now: Date = new Date();
   const targetDate: Date = new Date(dateString);
 
   const diffInMs: number = now.getTime() - targetDate.getTime();
   const diffInMinutes: number = Math.floor(diffInMs / 60000);
 
-  if (diffInMinutes <= 10) return '방금전';
-  if (diffInMinutes < 60) return '1시간 전';
-  if (diffInMinutes < 120) return '2시간 전';
-  if (diffInMinutes < 180) return '3시간 전';
+  if (diffInMinutes <= 10) return { label: '방금전', color: '#DC0000' };
+  if (diffInMinutes < 60) return { label: '1시간 전', color: '#DC0000' };
+  if (diffInMinutes < 120) return { label: '2시간 전', color: '#DC0000' };
+  if (diffInMinutes < 180) return { label: '3시간 전', color: '#DC0000' };
 
   // 날짜 비교를 위한 형식화된 년, 월, 일 값
   const targetYear: number = targetDate.getFullYear();
@@ -26,7 +31,7 @@ export function formatRelativeTime(dateString: string): string {
 
   // 같은 날일 경우
   if (targetYear === currentYear && targetMonth === currentMonth && targetDay === currentDay) {
-    return '오늘';
+    return { label: '오늘', color: '#767676' };
   }
 
   // 하루 전일 경우
@@ -37,12 +42,12 @@ export function formatRelativeTime(dateString: string): string {
   const yesterdayDay: number = yesterday.getDate();
 
   if (targetYear === yesterdayYear && targetMonth === yesterdayMonth && targetDay === yesterdayDay) {
-    return '1일 전';
+    return { label: '1일 전', color: '#767676' };
   }
 
   // 그 외의 경우 날짜 포맷
   const formatNumber = (num: number) => String(num).padStart(2, '0');
-  return `${targetYear}.${formatNumber(targetMonth)}.${formatNumber(targetDay)}`;
+  return { label: `${targetYear}.${formatNumber(targetMonth)}.${formatNumber(targetDay)}`, color: '#767676' };
 }
 
 export function calculateAge(birthDateString: string): number {

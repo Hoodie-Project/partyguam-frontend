@@ -198,6 +198,7 @@ function Main() {
                 }}
                 eachOptionStyle={{ padding: '14px 0px 14px 20px' }}
                 value={searchOptionStatus.label}
+                isSelectedIcon={searchOptionStatus.label != null}
                 onClick={handleSearchOptionStatusChange}
               />
             </div>

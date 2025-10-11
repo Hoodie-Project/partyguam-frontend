@@ -422,6 +422,7 @@ export default function PartyEdit({ partyId }: PageParams) {
               eachOptionStyle={{ padding: '20px' }}
               options={파티유형List}
               value={파티유형value.label}
+              isSelectedIcon={파티유형value.label != null}
               onClick={(e: React.MouseEvent<HTMLLIElement>) => {
                 const selectedOption = 파티유형List.find(option => option.label === e.currentTarget.textContent);
                 if (selectedOption) {
@@ -500,6 +501,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                   height="m"
                   options={positionList}
                   value={내포지션.직군}
+                  isSelectedIcon={내포지션.직군 != null}
                   onClick={handleSelectChange(set내포지션, '직군')}
                 />
                 <Select
