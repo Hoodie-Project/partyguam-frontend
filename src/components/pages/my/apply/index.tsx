@@ -407,8 +407,8 @@ function MyApply() {
                           </div>
                         </StyledCell>
                         <StyledCell isExpend={expand지원서 === item.id}>
-                          <Txt fontWeight="normal" fontSize={14} fontColor="grey500">
-                            {formatRelativeTime(item.createdAt)}
+                          <Txt fontWeight="normal" fontSize={14} fontColor={formatRelativeTime(item.createdAt).color}>
+                            {formatRelativeTime(item.createdAt).label}
                           </Txt>
                         </StyledCell>
                         <StyledCell isExpend={expand지원서 === item.id}>

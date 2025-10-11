@@ -272,6 +272,7 @@ function HomeParty() {
                   borderRadius: '24px',
                 }}
                 value={파티status.label}
+                isSelectedIcon={파티status.label != null}
                 onClick={handle파티StatusChange}
               />
             </div>
@@ -284,6 +285,7 @@ function HomeParty() {
                     : 파티유형FilterChips[0]?.label || undefined
                 }
                 options={파티유형List}
+                isSelectedIcon={파티유형FilterChips && 파티유형FilterChips.length > 0}
                 selectedOptions={tempSelected파티유형Options}
                 chipData={temp파티유형FilterChips}
                 handleClickReset={handle파티유형Reset}

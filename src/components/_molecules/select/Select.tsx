@@ -35,6 +35,7 @@ interface Props {
   selectRadius?: keyof typeof radius;
   optionRadius?: keyof typeof radius;
 
+  isSelectedIcon?: boolean;
   selectStyle?: React.CSSProperties;
   optionStyle?: React.CSSProperties;
   eachOptionStyle?: React.CSSProperties;
@@ -71,6 +72,7 @@ function Select({
   fontColor = 'black',
   selectRadius = 'base',
   optionRadius = 'base',
+  isSelectedIcon = false,
   selectStyle,
   optionStyle,
   eachOptionStyle,
@@ -132,9 +134,9 @@ function Select({
         )}
         <IconWrapper>
           {isOpen ? (
-            <KeyboardArrowUpRoundedIcon fontSize="medium" style={{color: '#11C9A7'}}/>
+            <KeyboardArrowUpRoundedIcon fontSize="medium" style={{color: isSelectedIcon ? '#11C9A7' : '#999999'}}/>
           ) : (
-            <KeyboardArrowDownRoundedIcon fontSize="medium" />
+            <KeyboardArrowDownRoundedIcon fontSize="medium" style={{color: isSelectedIcon ? '#11C9A7' : '#999999'}}/>
           )}
         </IconWrapper>
       </PickerDropDown>
