@@ -136,19 +136,45 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
               {/* 파티 모집중 칩 */}
               <Chip
                 size="small"
-                label={singlePartyData?.status === 'active' ? '진행중' : '파티종료'}
+                label={
+                  singlePartyData
+                    ? singlePartyData.status === 'active'
+                      ? '진행중'
+                      : '파티종료'
+                    : partyRecruitDetailData?.status === 'active'
+                      ? '진행중'
+                      : '파티종료'
+                }
                 chipType="filled"
                 chipColor={
-                  RENDER_PARTY_STATE(singlePartyData?.status === 'active' ? '진행중' : '파티종료')?.backgroundColor
+                  RENDER_PARTY_STATE(
+                    singlePartyData
+                      ? singlePartyData.status === 'active'
+                        ? '진행중'
+                        : '파티종료'
+                      : partyRecruitDetailData?.status === 'active'
+                        ? '진행중'
+                        : '파티종료',
+                  )?.backgroundColor
                 }
-                fontColor={RENDER_PARTY_STATE(singlePartyData?.status === 'active' ? '진행중' : '파티종료')?.fontColor}
+                fontColor={
+                  RENDER_PARTY_STATE(
+                    singlePartyData
+                      ? singlePartyData.status === 'active'
+                        ? '진행중'
+                        : '파티종료'
+                      : partyRecruitDetailData?.status === 'active'
+                        ? '진행중'
+                        : '파티종료',
+                  )?.fontColor
+                }
                 fontWeight="semibold"
                 shadow="shadow1"
               />
               {/* 파티 타입 칩 */}
               <Chip
                 size="small"
-                label={singlePartyData?.partyType.type}
+                label={singlePartyData ? singlePartyData.partyType.type : partyRecruitDetailData?.party.partyType.type}
                 chipType="filled"
                 chipColor="#F6F6F6"
                 fontColor="grey700"
@@ -385,7 +411,7 @@ const PartyRecruitDetailContainer = styled.section<{ isReadOnly?: boolean }>`
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: 100vh;
+  height: 110vh;
   padding-top: ${({ isReadOnly }) => (isReadOnly ? '0px' : '52px')};
 `;
 

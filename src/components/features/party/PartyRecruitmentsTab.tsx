@@ -166,6 +166,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
               fontSize={14}
               options={mainFiltered}
               value={primaryPosition.직군}
+              isSelectedIcon={primaryPosition.직군 != null}
               onClick={handleSelectChange(setPrimaryPosition, '직군')}
               selectStyle={{ minWidth: '67px', width: 'auto', padding: '8px 12px' }}
               optionStyle={{ width: '170px', left: '0', border: '1px solid #11C9A7' }}

@@ -1,8 +1,11 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-
+import { useModalContext } from '@/contexts/ModalContext';
+import { ConfirmModal } from '@/components/features';
 import { Portal } from '@/components/_atoms';
 import { palette } from '@/styles';
 
@@ -16,12 +19,47 @@ type Menu = {
 
 type OwnProps = {
   menu: Menu[];
+  isDirty?: boolean;
 };
 
 type Props = OwnProps & React.HTMLAttributes<HTMLDivElement>;
 
-export default function FloatingMenu({ menu, ...divAttributes }: Props) {
+export default function FloatingMenu({ menu, isDirty = false, ...divAttributes }: Props) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { openModal, closeModal } = useModalContext();
+
+  const handleClick = (e: React.MouseEvent, route: string) => {
+    if (isDirty) {
+      openModal({
+        children: (
+          <ConfirmModal
+            modalTitle="페이지 이동"
+            modalContents={
+              <>
+                입력한 내용이 저장되지 않았습니다.
+                <br />
+                이동하시겠습니까?
+              </>
+            }
+            cancelBtnTxt="취소"
+            submitBtnTxt="이동"
+          />
+        ),
+        onCancel: () => {
+          closeModal();
+        },
+        onSubmit: () => {
+          console.log('모달 submit 이동 시도', route);
+          //router.push(route); 
+          window.location.assign(route);
+          closeModal();
+        },
+      });
+    } else {
+      router.push(route); 
+    }
+  };
 
   return (
     <Portal>
@@ -30,13 +68,25 @@ export default function FloatingMenu({ menu, ...divAttributes }: Props) {
           <MenuItem key={index}>
             <MenuTitle style={{ lineHeight: '140%' }}>{item.대메뉴}</MenuTitle>
             <SubMenuList>
-              {item.소메뉴.map((subItem, subIndex) => (
-                <SubMenuItem key={subIndex} active={pathname === subItem.route}>
-                  <Link href={subItem.route} style={{ lineHeight: '140%' }}>
-                    {subItem.label}
-                  </Link>
-                </SubMenuItem>
-              ))}
+              {item.소메뉴.map((subItem, subIndex) => {
+                const active = pathname === subItem.route;
+                return (
+                  <SubMenuItem key={subIndex} active={active}> 
+                    <Link
+                      href={subItem.route}
+                      onClick={(e) => {
+                        if (isDirty) {
+                          e.preventDefault();
+                          handleClick(e, subItem.route);
+                        }
+                      }}
+                      style={{ lineHeight: '140%' }}
+                    >
+                      {subItem.label}
+                    </Link>
+                  </SubMenuItem>
+                );
+              })}
             </SubMenuList>
           </MenuItem>
         ))}

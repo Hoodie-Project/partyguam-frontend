@@ -228,6 +228,7 @@ export default function HomeRecruitmentSelect() {
                 : `${직무FilterChips[0].parentLabel || ''} ${직무FilterChips[0].label}`
               : undefined
           }
+          isSelectedIcon={직무FilterChips && 직무FilterChips.length > 0}
           parentOptions={[
             { id: 0, label: '기획자' },
             { id: 1, label: '디자이너' },
@@ -267,6 +268,7 @@ export default function HomeRecruitmentSelect() {
               ? `${파티유형FilterChips[0].label} 외 ${파티유형FilterChips.length - 1}`
               : 파티유형FilterChips[0]?.label || undefined
           }
+          isSelectedIcon={파티유형FilterChips && 파티유형FilterChips.length > 0}
           options={파티유형List}
           selectedOptions={tempSelected파티유형Options}
           chipData={temp파티유형FilterChips}

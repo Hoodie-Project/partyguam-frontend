@@ -78,8 +78,19 @@ export const fetchPostCreateParty = async (data: FormData): Promise<CreatePartyR
   }
 };
 
+// 파티 상태 수정
+export const fetchPatchPartyStatus = async (partyId: number, data: { status: string }) => {
+  try {
+    const response = await privateApi.patch<{ status: string }>(`/parties/${partyId}/admin/status`, data);
+    return response.data;
+  } catch (err) {
+    console.error('fetchPatchPartyStatus error : ', err);
+    throw err;
+  }
+};
+
 // 파티 수정
-export const fetchPatchParty = async ({
+export const fetchPatchPartyInfo = async ({
   partyId,
   data,
 }: {
@@ -87,7 +98,7 @@ export const fetchPatchParty = async ({
   data: FormData;
 }): Promise<CreatePartyResponse | null> => {
   try {
-    const response = await fileUploadApi.patch<CreatePartyResponse>(`/parties/${partyId}/admin`, data);
+    const response = await fileUploadApi.patch<CreatePartyResponse>(`/parties/${partyId}/admin/info`, data);
     return response.data;
   } catch (error) {
     console.error('fetchPatchParty error:', error);

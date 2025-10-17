@@ -7,10 +7,12 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import ShareOutlinedIcon from '@mui/icons-material/ShareOutlined';
 
 import { fetchUserAuthority, type UserAuthorityResponse } from '@/apis/auth';
-import { fetchGetPartyHome } from '@/apis/party';
+import { fetchGetPartyHome, fetchPatchPartyStatus } from '@/apis/party';
 import { Balloon, Chip, Square, Txt } from '@/components/_atoms';
 import { Tabs } from '@/components/_molecules';
+import { ConfirmModal } from '@/components/features';
 import { PartyHomeTab, PartyPeopleTab, PartyRecruitmentsTab } from '@/components/features/party';
+import { useModalContext } from '@/contexts/ModalContext';
 import { SContainer } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
 
@@ -43,6 +45,7 @@ function PartyHome({ partyId }: PageParams) {
   const [userAuthorityInfo, setUserAuthorityInfo] = useState<UserAuthorityResponse | null>(null);
   const [partyHomeData, setPartyHomeData] = useState<PartyHomeResponse | null>(null);
   const [isShowCopyBalloon, setIsShowCopyBalloon] = useState<boolean>(false);
+  const { openModal, closeModal } = useModalContext();
   const router = useRouter();
 
   useEffect(() => {
@@ -81,6 +84,41 @@ function PartyHome({ partyId }: PageParams) {
       .catch(err => {
         console.error('URL 복사 실패:', err);
       });
+  };
+
+  const handleSettingsClick = () => {
+    if (partyHomeData?.status === 'active') {
+      router.push(`/party/setting/${partyId}?type=MODIFY`);
+    } else {
+      openModal({
+        children: (
+          <ConfirmModal
+            modalTitle="종료된 파티예요"
+            modalContents={
+              <>
+                종료된 파티는 파티의 기능을 사용할 수 없어요
+                <br />
+                파티를 진행 중으로 변경하시겠어요?
+              </>
+            }
+            cancelBtnTxt="닫기"
+            submitBtnTxt="변경하기"
+          />
+        ),
+        onCancel: () => {
+          closeModal();
+        },
+        onSubmit: async () => {
+          try {
+            await fetchPatchPartyStatus(Number(partyId), { status: 'active' }); // 상태를 active로 변경
+            closeModal();
+            window.location.reload();
+          } catch (err) {
+            console.log(err);
+          }
+        },
+      });
+    }
   };
 
   return (
@@ -171,10 +209,7 @@ function PartyHome({ partyId }: PageParams) {
                   </Balloon>
                 )}
                 {userAuthorityInfo?.authority === 'master' && (
-                  <SettingsOutlinedIcon
-                    onClick={() => router.push(`/party/setting/${partyId}?type=MODIFY`)}
-                    style={{ cursor: 'pointer' }}
-                  />
+                  <SettingsOutlinedIcon onClick={() => handleSettingsClick()} style={{ cursor: 'pointer' }} />
                 )}
               </PartyTabsButtonWrapper>
             </PartyTabsWrapper>
@@ -205,7 +240,7 @@ const PartyHomeContainer = styled.section`
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: 100%;
+  height: 110vh;
   padding-top: 52px;
 `;
 

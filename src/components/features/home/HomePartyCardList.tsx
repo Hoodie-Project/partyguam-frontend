@@ -181,6 +181,7 @@ const SPartyCardList = styled.section`
 const StyledSlider = styled(Slider)`
   position: relative;
   .slick-track {
+    margin: 0;
     display: flex !important;
     padding-bottom: 5px;
   }

@@ -34,7 +34,7 @@ function SearchBar({
   return (
     <SearchContainer type={type} style={searchBarStyle}>
       <SearchIconWrapper>
-        <SearchRoundedIcon />
+        <SearchRoundedIcon style={{ width: `${iconSize}px`, height: `${iconSize}px`, marginTop: '1px' }} />
       </SearchIconWrapper>
       <SearchInput
         type="text"

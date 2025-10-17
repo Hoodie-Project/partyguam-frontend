@@ -35,6 +35,7 @@ interface Props {
   selectRadius?: keyof typeof radius;
   optionRadius?: keyof typeof radius;
 
+  isSelectedIcon?: boolean;
   selectStyle?: React.CSSProperties;
   optionStyle?: React.CSSProperties;
   eachOptionStyle?: React.CSSProperties;
@@ -57,6 +58,7 @@ interface Props {
   // 열릴 떄 값 초기화
   handleOpenReset?: () => void;
   isSubmitted?: boolean; // 적용하기 버튼 눌러서 닫힌 것인지 flag
+  disabled?: boolean; 
 }
 
 function Select({
@@ -71,6 +73,7 @@ function Select({
   fontColor = 'black',
   selectRadius = 'base',
   optionRadius = 'base',
+  isSelectedIcon = false,
   selectStyle,
   optionStyle,
   eachOptionStyle,
@@ -85,6 +88,7 @@ function Select({
   handleClickSubmit,
   handleOpenReset,
   isSubmitted,
+  disabled = false
 }: Props) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const pickerRef = useRef<HTMLDivElement>(null);
@@ -113,7 +117,7 @@ function Select({
   };
 
   return (
-    <PickerWrapper ref={pickerRef}>
+    <PickerWrapper ref={pickerRef} disabled={disabled}>
       <PickerDropDown
         height={height}
         selectRadius={selectRadius}
@@ -132,9 +136,9 @@ function Select({
         )}
         <IconWrapper>
           {isOpen ? (
-            <KeyboardArrowUpRoundedIcon fontSize="medium" />
+            <KeyboardArrowUpRoundedIcon fontSize="medium" style={{color: isSelectedIcon ? '#11C9A7' : '#999999'}}/>
           ) : (
-            <KeyboardArrowDownRoundedIcon fontSize="medium" />
+            <KeyboardArrowDownRoundedIcon fontSize="medium" style={{color: isSelectedIcon ? '#11C9A7' : '#999999'}}/>
           )}
         </IconWrapper>
       </PickerDropDown>
@@ -174,13 +178,15 @@ function Select({
 
 export const SelectComponent = memo(Select);
 
-const PickerWrapper = styled.div`
+const PickerWrapper = styled.div<{ disabled?: boolean }>`
   position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
 `;
 
 const PickerDropDown = styled.div<{

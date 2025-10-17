@@ -110,7 +110,10 @@ export default function MultiOptions({
           {options?.map((option, index) => (
             <OptionItem
               key={option.id}
-              onClick={() => handleOptionToggle?.(option)}
+              onClick={e => {
+                e.stopPropagation();
+                handleOptionToggle?.(option);
+              }}
               style={{
                 borderRadius:
                   parentOptions && index === 0
@@ -157,8 +160,11 @@ export default function MultiOptions({
                   {item.label}
                 </Txt>
                 <CloseRoundedIcon
-                  onClick={() => handleRemoveChip?.(item.id)}
-                  style={{ width: '16px', color: '#767676' }}
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleRemoveChip?.(item.id);
+                  }}
+                  style={{ width: '16px', color: '#767676', cursor: 'pointer' }}
                 />
               </ChipComponent>
             ))}
@@ -186,6 +192,8 @@ const SelectMultiOptions = styled.div<{ top?: keyof typeof size.height; optionRa
   background-color: #ffffff;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.04);
   border: 1px solid #11c9a7;
+  overflow: hidden; 
+  background-clip: padding-box;  
 `;
 
 const OptionGroupWrapper = styled.div`
@@ -199,7 +207,18 @@ const OptionGroup = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
+  overflow-y: auto;
+  // 보조 느낌 스크롤
+   &::-webkit-scrollbar {
+  width: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 999px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
 `;
 
 const OptionItem = styled.div`

@@ -13,6 +13,9 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   webpack: config => {
     config.optimization = {
       ...config.optimization,

@@ -272,6 +272,7 @@ function HomeParty() {
                   borderRadius: '24px',
                 }}
                 value={파티status.label}
+                isSelectedIcon={파티status.label != null}
                 onClick={handle파티StatusChange}
               />
             </div>
@@ -284,6 +285,7 @@ function HomeParty() {
                     : 파티유형FilterChips[0]?.label || undefined
                 }
                 options={파티유형List}
+                isSelectedIcon={파티유형FilterChips && 파티유형FilterChips.length > 0}
                 selectedOptions={tempSelected파티유형Options}
                 chipData={temp파티유형FilterChips}
                 handleClickReset={handle파티유형Reset}
@@ -364,14 +366,15 @@ function HomeParty() {
                 onClick={() => handleClickPartyCard(party.id)}
               >
                 <CardContentsWrapper>
-                  <Image
-                    src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
-                    width={255}
-                    height={180}
-                    alt={party.title}
-                    style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                  />
-
+                  <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Image
+                      src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
+                      width={255}
+                      height={180}
+                      alt={party.title}
+                      style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                    />
+                  </div>
                   <ChipWrapper>
                     <Chip
                       chipType="filled"
@@ -504,6 +507,8 @@ const CircleButton = styled.button`
   padding: 8px 12px;
   color: #000000;
   font-size: 14px;
-  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+  font-weight: 400;
   margin-left: 12px;
 `;

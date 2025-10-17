@@ -5,16 +5,19 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
-
+import { fetchGetPartyUsers } from '@/apis/party';
 import type { CreatePartyResponse } from '@/apis/party';
+import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
+
 import {
   fetchDeleteParty,
   fetchGetPartyHome,
   fetchGetPartyRecruitmentsList,
   fetchGetPartyTypes,
   fetchGetPositions,
-  fetchPatchParty,
+  fetchPatchPartyInfo,
   fetchPostCreateParty,
+  fetchPatchPartyStatus
 } from '@/apis/party';
 import ImageAddIcon from '@/assets/icon/image_add.svg';
 import { Balloon, Button, Input, Square, Txt } from '@/components/_atoms';
@@ -22,9 +25,10 @@ import { PageHeader, Select, TipBox } from '@/components/_molecules';
 import { ConfirmModal, FloatingMenu } from '@/components/features';
 import { PARTY_SETTING_MENU } from '@/constants';
 import { useModalContext } from '@/contexts/ModalContext';
-import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
+import { SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
 import type { Position } from '@/types/user';
+import { usePartyEditModal } from '@/hooks/usePartyEditModal';
 
 type StateType = any;
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
@@ -55,6 +59,7 @@ type PageParams = {
   partyId?: string;
 };
 
+
 // pathname -> 'CREATE': 파티 생성, 'MODIFY': 파티 수정
 export default function PartyEdit({ partyId }: PageParams) {
   const router = useRouter();
@@ -65,7 +70,6 @@ export default function PartyEdit({ partyId }: PageParams) {
   }, [pathname]);
 
   const { openModal, closeModal } = useModalContext();
-
   const [positionData, setPositionData] = useState<Position[]>([]);
   const positionList = transformPositionData(positionData);
 
@@ -82,7 +86,53 @@ export default function PartyEdit({ partyId }: PageParams) {
   const [imgPath, setImgPath] = useState('');
 
   const [postResponse, setPostResponse] = useState<CreatePartyResponse | null>(null);
+
+  // 최초 값들을 저장해둘 state
+  const [initialValues, setInitialValues] = useState({
+    title: '',
+    partyTypeId: 0,
+    content: '',
+  });
+
+  // 변경 여부 플래그
+  const [isDifferentAsIsValue, setIsDifferentAsIsValue] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (partyHomeData == null) return;
+    set파티명value(partyHomeData.title);
+    set파티유형value({ id: partyHomeData.partyType.id, label: partyHomeData.partyType.type });
+    set파티소개글value(partyHomeData.content);
+    set파티상태(partyHomeData.status);
+
+    // 최초 값 저장
+    setInitialValues({
+      title: partyHomeData.title,
+      partyTypeId: partyHomeData.partyType.id,
+      content: partyHomeData.content,
+    });
+  }, [partyHomeData]);
+
+  useEffect(() => {
+    const isChanged =
+      initialValues.title !== '' && (
+        initialValues.title !== 파티명value ||
+        initialValues.partyTypeId !== 파티유형value.id ||
+        initialValues.content !== 파티소개글value
+      );
+
+    setIsDifferentAsIsValue(isChanged);
+  }, [파티명value, 파티유형value, 파티소개글value, initialValues]);
+ 
+  useNavigationBlocker(isDifferentAsIsValue, partyId);
+
+    const { openPartyEditModal } = usePartyEditModal({
+    onHardReload: true,              
+    partyId,
+    editRecruitPath: (id) => `/party/setting/recruit/${partyId}`,
+  });
+
 
   useEffect(() => {
     (async () => {
@@ -201,9 +251,10 @@ export default function PartyEdit({ partyId }: PageParams) {
         console.error('Error creating party:', err);
       }
     } else if (pageType === 'MODIFY') {
-      formData.append('status', 파티상태);
+      let numberPartyId = Number(partyId);
       try {
-        const res = await fetchPatchParty({ partyId: Number(partyId), data: formData });
+        await fetchPatchPartyInfo({ partyId: numberPartyId, data: formData });
+        await fetchPatchPartyStatus(numberPartyId, { status: 파티상태 });
         window.location.reload();
       } catch (err) {
         console.error('Error creating party:', err);
@@ -267,37 +318,26 @@ export default function PartyEdit({ partyId }: PageParams) {
     });
   };
 
-  const onClickDeleteParty = () => {
-    openModal({
-      children: (
-        <ConfirmModal
-          modalTitle="파티 삭제"
-          modalContents={
-            <>
-              정말로 이 파티를 삭제하시겠어요?
-              <br />
-              삭제할 시 데이터 복구가 불가해요.
-            </>
-          }
-          cancelBtnTxt="닫기"
-          submitBtnTxt="삭제하기"
-        />
-      ),
-      onCancel: () => {
-        closeModal();
-      },
-      onSubmit: async () => {
-        await fetchDeleteParty(Number(partyId));
-        router.push('/');
-        closeModal();
-      },
+  const onClickDeleteParty = async () => {
+    const response = await fetchGetPartyUsers({
+          partyId: Number(partyId?.toString()),
+          page: 1,
+          limit: 16,
+          sort: 'createdAt',
+          order: 'DESC',
     });
+
+    if(response?.partyUser?.length && response?.partyUser?.length > 0) {
+      openPartyEditModal('partyDeleteBlocked');
+    } else {
+       openPartyEditModal('partyDelete');
+    }
   };
 
   return (
     <SContainer>
       <PageHeader title={pageType === 'CREATE' ? '파티 생성' : '파티 수정'} />
-      {pageType === 'MODIFY' && <FloatingMenu menu={PARTY_SETTING_MENU(partyId?.toString())} />}
+      {pageType === 'MODIFY' && <FloatingMenu isDirty={isDifferentAsIsValue} menu={PARTY_SETTING_MENU(partyId?.toString())} />}
       <PartyCreateContainer>
         <Square
           width="390px"
@@ -382,6 +422,7 @@ export default function PartyEdit({ partyId }: PageParams) {
               eachOptionStyle={{ padding: '20px' }}
               options={파티유형List}
               value={파티유형value.label}
+              isSelectedIcon={파티유형value.label != null}
               onClick={(e: React.MouseEvent<HTMLLIElement>) => {
                 const selectedOption = 파티유형List.find(option => option.label === e.currentTarget.textContent);
                 if (selectedOption) {
@@ -460,6 +501,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                   height="m"
                   options={positionList}
                   value={내포지션.직군}
+                  isSelectedIcon={내포지션.직군 != null}
                   onClick={handleSelectChange(set내포지션, '직군')}
                 />
                 <Select
@@ -495,29 +537,9 @@ export default function PartyEdit({ partyId }: PageParams) {
                         status: 'active',
                       });
                       if (모집공고.length != 0 && item === 'archived') {
-                        openModal({
-                          children: (
-                            <ConfirmModal
-                              modalTitle="파티 종료 불가"
-                              modalContents={
-                                <>
-                                  파티 모집글이 있으면 파티를 종료할 수 없어요.
-                                  <br />
-                                  모집글을 먼저 삭제해주세요.
-                                </>
-                              }
-                              submitBtnTxt="확인"
-                            />
-                          ),
-                          onCancel: () => {
-                            closeModal();
-                          },
-                          onSubmit: async () => {
-                            closeModal();
-                          },
-                        });
+                        openPartyEditModal('partyEndBlocked');
                       } else {
-                        set파티상태(item);
+                        openPartyEditModal('partyEnd');
                       }
                     }}
                     height="base"
@@ -592,6 +614,14 @@ export default function PartyEdit({ partyId }: PageParams) {
     </SContainer>
   );
 }
+
+const SContainer = styled.section`
+  width: 100%;
+  padding-top: 5.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const PartyCreateContainer = styled.div`
   display: flex;

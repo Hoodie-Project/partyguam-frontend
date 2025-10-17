@@ -117,17 +117,17 @@ export default function NotificationModal({ notificationData, onClose, filter, s
                   <Header>
                     <SFlexColumn style={{ alignItems: 'center', gap: '4px' }}>
                       <ImageWrapper isRead={item.isRead}>
-                        {item.image == null ? (
+                        {/* {item.image == null ? (
                           <Avatar name="sacagawea" variant="beam" size={48} colors={['#7ff4df', '#00c2ff']} />
-                        ) : (
-                          <Image
-                            alt="알림이미지"
-                            src={`${BASE_URL}/${item.image}`}
-                            width={48}
-                            height={48}
-                            style={{ borderRadius: '99px' }}
-                          />
-                        )}
+                        ) : ( */}
+                        <Image
+                          alt="알림이미지"
+                          src={item.image == null ? '/images/landing/default-party-light200.jpg' : `${BASE_URL}/${item.image}`}
+                          width={48}
+                          height={48}
+                          style={{ borderRadius: '99px' }}
+                        />
+                        {/* )} */}
                       </ImageWrapper>
                       <SFlexRow>
                         <Txt fontSize={12} fontWeight="semibold" fontColor={item.isRead ? 'grey500' : 'black'}>
@@ -194,8 +194,8 @@ export default function NotificationModal({ notificationData, onClose, filter, s
                     </Body>
 
                     <Footer>
-                      <Txt fontSize={14} fontColor={item.isRead ? 'grey500' : 'black'}>
-                        {formatRelativeTime(item.createdAt)}
+                      <Txt fontSize={14} fontColor={formatRelativeTime(item.createdAt).color}>
+                        {formatRelativeTime(item.createdAt).label}
                       </Txt>
                     </Footer>
                   </SFlexColumn>

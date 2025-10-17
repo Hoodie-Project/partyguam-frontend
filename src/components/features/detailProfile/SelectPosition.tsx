@@ -98,6 +98,10 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
   const positionList = transformPositionData(positionData);
   const router = useRouter();
 
+  // 유틸 상태
+  const isPrimaryJobDisabled = !primaryPosition.직군;
+  const isSecondaryJobDisabled = !secondaryPosition.직군;
+
   const submitEditDisabled = useMemo(() => {
     if (user.userCareers.filter(item => item.careerType === 'primary')[0]?.id != primaryPosition.id) return false;
     if (`${user.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년` != primaryPosition.경력)
@@ -147,6 +151,14 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
       setSubFiltered(filterPositions(positionData, secondaryPosition.직군));
     }
   }, [secondaryPosition.직군, positionData]);
+
+  useEffect(() => {
+    setPrimaryPosition(prev => ({ ...prev, 직무: '' }));
+  }, [primaryPosition.직군]);
+
+  useEffect(() => {
+    setSecondaryPosition(prev => ({ ...prev, 직무: '' }));
+  }, [secondaryPosition.직군]);
 
   const handleSelectChange =
     (
@@ -279,37 +291,45 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
           placeholder="경력"
           options={경력Options}
           value={primaryPosition.경력}
+          isSelectedIcon={primaryPosition.경력 != ''}
           onClick={handleSelectChange(setPrimaryPosition, '경력')}
         />
         <Select
           placeholder="경력"
           options={경력Options}
           value={secondaryPosition.경력}
+          isSelectedIcon={secondaryPosition.경력 != ''}
           onClick={handleSelectChange(setSecondaryPosition, '경력')}
         />
         <Select
           placeholder="직군"
           options={positionList}
           value={primaryPosition.직군}
+          isSelectedIcon={primaryPosition.직군 != ''}
           onClick={handleSelectChange(setPrimaryPosition, '직군')}
         />
         <Select
           placeholder="직군"
           options={positionList}
           value={secondaryPosition.직군}
+          isSelectedIcon={secondaryPosition.직군 != ''}
           onClick={handleSelectChange(setSecondaryPosition, '직군', positionList)}
         />
         <Select
           placeholder="직무"
           options={mainFiltered}
           value={primaryPosition.직무}
+          isSelectedIcon={primaryPosition.직무 != ''}
           onClick={handleSelectChange(setPrimaryPosition, '직무', mainFiltered)}
+          disabled={isPrimaryJobDisabled}
         />
         <Select
           placeholder="직무"
           options={subFiltered}
           value={secondaryPosition.직무}
+          isSelectedIcon={secondaryPosition.직무 != ''}
           onClick={handleSelectChange(setSecondaryPosition, '직무', subFiltered)}
+          disabled={isSecondaryJobDisabled}
         />
       </GridContainer>
       {editMode && (

@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import styled from '@emotion/styled';
 
 import { Txt } from '@/components/_atoms';
@@ -17,7 +18,7 @@ export default function PartySection() {
         </Txt>
       </Header>
       <VideoContainer>
-        <video src="/video/landing2.mp4" autoPlay muted loop playsInline style={{ width: '100%' }} />
+        <Image src="https://partyguham.s3.ap-northeast-2.amazonaws.com/assets/images/party-motion.gif" alt="랜딩 페이지 프리뷰" width={1920} height={1080} unoptimized />
       </VideoContainer>
     </SectionContainer>
   );

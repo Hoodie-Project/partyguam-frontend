@@ -1,5 +1,7 @@
 import type { UsersMeResponse } from '@/types/user';
 
+import type { FetchGetUsersMePartiesResponse } from './detailProfile';
+
 import { fileUploadApi, privateApi } from '.';
 
 // [POST] accessToken 재발급
@@ -90,6 +92,61 @@ export interface UserAuthorityResponse {
     sub: string;
   };
 }
+
+/**
+ * 파티 유저 조회
+ * @param nickname
+ * @returns UsersMeResponse 와 타입 동일
+ */
+export const fetchGetUserByNickname = async (nickname: string): Promise<UsersMeResponse> => {
+  try {
+    const response = await privateApi.get<UsersMeResponse>(`/users/@${nickname}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('fetchGetUserByNickname Network Error');
+  }
+};
+
+/**
+ * 파티 유저의 파티 리스트 조회
+ * @param page, limit, sort, order, status
+ * @returns FetchGetUsersMePartiesResponse와 타입 동일
+ */
+export const fetchGetUsersNicknameParties = async ({
+  nickname = '',
+  page = 1,
+  limit = 5,
+  sort = 'createdAt',
+  order = 'ASC',
+  status = 'all',
+}: {
+  nickname: string;
+  page: number;
+  limit: number;
+  sort: string;
+  order: string;
+  status?: 'all' | 'active' | 'archived';
+}): Promise<FetchGetUsersMePartiesResponse | null> => {
+  try {
+    // 쿼리 파라미터를 먼저 객체로 설정
+    const params: any = {
+      sort,
+      order,
+      limit,
+      page,
+    };
+
+    if (status == 'active' || status == 'archived') {
+      params.status = status;
+    }
+
+    const response = await privateApi.get(`/users/@${nickname}/parties`, { params });
+    return response.data;
+  } catch (err) {
+    console.error('fetchGetUsersMeParties error:', err);
+    return null;
+  }
+};
 
 // 내 정보 수정
 export const fetchPatchUsers = async (data: FormData) => {
