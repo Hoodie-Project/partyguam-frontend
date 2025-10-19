@@ -57,7 +57,8 @@ const fadeOut = keyframes`
 `;
 
 const ToastContainer = styled.div<{ position: number }>`
-  position: absolute;
+  /* position: absolute; */
+  position: fixed;
   left: 50%;
   bottom: ${({ position }) => `${position}px`};
   transform: translateX(-50%);

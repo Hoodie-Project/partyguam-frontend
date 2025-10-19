@@ -26,7 +26,7 @@ export default function MySelectPersonality() {
 
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  const [isToast, setIsToast] = useState(false);
+  const [isToast, setIsToast] = useState(false); 
   const { setAuth } = useAuthStore();
   const { closeModal } = useModalContext();
 
@@ -258,10 +258,10 @@ export default function MySelectPersonality() {
               visible={isToast}
               onClose={() => setIsToast(false)}
               label={`최대 ${step.questionCnt}개까지 선택할 수 있어요.`}
-              position={80}
+              position={135}
               icon={<ErrorIcon fontSize="small" />}
             />
-          )}
+           )}
           <SectionTitle>
             <SFlexColumn style={{ gap: '7px' }}>
               <Txt fontWeight="bold" fontSize={24} fontColor="black" style={{ lineHeight: '160%' }}>
@@ -301,7 +301,7 @@ export default function MySelectPersonality() {
                   defaultBackground="white"
                   clickBorder="greenLight100"
                   defaultBorder="grey200"
-                  pointer={selected.length < step.questionCnt}
+                  pointer={true}
                   onClick={() => handleSelectOption(option, step.questionCnt)}
                 />
               ))}

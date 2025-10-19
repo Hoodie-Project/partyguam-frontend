@@ -449,7 +449,7 @@ const Divider = styled.div`
 `;
 
 const FloatingButton = styled.div`
-  position: fixed;
-  bottom: 50px;
+  position: relative;
+  bottom: 200px;
   width: 820px;
 `;
