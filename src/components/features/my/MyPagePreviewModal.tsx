@@ -150,7 +150,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
         sx={{
           width: '24px',
           cursor: 'pointer',
-          position: 'absolute',
+          position: 'fixed',
           top: 0,
           right: 0,
           margin: '20px',
@@ -472,7 +472,7 @@ const MyPageEditModalContainer = styled.div`
   flex-direction: column;
   width: 804px;
   height: auto;
-  max-height: 1053px;
+  max-height: 800px;
   padding: 70px 102px 86px 102px;
   background-color: white;
   border-radius: 12px;
