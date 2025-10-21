@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import Avatar from 'boring-avatars';
 
 import { fetchDeleteNotification, fetchPatchReadNotification, type NotificationType } from '@/apis/notifications';
 import KebabMenu from '@/assets/icon/kebab-menu.svg';
@@ -122,7 +121,7 @@ export default function NotificationModal({ notificationData, onClose, filter, s
                         ) : ( */}
                         <Image
                           alt="알림이미지"
-                          src={item.image == null ? '/images/landing/default-party-light200.jpg' : `${BASE_URL}/${item.image}`}
+                          src={item.image == null ? '/images/default-party-light200.jpg' : `${BASE_URL}/${item.image}`}
                           width={48}
                           height={48}
                           style={{ borderRadius: '99px' }}
