@@ -134,7 +134,7 @@ function PartyHome({ partyId }: PageParams) {
         >
           <Image
             alt="파티 홈 이미지"
-            src={partyHomeData?.image ? `${BASE_URL}/${partyHomeData?.image}` : '/images/guam.png'}
+            src={partyHomeData?.image ? `${BASE_URL}/${partyHomeData?.image}` : '/images/default-party-light200.jpg'}
             width={400}
             height={300}
             style={{ borderRadius: '16px', border: '1px solid #E5E5EC' }}

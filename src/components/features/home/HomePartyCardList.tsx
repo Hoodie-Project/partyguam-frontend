@@ -109,7 +109,7 @@ function HomePartyCardList() {
                 >
                   <CardContentsWrapper>
                     <Image
-                      src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
+                      src={party.image ? `${BASE_URL}/${party.image}` : '/images/default-party-light200.jpg'}
                       width={255}
                       height={180}
                       alt={party.title}

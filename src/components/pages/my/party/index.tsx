@@ -125,7 +125,7 @@ function MyParty() {
               >
                 <CardContentsWrapper>
                   <Image
-                    src={party.party.image ? `${BASE_URL}/${party.party.image}` : '/images/guam.png'}
+                    src={party.party.image ? `${BASE_URL}/${party.party.image}` : '/images/default-party-light200.jpg'}
                     width={255}
                     height={180}
                     alt={party.party.title}

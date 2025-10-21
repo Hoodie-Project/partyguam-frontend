@@ -159,7 +159,11 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                   >
                     <CardContentsWrapper>
                       <Image
-                        src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
+                        src={
+                          recruitment.party.image
+                            ? `${BASE_URL}/${recruitment.party.image}`
+                            : '/images/default-party-light200.jpg'
+                        }
                         width={200}
                         height={150}
                         alt={recruitment.party.title}
@@ -231,7 +235,11 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                 >
                   <CardContentsWrapper>
                     <Image
-                      src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
+                      src={
+                        recruitment.party.image
+                          ? `${BASE_URL}/${recruitment.party.image}`
+                          : '/images/default-party-light200.jpg'
+                      }
                       width={160}
                       height={120}
                       alt={recruitment.party.title}

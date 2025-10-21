@@ -123,7 +123,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
               src={
                 partyRecruitDetailData?.party.image
                   ? `${BASE_URL}/${partyRecruitDetailData?.party.image}`
-                  : '/images/guam.png'
+                  : '/images/default-party-light200.jpg'
               }
               width={400}
               height={300}
