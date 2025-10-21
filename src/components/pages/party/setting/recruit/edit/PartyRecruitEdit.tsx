@@ -17,7 +17,7 @@ import { BreadCrumb, PageHeader, Select, TipBox } from '@/components/_molecules'
 import { ConfirmModal } from '@/components/features';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useEditPartyRecruitForm } from '@/stores/party/useAddPartyRecruit';
-import { SContainer, SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
+import { SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { SinglePartyResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 
@@ -422,6 +422,15 @@ function PartyRecruitEdit() {
 }
 
 export default PartyRecruitEdit;
+
+const SContainer = styled.section`
+  width: 100%;
+  padding-top: 5.25rem;
+  padding-bottom: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const PartyRecruitContainer = styled.div`
   display: flex;

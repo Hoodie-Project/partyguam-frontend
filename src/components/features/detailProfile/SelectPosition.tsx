@@ -442,6 +442,7 @@ const SectionTitle = styled.div`
   flex-direction: column;
   gap: 1.25rem;
   margin: 5rem 0 3.75rem;
+  line-height: 200%;
 `;
 
 const GridTitle = styled.div`
