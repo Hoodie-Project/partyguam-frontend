@@ -108,31 +108,52 @@ export default function SelectPersonality({ editType, personalityData }: Props) 
   const currentStep = progress.find(step => step.currentStep) || progress[0] || '';
 
   const handleSelectOption = (
-    selectedOption: {
-      id: number;
-      personalityQuestionId: number;
-      content: string;
-    },
-    questionCnt: number,
-  ) => {
-    setSelected(prevSelected => {
-      const index = prevSelected.findIndex(option => option.id === selectedOption.id);
-      const newSelected = [...prevSelected];
+  selectedOption: {
+    id: number;
+    personalityQuestionId: number;
+    content: string;
+  },
+  questionCnt: number,
+) => {
+  setSelected(prevSelected => {
+    const newSelected = [...prevSelected];
 
-      if (index > -1) {
-        newSelected.splice(index, 1);
-      } else {
-        if (newSelected.length >= questionCnt) {
-          setIsToast(true);
-          return prevSelected;
-        }
-        newSelected.push(selectedOption);
+    // questionId가 1 (시간대 선택)인 경우만 특별 처리
+    if (selectedOption.personalityQuestionId === 1) {
+      const is무관 = selectedOption.content === '무관';
+      const hasMugan = newSelected.some(opt => opt.content === '무관');
+
+      // 1) "무관" 선택 중 다른 옵션 클릭 시 → 무관 제거 후 새 옵션 추가
+      if (!is무관 && hasMugan) {
+        const filtered = newSelected.filter(opt => opt.content !== '무관');
+        return [...filtered, selectedOption];
       }
 
-      setIsToast(false);
-      return newSelected;
-    });
-  };
+      // 2)  다른 옵션들 선택 중 "무관" 클릭 시 → 기존 선택 전부 제거 후 "무관"만 추가
+      if (is무관) {
+        return [selectedOption];
+      }
+    }
+
+    // 이하 기존 로직 (중복 선택 / 토스트 처리)
+    const index = newSelected.findIndex(option => option.id === selectedOption.id);
+
+    if (index > -1) {
+      newSelected.splice(index, 1);
+    } else {
+      if (newSelected.length >= questionCnt) {
+        setIsToast(true);
+        return prevSelected;
+      }
+      newSelected.push(selectedOption);
+    }
+
+    setIsToast(false);
+    return newSelected;
+  });
+};
+
+
 
   const convertToSelectedPersonality = (
     options: {
