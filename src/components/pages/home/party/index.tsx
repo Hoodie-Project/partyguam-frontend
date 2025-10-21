@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -17,7 +17,7 @@ import { LoginModal } from '@/components/features';
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
-import { SContainer, SHomeContainer } from '@/styles/components';
+import { SHomeContainer } from '@/styles/components';
 import type { Position } from '@/types/user';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
@@ -229,6 +229,11 @@ function HomeParty() {
     refetchOnWindowFocus: false,
   });
 
+  const totalPartiesCount = useMemo(() => {
+    if (!partyList?.pages) return 0;
+    return partyList.pages.flatMap(page => page?.parties ?? []).length;
+  }, [partyList]);
+
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -242,7 +247,7 @@ function HomeParty() {
   };
 
   return (
-    <SContainer>
+    <SContainer isExtend={totalPartiesCount < 9}>
       <SHomeContainer>
         <Txt fontWeight="bold" fontSize={32}>
           파티
@@ -351,7 +356,6 @@ function HomeParty() {
             </CircleButton>
           </RightFilter>
         </HeaderWrapper>
-
         <PartyCardList>
           {partyList?.pages.flatMap(page =>
             page?.parties.map((party, i) => (
@@ -368,7 +372,7 @@ function HomeParty() {
                 <CardContentsWrapper>
                   <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Image
-                      src={party.image ? `${BASE_URL}/${party.image}` : '/images/guam.png'}
+                      src={party.image ? `${BASE_URL}/${party.image}` : '/images/default-party-light200.jpg'}
                       width={255}
                       height={180}
                       alt={party.title}
@@ -415,7 +419,6 @@ function HomeParty() {
             </EmptyState>
           )}
         </PartyCardList>
-
         <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
       </SHomeContainer>
       <ScrollToTop />
@@ -424,6 +427,16 @@ function HomeParty() {
 }
 
 export default HomeParty;
+
+const SContainer = styled.section<{ isExtend: boolean }>`
+  width: 100%;
+  height: ${({ isExtend }) => (isExtend ? '100vh' : '100%')};
+  padding-top: 5.25rem;
+  padding-bottom: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const HeaderWrapper = styled.section`
   width: 100%;

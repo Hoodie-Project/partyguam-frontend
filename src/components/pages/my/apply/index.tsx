@@ -81,9 +81,9 @@ function MyApply() {
       return myPartyApplications.pages.flatMap(page =>
         page?.partyApplications
           ? page.partyApplications.map(item => ({
-            ...item,
-            id: item.id,
-          }))
+              ...item,
+              id: item.id,
+            }))
           : [],
       );
     }
@@ -212,7 +212,7 @@ function MyApply() {
             data={{ nodes: myPartyApplicationsById ?? [] }}
             theme={theme}
             layout={{ custom: true }}
-            style={{ width: '100%', minHeight:'116px', height: 'auto', zIndex: 0, marginBottom: '20px' }}
+            style={{ width: '100%', minHeight: '116px', height: 'auto', zIndex: 0, marginBottom: '20px' }}
           >
             {(tableList: PartyApplication[]) => (
               <>
@@ -355,7 +355,7 @@ function MyApply() {
                                 src={
                                   item.partyRecruitment.party.image
                                     ? `${BASE_URL}/${item.partyRecruitment.party.image}`
-                                    : '/images/guam.png'
+                                    : '/images/default-party-light200.jpg'
                                 }
                                 width={120}
                                 height={90}
@@ -549,7 +549,7 @@ const StyledHeaderCell = styled(HeaderCell)`
   text-align: center;
 `;
 
-const StyledCell = styled(Cell) <{ isExpend: boolean }>`
+const StyledCell = styled(Cell)<{ isExpend: boolean }>`
   padding: 10px;
   border-bottom: ${({ isExpend }) => (isExpend ? 'none' : '1px solid #f1f1f5')};
   text-align: center;

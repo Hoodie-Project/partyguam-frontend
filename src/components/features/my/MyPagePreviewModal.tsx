@@ -403,7 +403,9 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                 >
                   <CardContentsWrapper>
                     <Image
-                      src={party.party.image ? `${BASE_URL}/${party.party.image}` : '/images/guam.png'}
+                      src={
+                        party.party.image ? `${BASE_URL}/${party.party.image}` : '/images/default-party-light200.jpg'
+                      }
                       width={165}
                       height={150}
                       alt={party.party.title}
@@ -450,7 +452,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
             )}
             <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
           </PartyCardList>
-          <SFlexColumnCenter>
+          <SFlexColumnCenter style={{ marginTop: '20px' }}>
             {visibleItemsCount !== (otherNickname ? othersPartyList : myPartyList)?.pages[0]?.total && (
               <CircleButton onClick={handleShowMore}>
                 <Txt fontSize={14} fontColor="grey500">
@@ -470,13 +472,25 @@ const MyPageEditModalContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  width: 804px;
+  width: 810px;
   height: auto;
   max-height: 800px;
   padding: 70px 102px 86px 102px;
   background-color: white;
   border-radius: 12px;
-  overflow-y: auto;
+
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+  clip-path: inset(0 round 12px);
+  /* 
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(33, 236, 199, 0.3);
+    border-radius: 999px;
+  } */
 `;
 
 const MyPageDetailProfileContainer = styled.div`
@@ -532,7 +546,7 @@ const CardContentsWrapper = styled.div`
 
 const EllipsisTitleText = styled(Txt)`
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

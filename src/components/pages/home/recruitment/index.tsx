@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -16,7 +16,7 @@ import HomeRecruitmentSelect from '@/components/features/home/HomeRecruitmentSel
 import { useModalContext } from '@/contexts/ModalContext';
 import { useAuthStore } from '@/stores/auth';
 import { useApplicantFilterStore } from '@/stores/home/useApplicantFilter';
-import { SContainer, SHomeContainer } from '@/styles/components';
+import { SHomeContainer } from '@/styles/components';
 
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
@@ -104,6 +104,11 @@ function HomeRecruitment() {
     refetchOnWindowFocus: false,
   });
 
+  const totalRecruitmentsCount = useMemo(() => {
+    if (!partyRecruitmentList?.pages) return 0;
+    return partyRecruitmentList.pages.flatMap(page => page?.partyRecruitments ?? []).length;
+  }, [partyRecruitmentList]);
+
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -117,7 +122,7 @@ function HomeRecruitment() {
   };
 
   return (
-    <SContainer>
+    <SContainer isExtend={totalRecruitmentsCount < 13}>
       <SHomeContainer>
         <Txt fontWeight="bold" fontSize={32}>
           모집공고
@@ -155,87 +160,89 @@ function HomeRecruitment() {
             </Txt>
           </RightFilter>
         </HeaderWrapper>
-        <div style={{ height: '100%' }}>
-          <ReCruitmentCardWrapper>
-            {partyRecruitmentList?.pages.flatMap(page =>
-              page?.partyRecruitments.map((recruitment, i) => (
-                <StyledSquare
-                  key={`${recruitment.id}_${i}`}
-                  width="100%"
-                  height="160px"
-                  shadowKey="shadow1"
-                  backgroundColor="white"
-                  radiusKey="base"
-                  borderColor="grey200"
-                  onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
-                >
-                  <CardContentsWrapper>
-                    <Image
-                      src={recruitment.party.image ? `${BASE_URL}/${recruitment.party.image}` : '/images/guam.png'}
-                      width={160}
-                      height={120}
-                      alt={recruitment.party.title}
-                      style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                    />
-                    <CardRightWrapper>
-                      <div>
-                        <Chip
-                          chipType="filled"
-                          label={recruitment.party.partyType.type}
-                          size="xsmall"
-                          chipColor="#F6F6F6"
-                          fontColor="grey700"
-                          fontWeight="semibold"
-                        />
-                        <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
-                          {recruitment.party.title} {/* 파티 제목 */}
-                        </EllipsisTitleText>
-                        <Txt
-                          fontSize={14}
-                          color="grey600"
-                          style={{
-                            marginLeft: '2px',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            lineHeight: '140%',
-                          }}
-                        >
-                          {recruitment.position.main} <Divider />
-                          {recruitment.position.sub} {/* 포지션 정보 */}
-                        </Txt>
-                      </div>
+        <ReCruitmentCardWrapper>
+          {partyRecruitmentList?.pages.flatMap(page =>
+            page?.partyRecruitments.map((recruitment, i) => (
+              <StyledSquare
+                key={`${recruitment.id}_${i}`}
+                width="100%"
+                height="160px"
+                shadowKey="shadow1"
+                backgroundColor="white"
+                radiusKey="base"
+                borderColor="grey200"
+                onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
+              >
+                <CardContentsWrapper>
+                  <Image
+                    src={
+                      recruitment.party.image
+                        ? `${BASE_URL}/${recruitment.party.image}`
+                        : '/images/default-party-light200.jpg'
+                    }
+                    width={160}
+                    height={120}
+                    alt={recruitment.party.title}
+                    style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                  />
+                  <CardRightWrapper>
+                    <div>
+                      <Chip
+                        chipType="filled"
+                        label={recruitment.party.partyType.type}
+                        size="xsmall"
+                        chipColor="#F6F6F6"
+                        fontColor="grey700"
+                        fontWeight="semibold"
+                      />
+                      <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                        {recruitment.party.title} {/* 파티 제목 */}
+                      </EllipsisTitleText>
+                      <Txt
+                        fontSize={14}
+                        color="grey600"
+                        style={{
+                          marginLeft: '2px',
+                          display: 'flex',
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          lineHeight: '140%',
+                        }}
+                      >
+                        {recruitment.position.main} <Divider />
+                        {recruitment.position.sub} {/* 포지션 정보 */}
+                      </Txt>
+                    </div>
 
-                      <RecruitsCount>
-                        <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                          {recruitment.status === 'active' ? '모집중' : '파티종료'}
-                        </Txt>
+                    <RecruitsCount>
+                      <Txt fontSize={12} style={{ lineHeight: '140%' }}>
+                        {recruitment.status === 'active' ? '모집중' : '파티종료'}
+                      </Txt>
 
-                        <Txt
-                          fontSize={12}
-                          color="failRed"
-                          style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
-                        >
-                          {recruitment.recruitedCount} / {recruitment.recruitingCount}
-                        </Txt>
-                      </RecruitsCount>
-                    </CardRightWrapper>
-                  </CardContentsWrapper>
-                </StyledSquare>
-              )),
-            )}
-            {partyRecruitmentList?.pages[0]?.total === 0 && (
-              <EmptyState>
-                <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
-                <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
-                  모집공고가 없습니다.
-                </Txt>
-              </EmptyState>
-            )}
-          </ReCruitmentCardWrapper>
+                      <Txt
+                        fontSize={12}
+                        color="failRed"
+                        style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
+                      >
+                        {recruitment.recruitedCount} / {recruitment.recruitingCount}
+                      </Txt>
+                    </RecruitsCount>
+                  </CardRightWrapper>
+                </CardContentsWrapper>
+              </StyledSquare>
+            )),
+          )}
+          {partyRecruitmentList?.pages[0]?.total === 0 && (
+            <EmptyState>
+              <InfoOutlinedIcon style={{ marginBottom: '6px' }} />
+              <Txt fontSize={16} fontWeight="semibold" fontColor="grey400">
+                모집공고가 없습니다.
+              </Txt>
+            </EmptyState>
+          )}
+        </ReCruitmentCardWrapper>
 
-          <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
-        </div>
+        <div ref={ref} style={{ height: '20px', backgroundColor: 'transparent' }} />
       </SHomeContainer>
       <ScrollToTop />
     </SContainer>
@@ -243,6 +250,16 @@ function HomeRecruitment() {
 }
 
 export default HomeRecruitment;
+
+const SContainer = styled.section<{ isExtend: boolean }>`
+  width: 100%;
+  height: ${({ isExtend }) => (isExtend ? '100vh' : '100%')};
+  padding-top: 5.25rem;
+  padding-bottom: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const HeaderWrapper = styled.section`
   width: 100%;

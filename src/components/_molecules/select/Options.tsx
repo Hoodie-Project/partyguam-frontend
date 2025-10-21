@@ -58,6 +58,7 @@ const SelectOptions = styled.ul<{ top?: keyof typeof size.height; optionRadius?:
   overflow-y: scroll;
   background-color: white;
   border-radius: ${({ optionRadius: radiusProp }) => radius[radiusProp!] || radius.base};
+  clip-path: ${({ optionRadius: radiusProp }) => `inset(0 round ${radius[radiusProp!] || radius.base})`};
 
   z-index: 10;
   border: 1px solid ${palette.greenDark100};
