@@ -10,14 +10,12 @@ import type { CreatePartyResponse } from '@/apis/party';
 import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 
 import {
-  fetchDeleteParty,
   fetchGetPartyHome,
   fetchGetPartyRecruitmentsList,
   fetchGetPartyTypes,
   fetchGetPositions,
   fetchPatchPartyInfo,
-  fetchPostCreateParty,
-  fetchPatchPartyStatus
+  fetchPostCreateParty
 } from '@/apis/party';
 import ImageAddIcon from '@/assets/icon/image_add.svg';
 import { Balloon, Button, Input, Square, Txt } from '@/components/_atoms';
@@ -254,7 +252,6 @@ export default function PartyEdit({ partyId }: PageParams) {
       let numberPartyId = Number(partyId);
       try {
         await fetchPatchPartyInfo({ partyId: numberPartyId, data: formData });
-        await fetchPatchPartyStatus(numberPartyId, { status: 파티상태 });
         window.location.reload();
       } catch (err) {
         console.error('Error creating party:', err);
