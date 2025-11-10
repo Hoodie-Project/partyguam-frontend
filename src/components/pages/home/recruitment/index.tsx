@@ -253,7 +253,7 @@ export default HomeRecruitment;
 
 const SContainer = styled.section<{ isExtend: boolean }>`
   width: 100%;
-  height: ${({ isExtend }) => (isExtend ? '100vh' : '100%')};
+//  height: ${({ isExtend }) => (isExtend ? '100vh' : '100%')};
   padding-top: 5.25rem;
   padding-bottom: 92px;
   display: flex;

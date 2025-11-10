@@ -13,7 +13,6 @@ import { Tabs } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';
 import { PartyHomeTab, PartyPeopleTab, PartyRecruitmentsTab } from '@/components/features/party';
 import { useModalContext } from '@/contexts/ModalContext';
-import { SContainer } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
 
 type PageParams = {
@@ -234,19 +233,27 @@ function PartyHome({ partyId }: PageParams) {
 
 export default PartyHome;
 
+const SContainer = styled.section`
+  width: 100%;
+  padding-top: 5.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const PartyHomeContainer = styled.section`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 820px;
-  height: 110vh;
+  height: 100%;
   padding-top: 52px;
 `;
 
 const PartyContentsWrapper = styled.header`
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   z-index: 10;
@@ -283,6 +290,7 @@ const PartyTabsWrapper = styled.div`
   position: sticky;
   top: 145px;
   width: 100%;
+  height: 100%;
   background-color: white;
   z-index: 10;
 `;
