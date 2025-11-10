@@ -152,7 +152,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
                 모집 편집
               </Txt>
             </HeaderRight>
-          )}{' '}
+          )}
         </HeaderArea>
 
         {/* Select와 등록순 필터가 같은 선상에 배치 */}

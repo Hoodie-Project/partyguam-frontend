@@ -7,6 +7,7 @@ import { useModalContext } from '@/contexts/ModalContext';
 export function useNavigationBlocker(shouldBlock: boolean, partyId?: string) {
   const { openModal, closeModal } = useModalContext();
   const isBlockedRef = useRef(false);
+  const beforeUnloadHandlerRef = useRef<(e: BeforeUnloadEvent) => void>();
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -55,6 +56,8 @@ export function useNavigationBlocker(shouldBlock: boolean, partyId?: string) {
       // history.pushState(null, '', window.location.href);
     };
 
+    beforeUnloadHandlerRef.current = handleBeforeUnload;
+
     if (shouldBlock) {
       window.addEventListener('beforeunload', handleBeforeUnload);
       window.addEventListener('popstate', handlePopState);
@@ -65,5 +68,13 @@ export function useNavigationBlocker(shouldBlock: boolean, partyId?: string) {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, [shouldBlock, openModal, closeModal]);
+  }, [shouldBlock, openModal, closeModal, partyId]);
+
+  return {
+    removeBeforeUnload: () => {
+      if (beforeUnloadHandlerRef.current) {
+        window.removeEventListener('beforeunload', beforeUnloadHandlerRef.current);
+      }
+    },
+  };
 }

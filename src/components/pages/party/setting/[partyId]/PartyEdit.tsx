@@ -96,7 +96,7 @@ export default function PartyEdit({ partyId }: PageParams) {
   const [isDifferentAsIsValue, setIsDifferentAsIsValue] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const { removeBeforeUnload } = useNavigationBlocker(isDifferentAsIsValue, partyId);
   useEffect(() => {
     if (partyHomeData == null) return;
     set파티명value(partyHomeData.title);
@@ -123,7 +123,6 @@ export default function PartyEdit({ partyId }: PageParams) {
     setIsDifferentAsIsValue(isChanged);
   }, [파티명value, 파티유형value, 파티소개글value, initialValues]);
  
-  useNavigationBlocker(isDifferentAsIsValue, partyId);
 
     const { openPartyEditModal } = usePartyEditModal({
     onHardReload: true,              
@@ -184,10 +183,10 @@ export default function PartyEdit({ partyId }: PageParams) {
     if (pageType === 'CREATE') {
       return !commonConditions && 내포지션.id != 0;
     } else if (pageType === 'MODIFY') {
-      return !(commonConditions && 파티상태 !== '');
+      return !(commonConditions && 파티상태 !== '' && isDifferentAsIsValue);
     }
     return true;
-  }, [파티명InputState, 파티소개글InputState, 파티유형value, 내포지션, 파티상태, pageType]);
+  }, [파티명InputState, 파티소개글InputState, 파티유형value, 내포지션, 파티상태, pageType, isDifferentAsIsValue]);
 
   const handle파티명Change = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     set파티명value(e.target.value);
@@ -252,6 +251,7 @@ export default function PartyEdit({ partyId }: PageParams) {
       let numberPartyId = Number(partyId);
       try {
         await fetchPatchPartyInfo({ partyId: numberPartyId, data: formData });
+        removeBeforeUnload();
         window.location.reload();
       } catch (err) {
         console.error('Error creating party:', err);
