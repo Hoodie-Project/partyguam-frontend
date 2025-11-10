@@ -90,9 +90,12 @@ export default function AlarmSection() {
 }
 const SectionContainer = styled.section`
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
-  height: 701px;
+  height: 751px;
+  overflow: hidden;
+
   background: linear-gradient(180deg, #ffffff 0%, #c5faf0 100%);
 `;
 

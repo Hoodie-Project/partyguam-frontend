@@ -29,6 +29,8 @@ const SectionContainer = styled.section`
   flex-direction: column;
   align-items: center;
   height: auto;
+  width: 100%;
+  overflow: hidden;
 `;
 
 const Header = styled.div`

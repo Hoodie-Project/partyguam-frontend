@@ -47,7 +47,9 @@ const SectionContainer = styled.section`
   display: flex;
   flex-direction: column;
   height: 967px;
+  width: 100%;
   background-color: #ddfcf6;
+  overflow: hidden;
 `;
 
 const Header = styled.div`

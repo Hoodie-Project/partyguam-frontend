@@ -33,8 +33,10 @@ const SectionContainer = styled.section`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100%;
   height: 900px;
   background-color: #21ecc7;
+  overflow: hidden;
 `;
 
 const SectionWrapper = styled.div`
