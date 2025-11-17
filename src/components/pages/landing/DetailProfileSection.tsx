@@ -26,6 +26,8 @@ export default function DetailProfileSection() {
 
 const Container = styled.div`
   height: auto;
+  width: 100%;
+  overflow: hidden;
 `;
 
 const Header = styled.div`

@@ -95,7 +95,7 @@ function MyProfile() {
     userImage,
   ]);
 
-  useNavigationBlocker(!수정완료disabled);
+      const { removeBeforeUnload } = useNavigationBlocker(!수정완료disabled);
 
   useEffect(() => {
     (async () => {
@@ -149,7 +149,11 @@ function MyProfile() {
       setBirthVisible(res.birthVisible);
       setGenderVisible(res.genderVisible);
       setUserImageUrl(res.image);
+      
       setUserImage(null);
+      removeBeforeUnload();
+      window.location.reload();
+
     } catch (error) {
       console.error('handleSubmitPatchUser : ', error);
     }
