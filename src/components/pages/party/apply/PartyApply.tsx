@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styled from '@emotion/styled';
 
-import { fetchPostApplyParty } from '@/apis/party';
+import { fetchPostApplyParty } from '@/apis/application/user';
 import { Button, Input, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';

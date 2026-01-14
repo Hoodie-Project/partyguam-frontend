@@ -8,7 +8,7 @@ import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftR
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 
 import { fetchGetUsers, fetchPostAccessToken } from '@/apis/auth';
-import { fetchGetBanner, type HomeBanner } from '@/apis/home';
+import { fetchGetBanner, type HomeBanner } from '@/apis/banner';
 import { Txt } from '@/components/_atoms';
 import { SearchBar, Select } from '@/components/_molecules';
 import { HomePartyCardList, HomeRecruitmentList } from '@/components/features';

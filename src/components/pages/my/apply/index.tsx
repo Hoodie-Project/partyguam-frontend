@@ -16,9 +16,13 @@ import { Body, Cell, Header, HeaderCell, HeaderRow, Row, Table } from '@table-li
 import { useTheme } from '@table-library/react-table-library/theme';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import {
+  fetchApprovePartyApplication,
+  fetchDeletePartyApplication,
+  fetchRejectPartyApplication,
+} from '@/apis/application/user';
 import type { PartyApplication } from '@/apis/auth';
 import { fetchGetUsersMePartiesApplications } from '@/apis/auth';
-import { fetchApprovePartyApplication, fetchDeletePartyApplication, fetchRejectPartyApplication } from '@/apis/party';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { ConfirmModal, FloatingMenu } from '@/components/features';

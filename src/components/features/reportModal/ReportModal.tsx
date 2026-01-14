@@ -3,7 +3,7 @@ import React, { useMemo, useState } from 'react';
 import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
-import { fetchPostReports } from '@/apis/party';
+import { fetchPostReports } from '@/apis/report';
 import { Button, Input, Txt } from '@/components/_atoms';
 import { useModalContext } from '@/contexts/ModalContext';
 import { palette } from '@/styles';

@@ -135,13 +135,13 @@ export interface PartyUserByAdmin {
 // [GET] 파티 포지션별 모집 공고 지원자
 export interface PartyApplicationData {
   total: number;
-  partyApplicationUser: PartyApplicationUser[];
+  applications: PartyApplicationUser[];
 }
 
 export interface PartyApplicationUser {
   id: number;
   message: string;
-  status: string;
+  applicationStatus: string;
   createdAt: string;
   user: {
     id: number;

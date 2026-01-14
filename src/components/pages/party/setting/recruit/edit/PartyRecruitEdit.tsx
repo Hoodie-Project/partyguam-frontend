@@ -5,13 +5,9 @@ import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import { fetchGetPositions } from '@/apis/detailProfile';
-import {
-  fetchCompletePartyRecruitment,
-  fetchGetSingleParty,
-  fetchPartyRecruitmentDetails,
-  fetchPostRecruitmentParty,
-  fetchUpdatePartyRecruitment,
-} from '@/apis/party';
+import { fetchGetSingleParty } from '@/apis/party';
+import { fetchCompletePartyRecruitment, fetchUpdatePartyRecruitment } from '@/apis/recruitment/admin';
+import { fetchPartyRecruitmentDetails, fetchPostRecruitmentParty } from '@/apis/recruitment/user';
 import { Button, Input, Txt } from '@/components/_atoms';
 import { BreadCrumb, PageHeader, Select, TipBox } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';

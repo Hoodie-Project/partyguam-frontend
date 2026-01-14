@@ -15,8 +15,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import {
   fetchAdminApprovePartyApplication,
   fetchAdminRejectPartyApplication,
-  fetchPartyRecruitmentApplications,
-} from '@/apis/party';
+  fetchGetPartyRecruitmentApplications,
+} from '@/apis/application/admin';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { BreadCrumb, ProfileImage } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';
@@ -50,21 +50,21 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
     queryFn: async ({ pageParam }) => {
       const refinedStatus = status === 'all' ? undefined : status;
 
-      const res = await fetchPartyRecruitmentApplications({
+      const res = await fetchGetPartyRecruitmentApplications({
         partyId: Number(partyId),
         partyRecruitmentId: Number(partyRecruitmentId),
         page: pageParam as number,
         limit: 10,
         sort: 'createdAt',
         order,
-        status: refinedStatus,
+        applicationStatus: refinedStatus,
       });
 
       return res;
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      const totalFetchedItems = allPages.flatMap(page => page.partyApplicationUser).length;
+      const totalFetchedItems = allPages.flatMap(page => page.applications).length;
 
       if (totalFetchedItems < lastPage.total) {
         return allPages.length + 1;
@@ -82,11 +82,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const partyRecruitmentApplicationsWithId = useMemo(() => {
     if (isFetched && partyRecruitmentApplications) {
       return partyRecruitmentApplications.pages.flatMap(page =>
-        page?.partyApplicationUser
-          ? page.partyApplicationUser.map(item => ({
-            ...item,
-            id: item.id,
-          }))
+        page?.applications
+          ? page.applications.map(item => ({
+              ...item,
+              id: item.id,
+            }))
           : [],
       );
     }
@@ -186,7 +186,14 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         data={{ nodes: partyRecruitmentApplicationsWithId ?? [] }}
         theme={theme}
         layout={{ custom: true }}
-        style={{ width: '100%', minHeight:'116px', height: 'auto', zIndex: 0, marginTop: '32px', marginBottom: '20px' }}
+        style={{
+          width: '100%',
+          minHeight: '116px',
+          height: 'auto',
+          zIndex: 0,
+          marginTop: '32px',
+          marginBottom: '20px',
+        }}
       >
         {(tableList: PartyApplicationUser[]) => (
           <>
@@ -229,7 +236,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                         onClose={() => {
                           setIsShowBalloon(false);
                         }}
-                        style={{ 
+                        style={{
                           position: 'fixed',
                           top: '310px',
                           padding: '20px',
@@ -248,10 +255,10 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                           cursor: 'pointer',
                           fill: 'white',
                           marginLeft: '4px',
-                          zIndex: 10
+                          zIndex: 10,
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column'}} >
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column' }}>
                           <div style={{ width: '100%', textAlign: 'start', marginBottom: '12px' }}>
                             <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
                               상태
@@ -333,9 +340,9 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                       <Txt
                         fontWeight="semibold"
                         fontSize={14}
-                        style={{ color: `${PARTY_APPLICANTS_STATUS(item.status)?.color}` }}
+                        style={{ color: `${PARTY_APPLICANTS_STATUS(item.applicationStatus)?.color}` }}
                       >
-                        {PARTY_APPLICANTS_STATUS(item.status)?.label}
+                        {PARTY_APPLICANTS_STATUS(item.applicationStatus)?.label}
                       </Txt>
                     </StyledCell>
                     <StyledCell isExpend={expand지원서 === item.id}>
@@ -355,7 +362,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                     <Row item={item}>
                       <Styled지원서Cell gridColumnStart={1} gridColumnEnd={5}>
                         <Styled지원서TxtBox>{item.message}</Styled지원서TxtBox>
-                        {item.status === 'pending' && recruitStatus === 'active' && (
+                        {item.applicationStatus === 'pending' && recruitStatus === 'active' && (
                           <div
                             style={{
                               display: 'flex',
@@ -435,7 +442,7 @@ const StyledHeaderCell = styled(HeaderCell)`
   text-align: center;
 `;
 
-const StyledCell = styled(Cell) <{ isExpend: boolean }>`
+const StyledCell = styled(Cell)<{ isExpend: boolean }>`
   padding: 10px;
   border-bottom: ${({ isExpend }) => (isExpend ? 'none' : '1px solid #f1f1f5')};
   text-align: center;
