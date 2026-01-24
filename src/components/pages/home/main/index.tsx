@@ -106,6 +106,7 @@ function Main() {
   useEffect(() => {
     const getBanner = async () => {
       const res = await fetchGetBanner();
+      console.log('배너 데이터 : ', res);
       setBanner(res);
     };
     getBanner();

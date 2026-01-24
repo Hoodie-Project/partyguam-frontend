@@ -28,3 +28,12 @@ export const fileUploadApi = new HttpClient({
   withCredentials: true,
   withXSRFToken: true,
 });
+
+export const withOttApi = new HttpClient({
+  baseURL: `${BASE_URL}`,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-OTT-Type': 'SIGNUP',
+  },
+  withCredentials: true,
+});

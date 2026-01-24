@@ -17,7 +17,7 @@ export interface HomeBanner {
 // https://documenter.getpostman.com/view/16386957/2sB3WqszSQ#13e53bbf-ff26-40dd-9798-ede8572a2df2
 export const fetchGetBanner = async (): Promise<HomeBanner | null> => {
   try {
-    const response = await privateApi.get('/banner/web');
+    const response = await privateApi.get('/banners?platform=web');
     return response.data;
   } catch (error) {
     console.error('fetchGetBanner error:', error);

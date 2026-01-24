@@ -2,7 +2,7 @@ import type { UsersMeResponse } from '@/types/user';
 
 import type { FetchGetUsersMePartiesResponse } from './detailProfile';
 
-import { fileUploadApi, privateApi } from '.';
+import { fileUploadApi, privateApi, withOttApi } from '.';
 
 // [POST] accessToken 재발급
 const fetchPostAccessToken = async (): Promise<{ accessToken: string }> => {
@@ -34,7 +34,7 @@ const fetchGetOauthInfo = async () => {
  */
 const fetchNicknameDuplicated = async (nickname: string) => {
   try {
-    const response = await privateApi.get('/users/check-nickname', {
+    const response = await withOttApi.get('/users/check-nickname', {
       params: { nickname },
     });
 
@@ -58,7 +58,7 @@ const fetchNicknameDuplicated = async (nickname: string) => {
  */
 const fetchJoinFormSubmit = async (data: { birth: string; nickname: string; gender: string }) => {
   try {
-    const response = await privateApi.post('/users', {
+    const response = await withOttApi.post('/users', {
       nickname: data.nickname,
       birth: data.birth,
       gender: data.gender,
@@ -213,7 +213,7 @@ const fetchUsersSignOut = async () => {
 // session에서 Oauth 본인 데이터 호출(email, image)
 const fetchGetUsersMeOauthProfile = async () => {
   try {
-    const response = await privateApi.get('/ott/signup/context');
+    const response = await withOttApi.get('/ott/signup/context');
     return response.data;
   } catch (error) {
     console.error('fetchUsersMeOauthProfile error : ', error);
