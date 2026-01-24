@@ -6,11 +6,11 @@ import { formatDate } from '@/utils/date';
 
 type Props = {
   createdAt: string; // 등록일
-  status: string; // 모집공고 상태 (active, completed)
+  completed: boolean; // 모집공고 완료 여부
   main: string; // 메인 포지션
   sub: string; // 서브 포지션
-  recruitedCount: number; // 모집된 인원
-  recruitingCount: number; // 모집인원
+  currentParticipants: number; // 모집된 인원
+  maxParticipants: number; // 모집인원
   applicationCount: number; // 지원자
   handleClick: () => void;
   isSetting?: boolean;
@@ -20,9 +20,9 @@ export default function PartyRecruitmentsCard({
   createdAt,
   main,
   sub,
-  status,
-  recruitedCount,
-  recruitingCount,
+  completed,
+  currentParticipants,
+  maxParticipants,
   applicationCount,
   handleClick,
   isSetting,
@@ -50,17 +50,17 @@ export default function PartyRecruitmentsCard({
         {main} <Divider height="12px" margin="0px 8px" /> {sub}
       </Txt>
       <Info>
-        {status === 'active' && !isSetting && (
+        {completed === false && !isSetting && (
           <>
             <Txt fontSize={14} fontColor="black">
               모집중
             </Txt>
             <Txt fontSize={14} fontColor="failRed" style={{ marginRight: '20px' }}>
-              {recruitedCount}/{recruitingCount}
+              {currentParticipants}/{maxParticipants}
             </Txt>
           </>
         )}
-        {status === 'active' && (
+        {completed === false && (
           <>
             <Txt fontSize={14} fontColor="black">
               지원자
@@ -71,7 +71,7 @@ export default function PartyRecruitmentsCard({
           </>
         )}
 
-        {status === 'completed' && (
+        {completed === true && (
           <Txt fontSize={14} fontColor="black">
             모집 마감
           </Txt>

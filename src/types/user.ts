@@ -41,7 +41,7 @@ export interface PersonalityQuestion {
 export interface UserCareer {
   id: number;
   years: number;
-  careerType: string; //'primary' | 'secondary';
+  careerType: 'PRIMARY' | 'SECONDARY';
   position: UserPosition;
 }
 
@@ -84,6 +84,6 @@ export interface UserPositionResponse {
   userId: number;
   positionId: number;
   years: number;
-  careerType: 'primary' | 'secondary';
+  careerType: 'PRIMARY' | 'SECONDARY';
 }
 /** detailProfile End */

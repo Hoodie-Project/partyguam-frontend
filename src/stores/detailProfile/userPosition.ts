@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export interface Career {
   positionId: number;
   years: number;
-  careerType: 'primary' | 'secondary';
+  careerType: 'PRIMARY' | 'SECONDARY';
 }
 
 interface SelectPositionState {

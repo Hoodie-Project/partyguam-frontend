@@ -40,7 +40,7 @@ type Position = {
 type Props = {
   partyId: number;
   user: User;
-  authority: string;
+  authority: 'MASTER' | 'DEPUTY' | 'MEMBER';
   position: Position;
 };
 
@@ -242,7 +242,7 @@ export default function PartyUserEditModal({ partyId, user, authority, position 
           marginTop: '16px',
         }}
       >
-        <ProfileImage imageUrl={user.image || ''} size={40} authority="member" />
+        <ProfileImage imageUrl={user.image || ''} size={40} authority="MEMBER" />
         <Txt
           fontWeight="normal"
           fontSize={14}
@@ -284,12 +284,12 @@ export default function PartyUserEditModal({ partyId, user, authority, position 
         <Button
           onClick={e => {
             e.preventDefault();
-            setChangedAuthority('master');
+            setChangedAuthority('MASTER');
           }}
           width="ms"
           height="l"
-          backgroudColor={changedAuthority === 'master' ? 'greenLight200' : 'white'}
-          borderColor={changedAuthority === 'master' ? 'transparent' : 'grey200'}
+          backgroudColor={changedAuthority === 'MASTER' ? 'greenLight200' : 'white'}
+          borderColor={changedAuthority === 'MASTER' ? 'transparent' : 'grey200'}
           radius="base"
           shadow="shadow1"
         >
@@ -298,15 +298,15 @@ export default function PartyUserEditModal({ partyId, user, authority, position 
         <Button
           onClick={e => {
             e.preventDefault();
-            setChangedAuthority('member');
+            setChangedAuthority('MEMBER');
           }}
           width="ms"
           height="l"
-          backgroudColor={changedAuthority === 'member' ? 'greenLight200' : 'white'}
-          borderColor={changedAuthority === 'member' ? 'transparent' : 'grey200'}
+          backgroudColor={changedAuthority === 'MEMBER' ? 'greenLight200' : 'white'}
+          borderColor={changedAuthority === 'MEMBER' ? 'transparent' : 'grey200'}
           radius="base"
           shadow="shadow1"
-          disabled={authority === 'master'}
+          disabled={authority === 'MASTER'}
         >
           <Txt fontColor="black">파티원</Txt>
         </Button>

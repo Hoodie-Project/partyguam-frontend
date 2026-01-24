@@ -48,7 +48,7 @@ function PartyUsersManage({ partyId }: PageParams) {
   useEffect(() => {
     (async () => {
       const res = await fetchUserAuthority(Number(partyId));
-      if (res?.authority !== 'master') {
+      if (res?.authority !== 'MASTER') {
         router.replace(`/party/${partyId}`);
       }
     })();

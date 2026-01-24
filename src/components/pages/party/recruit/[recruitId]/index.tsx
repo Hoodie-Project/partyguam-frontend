@@ -59,7 +59,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
 
   // 일반 사용자일 경우 혹은 isReadonly가 아닐 경우 편집하기 버튼 안보이게
   const isVisible편집하기 = useMemo(
-    () => !Boolean(isReadOnly) && userAuthorityInfo?.authority === 'master' && isLoggedIn,
+    () => !Boolean(isReadOnly) && userAuthorityInfo?.authority === 'MASTER' && isLoggedIn,
     [isReadOnly, userAuthorityInfo, isLoggedIn],
   );
   const isDisable지원하기 = useMemo(() => Boolean(isReadOnly), [isReadOnly]);
@@ -138,10 +138,10 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
                 size="small"
                 label={
                   singlePartyData
-                    ? singlePartyData.status === 'active'
+                    ? singlePartyData.partyStatus === 'IN_PROGRESS'
                       ? '진행중'
                       : '파티종료'
-                    : partyRecruitDetailData?.status === 'active'
+                    : partyRecruitDetailData?.party.partyStatus === 'IN_PROGRESS'
                       ? '진행중'
                       : '파티종료'
                 }
@@ -149,10 +149,10 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
                 chipColor={
                   RENDER_PARTY_STATE(
                     singlePartyData
-                      ? singlePartyData.status === 'active'
+                      ? singlePartyData.partyStatus === 'IN_PROGRESS'
                         ? '진행중'
                         : '파티종료'
-                      : partyRecruitDetailData?.status === 'active'
+                      : partyRecruitDetailData?.party.partyStatus === 'IN_PROGRESS'
                         ? '진행중'
                         : '파티종료',
                   )?.backgroundColor
@@ -160,10 +160,10 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
                 fontColor={
                   RENDER_PARTY_STATE(
                     singlePartyData
-                      ? singlePartyData.status === 'active'
+                      ? singlePartyData.partyStatus === 'IN_PROGRESS'
                         ? '진행중'
                         : '파티종료'
-                      : partyRecruitDetailData?.status === 'active'
+                      : partyRecruitDetailData?.party.partyStatus === 'IN_PROGRESS'
                         ? '진행중'
                         : '파티종료',
                   )?.fontColor
@@ -192,20 +192,20 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
             </Txt>
             <PartyInfoWrapper>
               <PartyInfo>
-                {singlePartyData?.status === 'active' && (
+                {partyRecruitDetailData?.completed === false && (
                   <>
                     <Txt fontColor="grey500" fontSize={16}>
                       모집중
                     </Txt>
                     <Txt fontColor="failRed" fontSize={16}>
                       {Boolean(pageModalType) &&
-                        `0 / ${pageModalType === 'ADD' ? '0' : editPartyRecruitForm?.recruiting_count}`}
+                        `0 / ${pageModalType === 'ADD' ? '0' : editPartyRecruitForm?.maxParticipants}`}
                       {!Boolean(pageModalType) &&
-                        `${partyRecruitDetailData?.recruitedCount} / ${pageModalType === 'ADD' ? '0' : partyRecruitDetailData?.recruitingCount}`}
+                        `${partyRecruitDetailData?.currentParticipants} / ${pageModalType === 'ADD' ? '0' : partyRecruitDetailData?.maxParticipants}`}
                     </Txt>
                   </>
                 )}
-                {partyRecruitDetailData?.status === 'completed' && (
+                {partyRecruitDetailData?.completed === true && (
                   <>
                     <Txt fontColor="grey500" fontSize={16} style={{ marginRight: '12px' }}>
                       모집
@@ -250,7 +250,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
                     borderRadius: '12px',
                   }}
                   onClick={handleShareClick}
-                  disabled={Boolean(isReadOnly) || partyRecruitDetailData?.status === 'completed'}
+                  disabled={Boolean(isReadOnly) || partyRecruitDetailData?.completed === true}
                 >
                   <Txt fontColor="grey500" fontSize={16}>
                     공유하기
@@ -282,7 +282,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
                 <Button
                   backgroudColor="white"
                   borderColor="grey200"
-                  disabled={partyRecruitDetailData?.status === 'completed'}
+                  disabled={partyRecruitDetailData?.completed === true}
                   onClick={() =>
                     router.push(
                       `/party/setting/recruit/edit?type=MODIFY&partyId=${partyId}&recruitId=${recruitId}&main=${partyRecruitDetailData?.position.main}&sub=${partyRecruitDetailData?.position.sub}`,
@@ -328,8 +328,8 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
                 인원
               </Txt>
               <Txt fontColor="black" fontWeight="semibold" fontSize={16}>
-                {!Boolean(pageModalType) && `${partyRecruitDetailData?.recruitingCount}명`}
-                {Boolean(pageModalType) && `${editPartyRecruitForm?.recruiting_count}명`}
+                {!Boolean(pageModalType) && `${partyRecruitDetailData?.maxParticipants}명`}
+                {Boolean(pageModalType) && `${editPartyRecruitForm?.maxParticipants}명`}
               </Txt>
             </div>
             <div style={{ display: 'flex', gap: '12px', width: 'calc(50%)' }}>
@@ -369,7 +369,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
         {isReadOnly && <SMargin margin="240px 0px 0px 0px" />}
       </PartyRecruitDetailContainer>
       <FloatingButton>
-        {userAuthorityInfo?.authority == null && partyRecruitDetailData?.status === 'active' && !isReadOnly && (
+        {userAuthorityInfo?.authority == null && partyRecruitDetailData?.completed === false && !isReadOnly && (
           <Button
             style={{ width: '100%' }}
             height="l"
@@ -384,7 +384,7 @@ function PartyRecruitDetail({ recruitId, isReadOnly, pageModalType, singlePartyD
             </Txt>
           </Button>
         )}
-        {partyRecruitDetailData?.status === 'completed' && (
+        {partyRecruitDetailData?.completed === true && (
           <Button
             style={{ width: '100%' }}
             height="l"

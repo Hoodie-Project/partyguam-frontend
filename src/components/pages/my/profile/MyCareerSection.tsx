@@ -48,9 +48,9 @@ export default function MyCareerSection({ userCareers }: Props) {
                 chipType="filled"
                 chipColor="greenLight400"
                 label={
-                  userCareers.filter(item => item.careerType === 'primary')[0]?.years === 0
+                  userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.years === 0
                     ? '신입'
-                    : `${userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`
+                    : `${userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.years}년`
                 }
                 chipStyle={{
                   fontSize: '16px',
@@ -68,7 +68,7 @@ export default function MyCareerSection({ userCareers }: Props) {
                 label={
                   <>
                     <Txt fontSize={16}>
-                      {userCareers.filter(item => item.careerType === 'primary')[0]?.position.main}
+                      {userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.position.main}
                     </Txt>
                     <div
                       style={{
@@ -80,7 +80,7 @@ export default function MyCareerSection({ userCareers }: Props) {
                       }}
                     />
                     <Txt fontSize={16}>
-                      {userCareers.filter(item => item.careerType === 'primary')[0]?.position.sub}
+                      {userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.position.sub}
                     </Txt>
                   </>
                 }
@@ -98,16 +98,16 @@ export default function MyCareerSection({ userCareers }: Props) {
             <Txt fontWeight="semibold" fontSize={16} style={{ marginRight: '24px' }}>
               부포지션
             </Txt>
-            {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main && (
+            {userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.position.main && (
               <SFlexRow style={{ gap: '8px' }}>
                 {/* 년수 */}
                 <Chip
                   chipType="filled"
                   chipColor="grey100"
                   label={
-                    userCareers.filter(item => item.careerType !== 'primary')[0]?.years === 0
+                    userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.years === 0
                       ? '신입'
-                      : `${userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`
+                      : `${userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.years}년`
                   }
                   chipStyle={{
                     fontSize: '16px',
@@ -125,7 +125,7 @@ export default function MyCareerSection({ userCareers }: Props) {
                   label={
                     <>
                       <Txt fontSize={16}>
-                        {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
+                        {userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.position.main}
                       </Txt>
                       <div
                         style={{
@@ -137,7 +137,7 @@ export default function MyCareerSection({ userCareers }: Props) {
                         }}
                       />
                       <Txt fontSize={16}>
-                        {userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
+                        {userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.position.sub}
                       </Txt>
                     </>
                   }

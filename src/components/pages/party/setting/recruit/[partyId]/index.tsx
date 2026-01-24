@@ -268,7 +268,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
           </div>
         </TitleContainer>
         <PartyRecruitSettingTable
-          status={status}
+          completed={status === 'completed'}
           partyId={Number(partyId)}
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}

@@ -28,7 +28,7 @@ export const fetchGetBanner = async (): Promise<HomeBanner | null> => {
 // [GET] 파티 모집 공고 목록 조회
 export const fetchPartyRecruitments = async ({
   page,
-  limit,
+  size,
   sort,
   order,
   main,
@@ -37,7 +37,7 @@ export const fetchPartyRecruitments = async ({
   titleSearch,
 }: {
   page: number;
-  limit: number;
+  size: number;
   sort: string;
   order: string;
   main?: string[];
@@ -49,7 +49,7 @@ export const fetchPartyRecruitments = async ({
     // 쿼리 파라미터를 객체로 설정
     const params: any = {
       page,
-      limit,
+      size,
       sort,
       order,
     };
@@ -92,7 +92,7 @@ interface Party {
   title: string;
   content: string;
   image: string;
-  status: 'active' | 'archived';
+  partyStatus: 'IN_PROGRESS' | 'CLOSED';
   createdAt: string;
   updatedAt: string;
   recruitmentCount: number;
@@ -105,10 +105,10 @@ export interface PartiesResponse {
 
 interface FetchPartiesParams {
   page: number;
-  limit: number;
+  size: number;
   sort?: string;
   order?: 'ASC' | 'DESC';
-  status?: string;
+  partyStatus?: 'IN_PROGRESS' | 'CLOSED';
   partyType?: number[];
   titleSearch?: string;
 }
@@ -116,10 +116,10 @@ interface FetchPartiesParams {
 // [GET] 파티 목록 조회
 export const fetchParties = async ({
   page,
-  limit,
+  size,
   sort = 'createdAt',
   order = 'ASC',
-  status,
+  partyStatus,
   partyType,
   titleSearch,
 }: FetchPartiesParams): Promise<PartiesResponse | null> => {
@@ -127,14 +127,14 @@ export const fetchParties = async ({
     // 쿼리 파라미터 객체 설정
     const params: any = {
       page,
-      limit,
+      size,
       sort,
       order,
     };
 
     // status가 존재할 경우에만 추가
-    if (status) {
-      params.status = status;
+    if (partyStatus) {
+      params.partyStatus = partyStatus;
     }
 
     // partyType이 배열로 존재하고 길이가 0보다 큰 경우에만 추가
@@ -158,19 +158,19 @@ export const fetchParties = async ({
 // [GET] 개인화된 파티 모집 공고 목록 조회
 export const fetchPersonalizedPartiesRecruitments = async ({
   page,
-  limit,
+  size,
   sort = 'createdAt',
   order = 'ASC',
 }: {
   page: number;
-  limit: number;
+  size: number;
   sort?: string;
   order?: 'ASC' | 'DESC';
 }): Promise<PartyRecruitmentsResponse | null> => {
   try {
     const params: any = {
       page,
-      limit,
+      size,
       sort,
       order,
     };

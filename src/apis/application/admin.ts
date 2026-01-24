@@ -8,7 +8,7 @@ export const fetchGetPartyRecruitmentApplications = async ({
   partyId,
   partyRecruitmentId,
   page = 1,
-  limit = 5,
+  size = 5,
   sort = 'createdAt',
   order = 'ASC',
   applicationStatus,
@@ -16,16 +16,16 @@ export const fetchGetPartyRecruitmentApplications = async ({
   partyId: number;
   partyRecruitmentId: number;
   page?: number;
-  limit?: number;
+  size?: number;
   sort?: 'createdAt';
   order?: string;
-  applicationStatus?: 'processing' | 'approved' | 'pending' | 'rejected';
+  applicationStatus?: 'PENDING' | 'PROCESSING' | 'APPROVED' | 'REJECTED' | 'DECLINED' | 'CLOSED';
 }): Promise<PartyApplicationData> => {
   try {
     const response = await privateApi.get(`/parties/${partyId}/admin/recruitments/${partyRecruitmentId}/applications`, {
       params: {
         page,
-        limit,
+        size,
         sort,
         order,
         ...(applicationStatus && { applicationStatus }), // status 값이 있을 때만 포함

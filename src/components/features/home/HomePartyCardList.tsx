@@ -25,12 +25,12 @@ function HomePartyCardList() {
   useEffect(() => {
     // [GET] 파티 목록 조회
     const fetchPartyList = async () => {
-      const response = await fetchParties({
-        page: 1,
-        limit: 6,
-        sort: 'createdAt',
-        order: 'DESC',
-      });
+    const response = await fetchParties({
+      page: 1,
+      size: 6,
+      sort: 'createdAt',
+      order: 'DESC',
+    });
 
       setPartyList(response);
     };
@@ -119,10 +119,10 @@ function HomePartyCardList() {
                     <ChipWrapper>
                       <Chip
                         chipType="filled"
-                        label={party.status === 'active' ? '진행중' : '파티종료'}
+                        label={party.partyStatus === 'IN_PROGRESS' ? '진행중' : '파티종료'}
                         size="xsmall"
-                        chipColor={party.status === 'active' ? '#D5F0E3' : '#F6F6F6'}
-                        fontColor={party.status === 'active' ? '#016110' : 'grey700'}
+                        chipColor={party.partyStatus === 'IN_PROGRESS' ? '#D5F0E3' : '#F6F6F6'}
+                        fontColor={party.partyStatus === 'IN_PROGRESS' ? '#016110' : 'grey700'}
                         fontWeight="semibold"
                       />
                       <Chip
@@ -148,7 +148,7 @@ function HomePartyCardList() {
                         marginLeft: '2px',
                       }}
                     >
-                      {party.status === 'active' &&
+                      {party.partyStatus === 'IN_PROGRESS' &&
                         party.recruitmentCount > 0 &&
                         `지금 ${party.recruitmentCount}개의 포지션 모집 중`}
                     </Txt>

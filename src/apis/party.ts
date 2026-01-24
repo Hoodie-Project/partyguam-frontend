@@ -56,7 +56,7 @@ export interface CreatePartyResponse {
   title: string;
   content: string;
   image: any;
-  status: string;
+  partyStatus: 'IN_PROGRESS' | 'CLOSED';
   createdAt: string;
   updatedAt: string;
   id: number;
@@ -76,7 +76,12 @@ export const fetchPostCreateParty = async (data: FormData): Promise<CreatePartyR
 // 파티 상태 수정
 export const fetchPatchPartyStatus = async (partyId: number, data: { status: string }) => {
   try {
-    const response = await privateApi.patch<{ status: string }>(`/parties/${partyId}/admin/status`, data);
+    const response = await privateApi.patch<{ partyStatus: 'IN_PROGRESS' | 'CLOSED' }>(
+      `/parties/${partyId}/admin/status`,
+      {
+        partyStatus: data.status,
+      },
+    );
     return response.data;
   } catch (err) {
     console.error('fetchPatchPartyStatus error : ', err);
@@ -172,7 +177,7 @@ export const fetchGetPartyHome = async ({ partyId }: { partyId: number }) => {
 export const fetchGetPartyUsers = async ({
   partyId,
   page,
-  limit,
+  size,
   sort,
   order,
   main,
@@ -180,7 +185,7 @@ export const fetchGetPartyUsers = async ({
 }: {
   partyId: number;
   page: number;
-  limit: number;
+  size: number;
   sort: string;
   order: string;
   main?: string;
@@ -191,7 +196,7 @@ export const fetchGetPartyUsers = async ({
     const params: any = {
       sort,
       order,
-      limit,
+      size,
       page,
     };
 
@@ -405,7 +410,7 @@ export const fetchPartyAdminUsers = async ({
     const params: any = {
       sort,
       order,
-      limit: 17,
+      size: 17,
       page: 1,
     };
 

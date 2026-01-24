@@ -4,7 +4,7 @@ export interface SinglePartyResponse {
   title: string;
   content: string;
   image: string;
-  status: string;
+  partyStatus: 'IN_PROGRESS' | 'CLOSED';
   createdAt: string;
   updatedAt: string;
 }
@@ -21,7 +21,7 @@ export interface PartyHomeResponse {
   title: string;
   content: string;
   image: string;
-  status: string;
+  partyStatus: 'IN_PROGRESS' | 'CLOSED';
   createdAt: string;
   updatedAt: string;
 }
@@ -35,13 +35,13 @@ export interface PartyType {
 
 export interface PartyUserResponse {
   partyUser: {
-    authority: string;
+    authority: 'MASTER' | 'DEPUTY' | 'MEMBER';
     id: number;
     position: Position;
     user: User;
   }[];
   partyAdmin: {
-    authority: string;
+    authority: 'MASTER' | 'DEPUTY' | 'MEMBER';
     id: number;
     position: Position;
     user: User;
@@ -49,7 +49,7 @@ export interface PartyUserResponse {
 }
 
 export interface PartyUser {
-  authority: 'master' | 'deputy' | 'member';
+  authority: 'MASTER' | 'DEPUTY' | 'MEMBER';
   position: Position;
   user: User;
 }
@@ -76,7 +76,7 @@ export interface PartyRecruitDetailResponse {
   party: {
     title: string;
     image: string;
-    status: string; // 파티 상태 : 진행중
+    partyStatus: 'IN_PROGRESS' | 'CLOSED'; // 파티 상태
     partyType: {
       type: string;
     };
@@ -85,10 +85,10 @@ export interface PartyRecruitDetailResponse {
     main: string;
     sub: string;
   };
-  status: string; // 모집 상태, 모집중: active, 모집 마감 : completed
+  completed: boolean; // 모집 완료 여부
   content: string;
-  recruitingCount: number;
-  recruitedCount: number;
+  maxParticipants: number;
+  currentParticipants: number;
   applicationCount: number;
   createdAt: string;
 }
@@ -96,14 +96,14 @@ export interface PartyRecruitDetailResponse {
 // [GET] 파티 공고 리스트 전체 조회
 export interface PartyRecruitment {
   id: number; // 모집 ID
-  status: string; // 모집중: active, 모집마감: completed
+  completed: boolean; // 모집 완료 여부
   position: {
     main: string; // 직군 (예: "기획", "디자이너" 등)
     sub: string; // 직무 (예: "UI/UX 기획자")
   };
   content: string; // 모집 설명
-  recruitingCount: number; // 모집 인원
-  recruitedCount: number; // 이미 모집된 인원
+  maxParticipants: number; // 모집 인원
+  currentParticipants: number; // 이미 모집된 인원
   applicationCount: number; // 지원자 수
   createdAt: string; // 생성일
 }
@@ -121,7 +121,7 @@ export interface PartyUserByAdmin {
   id: number;
   createdAt: string; // 참여 날짜
   updateAt: string; // 참여 날짜
-  authority: string; // 직책
+  authority: 'MASTER' | 'DEPUTY' | 'MEMBER'; // 직책
   position: {
     main: string; // 직군
     sub: string; // 직무
@@ -141,7 +141,7 @@ export interface PartyApplicationData {
 export interface PartyApplicationUser {
   id: number;
   message: string;
-  applicationStatus: string;
+  applicationStatus: 'PENDING' | 'PROCESSING' | 'APPROVED' | 'REJECTED' | 'DECLINED' | 'CLOSED';
   createdAt: string;
   user: {
     id: number;

@@ -10,11 +10,8 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { Body, Cell, Header, HeaderCell, HeaderRow, Row, Table } from '@table-library/react-table-library/table';
 import { useTheme } from '@table-library/react-table-library/theme';
 
-import {
-  fetchCompletePartyRecruitment,
-  fetchDeletePartyRecruitmentOnly,
-  fetchGetPartyRecruitmentsList,
-} from '@/apis/party';
+import { fetchGetPartyRecruitmentsList } from '@/apis/recruitment/user';
+import { fetchCompletePartyRecruitment, fetchDeletePartyRecruitmentOnly } from '@/apis/recruitment/admin';
 import KebabMenu from '@/assets/icon/kebab-menu.svg';
 import { Txt } from '@/components/_atoms';
 import { DropdownV2 } from '@/components/_molecules/dropdown';
@@ -26,7 +23,7 @@ import { formatDate } from '@/utils/date';
 import ConfirmModal from '../comfirmModal';
 
 type Props = {
-  status: 'active' | 'completed';
+  completed: boolean;
   partyId: number;
 
   selectedRows: number[];
@@ -36,7 +33,7 @@ type Props = {
 };
 
 function PartyRecruitSettingTable({
-  status,
+  completed,
   partyId,
   selectedRows,
   setSelectedRows,
@@ -55,7 +52,7 @@ function PartyRecruitSettingTable({
           partyId,
           sort: 'createdAt',
           order,
-          status: status,
+          completed,
         };
 
         const data = await fetchGetPartyRecruitmentsList(requestParams);
@@ -66,7 +63,7 @@ function PartyRecruitSettingTable({
     };
 
     fetchRecruitments();
-  }, [partyId, order, status, setPartyRecruitList]);
+  }, [partyId, order, completed, setPartyRecruitList]);
 
   interface TablePartyRecruitment extends PartyRecruitment {
     id: number;
@@ -239,7 +236,7 @@ function PartyRecruitSettingTable({
                     }}
                   >
                     <Txt fontWeight="normal" fontSize={14} fontColor="failRed">
-                      {item.recruitedCount} / {item.recruitingCount}
+                      {item.currentParticipants} / {item.maxParticipants}
                     </Txt>
                   </StyledCell>
                   <StyledCell
@@ -279,7 +276,7 @@ function PartyRecruitSettingTable({
                       <DropdownV2
                         isVisible={true}
                         menuList={
-                          status === 'active'
+                          completed === false
                             ? [
                               {
                                 label: '마감하기',

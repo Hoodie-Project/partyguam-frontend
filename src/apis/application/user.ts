@@ -3,7 +3,7 @@ import { privateApi } from '..';
 export interface ApplyPartyResponse {
   id: number;
   message: string;
-  status: 'pending' | 'processing' | 'approved' | 'rejected'; // 상태값 제한
+  status: 'PENDING' | 'PROCESSING' | 'APPROVED' | 'REJECTED' | 'DECLINED' | 'CLOSED';
   createdAt: string; // ISO 8601 형식의 날짜 문자열
 }
 

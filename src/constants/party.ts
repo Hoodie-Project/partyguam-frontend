@@ -38,19 +38,23 @@ export const PARTY_SETTING_MENU = (partyId?: string) => {
  */
 export const PARTY_APPLICANTS_STATUS = (status: string) => {
   return {
-    pending: { label: '검토중', color: '#111111' },
-    approved: { label: '수락', color: '#11C9A7' },
-    processing: { label: '응답대기', color: '#FFAA00' },
-    rejected: { label: '거절', color: '#767676' },
+    PENDING: { label: '검토중', color: '#111111' },
+    PROCESSING: { label: '응답대기', color: '#FFAA00' },
+    APPROVED: { label: '수락', color: '#11C9A7' },
+    REJECTED: { label: '거절', color: '#767676' },
+    DECLINED: { label: '응답 거절', color: '#767676' },
+    CLOSED: { label: '모집 마감', color: '#767676' },
   }[status];
 };
 
 export const TRANSFORM_PARTY_APPLICANTS_STATUS = (status: string) => {
   return {
-    검토중: 'pending',
-    수락: 'approved',
-    응답대기: 'processing',
-    거절: 'rejected',
+    검토중: 'PENDING',
+    수락: 'APPROVED',
+    응답대기: 'PROCESSING',
+    거절: 'REJECTED',
+    '응답 거절': 'DECLINED',
+    '모집 마감': 'CLOSED',
   }[status];
 };
 

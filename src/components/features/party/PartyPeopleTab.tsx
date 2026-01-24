@@ -33,14 +33,14 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
         const response = await fetchGetPartyUsers({
           partyId: Number(partyId.toString()),
           page: 1,
-          limit: 16,
+          size: 16,
           sort: 'createdAt',
           order: 'DESC',
         });
         setPartyUserData(response);
       } catch (error) {
         console.error('Error fetching party user data : ', error);
-        setPartyUserData(partyUserMockData);
+        setPartyUserData(partyUserMockData as PartyUserResponse);
       }
     };
     fetchData();
@@ -61,7 +61,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
               </Txt>
             </Txt>
           </HeaderLeft>
-          {userAuthority?.authority === 'master' && (
+          {userAuthority?.authority === 'MASTER' && (
             <HeaderRight>
               <Txt
                 fontColor="grey500"
@@ -82,7 +82,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
           {partyUserData?.partyAdmin.map(item => (
             <PartyPeopleCard
               key={item.id}
-              authority={item.authority as 'master' | 'deputy' | 'member' | undefined}
+              authority={item.authority as 'MASTER' | 'DEPUTY' | 'MEMBER' | undefined}
               position={item.position}
               user={{ id: item.id, ...item.user }}
               userAuthority={userAuthority}
@@ -92,7 +92,7 @@ function PartyPeopleTab({ partyId, userAuthority }: Props) {
           {partyUserData?.partyUser?.map(item => (
             <PartyPeopleCard
               key={item.id}
-              authority={item.authority as 'master' | 'deputy' | 'member' | undefined}
+              authority={item.authority as 'MASTER' | 'DEPUTY' | 'MEMBER' | undefined}
               position={item.position}
               user={{ id: item.id, ...item.user }}
               userAuthority={userAuthority}

@@ -51,14 +51,14 @@ type OptionType = {
 function HomeParty() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const 파티StatusOptions = [
-    { id: 0, label: '진행 중', value: 'active' },
-    { id: 1, label: '파티종료', value: 'archived' },
+  const 파티StatusOptions: { id: number; label: string; value: 'IN_PROGRESS' | 'CLOSED' }[] = [
+    { id: 0, label: '진행 중', value: 'IN_PROGRESS' },
+    { id: 1, label: '파티종료', value: 'CLOSED' },
   ];
-  const [파티status, set파티status] = useState<{ id: number; label: string; value: string }>({
+  const [파티status, set파티status] = useState<{ id: number; label: string; value: 'IN_PROGRESS' | 'CLOSED' }>({
     id: 0,
     label: '진행 중',
-    value: 'active',
+    value: 'IN_PROGRESS',
   });
   const [파티유형List, set파티유형List] = useState<OptionType[]>([]);
   const [search파티Value, setSearch파티Value] = useState<string>(searchParams.get('search') || '');
@@ -198,10 +198,10 @@ function HomeParty() {
   const fetchPartyList = async ({ pageParam = 1 }) => {
     const response = await fetchParties({
       page: pageParam,
-      limit: 10,
+      size: 10,
       sort: 'createdAt',
       order,
-      status: 파티status.value,
+      partyStatus: 파티status.value,
       partyType: submit파티유형Filter.map(Number),
       titleSearch: search파티Value,
     });
@@ -382,10 +382,10 @@ function HomeParty() {
                   <ChipWrapper>
                     <Chip
                       chipType="filled"
-                      label={party.status === 'active' ? '진행중' : '파티종료'}
+                      label={party.partyStatus === 'IN_PROGRESS' ? '진행중' : '파티종료'}
                       size="xsmall"
-                      chipColor={party.status === 'active' ? '#D5F0E3' : '#F6F6F6'}
-                      fontColor={party.status === 'active' ? '#016110' : 'grey700'}
+                      chipColor={party.partyStatus === 'IN_PROGRESS' ? '#D5F0E3' : '#F6F6F6'}
+                      fontColor={party.partyStatus === 'IN_PROGRESS' ? '#016110' : 'grey700'}
                       fontWeight="semibold"
                     />
                     <Chip
@@ -402,7 +402,7 @@ function HomeParty() {
                     {party.title} {/* 파티 제목 */}
                   </EllipsisTitleText>
                   <Txt fontSize={12} style={{ lineHeight: '140%', color: '#24CE85', marginTop: 'auto' }}>
-                    {party.status === 'active' &&
+                    {party.partyStatus === 'IN_PROGRESS' &&
                       party.recruitmentCount > 0 &&
                       `지금 ${party.recruitmentCount}개의 포지션 모집 중`}
                   </Txt>

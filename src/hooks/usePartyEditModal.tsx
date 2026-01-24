@@ -121,7 +121,7 @@ const makeHandlers = useMemo(
         cancelBtnTxt: '닫기',
         submitBtnTxt: '종료하기',
         submitAction: async () => {
-          await fetchPatchPartyStatus(Number(partyId), { status: 'archived' });
+          await fetchPatchPartyStatus(Number(partyId), { status: 'CLOSED' });
           closeModal();
           makeHandlers.goHome();
         },

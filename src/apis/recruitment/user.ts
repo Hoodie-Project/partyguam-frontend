@@ -40,18 +40,18 @@ export const fetchPostRecruitmentParty = async ({
   partyId,
   positionId,
   content,
-  recruiting_count,
+  maxParticipants,
 }: {
   partyId: number;
   positionId: number;
   content: string;
-  recruiting_count: number;
+  maxParticipants: number;
 }) => {
   try {
     const response = await privateApi.post(`/parties/${partyId}/recruitments`, {
       positionId,
       content,
-      recruiting_count,
+      maxParticipants,
     });
     return response.data;
   } catch (error) {

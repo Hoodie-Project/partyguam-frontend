@@ -113,7 +113,7 @@ function MyProfile() {
         portfolio: userResponse.portfolio,
         portfolioTitle: userResponse.portfolioTitle,
       });
-      const 참여중파티 = await fetchGetUsersMeParties({ page: 1, limit: 5, sort: 'createdAt', order: 'ASC' });
+      const 참여중파티 = await fetchGetUsersMeParties({ page: 1, size: 5, sort: 'createdAt', order: 'ASC' });
       set참여중파티수(참여중파티?.total);
     })();
   }, [login, setAuth, router]);

@@ -47,19 +47,19 @@ export const fetchUpdatePartyRecruitment = async ({
   partyRecruitmentId,
   positionId,
   content,
-  recruiting_count,
+  maxParticipants,
 }: {
   partyId: number;
   partyRecruitmentId: number;
   positionId: number;
   content: string;
-  recruiting_count: number;
+  maxParticipants: number;
 }) => {
   try {
     const response = await privateApi.patch(`/parties/${partyId}/admin/recruitments/${partyRecruitmentId}`, {
       positionId,
       content,
-      recruiting_count,
+      maxParticipants,
     });
     return response.data;
   } catch (error) {

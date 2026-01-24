@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { deleteCookie } from 'cookies-next';
 
 import type { GetUsersMeOauthResponse } from '@/apis/auth';
-import { fetchGetUsersMeOauth, fetchPostUsersMeOauthLink, fetchUsersLogOut } from '@/apis/auth';
+import { fetchGetUsersMeOauth, fetchUsersLogOut } from '@/apis/auth';
 import GoogleIcon from '@/assets/icon/google-icon.svg';
 import KakaoIcon from '@/assets/icon/kakao-icon.svg';
 import { Square, Txt } from '@/components/_atoms';
@@ -66,11 +66,11 @@ function MyAccount() {
         setUserMeOauth(res);
 
         res?.forEach(item => {
-          if (item.provider === 'kakao') {
+          if (item.provider === 'KAKAO') {
             setIsKakaoConnected(true);
             setKakaoEmail(item.email || '');
           }
-          if (item.provider === 'google') {
+          if (item.provider === 'GOOGLE') {
             setIsGoogleConnected(true);
             setGoogleEmail(item.email || '');
           }
@@ -80,20 +80,13 @@ function MyAccount() {
       }
     })();
 
-    (async () => {
-      try {
-        await fetchPostUsersMeOauthLink();
-      } catch (err) {
-        console.error('err > ', err);
-      }
-    })();
   }, []);
 
   const handleClickConnect = async (provider: 'kakao' | 'google') => {
     try {
       const baseUrl = isDev ? process.env.NEXT_PUBLIC_API_DEV_HOST : process.env.NEXT_PUBLIC_API_HOST;
 
-      const authUrl = `${baseUrl}/users/${provider}/link`;
+      const authUrl = `${baseUrl}/auth/oauth/${provider}/link`;
 
       await router.push(authUrl);
     } catch (err) {
