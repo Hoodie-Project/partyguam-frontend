@@ -49,7 +49,7 @@ export default function JoinSuccess() {
           backgroudColor="primaryGreen"
           radius="base"
           onClick={() => {
-            router.push('/join/detail?num=1');
+            router.push('/signup/detail?num=1');
           }}
         >
           <Txt fontWeight="bold" fontColor="black">

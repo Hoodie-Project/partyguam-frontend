@@ -17,7 +17,7 @@ export const fetchGetSingleParty = async (partyId: number): Promise<SinglePartyR
 export const fetchGetPartyTypes = async () => {
   try {
     const response = await publicApi.get('/parties/types');
-    return response.data;
+    return response.data.partyTypes;
   } catch (error) {
     console.error('fetchGetPartyTypes error : ', error);
     return error;

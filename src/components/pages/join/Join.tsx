@@ -262,7 +262,7 @@ export default function Join() {
               if (response.status === 201) {
                 const userResponse = await fetchGetUsers();
                 setAuth(userResponse);
-                router.push('/join/success');
+                router.push('/signup/success');
               }
             }}
           >

@@ -523,7 +523,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                 파티의 진행 상태를 선택해 주세요.
               </Txt>
               <SFlexRowFull style={{ justifyContent: 'space-between' }}>
-                {['IN_PROGRESS', 'CLOSED'].map((item, index) => (
+                {['active', 'archived'].map((item, index) => (
                   <Button
                     key={index}
                     onClick={async e => {
@@ -533,7 +533,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                         order: 'DESC',
                         completed: false,
                       });
-                      if (모집공고.length != 0 && item === 'CLOSED') {
+                      if (모집공고.length != 0 && item === 'archived') {
                         openPartyEditModal('partyEndBlocked');
                       } else {
                         openPartyEditModal('partyEnd');
@@ -545,7 +545,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                     radius="base"
                     shadow="shadow1"
                   >
-                    {item === 'IN_PROGRESS' ? '진행중' : '파티종료'}
+                    {item === 'active' ? '진행중' : '파티종료'}
                   </Button>
                 ))}
               </SFlexRowFull>

@@ -55,7 +55,7 @@ function HomeParty() {
     { id: 0, label: '진행 중', value: 'IN_PROGRESS' },
     { id: 1, label: '파티종료', value: 'CLOSED' },
   ];
-  const [파티status, set파티status] = useState<{ id: number; label: string; value: 'IN_PROGRESS' | 'CLOSED' }>({
+  const [파티status, set파티status] = useState<{ id: number; label: string; value?: 'IN_PROGRESS' | 'CLOSED' }>({
     id: 0,
     label: '진행 중',
     value: 'IN_PROGRESS',

@@ -204,7 +204,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
     }
     setPositionCompletion(true);
 
-    router.push('/join/detail?num=3');
+    router.push('/signup/detail?num=3');
 
     return res;
   };
@@ -422,7 +422,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             textDecoration="underline"
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              router.push('/join/detail?num=3');
+              router.push('/signup/detail?num=3');
             }}
           >
             건너뛰기

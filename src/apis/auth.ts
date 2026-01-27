@@ -7,7 +7,7 @@ import { fileUploadApi, privateApi, withOttApi } from '.';
 // [POST] accessToken 재발급
 const fetchPostAccessToken = async (): Promise<{ accessToken: string }> => {
   try {
-    const response = await privateApi.post<{ accessToken: string }>('/auth/access-token');
+    const response = await privateApi.post<{ accessToken: string }>('/auth/reissue');
     return response.data;
   } catch (error) {
     console.error('error : ', error);
@@ -76,7 +76,7 @@ const fetchJoinFormSubmit = async (data: { birth: string; nickname: string; gend
 
 const fetchGetUsers = async (): Promise<UsersMeResponse> => {
   try {
-    const response = await privateApi.get('/users/me');
+    const response = await privateApi.get('/users/me/profile');
     return response.data;
   } catch (error) {
     throw new Error('fetchGetUsers Network error');
@@ -184,7 +184,7 @@ const fetchUserAuthority = async (partyId: number): Promise<UserAuthorityRespons
 // 로그아웃
 const fetchUsersLogOut = async () => {
   try {
-    const response = await privateApi.delete('/users/logout');
+    const response = await privateApi.post('/auth/web/logout');
     return response.data;
   } catch (error) {
     console.error('fetchUsersLogOut error : ', error);
