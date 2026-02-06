@@ -72,7 +72,7 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
       nickname: string;
       image?: string | null;
     },
-    authority: string,
+    authority: 'MASTER' | 'DEPUTY' | 'MEMBER',
     position: {
       main: string;
       sub: string;
@@ -150,7 +150,7 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
                 <Row item={item} key={item.id}>
                   <StyledCell>
                     <CenteredCheckbox>
-                      {item.authority != 'master' && (
+                      {item.authority !== 'MASTER' && (
                         <CustomCheckbox
                           type="checkbox"
                           checked={selectedRows.includes(item.id)}
@@ -174,7 +174,7 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
                       <ProfileImage
                         imageUrl={item.user.image || ''}
                         size={40}
-                        authority={item.authority as unknown as 'master' | 'deputy' | 'member'}
+                        authority={item.authority as unknown as 'MASTER' | 'DEPUTY' | 'MEMBER'}
                         flagWrapperStyle={{ width: '16px', height: '16px' }}
                         flagIconStyle={{ width: '12px', height: '12px', color: 'white' }}
                       />
@@ -183,15 +183,15 @@ function PartyUsersManageTable({ partyId, selectedRows, setSelectedRows, order, 
                           fontWeight="semibold"
                           fontSize={12}
                           fontColor={
-                            item.authority === 'master'
+                            item.authority === 'MASTER'
                               ? 'greenDark100'
-                              : item.authority === 'deputy'
+                              : item.authority === 'DEPUTY'
                                 ? 'greenDark100'
                                 : 'grey500'
                           }
                           style={{ lineHeight: '150%' }}
                         >
-                          {item.authority === 'master' ? '파티장' : item.authority === 'deputy' ? '부파티장' : '파티원'}
+                          {item.authority === 'MASTER' ? '파티장' : item.authority === 'DEPUTY' ? '부파티장' : '파티원'}
                         </Txt>
                         <Txt
                           fontWeight="normal"

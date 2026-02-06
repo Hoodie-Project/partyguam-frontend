@@ -3,14 +3,15 @@ export interface PartyRecruitmentsResponse {
   partyRecruitments: {
     id: number;
     createdAt: string;
-    recruitingCount: number;
-    recruitedCount: number;
+    maxParticipants: number;
+    currentParticipants: number;
     content: string;
-    status: string; // 'active' -> 모집중
+    partyStatus: 'IN_PROGRESS' | 'CLOSED';
     party: {
       id: number;
       title: string;
       image: string;
+      completed: boolean; // 모집 완료 여부
       partyType: {
         id: number;
         type: string;

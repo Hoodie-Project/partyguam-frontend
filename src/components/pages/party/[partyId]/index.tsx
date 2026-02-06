@@ -86,7 +86,7 @@ function PartyHome({ partyId }: PageParams) {
   };
 
   const handleSettingsClick = () => {
-    if (partyHomeData?.status === 'active') {
+    if (partyHomeData?.partyStatus === 'IN_PROGRESS') {
       router.push(`/party/setting/${partyId}?type=MODIFY`);
     } else {
       openModal({
@@ -109,7 +109,7 @@ function PartyHome({ partyId }: PageParams) {
         },
         onSubmit: async () => {
           try {
-            await fetchPatchPartyStatus(Number(partyId), { status: 'active' }); // 상태를 active로 변경
+            await fetchPatchPartyStatus(Number(partyId), { status: 'IN_PROGRESS' });
             closeModal();
             window.location.reload();
           } catch (err) {
@@ -150,12 +150,14 @@ function PartyHome({ partyId }: PageParams) {
               {/* 파티 모집중 칩 */}
               <Chip
                 size="small"
-                label={partyHomeData?.status === 'active' ? '진행중' : '파티종료'}
+                label={partyHomeData?.partyStatus === 'IN_PROGRESS' ? '진행중' : '파티종료'}
                 chipType="filled"
                 chipColor={
-                  renderPartyState(partyHomeData?.status === 'active' ? '진행중' : '파티종료')?.backgroundColor
+                  renderPartyState(partyHomeData?.partyStatus === 'IN_PROGRESS' ? '진행중' : '파티종료')
+                    ?.backgroundColor
                 }
-                fontColor={renderPartyState(partyHomeData?.status === 'active' ? '진행중' : '파티종료')?.fontColor}
+                fontColor={renderPartyState(partyHomeData?.partyStatus === 'IN_PROGRESS' ? '진행중' : '파티종료')
+                  ?.fontColor}
                 fontWeight="semibold"
                 shadow="shadow1"
               />
@@ -207,7 +209,7 @@ function PartyHome({ partyId }: PageParams) {
                     </Txt>
                   </Balloon>
                 )}
-                {userAuthorityInfo?.authority === 'master' && (
+                {userAuthorityInfo?.authority === 'MASTER' && (
                   <SettingsOutlinedIcon onClick={() => handleSettingsClick()} style={{ cursor: 'pointer' }} />
                 )}
               </PartyTabsButtonWrapper>

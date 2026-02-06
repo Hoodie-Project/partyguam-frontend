@@ -80,7 +80,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
     queryFn: async ({ pageParam }) => {
       const res = await fetchGetUsersMeParties({
         page: pageParam as number,
-        limit: 10,
+        size: 10,
         sort: 'createdAt',
         order: 'DESC',
       });
@@ -108,7 +108,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
       const res = await fetchGetUsersNicknameParties({
         nickname: otherNickname as string,
         page: pageParam as number,
-        limit: 10,
+        size: 10,
         sort: 'createdAt',
         order: 'DESC',
       });
@@ -196,9 +196,9 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                     chipType="filled"
                     chipColor="greenLight400"
                     label={
-                      newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.years === 0
+                      newUser?.userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.years === 0
                         ? '신입'
-                        : `${newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년`
+                        : `${newUser?.userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.years}년`
                     }
                     chipStyle={{
                       fontSize: '16px',
@@ -216,7 +216,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                     label={
                       <>
                         <Txt fontSize={16}>
-                          {newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.position.main}
+                          {newUser?.userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.position.main}
                         </Txt>
                         <div
                           style={{
@@ -228,7 +228,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                           }}
                         />
                         <Txt fontSize={16}>
-                          {newUser?.userCareers.filter(item => item.careerType === 'primary')[0]?.position.sub}
+                          {newUser?.userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.position.sub}
                         </Txt>
                       </>
                     }
@@ -242,7 +242,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                   />
                 </SFlexRow>
               </SFlexRow>
-              {newUser?.userCareers.filter(item => item.careerType !== 'primary')[0] && (
+              {newUser?.userCareers.filter(item => item.careerType === 'SECONDARY')[0] && (
                 <SFlexRow style={{ alignItems: 'center' }}>
                   <SFlexRow style={{ gap: '8px' }}>
                     {/* 년수 */}
@@ -250,9 +250,9 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                       chipType="filled"
                       chipColor="grey100"
                       label={
-                        newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.years === 0
+                        newUser?.userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.years === 0
                           ? '신입'
-                          : `${newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.years}년`
+                          : `${newUser?.userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.years}년`
                       }
                       chipStyle={{
                         fontSize: '16px',
@@ -270,7 +270,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                       label={
                         <>
                           <Txt fontSize={16}>
-                            {newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.main}
+                            {newUser?.userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.position.main}
                           </Txt>
                           <div
                             style={{
@@ -282,7 +282,7 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                             }}
                           />
                           <Txt fontSize={16}>
-                            {newUser?.userCareers.filter(item => item.careerType !== 'primary')[0]?.position.sub}
+                            {newUser?.userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.position.sub}
                           </Txt>
                         </>
                       }
@@ -415,10 +415,10 @@ export default function MyPagePreviewModal({ otherNickname }: Props) {
                     <ChipWrapper>
                       <Chip
                         chipType="filled"
-                        label={party.party.status === 'active' ? '진행중' : '파티종료'}
+                        label={party.party.partyStatus === 'IN_PROGRESS' ? '진행중' : '파티종료'}
                         size="xsmall"
-                        chipColor={party.party.status === 'active' ? '#D5F0E3' : '#505050'}
-                        fontColor={party.party.status === 'active' ? '#016110' : '#ffffff'}
+                        chipColor={party.party.partyStatus === 'IN_PROGRESS' ? '#D5F0E3' : '#505050'}
+                        fontColor={party.party.partyStatus === 'IN_PROGRESS' ? '#016110' : '#ffffff'}
                         fontWeight="semibold"
                       />
                       <Chip

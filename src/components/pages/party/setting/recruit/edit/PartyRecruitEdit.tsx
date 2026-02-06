@@ -5,13 +5,9 @@ import styled from '@emotion/styled';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import { fetchGetPositions } from '@/apis/detailProfile';
-import {
-  fetchCompletePartyRecruitment,
-  fetchGetSingleParty,
-  fetchPartyRecruitmentDetails,
-  fetchPostRecruitmentParty,
-  fetchUpdatePartyRecruitment,
-} from '@/apis/party';
+import { fetchGetSingleParty } from '@/apis/party';
+import { fetchCompletePartyRecruitment, fetchUpdatePartyRecruitment } from '@/apis/recruitment/admin';
+import { fetchPartyRecruitmentDetails, fetchPostRecruitmentParty } from '@/apis/recruitment/user';
 import { Button, Input, Txt } from '@/components/_atoms';
 import { BreadCrumb, PageHeader, Select, TipBox } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';
@@ -80,7 +76,7 @@ function PartyRecruitEdit() {
               positionId: recruitmentDetails.positionId || 3,
               직군: recruitmentDetails.position.main,
               직무: recruitmentDetails.position.sub,
-              recruiting_count: recruitmentDetails.recruitingCount.toString(),
+              maxParticipants: recruitmentDetails.maxParticipants.toString(),
               content: recruitmentDetails.content,
             });
           }
@@ -114,7 +110,7 @@ function PartyRecruitEdit() {
     return (
       editPartyRecruitForm.직군 &&
       editPartyRecruitForm.직무 &&
-      editPartyRecruitForm.recruiting_count &&
+      editPartyRecruitForm.maxParticipants &&
       editPartyRecruitForm.content &&
       모집소개글InputState === 'success'
     );
@@ -224,7 +220,7 @@ function PartyRecruitEdit() {
       const transformBodyData = {
         positionId: editPartyRecruitForm.positionId,
         content: editPartyRecruitForm.content,
-        recruiting_count: parseInt(editPartyRecruitForm.recruiting_count, 10),
+        maxParticipants: parseInt(editPartyRecruitForm.maxParticipants, 10),
       };
 
       let res;
@@ -301,9 +297,9 @@ function PartyRecruitEdit() {
                 placeholder="인원 선택"
                 height="l"
                 options={Array.from({ length: 10 }, (_, i) => ({ id: i + 1, label: (i + 1).toString() }))}
-                value={editPartyRecruitForm.recruiting_count}
-                isSelectedIcon={editPartyRecruitForm.recruiting_count != null}
-                onClick={handleSelectChange('recruiting_count')}
+                value={editPartyRecruitForm.maxParticipants}
+                isSelectedIcon={editPartyRecruitForm.maxParticipants != null}
+                onClick={handleSelectChange('maxParticipants')}
               />
             </div>
           </SFlexColumnFull>

@@ -52,19 +52,19 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
   const [primaryPosition, setPrimaryPosition] = useState(
     editMode
       ? {
-          id: user.userCareers.filter(item => item.careerType === 'primary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'primary')[0].id
+          id: user.userCareers.filter(item => item.careerType === 'PRIMARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'PRIMARY')[0].id
             : 0,
-          직군: user.userCareers.filter(item => item.careerType === 'primary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'primary')[0].position.main
+          직군: user.userCareers.filter(item => item.careerType === 'PRIMARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'PRIMARY')[0].position.main
             : '',
-          직무: user.userCareers.filter(item => item.careerType === 'primary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'primary')[0].position.sub
+          직무: user.userCareers.filter(item => item.careerType === 'PRIMARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'PRIMARY')[0].position.sub
             : '',
-          경력: user.userCareers.filter(item => item.careerType === 'primary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'primary')[0].years === 0
+          경력: user.userCareers.filter(item => item.careerType === 'PRIMARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'PRIMARY')[0].years === 0
               ? '신입'
-              : `${user.userCareers.filter(item => item.careerType === 'primary')[0].years}년`
+              : `${user.userCareers.filter(item => item.careerType === 'PRIMARY')[0].years}년`
             : '',
         }
       : { id: 0, 직군: '', 직무: '', 경력: '' },
@@ -72,19 +72,19 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
   const [secondaryPosition, setSecondaryPosition] = useState(
     editMode
       ? {
-          id: user.userCareers.filter(item => item.careerType === 'secondary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'secondary')[0].id
+          id: user.userCareers.filter(item => item.careerType === 'SECONDARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'SECONDARY')[0].id
             : 0,
-          직군: user.userCareers.filter(item => item.careerType === 'secondary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'secondary')[0].position.main
+          직군: user.userCareers.filter(item => item.careerType === 'SECONDARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'SECONDARY')[0].position.main
             : '',
-          직무: user.userCareers.filter(item => item.careerType === 'secondary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'secondary')[0].position.sub
+          직무: user.userCareers.filter(item => item.careerType === 'SECONDARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'SECONDARY')[0].position.sub
             : '',
-          경력: user.userCareers.filter(item => item.careerType === 'secondary')[0]
-            ? user.userCareers.filter(item => item.careerType === 'secondary')[0].years === 0
+          경력: user.userCareers.filter(item => item.careerType === 'SECONDARY')[0]
+            ? user.userCareers.filter(item => item.careerType === 'SECONDARY')[0].years === 0
               ? '신입'
-              : `${user.userCareers.filter(item => item.careerType === 'secondary')[0].years}년`
+              : `${user.userCareers.filter(item => item.careerType === 'SECONDARY')[0].years}년`
             : '',
         }
       : { id: 0, 직군: '', 직무: '', 경력: '' },
@@ -103,20 +103,20 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
   const isSecondaryJobDisabled = !secondaryPosition.직군;
 
   const submitEditDisabled = useMemo(() => {
-    if (user.userCareers.filter(item => item.careerType === 'primary')[0]?.id != primaryPosition.id) return false;
-    if (`${user.userCareers.filter(item => item.careerType === 'primary')[0]?.years}년` != primaryPosition.경력)
+    if (user.userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.id != primaryPosition.id) return false;
+    if (`${user.userCareers.filter(item => item.careerType === 'PRIMARY')[0]?.years}년` != primaryPosition.경력)
       return false;
 
-    if (user.userCareers.filter(item => item.careerType === 'secondary')[0]?.id != secondaryPosition.id) return false;
-    if (`${user.userCareers.filter(item => item.careerType === 'secondary')[0]?.years}년` != secondaryPosition.경력)
+    if (user.userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.id != secondaryPosition.id) return false;
+    if (`${user.userCareers.filter(item => item.careerType === 'SECONDARY')[0]?.years}년` != secondaryPosition.경력)
       return false;
 
     return true;
   }, [primaryPosition, secondaryPosition, user.userCareers]);
 
   useEffect(() => {
-    const primaryCareer = user.userCareers.find(item => item.careerType === 'primary');
-    const secondaryCareer = user.userCareers.find(item => item.careerType === 'secondary');
+    const primaryCareer = user.userCareers.find(item => item.careerType === 'PRIMARY');
+    const secondaryCareer = user.userCareers.find(item => item.careerType === 'SECONDARY');
 
     setPrimaryPosition({
       id: primaryCareer?.id || 0,
@@ -181,13 +181,13 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
     const primaryCareer = {
       positionId: primaryPosition.id,
       years: 경력map[primaryPosition.경력],
-      careerType: 'primary' as const,
+      careerType: 'PRIMARY' as const,
     };
 
     const secondaryCareer = {
       positionId: secondaryPosition.id,
       years: 경력map[secondaryPosition.경력],
-      careerType: 'secondary' as const,
+      careerType: 'SECONDARY' as const,
     };
 
     const validPositions: Career[] = [
@@ -204,7 +204,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
     }
     setPositionCompletion(true);
 
-    router.push('/join/detail?num=3');
+    router.push('/signup/detail?num=3');
 
     return res;
   };
@@ -214,13 +214,13 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
     const primaryCareer = {
       positionId: primaryPosition.id,
       years: 경력map[primaryPosition.경력],
-      careerType: 'primary' as const,
+      careerType: 'PRIMARY' as const,
     };
 
     const secondaryCareer = {
       positionId: secondaryPosition.id,
       years: 경력map[secondaryPosition.경력],
-      careerType: 'secondary' as const,
+      careerType: 'SECONDARY' as const,
     };
     const validPositions: Career[] = [
       ...(primaryCareer.positionId !== 0 ? [primaryCareer] : []),
@@ -233,7 +233,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             {
               id: primaryPosition.id,
               years: 경력map[primaryPosition.경력],
-              careerType: 'primary' as const,
+              careerType: 'PRIMARY' as const,
               position: {
                 main: primaryPosition.직군,
                 sub: primaryPosition.직무,
@@ -246,7 +246,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             {
               id: secondaryPosition.id,
               years: 경력map[secondaryPosition.경력],
-              careerType: 'secondary' as const,
+              careerType: 'SECONDARY' as const,
               position: {
                 main: secondaryPosition.직군,
                 sub: secondaryPosition.직무,
@@ -422,7 +422,7 @@ export default function SelectPosition({ editMode = false, handleResetEdit, hand
             textDecoration="underline"
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              router.push('/join/detail?num=3');
+              router.push('/signup/detail?num=3');
             }}
           >
             건너뛰기

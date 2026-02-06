@@ -9,7 +9,7 @@ import Avatar from 'boring-avatars';
 type OwnProps = {
   imageUrl?: string;
   size: number;
-  authority?: 'master' | 'deputy' | 'member';
+  authority?: 'MASTER' | 'DEPUTY' | 'MEMBER';
   editMode?: boolean;
   setImage?: React.Dispatch<React.SetStateAction<File | null>>;
   children?: React.ReactNode;
@@ -86,7 +86,7 @@ function ProfileImage({
           <HiddenFileInput type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} />
         </>
       )}
-      {authority && authority != 'member' && (
+      {authority && authority !== 'MEMBER' && (
         <TagWrapper type={authority} style={flagWrapperStyle}>
           <FlagIcon style={flagIconStyle || { width: '18px', height: '18px', color: 'white' }} />
         </TagWrapper>
@@ -107,7 +107,7 @@ const ImageWrapper = styled.div<{ size: number }>`
   border: 1px solid #e5e5ec;
 `;
 
-const TagWrapper = styled.div<{ type?: 'master' | 'deputy' | 'member' }>`
+const TagWrapper = styled.div<{ type?: 'MASTER' | 'DEPUTY' | 'MEMBER' }>`
   position: absolute;
   display: flex;
   justify-content: center;
@@ -117,7 +117,7 @@ const TagWrapper = styled.div<{ type?: 'master' | 'deputy' | 'member' }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: ${({ type }) => (type === 'master' ? '#21ECC7' : '#A0A0A0')};
+  background-color: ${({ type }) => (type === 'MASTER' ? '#21ECC7' : '#A0A0A0')};
   z-index: 5;
 `;
 

@@ -80,7 +80,7 @@ export default function JoinDetail() {
         title="세부 프로필"
         hrefLabel={hrefLabel}
         onClickHref={() => {
-          router.push(`/join/detail?num=${Number(detailNum) - 1}`);
+          router.push(`/signup/detail?num=${Number(detailNum) - 1}`);
         }}
         onClickIcon={() =>
           openModal({

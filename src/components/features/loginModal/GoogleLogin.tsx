@@ -13,8 +13,8 @@ export default function GoogleLogin() {
   const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
   const handleGoogleLogin = () => {
     const googleAuthUrl = isDev
-      ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/users/google/login`
-      : `${process.env.NEXT_PUBLIC_API_HOST}/users/google/login`;
+      ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/auth/oauth/google/login`
+      : `${process.env.NEXT_PUBLIC_API_HOST}/auth/oauth/google/login`;
     push(googleAuthUrl);
   };
 

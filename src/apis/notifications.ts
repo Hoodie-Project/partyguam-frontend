@@ -1,7 +1,7 @@
 import { privateApi } from '@/apis';
 
 export interface NotificationParams {
-  limit: number;
+  size: number;
   cursor?: number | null;
   type?: string; // party, recruit
 }
@@ -27,14 +27,14 @@ export interface NotificationResponse {
 }
 
 export const fetchGetNotifications = async ({
-  limit,
+  size,
   cursor,
   type,
 }: NotificationParams): Promise<NotificationResponse> => {
   try {
     const response = await privateApi.get('/notifications', {
       params: {
-        limit,
+        size,
         ...((cursor !== undefined || cursor !== 0) && { cursor }),
         ...(type !== 'all' && { type }),
       },

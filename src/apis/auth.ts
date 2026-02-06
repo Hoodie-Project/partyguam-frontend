@@ -2,12 +2,12 @@ import type { UsersMeResponse } from '@/types/user';
 
 import type { FetchGetUsersMePartiesResponse } from './detailProfile';
 
-import { fileUploadApi, privateApi } from '.';
+import { fileUploadApi, privateApi, withOttApi } from '.';
 
 // [POST] accessToken 재발급
 const fetchPostAccessToken = async (): Promise<{ accessToken: string }> => {
   try {
-    const response = await privateApi.post<{ accessToken: string }>('/auth/access-token');
+    const response = await privateApi.post<{ accessToken: string }>('/auth/reissue');
     return response.data;
   } catch (error) {
     console.error('error : ', error);
@@ -34,7 +34,7 @@ const fetchGetOauthInfo = async () => {
  */
 const fetchNicknameDuplicated = async (nickname: string) => {
   try {
-    const response = await privateApi.get('/users/check-nickname', {
+    const response = await withOttApi.get('/users/check-nickname', {
       params: { nickname },
     });
 
@@ -58,7 +58,7 @@ const fetchNicknameDuplicated = async (nickname: string) => {
  */
 const fetchJoinFormSubmit = async (data: { birth: string; nickname: string; gender: string }) => {
   try {
-    const response = await privateApi.post('/users', {
+    const response = await withOttApi.post('/users', {
       nickname: data.nickname,
       birth: data.birth,
       gender: data.gender,
@@ -76,7 +76,7 @@ const fetchJoinFormSubmit = async (data: { birth: string; nickname: string; gend
 
 const fetchGetUsers = async (): Promise<UsersMeResponse> => {
   try {
-    const response = await privateApi.get('/users/me');
+    const response = await privateApi.get('/users/me/profile');
     return response.data;
   } catch (error) {
     throw new Error('fetchGetUsers Network error');
@@ -85,7 +85,7 @@ const fetchGetUsers = async (): Promise<UsersMeResponse> => {
 
 export interface UserAuthorityResponse {
   id: number;
-  authority: 'master' | 'deputy' | 'member';
+  authority: 'MASTER' | 'DEPUTY' | 'MEMBER';
   position: {
     id: number;
     main: string;
@@ -100,7 +100,9 @@ export interface UserAuthorityResponse {
  */
 export const fetchGetUserByNickname = async (nickname: string): Promise<UsersMeResponse> => {
   try {
-    const response = await privateApi.get<UsersMeResponse>(`/users/@${nickname}`);
+    const response = await privateApi.get<UsersMeResponse>('/users/profile', {
+      params: { nickname },
+    });
     return response.data;
   } catch (error) {
     throw new Error('fetchGetUserByNickname Network Error');
@@ -115,32 +117,33 @@ export const fetchGetUserByNickname = async (nickname: string): Promise<UsersMeR
 export const fetchGetUsersNicknameParties = async ({
   nickname = '',
   page = 1,
-  limit = 5,
+  size = 5,
   sort = 'createdAt',
   order = 'ASC',
-  status = 'all',
+  partyStatus,
 }: {
   nickname: string;
   page: number;
-  limit: number;
+  size: number;
   sort: string;
   order: string;
-  status?: 'all' | 'active' | 'archived';
+  partyStatus?: 'IN_PROGRESS' | 'CLOSED';
 }): Promise<FetchGetUsersMePartiesResponse | null> => {
   try {
     // 쿼리 파라미터를 먼저 객체로 설정
     const params: any = {
       sort,
       order,
-      limit,
+      size,
       page,
+      nickname,
     };
 
-    if (status == 'active' || status == 'archived') {
-      params.status = status;
+    if (partyStatus) {
+      params.partyStatus = partyStatus;
     }
 
-    const response = await privateApi.get(`/users/@${nickname}/parties`, { params });
+    const response = await privateApi.get(`/parties/users`, { params });
     return response.data;
   } catch (err) {
     console.error('fetchGetUsersMeParties error:', err);
@@ -181,7 +184,7 @@ const fetchUserAuthority = async (partyId: number): Promise<UserAuthorityRespons
 // 로그아웃
 const fetchUsersLogOut = async () => {
   try {
-    const response = await privateApi.delete('/users/logout');
+    const response = await privateApi.post('/auth/web/logout');
     return response.data;
   } catch (error) {
     console.error('fetchUsersLogOut error : ', error);
@@ -194,7 +197,7 @@ const fetchUsersSignOut = async () => {
   try {
     const accessToken = window.localStorage.getItem('accessToken');
 
-    const response = await privateApi.delete('/users/signout', {
+    const response = await privateApi.delete('/users/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -210,7 +213,7 @@ const fetchUsersSignOut = async () => {
 // session에서 Oauth 본인 데이터 호출(email, image)
 const fetchGetUsersMeOauthProfile = async () => {
   try {
-    const response = await privateApi.get('/users/me/oauth/profile');
+    const response = await withOttApi.get('/ott/signup/context');
     return response.data;
   } catch (error) {
     console.error('fetchUsersMeOauthProfile error : ', error);
@@ -222,7 +225,7 @@ const fetchGetUsersMeOauthProfile = async () => {
 export interface GetUsersMeOauthResponse {
   email: string;
   image: string | null;
-  provider: 'kakao' | 'google';
+  provider: 'KAKAO' | 'GOOGLE';
 }
 const fetchGetUsersMeOauth = async (): Promise<GetUsersMeOauthResponse[] | null> => {
   try {
@@ -234,10 +237,10 @@ const fetchGetUsersMeOauth = async (): Promise<GetUsersMeOauthResponse[] | null>
   }
 };
 
-// 계정 연동
-const fetchPostUsersMeOauthLink = async () => {
+// 계정 연동 (웹): /auth/oauth/:provider/link
+const fetchPostUsersMeOauthLink = async (provider: 'kakao' | 'google') => {
   try {
-    const response = await privateApi.post('/users/me/oauth/link');
+    const response = await privateApi.get(`/auth/oauth/${provider}/link`);
     return response.data;
   } catch (err) {
     console.error('fetchPostUsersMeOauthLink error : ', err);
@@ -253,11 +256,11 @@ export interface PartyApplicationResponse {
 export interface PartyApplication {
   id: number;
   message: string;
-  status: 'pending' | 'processing' | 'approved' | 'rejected'; // 상태에 따라 Union 타입 정의
+  status: 'PENDING' | 'PROCESSING' | 'APPROVED' | 'REJECTED' | 'DECLINED' | 'CLOSED';
   createdAt: string;
   partyRecruitment: {
     id: number;
-    status: string; // 'active' | 'completed'
+    completed: boolean;
     position: {
       main: string;
       sub: string;
@@ -276,25 +279,25 @@ export interface PartyApplication {
 // [GET] 파티 포지션 모집별 지원자 목록 조회 API
 export const fetchGetUsersMePartiesApplications = async ({
   page = 1,
-  limit = 5,
+  size = 5,
   sort = 'createdAt',
   order = 'ASC',
-  status,
+  partyApplicationStatus,
 }: {
   page?: number;
-  limit?: number;
+  size?: number;
   sort?: 'createdAt';
   order?: string;
-  status?: 'processing' | 'approved' | 'pending' | 'rejected' | 'all';
+  partyApplicationStatus?: 'PENDING' | 'PROCESSING' | 'APPROVED' | 'REJECTED' | 'DECLINED' | 'CLOSED' | 'ALL';
 }): Promise<PartyApplicationResponse> => {
   try {
     const response = await privateApi.get(`/users/me/parties/applications`, {
       params: {
         page,
-        limit,
+        size,
         sort,
         order,
-        ...(status && status != 'all' && { status }), // status 값이 있을 때만 포함
+        ...(partyApplicationStatus && partyApplicationStatus !== 'ALL' && { partyApplicationStatus }),
       },
     });
     return response.data;

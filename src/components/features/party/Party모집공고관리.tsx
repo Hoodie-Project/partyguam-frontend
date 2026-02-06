@@ -5,7 +5,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
-import { fetchGetPartyRecruitmentsList } from '@/apis/party';
+import { fetchGetPartyRecruitmentsList } from '@/apis/recruitment/user';
 import { Chip, Txt } from '@/components/_atoms';
 import { SChildContainer, SFlexColumn, SFlexRow } from '@/styles/components';
 import type { PartyRecruitmentListResponse } from '@/types/party';
@@ -16,20 +16,14 @@ function Party모집공고관리({ partyId }: { partyId: string }) {
   const router = useRouter();
   const [partyRecruitList, setPartyRecruitList] = useState<PartyRecruitmentListResponse>([]);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('DESC');
-  const [recruitStatus, setRecruitStatus] = useState<string>('active');
+  const [recruitStatus, setRecruitStatus] = useState<boolean>(false); // false: 모집 중, true: 마감
 
   const fetchRecruitments = async () => {
     try {
-      const requestParams: {
-        partyId: number;
-        sort: string;
-        order: 'ASC' | 'DESC';
-        status: string;
-        main?: string;
-      } = {
+      const requestParams = {
         partyId: Number(partyId),
         sort: 'createdAt',
-        status: recruitStatus,
+        completed: recruitStatus,
         order: order,
       };
 
@@ -76,8 +70,8 @@ function Party모집공고관리({ partyId }: { partyId: string }) {
             }}
           >
             {[
-              { label: '모집 중', value: 'active' },
-              { label: '마감', value: 'completed' },
+              { label: '모집 중', value: false },
+              { label: '마감', value: true },
             ].map((item, i) => (
               <Chip
                 key={i}
@@ -108,11 +102,13 @@ function Party모집공고관리({ partyId }: { partyId: string }) {
           <PartyRecruitmentsCard
             isSetting
             key={item.id}
-            status={item.status}
+            completed={item.completed}
             main={item.position.main}
             sub={item.position.sub}
             createdAt={item.createdAt}
             applicationCount={item.applicationCount}
+            currentParticipants={item.currentParticipants}
+            maxParticipants={item.maxParticipants}
             handleClick={() =>
               router.push(
                 `/party/setting/applicant/${partyId}?partyRecruitmentId=${item.id}&main=${item.position.main}&sub=${item.position.sub}&recruitStatus=${recruitStatus}`,

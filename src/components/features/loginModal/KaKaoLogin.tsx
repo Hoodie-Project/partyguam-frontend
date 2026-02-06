@@ -10,8 +10,8 @@ export default function KaKaoLogin() {
   const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
   const handleKakaoLogin = () => {
     const kakaoAuthUrl = isDev
-      ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/users/kakao/login`
-      : `${process.env.NEXT_PUBLIC_API_HOST}/users/kakao/login`;
+      ? `${process.env.NEXT_PUBLIC_API_DEV_HOST}/auth/oauth/kakao/login`
+      : `${process.env.NEXT_PUBLIC_API_HOST}/auth/oauth/kakao/login`;
     push(kakaoAuthUrl);
   };
 

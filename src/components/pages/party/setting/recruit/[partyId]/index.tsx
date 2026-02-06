@@ -4,11 +4,8 @@ import { useRouter } from 'next/navigation';
 import styled from '@emotion/styled';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
-import {
-  fetchCompletePartyRecruitmentBatchUpdate,
-  fetchDeletePartyRecruitments,
-  fetchGetPartyRecruitmentsList,
-} from '@/apis/party';
+import { fetchCompletePartyRecruitmentBatchUpdate, fetchPostDeletePartyRecruitments } from '@/apis/recruitment/admin';
+import { fetchGetPartyRecruitmentsList } from '@/apis/recruitment/user';
 import { Balloon, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { ConfirmModal, FloatingMenu } from '@/components/features';
@@ -48,7 +45,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
           partyId: parseInt(partyId),
           sort: 'createdAt',
           order: 'ASC',
-          status: 'active',
+          completed: false,
         };
 
         const data = await fetchGetPartyRecruitmentsList(requestParams);
@@ -64,7 +61,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
           partyId: parseInt(partyId),
           sort: 'createdAt',
           order: 'ASC',
-          status: 'completed',
+          completed: true,
         };
 
         const data = await fetchGetPartyRecruitmentsList(requestParams);
@@ -100,7 +97,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
       onSubmit: async () => {
         try {
           // 삭제 API 호출
-          await fetchDeletePartyRecruitments({
+          await fetchPostDeletePartyRecruitments({
             partyId: Number(partyId),
             recruitmentIds: selectedRows,
           });
@@ -271,7 +268,7 @@ function PartyRecruitSetting({ partyId }: PageParams) {
           </div>
         </TitleContainer>
         <PartyRecruitSettingTable
-          status={status}
+          completed={status === 'completed'}
           partyId={Number(partyId)}
           selectedRows={selectedRows}
           setSelectedRows={setSelectedRows}

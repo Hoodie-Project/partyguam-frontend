@@ -3,7 +3,7 @@ export const partyUserMockData = {
   partyUser: [
     {
       id: 18,
-      authority: 'master',
+      authority: 'MASTER',
       position: {
         id: 15,
         main: '디자이너',
@@ -22,7 +22,7 @@ export const partyUserMockData = {
     },
     {
       id: 19,
-      authority: 'member',
+      authority: 'MEMBER',
       position: {
         id: 22,
         main: '개발자',
@@ -36,7 +36,7 @@ export const partyUserMockData = {
     },
     {
       id: 20,
-      authority: 'member',
+      authority: 'MEMBER',
       position: {
         id: 10,
         main: '매니저',
@@ -55,7 +55,7 @@ export const partyUserMockData = {
     },
     {
       id: 21,
-      authority: 'member',
+      authority: 'MEMBER',
       position: {
         id: 25,
         main: '마케터',
@@ -74,7 +74,7 @@ export const partyUserMockData = {
     },
     {
       id: 22,
-      authority: 'member',
+      authority: 'MEMBER',
       position: {
         id: 30,
         main: '개발자',
@@ -88,7 +88,7 @@ export const partyUserMockData = {
     },
     {
       id: 23,
-      authority: 'member',
+      authority: 'MEMBER',
       position: {
         id: 35,
         main: '디자이너',

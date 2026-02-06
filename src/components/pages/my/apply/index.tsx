@@ -16,9 +16,13 @@ import { Body, Cell, Header, HeaderCell, HeaderRow, Row, Table } from '@table-li
 import { useTheme } from '@table-library/react-table-library/theme';
 import { useInfiniteQuery } from '@tanstack/react-query';
 
+import {
+  fetchApprovePartyApplication,
+  fetchDeletePartyApplication,
+  fetchRejectPartyApplication,
+} from '@/apis/application/user';
 import type { PartyApplication } from '@/apis/auth';
 import { fetchGetUsersMePartiesApplications } from '@/apis/auth';
-import { fetchApprovePartyApplication, fetchDeletePartyApplication, fetchRejectPartyApplication } from '@/apis/party';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { PageHeader } from '@/components/_molecules';
 import { ConfirmModal, FloatingMenu } from '@/components/features';
@@ -33,7 +37,7 @@ const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEX
 function MyApply() {
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
-  const [status, setStatus] = useState<'processing' | 'approved' | 'pending' | 'rejected' | 'all'>('all');
+  const [status, setStatus] = useState<'PROCESSING' | 'APPROVED' | 'PENDING' | 'REJECTED' | 'ALL'>('ALL');
   const [expand지원서, setExpand지원서] = useState<number | null>(null);
 
   const { openModal, closeModal } = useModalContext();
@@ -50,10 +54,10 @@ function MyApply() {
     queryFn: async ({ pageParam }) => {
       const res = await fetchGetUsersMePartiesApplications({
         page: pageParam as number,
-        limit: 10,
+        size: 10,
         sort: 'createdAt',
         order,
-        status,
+        partyApplicationStatus: status,
       });
 
       return res;
@@ -186,11 +190,11 @@ function MyApply() {
           }}
         >
           {[
-            { label: '전체', value: 'all' },
-            { label: '검토중', value: 'pending' },
-            { label: ' 수락 ', value: 'approved' },
-            { label: '응답대기', value: 'processing' },
-            { label: ' 거절 ', value: 'rejected' },
+            { label: '전체', value: 'ALL' },
+            { label: '검토중', value: 'PENDING' },
+            { label: ' 수락 ', value: 'APPROVED' },
+            { label: '응답대기', value: 'PROCESSING' },
+            { label: ' 거절 ', value: 'REJECTED' },
           ].map((item, i) => (
             <Chip
               key={i}
@@ -201,7 +205,7 @@ function MyApply() {
               fontColor={status === item.value ? 'black' : '#767676'}
               fontWeight={status === item.value ? 'bold' : 'normal'}
               onClick={() => {
-                setStatus(item.value as unknown as 'processing' | 'approved' | 'pending' | 'rejected');
+                setStatus(item.value as unknown as 'PROCESSING' | 'APPROVED' | 'PENDING' | 'REJECTED');
               }}
             />
           ))}
@@ -341,7 +345,7 @@ function MyApply() {
                             }}
                           >
                             <ImageWrapper>
-                              {item.partyRecruitment.status === 'completed' && (
+                              {item.partyRecruitment.completed === true && (
                                 <CompletedImageWrapper>
                                   <ErrorRoundedIcon
                                     style={{ width: '16px', height: '16px', color: '#767676', marginBottom: '4px' }}
@@ -364,7 +368,7 @@ function MyApply() {
                                 style={{
                                   width: '120px',
                                   borderRadius: '8px',
-                                  border: item.partyRecruitment.status === 'completed' ? 'none' : '1px solid #F1F1F5',
+                                  border: item.partyRecruitment.completed === true ? 'none' : '1px solid #F1F1F5',
                                   objectFit: 'contain',
                                 }}
                               />
@@ -375,12 +379,12 @@ function MyApply() {
                                   chipType="filled"
                                   label={item.partyRecruitment.party.partyType.type}
                                   size="xsmall"
-                                  chipColor={item.partyRecruitment.status === 'completed' ? '#fcfcfc' : '#F6F6F6'}
-                                  fontColor={item.partyRecruitment.status === 'completed' ? '#c7c7c7' : 'grey700'}
+                                  chipColor={item.partyRecruitment.completed === true ? '#fcfcfc' : '#F6F6F6'}
+                                  fontColor={item.partyRecruitment.completed === true ? '#c7c7c7' : 'grey700'}
                                   fontWeight="semibold"
                                 />
                                 <EllipsisTitleText
-                                  fontColor={item.partyRecruitment.status === 'completed' ? 'grey500' : 'black'}
+                                  fontColor={item.partyRecruitment.completed === true ? 'grey500' : 'black'}
                                   fontSize={16}
                                   fontWeight="semibold"
                                   style={{ lineHeight: '140%' }}
@@ -389,7 +393,7 @@ function MyApply() {
                                 </EllipsisTitleText>
                                 <Txt
                                   fontSize={14}
-                                  fontColor={item.partyRecruitment.status === 'completed' ? 'grey500' : 'black'}
+                                  fontColor={item.partyRecruitment.completed === true ? 'grey500' : 'black'}
                                   style={{
                                     marginLeft: '2px',
                                     display: 'flex',
@@ -439,7 +443,7 @@ function MyApply() {
                         <Row item={item}>
                           <Styled지원서Cell gridColumnStart={1} gridColumnEnd={5}>
                             <Styled지원서TxtBox>{item.message}</Styled지원서TxtBox>
-                            {item.partyRecruitment.status === 'active' && item.status === 'pending' && (
+                            {item.partyRecruitment.completed === false && item.status === 'PENDING' && (
                               <div
                                 style={{
                                   display: 'flex',
@@ -461,7 +465,7 @@ function MyApply() {
                                 </SquareButton>
                               </div>
                             )}
-                            {item.partyRecruitment.status === 'active' && item.status === 'processing' && (
+                            {item.partyRecruitment.completed === false && item.status === 'PROCESSING' && (
                               <div
                                 style={{
                                   display: 'flex',

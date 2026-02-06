@@ -49,12 +49,12 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
   useEffect(() => {
     const fetchRecruitments = async () => {
-      const response = await fetchPartyRecruitments({
-        page: 1,
-        limit: 6,
-        sort: 'createdAt',
-        order: 'DESC',
-      });
+    const response = await fetchPartyRecruitments({
+      page: 1,
+      size: 6,
+      sort: 'createdAt',
+      order: 'DESC',
+    });
 
       setRecruitmentList(response);
     };
@@ -63,7 +63,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
       try {
         const response = await fetchPersonalizedPartiesRecruitments({
           page: 1,
-          limit: 6,
+          size: 6,
           sort: 'createdAt',
           order: 'DESC',
         });
@@ -146,74 +146,74 @@ function HomeRecruitmentList({ personalized = false }: Props) {
               <StyledSlider ref={sliderRef} {...sliderSettings}>
                 {recruitmentList?.partyRecruitments?.map(recruitment => (
                   <StyledSquare
-                    key={recruitment.id}
-                    width="405px"
-                    height="190px"
-                    shadowKey="shadow1"
-                    backgroundColor="white"
-                    radiusKey="base"
-                    borderColor="grey200"
-                    personalized={personalized}
-                    style={{ marginRight: '12px' }}
-                    onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
-                  >
-                    <CardContentsWrapper>
-                      <Image
-                        src={
-                          recruitment.party.image
-                            ? `${BASE_URL}/${recruitment.party.image}`
-                            : '/images/default-party-light200.jpg'
-                        }
-                        width={200}
-                        height={150}
-                        alt={recruitment.party.title}
-                        style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
-                      />
-                      <CardRightWrapper>
-                        <div>
-                          <Chip
-                            chipType="filled"
-                            label={recruitment.party.partyType.type}
-                            size="xsmall"
-                            chipColor="#F6F6F6"
-                            fontColor="grey700"
-                            fontWeight="semibold"
-                          />
-                          <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
-                            {recruitment.party.title} {/* 파티 제목 */}
-                          </EllipsisTitleText>
-                          <Txt
-                            fontSize={14}
-                            color="grey600"
-                            style={{
-                              marginLeft: '2px',
-                              display: 'flex',
-                              flexDirection: 'row',
-                              alignItems: 'center',
-                              lineHeight: '140%',
-                            }}
-                          >
-                            {recruitment.position.main} <Divider />
-                            {recruitment.position.sub}
-                          </Txt>
-                        </div>
-
-                        <RecruitsCount>
-                          <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                            {recruitment.status === 'active' ? '모집중' : '파티종료'}
-                          </Txt>
-
-                          <Txt
-                            fontSize={12}
-                            color="failRed"
-                            style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
-                          >
-                            {recruitment.recruitedCount} / {recruitment.recruitingCount}
-                          </Txt>
-                        </RecruitsCount>
-                      </CardRightWrapper>
-                    </CardContentsWrapper>
-                  </StyledSquare>
+                      key={recruitment.id}
+                      width="405px"
+                      height="190px"
+                      shadowKey="shadow1"
+                      backgroundColor="white"
+                      radiusKey="base"
+                      borderColor="grey200"
+                      personalized={personalized}
+                      style={{ marginRight: '12px' }}
+                      onClick={() => handleClickRecruitmentCard(recruitment.id, recruitment.party.id)}
+                    >
+                      <CardContentsWrapper>
+                        <Image
+                          src={
+                            recruitment.party.image
+                              ? `${BASE_URL}/${recruitment.party.image}`
+                              : '/images/default-party-light200.jpg'
+                          }
+                          width={200}
+                          height={150}
+                          alt={recruitment.party.title}
+                          style={{ borderRadius: '8px', border: '1px solid #F1F1F5' }}
+                        />
+                        <CardRightWrapper>
+                          <div>
+                            <Chip
+                              chipType="filled"
+                              label={recruitment.party.partyType.type}
+                              size="xsmall"
+                              chipColor="#F6F6F6"
+                              fontColor="grey700"
+                              fontWeight="semibold"
+                            />
+                            <EllipsisTitleText fontSize={16} fontWeight="semibold" style={{ lineHeight: '140%' }}>
+                              {recruitment.party.title} {/* 파티 제목 */}
+                            </EllipsisTitleText>
+                            <Txt
+                              fontSize={14}
+                              color="grey600"
+                              style={{
+                                marginLeft: '2px',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                lineHeight: '140%',
+                              }}
+                            >
+                              {recruitment.position.main} <Divider />
+                              {recruitment.position.sub}
+                            </Txt>
+                          </div>
+  
+                          <RecruitsCount>
+                            <Txt fontSize={12} style={{ lineHeight: '140%' }}>
+                              {recruitment.party.completed ? '모집마감' : '모집중'}
+                            </Txt>
+  
+                            <Txt
+                              fontSize={12}
+                              color="failRed"
+                              style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
+                            >
+                              {recruitment.currentParticipants} / {recruitment.maxParticipants}
+                            </Txt>
+                          </RecruitsCount>
+                        </CardRightWrapper>
+                      </CardContentsWrapper>
+                    </StyledSquare>
                 ))}
               </StyledSlider>
             </>
@@ -276,7 +276,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
 
                       <RecruitsCount>
                         <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                          {recruitment.status === 'active' ? '모집중' : '파티종료'}
+                          {recruitment.party.completed ? '모집마감' : '모집중'}
                         </Txt>
 
                         <Txt
@@ -284,7 +284,7 @@ function HomeRecruitmentList({ personalized = false }: Props) {
                           color="failRed"
                           style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
                         >
-                          {recruitment.recruitedCount} / {recruitment.recruitingCount}
+                          {recruitment.currentParticipants} / {recruitment.maxParticipants}
                         </Txt>
                       </RecruitsCount>
                     </CardRightWrapper>

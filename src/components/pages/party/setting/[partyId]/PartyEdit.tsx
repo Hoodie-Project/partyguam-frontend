@@ -11,7 +11,6 @@ import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 
 import {
   fetchGetPartyHome,
-  fetchGetPartyRecruitmentsList,
   fetchGetPartyTypes,
   fetchGetPositions,
   fetchPatchPartyInfo,
@@ -27,6 +26,7 @@ import { SFlexColumnFull, SFlexRowFull, SMargin } from '@/styles/components';
 import type { PartyHomeResponse } from '@/types/party';
 import type { Position } from '@/types/user';
 import { usePartyEditModal } from '@/hooks/usePartyEditModal';
+import { fetchGetPartyRecruitmentsList } from '@/apis/recruitment/user';
 
 type StateType = any;
 const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
@@ -102,7 +102,7 @@ export default function PartyEdit({ partyId }: PageParams) {
     set파티명value(partyHomeData.title);
     set파티유형value({ id: partyHomeData.partyType.id, label: partyHomeData.partyType.type });
     set파티소개글value(partyHomeData.content);
-    set파티상태(partyHomeData.status);
+    set파티상태(partyHomeData.partyStatus);
 
     // 최초 값 저장
     setInitialValues({
@@ -150,7 +150,7 @@ export default function PartyEdit({ partyId }: PageParams) {
     set파티명value(partyHomeData?.title);
     set파티유형value({ id: partyHomeData?.partyType.id, label: partyHomeData?.partyType.type });
     set파티소개글value(partyHomeData.content);
-    set파티상태(partyHomeData.status);
+    set파티상태(partyHomeData.partyStatus);
   }, [partyHomeData]);
 
   const 내포지션Filtered = useMemo(() => {
@@ -319,7 +319,7 @@ export default function PartyEdit({ partyId }: PageParams) {
     const response = await fetchGetPartyUsers({
           partyId: Number(partyId?.toString()),
           page: 1,
-          limit: 16,
+          size: 16,
           sort: 'createdAt',
           order: 'DESC',
     });
@@ -531,7 +531,7 @@ export default function PartyEdit({ partyId }: PageParams) {
                         partyId: Number(partyId),
                         sort: 'createdAt',
                         order: 'DESC',
-                        status: 'active',
+                        completed: false,
                       });
                       if (모집공고.length != 0 && item === 'archived') {
                         openPartyEditModal('partyEndBlocked');

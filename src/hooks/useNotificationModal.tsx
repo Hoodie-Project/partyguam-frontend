@@ -15,7 +15,7 @@ export function useNotificationModal() {
     initialPageParam: 0,
     queryFn: async ({ pageParam = undefined }) => {
       return await fetchGetNotifications({
-        limit: 10,
+        size: 10,
         ...(pageParam !== 0 && { cursor: pageParam }),
         type: filter,
       });

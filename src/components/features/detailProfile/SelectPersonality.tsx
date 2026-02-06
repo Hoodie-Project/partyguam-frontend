@@ -210,9 +210,9 @@ export default function SelectPersonality({ editType, personalityData }: Props) 
 
     if (editType == null) {
       if (Number(detailNum) === 6) {
-        router.push('/join/detail/success');
+        router.push('/join/signup/success');
       } else {
-        router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+        router.push(`/join/signup?num=${Number(detailNum) + 1}`);
       }
     } else {
       setTimeout(() => {
@@ -333,9 +333,9 @@ export default function SelectPersonality({ editType, personalityData }: Props) 
             style={{ cursor: 'pointer' }}
             onClick={() => {
               if (Number(detailNum) == 6) {
-                router.push('/join/detail/success');
+                router.push('/signup/detail/success');
               } else {
-                router.push(`/join/detail?num=${Number(detailNum) + 1}`);
+                router.push(`/signup/detail?num=${Number(detailNum) + 1}`);
               }
             }}
           >

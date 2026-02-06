@@ -15,8 +15,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import {
   fetchAdminApprovePartyApplication,
   fetchAdminRejectPartyApplication,
-  fetchPartyRecruitmentApplications,
-} from '@/apis/party';
+  fetchGetPartyRecruitmentApplications,
+} from '@/apis/application/admin';
 import { Balloon, Chip, Txt } from '@/components/_atoms';
 import { BreadCrumb, ProfileImage } from '@/components/_molecules';
 import { ConfirmModal } from '@/components/features';
@@ -29,7 +29,7 @@ import { formatRelativeTime } from '@/utils/date';
 function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const [isShowBalloon, setIsShowBalloon] = useState(false);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC');
-  const [status, setStatus] = useState<'all' | 'processing' | 'approved' | 'pending' | 'rejected'>('all');
+  const [status, setStatus] = useState<'ALL' | 'PROCESSING' | 'APPROVED' | 'PENDING' | 'REJECTED'>('ALL');
   const [expand지원서, setExpand지원서] = useState<number | null>(null);
   const searchParams = useSearchParams();
   const partyRecruitmentId = searchParams.get('partyRecruitmentId');
@@ -48,23 +48,23 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   } = useInfiniteQuery({
     queryKey: [partyId, order, status, partyRecruitmentId, mainPosition, subPosition],
     queryFn: async ({ pageParam }) => {
-      const refinedStatus = status === 'all' ? undefined : status;
+      const refinedStatus = status === 'ALL' ? undefined : status;
 
-      const res = await fetchPartyRecruitmentApplications({
+      const res = await fetchGetPartyRecruitmentApplications({
         partyId: Number(partyId),
         partyRecruitmentId: Number(partyRecruitmentId),
         page: pageParam as number,
-        limit: 10,
+        size: 10,
         sort: 'createdAt',
         order,
-        status: refinedStatus,
+        applicationStatus: refinedStatus,
       });
 
       return res;
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
-      const totalFetchedItems = allPages.flatMap(page => page.partyApplicationUser).length;
+      const totalFetchedItems = allPages.flatMap(page => page.applications).length;
 
       if (totalFetchedItems < lastPage.total) {
         return allPages.length + 1;
@@ -82,11 +82,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
   const partyRecruitmentApplicationsWithId = useMemo(() => {
     if (isFetched && partyRecruitmentApplications) {
       return partyRecruitmentApplications.pages.flatMap(page =>
-        page?.partyApplicationUser
-          ? page.partyApplicationUser.map(item => ({
-            ...item,
-            id: item.id,
-          }))
+        page?.applications
+          ? page.applications.map(item => ({
+              ...item,
+              id: item.id,
+            }))
           : [],
       );
     }
@@ -160,11 +160,11 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         </div>
         <div style={{ display: 'flex', flexDirection: 'row', gap: '7px', marginTop: '12px' }}>
           {[
-            { label: ' 전체 ', value: 'all' },
-            { label: '검토중', value: 'pending' },
-            { label: ' 수락 ', value: 'approved' },
-            { label: '응답대기', value: 'processing' },
-            { label: ' 거절 ', value: 'rejected' },
+            { label: ' 전체 ', value: 'ALL' },
+            { label: '검토중', value: 'PENDING' },
+            { label: ' 수락 ', value: 'APPROVED' },
+            { label: '응답대기', value: 'PROCESSING' },
+            { label: ' 거절 ', value: 'REJECTED' },
           ].map((item, i) => (
             <Chip
               key={i}
@@ -175,7 +175,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
               fontColor={status === item.value ? 'black' : '#767676'}
               fontWeight={status === item.value ? 'bold' : 'normal'}
               onClick={() => {
-                setStatus(item.value as unknown as 'processing' | 'approved' | 'pending' | 'rejected');
+                setStatus(item.value as unknown as 'PROCESSING' | 'APPROVED' | 'PENDING' | 'REJECTED');
               }}
             />
           ))}
@@ -186,7 +186,14 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
         data={{ nodes: partyRecruitmentApplicationsWithId ?? [] }}
         theme={theme}
         layout={{ custom: true }}
-        style={{ width: '100%', minHeight:'116px', height: 'auto', zIndex: 0, marginTop: '32px', marginBottom: '20px' }}
+        style={{
+          width: '100%',
+          minHeight: '116px',
+          height: 'auto',
+          zIndex: 0,
+          marginTop: '32px',
+          marginBottom: '20px',
+        }}
       >
         {(tableList: PartyApplicationUser[]) => (
           <>
@@ -229,7 +236,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                         onClose={() => {
                           setIsShowBalloon(false);
                         }}
-                        style={{ 
+                        style={{
                           position: 'fixed',
                           top: '310px',
                           padding: '20px',
@@ -248,10 +255,10 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                           cursor: 'pointer',
                           fill: 'white',
                           marginLeft: '4px',
-                          zIndex: 10
+                          zIndex: 10,
                         }}
                       >
-                        <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column'}} >
+                        <div style={{ display: 'flex', justifyContent: 'flex-start', flexDirection: 'column' }}>
                           <div style={{ width: '100%', textAlign: 'start', marginBottom: '12px' }}>
                             <Txt fontSize={16} fontColor="primaryGreen" fontWeight="semibold">
                               상태
@@ -333,9 +340,9 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                       <Txt
                         fontWeight="semibold"
                         fontSize={14}
-                        style={{ color: `${PARTY_APPLICANTS_STATUS(item.status)?.color}` }}
+                        style={{ color: `${PARTY_APPLICANTS_STATUS(item.applicationStatus)?.color}` }}
                       >
-                        {PARTY_APPLICANTS_STATUS(item.status)?.label}
+                        {PARTY_APPLICANTS_STATUS(item.applicationStatus)?.label}
                       </Txt>
                     </StyledCell>
                     <StyledCell isExpend={expand지원서 === item.id}>
@@ -355,7 +362,7 @@ function Party모집공고별지원자관리({ partyId }: { partyId: string }) {
                     <Row item={item}>
                       <Styled지원서Cell gridColumnStart={1} gridColumnEnd={5}>
                         <Styled지원서TxtBox>{item.message}</Styled지원서TxtBox>
-                        {item.status === 'pending' && recruitStatus === 'active' && (
+                        {item.applicationStatus === 'PENDING' && recruitStatus === 'active' && (
                           <div
                             style={{
                               display: 'flex',
@@ -435,7 +442,7 @@ const StyledHeaderCell = styled(HeaderCell)`
   text-align: center;
 `;
 
-const StyledCell = styled(Cell) <{ isExpend: boolean }>`
+const StyledCell = styled(Cell)<{ isExpend: boolean }>`
   padding: 10px;
   border-bottom: ${({ isExpend }) => (isExpend ? 'none' : '1px solid #f1f1f5')};
   text-align: center;

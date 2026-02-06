@@ -68,7 +68,7 @@ export default function SelectLocation({ editMode = false, handleResetEdit, hand
     const userResponse = await fetchGetUsers();
     setAuth(userResponse);
     if (!editMode) {
-      router.push('/join/detail?num=2');
+      router.push('/signup/detail?num=2');
     } else {
       closeModal();
     }
@@ -156,7 +156,7 @@ export default function SelectLocation({ editMode = false, handleResetEdit, hand
             textDecoration="underline"
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              router.push('/join/detail?num=2');
+              router.push('/signup/detail?num=2');
             }}
           >
             건너뛰기

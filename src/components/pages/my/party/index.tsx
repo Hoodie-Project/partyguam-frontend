@@ -20,7 +20,7 @@ const isDev = process.env.NEXT_PUBLIC_ENV === 'dev';
 const BASE_URL = isDev ? process.env.NEXT_PUBLIC_DEV_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL;
 
 function MyParty() {
-  const [status, setStatus] = useState<'all' | 'active' | 'archived'>('all');
+  const [status, setStatus] = useState<'ALL' | 'IN_PROGRESS' | 'CLOSED'>('ALL');
   const [order, setOrder] = useState<'ASC' | 'DESC'>('DESC');
 
   const router = useRouter();
@@ -49,10 +49,10 @@ function MyParty() {
     queryFn: async ({ pageParam }) => {
       const res = await fetchGetUsersMeParties({
         page: pageParam as number,
-        limit: 10,
+        size: 10,
         sort: 'createdAt',
         order,
-        status,
+        partyStatus: status === 'ALL' ? undefined : status,
       });
 
       return res;
@@ -82,9 +82,9 @@ function MyParty() {
         <SFlexRow style={{ width: '100%', alignItems: 'center', justifyContent: 'space-between', marginTop: '10px' }}>
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '12px' }}>
             {[
-              { label: ' 전체 ', value: 'all' },
-              { label: '진행중', value: 'active' },
-              { label: '종료', value: 'archived' },
+              { label: ' 전체 ', value: 'ALL' },
+              { label: '진행중', value: 'IN_PROGRESS' },
+              { label: '종료', value: 'CLOSED' },
             ].map((item, i) => (
               <Chip
                 key={i}
@@ -95,7 +95,7 @@ function MyParty() {
                 fontColor={status === item.value ? 'black' : '#767676'}
                 fontWeight={status === item.value ? 'bold' : 'normal'}
                 onClick={() => {
-                  setStatus(item.value as unknown as 'all' | 'active' | 'archived');
+                  setStatus(item.value as unknown as 'ALL' | 'IN_PROGRESS' | 'CLOSED');
                 }}
               />
             ))}
@@ -135,10 +135,10 @@ function MyParty() {
                   <ChipWrapper>
                     <Chip
                       chipType="filled"
-                      label={party.party.status === 'active' ? '진행중' : '파티종료'}
+                      label={party.party.partyStatus === 'IN_PROGRESS' ? '진행중' : '파티종료'}
                       size="xsmall"
-                      chipColor={party.party.status === 'active' ? '#D5F0E3' : '#505050'}
-                      fontColor={party.party.status === 'active' ? '#016110' : '#ffffff'}
+                      chipColor={party.party.partyStatus === 'IN_PROGRESS' ? '#D5F0E3' : '#505050'}
+                      fontColor={party.party.partyStatus === 'IN_PROGRESS' ? '#016110' : '#ffffff'}
                       fontWeight="semibold"
                     />
                     <Chip

@@ -60,7 +60,7 @@ const fetchGetPositions = async () => {
 const fetchPostPositions = async (data: Career[]) => {
   try {
     const response = await privateApi.post('/users/me/careers', {
-      career: data,
+      careers: data,
     });
     return response.data;
   } catch (error) {
@@ -126,7 +126,7 @@ export type Party = {
     id: number;
     title: string; // 파티 제목
     image: string; // 이미지 경로
-    status: 'active' | 'archived'; // 파티 상태
+    partyStatus: 'IN_PROGRESS' | 'CLOSED'; // 파티 상태
     partyType: {
       type: string; // 파티 유형 (예: "포트폴리오", "해커톤")
     };
@@ -140,28 +140,28 @@ export type FetchGetUsersMePartiesResponse = {
 
 const fetchGetUsersMeParties = async ({
   page = 1,
-  limit = 5,
+  size = 5,
   sort = 'createdAt',
   order = 'ASC',
-  status = 'all',
+  partyStatus,
 }: {
   page: number;
-  limit: number;
+  size: number;
   sort: string;
   order: string;
-  status?: 'all' | 'active' | 'archived';
+  partyStatus?: 'IN_PROGRESS' | 'CLOSED';
 }): Promise<FetchGetUsersMePartiesResponse | null> => {
   try {
     // 쿼리 파라미터를 먼저 객체로 설정
     const params: any = {
       sort,
       order,
-      limit,
+      size,
       page,
     };
 
-    if (status == 'active' || status == 'archived') {
-      params.status = status;
+    if (partyStatus) {
+      params.partyStatus = partyStatus;
     }
 
     const response = await privateApi.get('/users/me/parties', { params });

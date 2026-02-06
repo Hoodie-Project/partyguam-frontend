@@ -13,7 +13,7 @@ import type { UserCareer } from '@/types/party';
 import ReportModal from '../reportModal';
 
 type Props = {
-  authority?: 'master' | 'deputy' | 'member';
+  authority?: 'MASTER' | 'DEPUTY' | 'MEMBER';
   userAuthority: UserAuthorityResponse | null;
   position?: {
     main: string;
@@ -27,12 +27,12 @@ type Props = {
   };
 };
 
-const PARTY_AUTHORITY_MAP = (authority?: 'master' | 'deputy' | 'member') => {
+const PARTY_AUTHORITY_MAP = (authority?: 'MASTER' | 'DEPUTY' | 'MEMBER') => {
   return {
-    master: '파티장',
-    deputy: '부파티장',
-    member: '파티원',
-  }[authority!];
+    MASTER: '파티장',
+    DEPUTY: '부파티장',
+    MEMBER: '파티원',
+  }[authority ?? 'MEMBER'];
 };
 
 function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
@@ -74,7 +74,7 @@ function PartyPeopleCard({ authority, userAuthority, position, user }: Props) {
         />
         <UserInfoContainer>
           <UserPositionWrapper>
-            {authority != 'member' && (
+            {authority !== 'MEMBER' && (
               <SFlexRow style={{ alignItems: 'center' }}>
                 <Txt fontSize={14} fontColor="greenDark100" fontWeight="semibold">
                   {PARTY_AUTHORITY_MAP(authority)}
@@ -188,7 +188,7 @@ const ColumnLine = styled.div`
   border-right: 1px solid #d4d4d4;
 `;
 
-const TagWrapper = styled.div<{ type?: 'master' | 'deputy' }>`
+const TagWrapper = styled.div<{ type?: 'MASTER' | 'DEPUTY' }>`
   position: absolute;
   display: flex;
   justify-content: center;
@@ -198,6 +198,6 @@ const TagWrapper = styled.div<{ type?: 'master' | 'deputy' }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: ${({ type }) => (type == 'master' ? '#21ECC7' : '#a0a0a05ec')};
+  background-color: ${({ type }) => (type === 'MASTER' ? '#21ECC7' : '#a0a0a05ec')};
   z-index: 5;
 `;

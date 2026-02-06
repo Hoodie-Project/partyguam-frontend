@@ -7,7 +7,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import type { UserAuthorityResponse } from '@/apis/auth';
 import { fetchGetPositions } from '@/apis/detailProfile';
-import { fetchGetPartyRecruitmentsList } from '@/apis/party';
+import { fetchGetPartyRecruitmentsList } from '@/apis/recruitment/user';
 import { Chip, Txt } from '@/components/_atoms';
 import { Select } from '@/components/_molecules';
 import { SFlexColumnFull, SFlexRow, SMargin } from '@/styles/components';
@@ -38,7 +38,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
   const [primaryPosition, setPrimaryPosition] = useState({ id: 0, 직군: '전체', 직무: '', 경력: '' });
   const [mainFiltered, setMainFiltered] = useState<{ id: number; label: string }[]>([]);
   const [order, setOrder] = useState<'ASC' | 'DESC'>('ASC'); // ASC (오름차순) / DESC (내림차순)
-  const [recruitStatus, setRecruitStatus] = useState<string>('active');
+  const [recruitStatus, setRecruitStatus] = useState<boolean>(false); // false: 모집 중, true: 마감;
 
   const [isArrowUp, setIsArrowUp] = useState(false);
   const router = useRouter();
@@ -50,13 +50,13 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
         partyId: number;
         sort: string;
         order: 'ASC' | 'DESC';
-        status: string;
+        completed: boolean;
         main?: string;
       } = {
         partyId: Number(partyId),
         sort: 'createdAt',
         order: order,
-        status: recruitStatus,
+        completed: recruitStatus,
       };
 
       // 직군이 '전체'가 아닐 경우에만 main 파라미터 추가
@@ -128,7 +128,7 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
               {partyRecruitList.reduce((acc, curr) => acc + Number(curr.applicationCount), 0)}
             </Txt>
           </HeaderLeft>
-          {userAuthority?.authority === 'master' && (
+          {userAuthority?.authority === 'MASTER' && (
             <HeaderRight>
               <Txt
                 fontColor="grey500"
@@ -181,8 +181,8 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
               }}
             >
               {[
-                { label: '모집 중', value: 'active' },
-                { label: '마감', value: 'completed' },
+                { label: '모집 중', value: false },
+                { label: '마감', value: true },
               ].map((item, i) => (
                 <Chip
                   key={i}
@@ -223,11 +223,11 @@ function PartyRecruitmentsTab({ partyId, userAuthority }: Props) {
               <PartyRecruitmentsCard
                 key={item.id}
                 createdAt={item.createdAt}
-                status={item.status}
+                completed={item.completed}
                 main={item.position.main}
                 sub={item.position.sub}
-                recruitedCount={item.recruitedCount}
-                recruitingCount={item.recruitingCount}
+                currentParticipants={item.currentParticipants}
+                maxParticipants={item.maxParticipants}
                 applicationCount={item.applicationCount}
                 handleClick={() => router.push(`/party/recruit/${item.id}?partyId=${partyId}`)}
               />

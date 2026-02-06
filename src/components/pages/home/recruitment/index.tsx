@@ -72,7 +72,7 @@ function HomeRecruitment() {
   const fetchRecruitments = async ({ pageParam = 1 }) => {
     const response = await fetchPartyRecruitments({
       page: pageParam,
-      limit: 10,
+      size: 10,
       sort: 'createdAt',
       order,
       main: submit직무Main,
@@ -216,7 +216,7 @@ function HomeRecruitment() {
 
                     <RecruitsCount>
                       <Txt fontSize={12} style={{ lineHeight: '140%' }}>
-                        {recruitment.status === 'active' ? '모집중' : '파티종료'}
+                        {recruitment.party.completed ? '모집마감' : '모집중'}
                       </Txt>
 
                       <Txt
@@ -224,7 +224,7 @@ function HomeRecruitment() {
                         color="failRed"
                         style={{ marginLeft: '4px', color: '#DC0000', lineHeight: '140%' }}
                       >
-                        {recruitment.recruitedCount} / {recruitment.recruitingCount}
+                        {recruitment.currentParticipants} / {recruitment.maxParticipants}
                       </Txt>
                     </RecruitsCount>
                   </CardRightWrapper>
