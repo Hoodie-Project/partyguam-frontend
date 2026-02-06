@@ -1,3 +1,5 @@
+import qs from 'qs';
+
 import type { PartyRecruitmentsResponse } from '@/types/home';
 
 import { privateApi } from '.';
@@ -46,34 +48,37 @@ export const fetchPartyRecruitments = async ({
   titleSearch?: string;
 }): Promise<PartyRecruitmentsResponse | null> => {
   try {
-    // 쿼리 파라미터를 객체로 설정
-    const params: any = {
+    const params: Record<string, any> = {
       page,
       size,
       sort,
       order,
     };
 
-    // main이 배열로 존재하고 길이가 0보다 큰 경우에만 추가
     if (main && main.length > 0) {
       params.main = main;
     }
 
-    // position이 배열로 존재하고 길이가 0보다 큰 경우에만 추가
     if (position && position.length > 0) {
       params.position = position;
     }
-    // position이 배열로 존재하고 길이가 0보다 큰 경우에만 추가
+
     if (partyType && partyType.length > 0) {
       params.partyType = partyType;
     }
 
-    // titleSearch가 존재할 때만 추가
     if (titleSearch) {
       params.titleSearch = titleSearch;
     }
 
-    const response = await privateApi.get(`/parties/recruitments`, { params });
+    const response = await privateApi.get('/parties/recruitments', {
+      params,
+      paramsSerializer: params =>
+        qs.stringify(params, {
+          arrayFormat: 'repeat',
+        }),
+    });
+
     return response.data;
   } catch (error) {
     console.error('fetchPartyRecruitments error:', error);
@@ -114,6 +119,7 @@ interface FetchPartiesParams {
 }
 
 // [GET] 파티 목록 조회
+
 export const fetchParties = async ({
   page,
   size,
@@ -124,32 +130,35 @@ export const fetchParties = async ({
   titleSearch,
 }: FetchPartiesParams): Promise<PartiesResponse | null> => {
   try {
-    // 쿼리 파라미터 객체 설정
-    const params: any = {
+    const params: Record<string, any> = {
       page,
       size,
       sort,
       order,
     };
 
-    // status가 존재할 경우에만 추가
     if (partyStatus) {
       params.partyStatus = partyStatus;
     }
 
-    // partyType이 배열로 존재하고 길이가 0보다 큰 경우에만 추가
     if (partyType && partyType.length > 0) {
-      params.partyType = partyType;
+      params.partyType = partyType; 
     }
 
-    // titleSearch가 배열로 존재하고 길이가 0보다 큰 경우에만 추가
-    if (titleSearch && titleSearch.length > 0) {
-      params.titleSearch = titleSearch;
+    if (titleSearch) {
+      params.titleSearch = titleSearch; 
     }
 
-    const response = await privateApi.get('/parties', { params });
+    const response = await privateApi.get('/parties', {
+      params,
+      paramsSerializer: params =>
+        qs.stringify(params, {
+          arrayFormat: 'repeat',
+        }),
+    });
+
     return response.data;
-  } catch (error: any) {
+  } catch (error) {
     console.error('fetchParties error:', error);
     return null;
   }
