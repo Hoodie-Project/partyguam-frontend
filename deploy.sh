@@ -1,44 +1,50 @@
 #!/bin/bash
 
-# 배포 디렉토리 경로 설정
 DEPLOY_DIR="/Users/macmini/partyguam/partyguam-frontend"
 
-# PM2 프로세스 이름 설정
-PM2_PROCESS_NAME="partyguam-frontend"
+cd $DEPLOY_DIR || { echo "❌ 디렉토리 이동 실패"; exit 1; }
 
-# 배포 디렉토리로 이동
-cd $DEPLOY_DIR || { echo "❌ 디렉토리 이동 실패: $DEPLOY_DIR"; exit 1; }
+echo "🚀 배포 시작"
 
-echo "🚀 배포 스크립트를 시작합니다..."
+# 현재 브랜치 확인
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo "📌 현재 브랜치: $BRANCH"
 
-# .next, node_modules, pnpm-lock.yaml 삭제
-echo "🧹 불필요한 파일 삭제 중..."
-rm -rf .next node_modules pnpm-lock.yaml
-if [ $? -ne 0 ]; then
-  echo "❌ 파일 삭제 실패"; exit 1;
+# 브랜치별 설정
+if [ "$BRANCH" = "main" ]; then
+  PORT=3000
+  PROCESS_NAME="partyguam-main"
+  ENV="production"
+elif [ "$BRANCH" = "dev" ]; then
+  PORT=4000
+  PROCESS_NAME="partyguam-dev"
+  ENV="development"
+else
+  echo "❌ main 또는 dev 브랜치에서만 배포 가능"
+  exit 1
 fi
 
-# pnpm install 실행
-echo "📦 pnpm install 실행 중..."
-pnpm install
-if [ $? -ne 0 ]; then
-  echo "❌ pnpm install 실패"; exit 1;
+echo "⚙ 포트: $PORT"
+echo "⚙ 프로세스: $PROCESS_NAME"
+
+# 최신 코드 pull
+git pull origin $BRANCH || { echo "❌ git pull 실패"; exit 1; }
+
+# 의존성 설치 (lock 유지)
+pnpm install --frozen-lockfile || { echo "❌ pnpm install 실패"; exit 1; }
+
+# 빌드
+pnpm build || { echo "❌ build 실패"; exit 1; }
+
+# PM2 재시작 (무중단 reload)
+pm2 describe $PROCESS_NAME > /dev/null
+
+if [ $? -eq 0 ]; then
+  echo "🔄 PM2 reload"
+  pm2 reload $PROCESS_NAME --update-env
+else
+  echo "🚀 PM2 start"
+  PORT=$PORT NEXT_PUBLIC_ENV=$ENV pm2 start pnpm --name $PROCESS_NAME -- start -- -p $PORT
 fi
 
-# pnpm build 실행
-echo "🔨 pnpm build 실행 중..."
-pnpm build
-if [ $? -ne 0 ]; then
-  echo "❌ pnpm build 실패"; exit 1;
-fi
-
-# PM2 프로세스 재시작
-echo "🔄 PM2 프로세스 재시작 중..."
-pm2 delete $PM2_PROCESS_NAME 2>/dev/null
-pm2 start pnpm --name "$PM2_PROCESS_NAME" -- start -- -p 3000
-if [ $? -ne 0 ]; then
-  echo "❌ PM2 프로세스 재시작 실패"; exit 1;
-fi
-
-echo "✅ 배포가 완료되었습니다!"
-
+echo "✅ 배포 완료"
