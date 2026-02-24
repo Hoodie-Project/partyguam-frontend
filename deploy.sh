@@ -1,8 +1,9 @@
 #!/bin/bash
+set -e  # 하나라도 실패하면 즉시 종료
 
-DEPLOY_DIR="/Users/macmini/partyguam/partyguam-frontend"
+DEPLOY_DIR="/Users/macmini/partyguam/dev-partyguham-frontend"
 
-cd $DEPLOY_DIR || { echo "❌ 디렉토리 이동 실패"; exit 1; }
+cd "$DEPLOY_DIR" || { echo "❌ 디렉토리 이동 실패"; exit 1; }
 
 echo "🚀 배포 시작"
 
@@ -28,23 +29,33 @@ echo "⚙ 포트: $PORT"
 echo "⚙ 프로세스: $PROCESS_NAME"
 
 # 최신 코드 pull
-git pull origin $BRANCH || { echo "❌ git pull 실패"; exit 1; }
+echo "🔄 git pull"
+git pull origin "$BRANCH"
 
-# 의존성 설치 (lock 유지)
-pnpm install --frozen-lockfile || { echo "❌ pnpm install 실패"; exit 1; }
+# 의존성 설치
+echo "📦 pnpm install"
+pnpm install --frozen-lockfile
+
+# 이전 빌드 제거 (중요)
+echo "🧹 .next 삭제"
+rm -rf .next
 
 # 빌드
-pnpm build || { echo "❌ build 실패"; exit 1; }
+echo "🏗 build"
+pnpm build
 
-# PM2 재시작 (무중단 reload)
-pm2 describe $PROCESS_NAME > /dev/null
-
-if [ $? -eq 0 ]; then
-  echo "🔄 PM2 reload"
-  pm2 reload $PROCESS_NAME --update-env
-else
-  echo "🚀 PM2 start"
-  PORT=$PORT NEXT_PUBLIC_ENV=$ENV pm2 start pnpm --name $PROCESS_NAME -- start -- -p $PORT
+# 기존 프로세스 삭제
+if pm2 describe "$PROCESS_NAME" > /dev/null 2>&1; then
+  echo "🛑 PM2 delete"
+  pm2 delete "$PROCESS_NAME"
 fi
+
+# Next를 직접 실행 (pnpm wrapper 사용 X)
+echo "🚀 PM2 start"
+pm2 start "node node_modules/next/dist/bin/next start -p $PORT" \
+  --name "$PROCESS_NAME" \
+  --cwd "$DEPLOY_DIR"
+
+pm2 save
 
 echo "✅ 배포 완료"
