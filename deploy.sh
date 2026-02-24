@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e  # 하나라도 실패하면 즉시 종료
 
-DEPLOY_DIR="/Users/macmini/partyguam/dev-partyguham-frontend"
+DEPLOY_DIR="/Users/macmini/partyguam/partyguam-frontend"
 
 cd "$DEPLOY_DIR" || { echo "❌ 디렉토리 이동 실패"; exit 1; }
 
